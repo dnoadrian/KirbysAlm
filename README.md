@@ -44,7 +44,7 @@ Die Bestenliste zeigt deine 10 besten Runden auf diesem Gerät: wie viele Hinder
 
 Es gibt keine Punkte, nur Fische. Sie sind die Währung und werden im Browser gespeichert. Fische gibt es auf der Strecke, bei Events, für jede 5er-Serie (+2) und für jeden Gegner, den du mit Regenbogen-Kraft wegschleuderst.
 
-Im **Shop** gibt es Upgrades (Regenbogen-Stern, Fisch-Magnet, Dreifachsprung, Glückspfote), Katzen (siehe oben) und 8 Cosmetics: Tirolerhut, Weihnachtsmütze, Krone, Sonnenbrille, Goldkette, Schal, Strickpulli und Ringelsocken. Pro Körperstelle (Kopf, Augen, Hals, Körper, Pfoten) ist eines angezogen. Im **Inventar** siehst du deine Katze, wählst eine deiner Katzen, siehst deine Upgrades und ziehst Cosmetics an oder aus. Cosmetics zählen nicht zur Hitbox.
+Im **Shop** gibt es Upgrades (Regenbogen-Stern, Fisch-Magnet, Dreifachsprung, Glückspfote), Katzen (siehe oben) und 8 Cosmetics: Tirolerhut, Weihnachtsmütze, Krone, Sonnenbrille, Goldkette, Schal, Strickpulli und Ringelsocken. Pro Körperstelle (Kopf, Augen, Hals, Körper, Pfoten) ist eines angezogen. Im **Inventar** siehst du deine Katze, wählst eine deiner Katzen, siehst deine Upgrades und ziehst Cosmetics an oder aus. Gekaufte Katzen und Cosmetics kannst du auch direkt im Shop auswählen bzw. an- und ausziehen. Cosmetics zählen nicht zur Hitbox.
 
 ## Spannung
 
@@ -54,7 +54,7 @@ Im **Shop** gibt es Upgrades (Regenbogen-Stern, Fisch-Magnet, Dreifachsprung, Gl
 
 ## Oberfläche
 
-Holzknöpfe mit Rautengitter und Fenster aus Brettern mit rotem Kopf. Die Schrift ist weiß (Minecraft-Schrift). Grün heißt los oder kaufen, Rot heißt zurück oder schließen, Braun ist alles andere.
+Große Holzknöpfe mit dezentem Rautengitter und Fenster aus Brettern mit rotem Kopf. Die Schrift ist weiß (Minecraft-Schrift). Grün heißt los oder kaufen, Rot heißt zurück oder schließen, Braun ist alles andere.
 
 ## Level
 

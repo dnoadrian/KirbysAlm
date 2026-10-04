@@ -70,7 +70,7 @@ p, h1, h2, h3 { margin: 0; }
   z-index: 10;
 }
 .box { display: flex; flex-direction: column; gap: 4px; padding: 7px 11px 8px; color: #ffffff; text-shadow: var(--stroke-sm); white-space: nowrap; }
-.fishbox { flex-direction: row; align-items: center; gap: 6px; margin-left: auto; min-height: 31px; padding-block: 4px; }
+.fishbox { flex-direction: row; align-items: center; gap: 8px; margin-left: auto; min-height: 44px; font-size: 24px; }
 .fish-ico { width: 27px; height: 15px; display: inline-block; flex: none; }
 .at-home .play-only { display: none; }
 .box.bump { animation: bump .3s ease-out; }
@@ -83,8 +83,8 @@ p, h1, h2, h3 { margin: 0; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 6px 12px 7px;
+  gap: 8px;
+  padding: 13px 18px 15px;
   color: #ffffff;
   text-shadow: var(--stroke-sm);
   font: 16px/1 var(--font);
@@ -98,11 +98,11 @@ p, h1, h2, h3 { margin: 0; }
 .btn.poor { filter: saturate(.45) brightness(.9); }
 .btn2 { --c: var(--wood); --c-hi: var(--wood-hi); --c-lo: var(--wood-lo); }
 .btn-red, .close-x { --c: var(--red); --c-hi: var(--red-hi); --c-lo: var(--red-lo); }
-.btn-start { padding: 8px 16px 9px; }
-.icon-btn { width: 31px; height: 31px; padding: 0; --c: var(--wood); --c-hi: var(--wood-hi); --c-lo: var(--wood-lo); }
-.icon-btn svg { width: 14px; height: 14px; display: block; filter: drop-shadow(1px 1px 0 var(--outline)) drop-shadow(-1px -1px 0 var(--outline)); }
-.close-x { width: 30px; height: 30px; padding: 0; }
-.close-x svg { width: 16px; height: 16px; filter: drop-shadow(1px 1px 0 var(--outline)) drop-shadow(-1px -1px 0 var(--outline)); }
+.btn-start { font-size: 24px; padding: 16px 22px 18px; }
+.icon-btn { width: 44px; height: 44px; padding: 0; --c: var(--wood); --c-hi: var(--wood-hi); --c-lo: var(--wood-lo); }
+.icon-btn svg { width: 20px; height: 20px; display: block; filter: drop-shadow(1px 1px 0 var(--outline)) drop-shadow(-1px -1px 0 var(--outline)); }
+.close-x { width: 42px; height: 42px; padding: 0; }
+.close-x svg { width: 20px; height: 20px; filter: drop-shadow(1px 1px 0 var(--outline)) drop-shadow(-1px -1px 0 var(--outline)); }
 #mute .off { display: none; }
 #mute[aria-pressed="true"] .on { display: none; }
 #mute[aria-pressed="true"] .off { display: block; }
@@ -119,7 +119,7 @@ p, h1, h2, h3 { margin: 0; }
   display: grid;
   grid-template-columns: 1fr;
   gap: 10px;
-  width: 170px;
+  width: 220px;
 }
 .home-menu .btn-start {
   position: fixed;
@@ -154,12 +154,12 @@ p, h1, h2, h3 { margin: 0; }
 @keyframes panelIn { from { transform: translateY(24px) scale(.94); opacity: 0; } }
 .panel-head { display: flex; align-items: center; gap: 12px; padding: 8px 8px 8px 14px; color: #ffffff; }
 .panel-head h2 { flex: 1; font: 24px/1 var(--font); text-shadow: var(--stroke); }
-.panel-head .btn { padding: 6px 10px 7px; }
+.panel-head .btn { padding: 10px 14px 12px; }
 .panel-head .close-x { padding: 0; }
 .close-x svg, .icon-btn svg { flex: none; }
 .wallet { display: flex; align-items: center; gap: 6px; font-size: 24px; }
 .tabs { display: flex; gap: 8px; padding: 12px 12px 0; flex-wrap: wrap; }
-.tab { font: 16px/1 var(--font); padding: 6px 10px 7px; color: #ffffff; text-shadow: var(--stroke-sm); cursor: pointer; touch-action: manipulation; }
+.tab { font: 16px/1 var(--font); padding: 9px 14px 11px; color: #ffffff; text-shadow: var(--stroke-sm); cursor: pointer; touch-action: manipulation; }
 .scroll { flex: 1; min-height: 0; overflow-y: auto; touch-action: pan-y; -webkit-overflow-scrolling: touch; padding: 12px 12px 16px; }
 .scroll h3 { margin: 4px 0 10px; font: 16px var(--font); }
 .scroll h3:not(:first-child) { margin-top: 18px; }
@@ -167,7 +167,7 @@ p, h1, h2, h3 { margin: 0; }
 .card { display: flex; flex-direction: column; gap: 8px; padding: 10px; }
 .card .prev { height: 66px; display: flex; align-items: center; justify-content: center; }
 .card .desc { line-height: 1.3; flex: 1; opacity: .85; }
-.card .btn { width: 100%; padding: 6px 8px 7px; }
+.card .btn { width: 100%; padding: 10px 10px 12px; }
 .badge { align-self: flex-start; padding: 5px 10px 6px; background: var(--green); color: #ffffff; }
 .msg { margin: 10px 12px 0; padding: 8px 10px; background: rgba(42, 23, 11, .6); color: #ffffff; }
 .panel-body { display: flex; flex-direction: column; gap: 14px; padding: 16px; }
@@ -217,8 +217,8 @@ p, h1, h2, h3 { margin: 0; }
 #banner .name, #banner .tip { color: #ffffff; text-shadow: var(--stroke-sm); }
 #combo { position: fixed; left: 16px; right: 16px; top: 40%; z-index: 5; display: flex; flex-direction: column; align-items: center; gap: 6px; pointer-events: none; opacity: 0; }
 #combo.pop { animation: combo 1.15s cubic-bezier(.2, .9, .3, 1) both; }
-#comboWord { font-size: 32px; line-height: 1; color: #ffffff; text-shadow: var(--stroke); }
-#comboMult { font-size: 24px; line-height: 1; color: #ffffff; text-shadow: var(--stroke); }
+#comboWord { font-size: 16px; line-height: 1; color: #ffffff; text-shadow: var(--stroke-sm); }
+#comboMult { font-size: 16px; line-height: 1; color: #ffffff; text-shadow: var(--stroke-sm); }
 @keyframes combo {
   0% { opacity: 0; transform: scale(2.4) rotate(-10deg); }
   12% { opacity: 1; transform: scale(.85) rotate(5deg); }
@@ -247,17 +247,15 @@ p, h1, h2, h3 { margin: 0; }
 
 /* Bausteine: Rautengitter, Holzmaserung, Bretterfugen */
 :root {
-  --diamond: repeating-linear-gradient(45deg, rgba(255, 255, 255, .13) 0 2px, transparent 2px 12px), repeating-linear-gradient(-45deg, rgba(255, 255, 255, .13) 0 2px, transparent 2px 12px);
-  --hole: linear-gradient(rgba(42, 23, 11, .45), rgba(42, 23, 11, .45));
-  --holes: var(--hole) left 6px top 6px / 4px 4px no-repeat, var(--hole) right 6px top 6px / 4px 4px no-repeat, var(--hole) left 6px bottom 8px / 4px 4px no-repeat, var(--hole) right 6px bottom 8px / 4px 4px no-repeat;
-  --trim: repeating-linear-gradient(90deg, var(--red) 0 12px, var(--red-lo) 12px 24px);
+  --diamond: repeating-linear-gradient(45deg, rgba(255, 255, 255, .07) 0 2px, transparent 2px 12px), repeating-linear-gradient(-45deg, rgba(255, 255, 255, .07) 0 2px, transparent 2px 12px);
+  --diamond-soft: repeating-linear-gradient(45deg, rgba(255, 255, 255, .035) 0 2px, transparent 2px 12px), repeating-linear-gradient(-45deg, rgba(255, 255, 255, .035) 0 2px, transparent 2px 12px);
 }
 
 /* ================= Gitterholz: Holzknöpfe mit Rautengitter, Bretter-Fenster mit rotem Kopf ================= */
 [data-ui="gitterholz"] .btn, [data-ui="gitterholz"] .tab {
   border: 3px solid var(--wood-deep);
   border-radius: 5px;
-  background: var(--holes), var(--diamond), var(--grain), linear-gradient(var(--c-hi), var(--c-lo));
+  background: var(--diamond), var(--grain), linear-gradient(var(--c-hi), var(--c-lo));
   box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .32), inset 0 -4px 0 rgba(0, 0, 0, .18), 0 4px 0 var(--wood-deep);
 }
 [data-ui="gitterholz"] .btn:active { transform: translateY(3px); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .32), 0 1px 0 var(--wood-deep); }
@@ -271,19 +269,19 @@ p, h1, h2, h3 { margin: 0; }
   border-radius: 8px;
   box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .18), 0 6px 0 var(--wood-deep), 0 16px 30px rgba(0, 0, 0, .35);
 }
-[data-ui="gitterholz"] .panel-head { margin: 6px 6px 0; padding-bottom: 16px; background: var(--trim) left bottom / 100% 8px no-repeat, var(--diamond), linear-gradient(var(--red-hi), var(--red-lo)); border: 3px solid var(--wood-deep); border-radius: 6px; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .3); }
+[data-ui="gitterholz"] .panel-head { margin: 6px 6px 0; background: var(--diamond-soft), linear-gradient(var(--red-hi), var(--red-lo)); border: 3px solid var(--wood-deep); border-radius: 6px; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .3); }
 [data-ui="gitterholz"] .panel-head .close-x { --c: var(--wood); --c-hi: var(--wood-hi); --c-lo: var(--wood-lo); }
-[data-ui="gitterholz"] .card, [data-ui="gitterholz"] .me, [data-ui="gitterholz"] .lb-row { background: var(--diamond), var(--grain), var(--wood-dk); border: 3px solid var(--wood-deep); border-radius: 6px; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .14); }
-[data-ui="gitterholz"] .lb-row:first-child { background: var(--diamond), var(--green-lo); }
+[data-ui="gitterholz"] .card, [data-ui="gitterholz"] .me, [data-ui="gitterholz"] .lb-row { background: var(--diamond-soft), var(--grain), var(--wood-dk); border: 3px solid var(--wood-deep); border-radius: 6px; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .14); }
+[data-ui="gitterholz"] .lb-row:first-child { background: var(--diamond-soft), var(--green-lo); }
 [data-ui="gitterholz"] .badge, [data-ui="gitterholz"] .msg { border: 2px solid var(--wood-deep); border-radius: 4px; }
 [data-ui="gitterholz"] .name-input { border-radius: 6px; }
 [data-ui="gitterholz"] #wipe { background: var(--diamond), var(--grain), var(--wood); }
 
 /* kleiner Installieren-Knopf oben in der Leiste */
-.install-btn svg { width: 14px; height: 14px; }
+.install-btn svg { width: 20px; height: 20px; }
 #installHelp {
   position: fixed;
-  top: calc(env(safe-area-inset-top, 0px) + 52px);
+  top: calc(env(safe-area-inset-top, 0px) + 64px);
   right: calc(env(safe-area-inset-right, 0px) + 16px);
   max-width: min(320px, calc(100% - 32px));
   padding: 8px 10px;
@@ -1492,7 +1490,6 @@ function startGame() {
   document.body.classList.remove('at-home');
   show(null);
   showLevelBanner(1);
-  showHint(5000, 'Tippen = springen');
   keepAwake();
   updateHud(true);
 }
@@ -1642,7 +1639,7 @@ function renderShop() {
     ? UPGRADES.map((u) => ({ ...u, key: 'up:' + u.id, prev: () => iconCanvas(ICONS[u.id]) }))
     : shopTab === 'cats'
       ? BREEDS.filter((b) => b.price > 0).map((b) => ({ ...b, key: 'cat:' + b.id, cat: true, desc: b.desc + ' ' + b.hair + '.', prev: () => catPreview([], b.id) }))
-      : COSMETICS.map((c) => ({ ...c, key: 'cos:' + c.id, prev: () => catPreview([c.id]) }));
+      : COSMETICS.map((c) => ({ ...c, key: 'cos:' + c.id, prev: () => catPreview([c.id], 'weiss') }));
   for (const it of items) {
     const card = el('div', 'card');
     const prev = el('div', 'prev');
@@ -1656,6 +1653,12 @@ function renderShop() {
       btn.classList.add('btn2');
       btn.disabled = on;
       btn.addEventListener('click', () => { save.breed = it.id; cat = myCat(); persist(); sfx.meow(); renderShop(); });
+    } else if (it.slot && has(it.key)) {
+      // gekaufte Cosmetics direkt im Shop an- und ausziehen
+      const on = wearing().includes(it.id);
+      btn.textContent = on ? 'Ausziehen' : 'Anziehen';
+      if (!on) btn.classList.add('btn2');
+      btn.addEventListener('click', () => { wear(it, !on); sfx.meow(); shopMsg(it.name + (on ? ' ausgezogen.' : ' angezogen!')); renderShop(); });
     } else if (has(it.key)) {
       btn.textContent = 'Gekauft';
       btn.disabled = true;
@@ -1744,7 +1747,7 @@ function renderInv() {
     const on = save.wear[c.slot] === c.id;
     const card = el('div', 'card');
     const prev = el('div', 'prev');
-    prev.appendChild(catPreview([c.id]));
+    prev.appendChild(catPreview([c.id], 'weiss'));
     const btn = el('button', 'btn' + (on ? '' : ' btn2'), on ? 'Ausziehen' : 'Anziehen');
     btn.type = 'button';
     btn.addEventListener('click', () => { wear(c, !on); sfx.buy(); renderInv(); });
