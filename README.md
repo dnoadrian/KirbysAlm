@@ -6,7 +6,7 @@ Ein kleines Pixel-Spiel fürs Handy: Deine Katze läuft über eine Bergwiese und
 
 ## Lobby
 
-In der Lobby spielt deine Katze mit einem Wollknäuel. Links oben stehen untereinander **Bestenliste**, **Shop** und **Inventar**, rechts unten der große **Start**-Knopf. Start öffnet mit einem Kreis-Übergang das Spiel. Nach dem Verlieren geht es mit **Nochmal** sofort weiter (kurzer Übergang) oder mit **Lobby** zurück.
+In der Lobby spielt deine Katze mit einem Wollknäuel. Links oben stehen untereinander **Bestenliste**, **Shop** und **Inventar**, rechts unten der große **Start**-Knopf. Bei Start läuft die Katze einfach los: Die Menüs gleiten weg und die Landschaft zieht vorbei. Nach dem Verlieren geht es mit **Nochmal** genauso sofort weiter oder mit **Lobby** zurück.
 
 ## Steuerung
 
@@ -68,7 +68,7 @@ Große Holzknöpfe mit dezentem Rautengitter und Fenster aus Brettern mit rotem 
 | 6 | Sternennacht | Alles zusammen, bei Nacht |
 | 7+ | Endlos-Alm | Immer schneller |
 
-Mit jedem Level wird es 2,5 Stunden später: Level 1 beginnt um 08:00, Level 2 um 10:30, Level 5 zum Sonnenuntergang um 18:00, Level 7 um 23:00. Die Uhrzeit steht oben links, die Sonne wandert mit.
+Mit jedem Level wird es 2,5 Stunden später: Level 1 beginnt um 08:00, Level 2 um 10:30, Level 5 zum Sonnenuntergang um 18:00, Level 7 um 23:00. Level und Uhrzeit stehen kurz im Banner, wenn ein Level beginnt, die Sonne wandert mit. Oben rechts siehst du nur deine Fische.
 
 ## Als App installieren
 

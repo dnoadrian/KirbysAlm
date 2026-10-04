@@ -72,7 +72,6 @@ p, h1, h2, h3 { margin: 0; }
 .box { display: flex; flex-direction: column; gap: 4px; padding: 7px 11px 8px; color: #ffffff; text-shadow: var(--stroke-sm); white-space: nowrap; }
 .fishbox { flex-direction: row; align-items: center; gap: 8px; margin-left: auto; min-height: 44px; font-size: 24px; }
 .fish-ico { width: 27px; height: 15px; display: inline-block; flex: none; }
-.at-home .play-only { display: none; }
 .box.bump { animation: bump .3s ease-out; }
 @keyframes bump { 40% { transform: scale(1.12); } }
 
@@ -110,6 +109,11 @@ p, h1, h2, h3 { margin: 0; }
 .home-title { position: fixed; pointer-events: none; }
 .title { font: 48px/1 var(--font); color: #ffffff; text-shadow: 0 4px 0 rgba(74, 41, 19, .45), 0 8px 16px rgba(74, 41, 19, .2); }
 .subtitle { margin-top: 12px; color: #ffffff; text-shadow: var(--stroke-sm); }
+#home.leaving { pointer-events: none; }
+#home .home-title, #home .home-menu .btn { transition: transform .45s cubic-bezier(.5, 0, .75, 0), opacity .45s; }
+#home.leaving .home-title { transform: translateY(-60px); opacity: 0; }
+#home.leaving .home-menu .btn:not(.btn-start) { transform: translateX(-140%); opacity: 0; }
+#home.leaving .home-menu .btn-start { transform: translateX(140%); opacity: 0; }
 /* Lobby: Titel mittig oben, links oben Bestenliste, Shop, Inventar untereinander, großer Start-Knopf rechts unten */
 .home-title { top: calc(env(safe-area-inset-top, 0px) + 14px); left: 0; right: 0; text-align: center; }
 .home-menu {
@@ -247,8 +251,8 @@ p, h1, h2, h3 { margin: 0; }
 
 /* Bausteine: Rautengitter, Holzmaserung, Bretterfugen */
 :root {
-  --diamond: repeating-linear-gradient(45deg, rgba(255, 255, 255, .07) 0 2px, transparent 2px 12px), repeating-linear-gradient(-45deg, rgba(255, 255, 255, .07) 0 2px, transparent 2px 12px);
-  --diamond-soft: repeating-linear-gradient(45deg, rgba(255, 255, 255, .035) 0 2px, transparent 2px 12px), repeating-linear-gradient(-45deg, rgba(255, 255, 255, .035) 0 2px, transparent 2px 12px);
+  --diamond: repeating-linear-gradient(45deg, rgba(255, 255, 255, .03) 0 2px, transparent 2px 12px), repeating-linear-gradient(-45deg, rgba(255, 255, 255, .03) 0 2px, transparent 2px 12px);
+  --diamond-soft: repeating-linear-gradient(45deg, rgba(255, 255, 255, .015) 0 2px, transparent 2px 12px), repeating-linear-gradient(-45deg, rgba(255, 255, 255, .015) 0 2px, transparent 2px 12px);
 }
 
 /* ================= Gitterholz: Holzknöpfe mit Rautengitter, Bretter-Fenster mit rotem Kopf ================= */
@@ -294,6 +298,7 @@ p, h1, h2, h3 { margin: 0; }
 
 @media (orientation: portrait) {
   .hud { flex-wrap: wrap; }
+  .home-menu { top: calc(env(safe-area-inset-top, 0px) + 72px); }
   .home-title { top: auto; bottom: calc(env(safe-area-inset-bottom, 0px) + 120px); }
   .title { font-size: 40px; }
   .stats { grid-template-columns: repeat(2, 1fr); }
@@ -319,14 +324,6 @@ p, h1, h2, h3 { margin: 0; }
 <canvas id="game" aria-label="Spielfeld: eine Katze springt auf der Alm über Hindernisse, im Hintergrund schleckt Kirby Schnee"></canvas>
 
 <div class="hud">
-  <div class="box play-only">
-    <span><span class="lbl">Level</span> <span id="level">1</span></span>
-    <span class="clock" id="clock">08:00 Uhr</span>
-  </div>
-  <div class="box play-only">
-    <span class="lbl">Übersprungen</span>
-    <span id="jumped">0</span>
-  </div>
   <div class="box fishbox" id="fishBox" aria-label="Fische">
     <svg class="fish-ico" viewBox="0 0 9 5" shape-rendering="crispEdges" aria-hidden="true"><path fill="#ff9f43" d="M2 0h4v1h1v1h1V1h1v3H8V3H7v1H6v1H2V4H1V3H0V2h1V1h1z"/><path fill="#1e1c26" d="M2 1h1v1H2z"/></svg><span id="fish">0</span>
   </div>
@@ -501,16 +498,6 @@ function sprite(rows, pal, outline = true, ghost = 'w', noMask = '') {
   const g = c.getContext('2d');
   const mask = new Uint8Array(w * h);
   const at = (x, y) => (y >= 0 && y < h && x >= 0 && x < w ? rows[y][x] || '.' : '.');
-  if (outline) {
-    g.fillStyle = INK;
-    for (let y = -1; y <= h; y++) {
-      for (let x = -1; x <= w; x++) {
-        if (at(x, y) !== '.') continue;
-        const n = [at(x - 1, y), at(x + 1, y), at(x, y - 1), at(x, y + 1)];
-        if (n.some((ch) => ch !== '.' && ch !== ghost)) g.fillRect(x + pad, y + pad, 1, 1);
-      }
-    }
-  }
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
       const ch = at(x, y);
@@ -1482,13 +1469,22 @@ function goHome() {
   updateHud(true);
 }
 function startGame() {
+  // ohne schwarzen oder braunen Übergang: die Katze läuft los und die Landschaft zieht nach links weg
+  const fromX = P.x;
+  const toy = G.objects.find((o) => o.type === 'toy');
   G = freshGame();
-  Object.assign(P, { x: 24, y: 0, vy: 0, grounded: true, jumps: 0, buffer: 0, airT: 0, land: 0, flip: 0, inv: 0, jumpPassed: false, checkReset: false });
+  if (toy) G.objects.push(toy); // das Wollknäuel bleibt liegen und rollt aus dem Bild
+  G.intro = { t: 0, dur: 1.1, from: fromX };
+  Object.assign(P, { x: fromX, y: 0, vy: 0, grounded: true, jumps: 0, buffer: 0, airT: 0, land: 0, flip: 0, inv: 0, jumpPassed: false, checkReset: false });
   particles.length = 0;
   floaters.length = 0;
   mode = 'play';
   document.body.classList.remove('at-home');
-  show(null);
+  if (!screens.home.hidden) {
+    screens.home.classList.add('leaving');
+    setTimeout(() => { screens.home.classList.remove('leaving'); if (mode !== 'home') screens.home.hidden = true; }, 450);
+    for (const k in screens) if (k !== 'home') screens[k].hidden = true;
+  } else show(null);
   showLevelBanner(1);
   keepAwake();
   updateHud(true);
@@ -1496,8 +1492,8 @@ function startGame() {
 function pause() { mode = 'paused'; show('pause'); }
 function resume() { mode = 'play'; show(null); last = performance.now(); }
 
-$('startBtn').addEventListener('click', () => { audioOn(); if (mode === 'home') transition("Los geht's!", startGame); });
-$('againBtn').addEventListener('click', () => { audioOn(); if (mode === 'over') transition('', startGame, true); });
+$('startBtn').addEventListener('click', () => { audioOn(); if (mode === 'home') { sfx.whoosh(); startGame(); } });
+$('againBtn').addEventListener('click', () => { audioOn(); if (mode === 'over') { sfx.whoosh(); startGame(); } });
 $('lobbyBtn').addEventListener('click', () => { if (mode === 'over') transition('Lobby', goHome); });
 $('pauseLobbyBtn').addEventListener('click', () => { if (mode === 'paused') transition('Lobby', goHome); });
 $('resumeBtn').addEventListener('click', () => { if (mode === 'paused') resume(); });
@@ -1596,9 +1592,6 @@ function updateHud(force) {
   if (!force && key === hudCache) return;
   hudCache = key;
   $('fish').textContent = save.fish;
-  $('jumped').textContent = G.jumped;
-  $('level').textContent = G.level;
-  $('clock').textContent = clock + ' Uhr';
 }
 
 /* ---------- Shop und Inventar ---------- */
@@ -1902,6 +1895,13 @@ function update(dt) {
 
   const L = levelInfo(G.level);
   G.speed = Math.min(340, L.speed + Math.min(20, (G.score - L.at) * .04)) * G.turbo;
+  if (G.intro) { // Anlauf: Tempo steigt sanft, die Katze rückt an ihren Platz links
+    G.intro.t += dt;
+    const u = Math.min(1, G.intro.t / G.intro.dur), e = u * u * (3 - 2 * u);
+    P.x = G.intro.from + (24 - G.intro.from) * e;
+    G.speed *= .25 + .75 * e;
+    if (u >= 1) { G.intro = null; P.x = 24; }
+  }
   const step = G.speed * dt;
   G.dist += step;
   G.scroll += step;
@@ -1968,6 +1968,7 @@ function update(dt) {
       o.krot += dt * 12;
       continue;
     }
+    if (o.type === 'toy') { o.x -= step; o.rot -= step / 4.5; continue; }
     o.x -= step + (o.vx || 0) * dt;
     if (o.fall !== undefined) {
       o.y += o.fall * dt;
@@ -2053,13 +2054,13 @@ function drawKirby(pal) {
     const y = 32 + r;
     const snowy = r < snowRows;
     ctx.fillStyle = snowy ? pal.snow : pal.rock;
-    ctx.fillRect(22 - half, y, half, 1);
+    ctx.fillRect(22 - half, y, half + .5, 1.6);
     ctx.fillStyle = snowy ? pal.snowSh : pal.rockSh;
-    ctx.fillRect(22, y, half, 1);
+    ctx.fillRect(22, y, half, 1.6);
     if (!snowy && r < snowRows + 5) {
       ctx.fillStyle = pal.snow;
       const tl = Math.max(0, 3 - (r - snowRows) * .7);
-      for (const f of [-.65, -.15, .4]) ctx.fillRect(Math.round(22 + f * half), y, Math.round(tl), 1);
+      for (const f of [-.65, -.15, .4]) ctx.fillRect(Math.round(22 + f * half), y, Math.round(tl), 1.6);
     }
   }
   // Zunge
@@ -2147,11 +2148,11 @@ function draw() {
     const h = Math.round(farH(wx));
     const shaded = farH(wx + 1) < farH(wx);
     ctx.fillStyle = shaded ? pal.rockSh : pal.rock;
-    ctx.fillRect(s - fracF, -h, 1, h);
+    ctx.fillRect(s - fracF, -h, 1.6, h + 1);
     const snowline = Math.round(farBase + farAmp * .52 + hash(wx) * 2);
     if (h > snowline) {
       ctx.fillStyle = shaded ? pal.snowSh : pal.snow;
-      ctx.fillRect(s - fracF, -h, 1, h - snowline);
+      ctx.fillRect(s - fracF, -h, 1.6, h - snowline);
     }
   }
 
@@ -2171,10 +2172,10 @@ function draw() {
       tree = Math.max(tree, Math.round(th - d * 2.2));
     }
     ctx.fillStyle = pal.hill;
-    ctx.fillRect(s - fracM, -hill, 1, hill);
+    ctx.fillRect(s - fracM, -hill, 1.6, hill + 1);
     if (tree > 0) {
       ctx.fillStyle = pal.pine;
-      ctx.fillRect(s - fracM, -hill - tree + 2, 1, tree);
+      ctx.fillRect(s - fracM, -hill - tree + 2, 1.6, tree);
     }
   }
 

@@ -1,5 +1,5 @@
 // Offline-Cache für "Cat Jumper". Bei Änderungen die Versionsnummer erhöhen.
-const CACHE = 'cat-jumper-v22';
+const CACHE = 'cat-jumper-v23';
 const ASSETS = [
   './',
   './index.html',
