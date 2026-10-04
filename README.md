@@ -1,12 +1,12 @@
 # Cat Jumper
 
-Spring über Adrian und Valentina! Ein kleines Pixel-Spiel fürs Handy: Eine weiße Katze läuft über eine Bergwiese und springt über Adrian und Valentina (das Mädchen mit den braunen Haaren). Im Hintergrund sitzt Kirby, die schwarz-weiße Katze, und schleckt den Schnee von den Gipfeln.
+Ein kleines Pixel-Spiel fürs Handy: Deine Katze läuft über eine Bergwiese und springt über alles, was im Weg steht: Wanderer, Gleitschirmflieger, Skifahrer und rote Wollknäuel. Im Hintergrund sitzt Kirby, die schwarz-weiße Katze, und schleckt den Schnee von den Gipfeln.
 
-**Spielen:** https://dnoadrian.github.io/Temp/ (sobald GitHub Pages eingeschaltet ist), oder `index.html` direkt im Browser öffnen.
+**Spielen:** https://dnoadrian.github.io/Temp/ oder `index.html` direkt im Browser öffnen.
 
 ## Lobby
 
-In der Lobby stehen links unten **Shop**, **Inventar** und **Start**. Start öffnet mit einem Kreis-Übergang das Spiel. Nach dem Verlieren geht es mit **Nochmal** direkt weiter oder mit **Lobby** zurück.
+In der Lobby stehen links unten **Shop**, **Inventar**, **Bestenliste** und **Start**. Start öffnet mit einem Kreis-Übergang das Spiel. Nach dem Verlieren geht es mit **Nochmal** direkt weiter oder mit **Lobby** zurück.
 
 ## Steuerung
 
@@ -19,7 +19,11 @@ Oben rechts lädt der Pfeil-Knopf die Seite bzw. App neu und holt die neueste Ve
 
 ## Deine Katze
 
-Beim ersten Start gibst du deiner Katze einen Namen und wählst eine von drei Katzen: Schneeweiß (Kurzhaar), Grau getigert (Halblanghaar) oder Rotes Fellknäuel (Langhaar, mit buschigem Schwanz, Halskrause und Ohrpinseln). Im Inventar kannst du das später unter "Katze ändern" anpassen.
+Beim ersten Start gibst du deiner Katze einen Namen und wählst das Fell: Weiß (Kurzhaar), Weiß-Braun (Langhaar), Orange (Halblanghaar) oder Braun (Kurzhaar). Danach wählst du **dick** oder **dünn**. Im Inventar kannst du das später unter "Katze ändern" anpassen.
+
+## Bestenliste
+
+Gezählt wird, wie viele Hindernisse du in einer Runde überspringst. Läuft das Spiel als Claude-Artefakt, ist die Bestenliste für alle gemeinsam und jeder Katzenname kann nur einmal vergeben werden. Auf GitHub Pages gibt es (noch) keinen gemeinsamen Speicher; dort siehst du nur deinen eigenen Rekord.
 
 ## Fische, Shop und Inventar
 
@@ -31,20 +35,20 @@ Im **Shop** gibt es Upgrades (Regenbogen-Stern, Fisch-Magnet, Dreifachsprung, Gl
 
 - **Sprung-Bewertung:** Super!, Perfekt!, Unglaublich! mit Serie (1x, 2x ...).
 - **Regenbogen-Stern:** liegt selten auf der Strecke oder rettet dich einmal pro Runde (Upgrade). 4 bis 5 Sekunden unverwundbar, Gegner fliegen weg.
-- **Zufalls-Events:** Sternschauer, Fischregen, Lawine (ab Level 2) und Turbo-Rausch.
+- **Zufalls-Events:** Sternschauer, Fischregen, Wollknäuel (ab Level 2: rote Wollknäuel rollen heran) und Turbo-Rausch.
 
 ## Oberfläche
 
-Almhütte: Holzbretter mit Maserung, Nägeln und Moos, rot-weiße Kopfleiste, grüner Start-Knopf mit Blümchen. Alle Schrift ist weiß, in der Minecraft-Schrift.
+Kräftige Farbflächen mit Rauten-Gitter, dicke dunkle Ränder und weiße Schrift mit Umrandung (Minecraft-Schrift).
 
 ## Level
 
 | Level | Name | Neu |
 | --- | --- | --- |
-| 1 | Almwiese | Adrian und Valentina stehen im Weg |
-| 2 | Adrian-Turm | Adrian und Valentina zu zweit, Valentina auf Adrians Schultern |
-| 3 | Gleitschirm | Adrian fliegt: tief drüber springen, hoch drunter durchlaufen |
-| 4 | Skipiste | Ski-Adrian kommt schneller entgegen |
+| 1 | Almwiese | Wanderer stehen im Weg |
+| 2 | Menschenturm | Zu zweit, und einer steht auf den Schultern des anderen |
+| 3 | Gleitschirm | Fliegt jemand tief: drüber springen, hoch: drunter durchlaufen |
+| 4 | Skipiste | Skifahrer kommen schneller entgegen |
 | 5 | Alpenglühen | Drei auf einmal, Kombinationen |
 | 6 | Sternennacht | Alles zusammen, bei Nacht |
 | 7+ | Endlos-Alm | Immer schneller |

@@ -8,49 +8,39 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Cat Jumper">
-<meta name="description" content="Cat Jumper: Eine weiße Katze springt auf der Alm über Adrian und Valentina, während Kirby den Schnee von den Gipfeln schleckt.">
+<meta name="description" content="Cat Jumper: Eine Katze springt auf der Alm über alles, was im Weg steht, während Kirby den Schnee von den Gipfeln schleckt.">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icons/cat-jumper-192.png">
 <link rel="apple-touch-icon" href="icons/cat-jumper-apple-180.png">
 <title>Cat Jumper</title>
 <style>
-/* Layout: full-bleed pixel alm on canvas. Lobby: title top-left, menu (Shop, Inventar, Start) bottom-left.
-   Shop/Inventar/Pause/Tod as wooden panels with a red-and-white header (Almhütte look). */
+/* Layout: full-bleed pixel alm on canvas. Lobby: title top-left, menu (Shop, Inventar, Bestenliste, Start) bottom-left.
+   Look: bold colour blocks with a diamond grid, thick dark outlines, white text with a dark outline (game-UI style). */
 /* Schrift: "Minecraft" von Pwnage_Block (fontstruct.com), CC BY-SA 3.0, um Ä Ö Ü ä ö ü ß · ergänzt. */
 @font-face {
   font-family: "CatJumperMC";
   src: url(data:font/woff2;base64,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) format("woff2");
   font-display: block;
 }
-
-/* ---- Look: Almhütte (Holz, Moos, rot-weiß). Alle Schrift weiß. ---- */
 :root {
   --font: "CatJumperMC", "Courier New", monospace;
   --ink: #1e1c26;
-  --text: #ffffff;
-  --text-soft: rgba(255, 255, 255, .78);
-  --text-shadow: 2px 2px 0 rgba(40, 22, 8, .7);
-  --wood-dark: #3b2412;
-  --hud-bg: linear-gradient(#7a4d28, #643d1e);
-  --hud-border: 3px solid #3b2412;
-  --hud-radius: 5px;
-  --hud-shadow: 0 3px 0 #3b2412;
-  --panel-bg: repeating-linear-gradient(0deg, rgba(60, 30, 10, .16) 0 2px, transparent 2px 24px), linear-gradient(#8f5f34, #7a4f2a);
-  --panel-border: 4px solid #3b2412;
-  --panel-radius: 7px;
-  --panel-shadow: 0 6px 0 #3b2412, 0 14px 30px rgba(0, 0, 0, .35);
-  --head-bg: #c8382f;
-  --head-trim: repeating-linear-gradient(90deg, #c8382f 0 12px, #ffffff 12px 24px);
-  --card-bg: repeating-linear-gradient(90deg, rgba(255, 255, 255, .04) 0 2px, transparent 2px 19px), linear-gradient(#6e4524, #5e3a1d);
-  --card-border: 3px solid #3b2412;
-  --card-radius: 5px;
-  --btn-radius: 5px;
-  --good: #5fae3e;
-  --focus: #ffffff;
-  --wipe: #6b4424;
-  --modal-dim: rgba(30, 18, 8, .45);
-  /* Holz-Töne der Knöpfe (oben hell, unten dunkel) */
-  --wood-hi: #b07a45; --wood-lo: #8a5a2f; --wood-edge: #3b2412;
+  --outline: #15171d;
+  /* weiße Schrift mit dunkler Umrandung */
+  --stroke: -2px -2px 0 var(--outline), 2px -2px 0 var(--outline), -2px 2px 0 var(--outline), 2px 2px 0 var(--outline), 0 -2px 0 var(--outline), 0 2px 0 var(--outline), -2px 0 0 var(--outline), 2px 0 0 var(--outline), 0 4px 0 rgba(0, 0, 0, .35);
+  --stroke-sm: -1px -1px 0 var(--outline), 1px -1px 0 var(--outline), -1px 1px 0 var(--outline), 1px 1px 0 var(--outline), 0 2px 0 rgba(0, 0, 0, .45);
+  /* Rauten-Gitter über allen Knöpfen und Kärtchen */
+  --grid: repeating-linear-gradient(45deg, rgba(255, 255, 255, .15) 0 2px, transparent 2px 12px), repeating-linear-gradient(-45deg, rgba(255, 255, 255, .15) 0 2px, transparent 2px 12px);
+  /* schlichte Bohrlöcher in den Ecken */
+  --hole: linear-gradient(rgba(0, 0, 0, .32), rgba(0, 0, 0, .32));
+  --holes: var(--hole) left 6px top 6px / 4px 4px no-repeat, var(--hole) right 6px top 6px / 4px 4px no-repeat, var(--hole) left 6px bottom 8px / 4px 4px no-repeat, var(--hole) right 6px bottom 8px / 4px 4px no-repeat;
+  --green: #a4f25a; --green-lo: #4cc31f;
+  --blue: #66d4ff; --blue-lo: #1f8fe6;
+  --red: #ff6f62; --red-lo: #d9281f;
+  --brown: #cf9658; --brown-lo: #8a5a2b;
+  --purple: #c69aff; --purple-lo: #7b45e0;
+  --slate: #9aa6b6; --slate-lo: #5f6b7a;
+  --yellow: #fff36b;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -71,6 +61,7 @@ html, body {
   -webkit-tap-highlight-color: transparent;
 }
 #game { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+canvas.pix { image-rendering: pixelated; image-rendering: crisp-edges; }
 p, h1, h2, h3 { margin: 0; }
 
 /* HUD */
@@ -90,89 +81,56 @@ p, h1, h2, h3 { margin: 0; }
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: 6px 10px 7px;
-  background: var(--hud-bg);
-  border: var(--hud-border);
-  border-radius: var(--hud-radius);
-  box-shadow: var(--hud-shadow);
-  color: var(--text);
-  text-shadow: var(--text-shadow);
+  padding: 7px 11px 8px;
+  background: rgba(14, 18, 28, .55);
+  border: 2px solid rgba(0, 0, 0, .45);
+  border-radius: 8px;
+  color: #ffffff;
+  text-shadow: var(--stroke-sm);
   white-space: nowrap;
 }
-.box .lbl { color: var(--text-soft); }
+.box .lbl { color: rgba(255, 255, 255, .8); }
 .fishbox { flex-direction: row; align-items: center; gap: 8px; margin-left: auto; min-height: 44px; font-size: 24px; }
 .fish-ico { width: 27px; height: 15px; display: inline-block; flex: none; }
 .at-home .play-only { display: none; }
 .box.bump { animation: bump .3s ease-out; }
 @keyframes bump { 40% { transform: scale(1.12); } }
 
-/* Knöpfe: Holzbretter mit Maserung, Nägeln in den Ecken und Moos obendrauf */
+/* Knöpfe: kräftige Farbe, Rauten-Gitter, dicker Rand, schlichte Bohrlöcher */
 .btn {
-  --nail: radial-gradient(circle, #2a180a 0 1.4px, rgba(255, 255, 255, .35) 1.5px 2.2px, transparent 2.4px);
+  --c: var(--green); --c-lo: var(--green-lo);
   position: relative;
   pointer-events: auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 13px 16px 13px;
-  border: 3px solid var(--wood-edge);
-  border-radius: var(--btn-radius);
-  background:
-    var(--nail) left 4px top 7px / 6px 6px no-repeat,
-    var(--nail) right 4px top 7px / 6px 6px no-repeat,
-    var(--nail) left 4px bottom 4px / 6px 6px no-repeat,
-    var(--nail) right 4px bottom 4px / 6px 6px no-repeat,
-    repeating-linear-gradient(0deg, rgba(50, 25, 8, .2) 0 1px, transparent 1px 5px, rgba(255, 255, 255, .06) 5px 6px, transparent 6px 9px),
-    repeating-linear-gradient(90deg, transparent 0 37px, rgba(50, 25, 8, .25) 37px 39px),
-    linear-gradient(var(--wood-hi), var(--wood-lo));
-  color: var(--text);
-  text-shadow: var(--text-shadow);
-  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .22), inset 0 -3px 0 rgba(0, 0, 0, .18), 0 5px 0 var(--wood-edge);
+  padding: 13px 18px 15px;
+  border: 3px solid var(--outline);
+  border-radius: 6px;
+  background: var(--holes), var(--grid), linear-gradient(var(--c), var(--c-lo));
+  color: #ffffff;
+  text-shadow: var(--stroke-sm);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .45), inset 0 -5px 0 rgba(0, 0, 0, .18), 0 4px 0 var(--outline);
   font: 16px/1 var(--font);
   cursor: pointer;
   touch-action: manipulation;
-  transition: transform .08s, box-shadow .08s;
+  transition: transform .08s, box-shadow .08s, filter .12s;
 }
-/* Moos-Kante */
-.btn::before {
-  content: "";
-  position: absolute;
-  left: 3px;
-  right: 3px;
-  top: -6px;
-  height: 9px;
-  background: linear-gradient(#7fc85a, #4f9a3c);
-  clip-path: polygon(0 100%, 0% 15%, 3% 55%, 6% 15%, 9% 80%, 12% 0%, 15% 55%, 18% 30%, 21% 55%, 24% 15%, 27% 80%, 30% 0%, 33% 80%, 36% 0%, 39% 55%, 42% 0%, 45% 70%, 48% 15%, 51% 55%, 54% 0%, 57% 55%, 60% 30%, 63% 70%, 66% 0%, 69% 80%, 72% 0%, 75% 55%, 78% 30%, 81% 80%, 84% 30%, 87% 55%, 90% 30%, 93% 80%, 96% 15%, 99% 55%, 100% 100%);
-  pointer-events: none;
-}
-.btn:active { transform: translateY(4px); box-shadow: inset 0 2px 0 rgba(255, 255, 255, .22), 0 1px 0 var(--wood-edge); }
-.btn:focus-visible, .tab:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
-.btn[disabled] { opacity: .7; cursor: default; transform: none; }
-.btn.poor { opacity: .72; }
-/* helles Birkenholz */
-.btn2 { --wood-hi: #c9955c; --wood-lo: #a8743f; }
-/* Kirschholz für Kaufen */
-.btn-buy { --wood-hi: #b5523f; --wood-lo: #8e3a2b; }
-/* Start: grünes, bemoostes Brett mit Blümchen */
-.btn-start {
-  --wood-hi: #5fae3e; --wood-lo: #3f8a2c; --wood-edge: #234f19;
-  font-size: 24px;
-  padding: 17px 20px 17px;
-}
-.btn-start::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(circle, #ffffff 0 1.5px, #ffd43b 1.6px 2.2px, transparent 2.4px) 12% 30% / 12px 12px no-repeat,
-    radial-gradient(circle, #ffffff 0 1.5px, #ff8fb8 1.6px 2.2px, transparent 2.4px) 88% 70% / 12px 12px no-repeat,
-    radial-gradient(circle, #ffffff 0 1.5px, #ffd43b 1.6px 2.2px, transparent 2.4px) 76% 22% / 12px 12px no-repeat;
-}
-.btn-start::before { height: 11px; top: -8px; background: linear-gradient(#9be07a, #5fae3e); }
-.icon-btn { width: 44px; height: 44px; padding: 0; }
-.icon-btn svg { width: 20px; height: 20px; display: block; filter: drop-shadow(2px 2px 0 rgba(40, 22, 8, .7)); }
+.btn:hover { filter: brightness(1.06); }
+.btn:active { transform: translateY(3px); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .45), inset 0 -3px 0 rgba(0, 0, 0, .18), 0 1px 0 var(--outline); }
+.btn:focus-visible, .tab:focus-visible, .pick:focus-visible { outline: 3px solid #ffffff; outline-offset: 3px; }
+.btn[disabled] { filter: saturate(.35) brightness(.9); cursor: default; transform: none; }
+.btn.poor { filter: saturate(.5); }
+.btn2, .btn-brown { --c: var(--brown); --c-lo: var(--brown-lo); }
+.btn-blue { --c: var(--blue); --c-lo: var(--blue-lo); }
+.btn-red { --c: var(--red); --c-lo: var(--red-lo); }
+.btn-purple { --c: var(--purple); --c-lo: var(--purple-lo); }
+.btn-start { font-size: 24px; padding: 16px 20px 18px; }
+.icon-btn { width: 44px; height: 44px; padding: 0; --c: var(--blue); --c-lo: var(--blue-lo); background: var(--grid), linear-gradient(var(--c), var(--c-lo)); }
+.icon-btn svg { width: 20px; height: 20px; display: block; filter: drop-shadow(1px 1px 0 var(--outline)) drop-shadow(-1px -1px 0 var(--outline)); }
+.close-x { width: 42px; height: 42px; padding: 0; --c: var(--red); --c-lo: var(--red-lo); background: var(--grid), linear-gradient(var(--c), var(--c-lo)); }
+.close-x svg { width: 22px; height: 22px; filter: drop-shadow(1px 1px 0 var(--outline)) drop-shadow(-1px -1px 0 var(--outline)); }
 #mute .off { display: none; }
 #mute[aria-pressed="true"] .on { display: none; }
 #mute[aria-pressed="true"] .off { display: block; }
@@ -184,17 +142,18 @@ p, h1, h2, h3 { margin: 0; }
   left: calc(env(safe-area-inset-left, 0px) + 16px);
   pointer-events: none;
 }
-.title { font: 48px/1 var(--font); color: #ffffff; text-shadow: 0 3px 0 rgba(40, 22, 8, .35), 0 6px 14px rgba(0, 0, 0, .18); }
-.subtitle { margin-top: 14px; color: #ffffff; text-shadow: var(--text-shadow); }
+.title { font: 48px/1 var(--font); color: #ffffff; text-shadow: 0 3px 0 rgba(20, 30, 50, .3), 0 6px 14px rgba(0, 0, 0, .18); }
+.subtitle { margin-top: 14px; color: #ffffff; text-shadow: var(--stroke-sm); }
 .home-menu {
   position: fixed;
   left: calc(env(safe-area-inset-left, 0px) + 16px);
   bottom: calc(env(safe-area-inset-bottom, 0px) + 18px);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 210px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 260px;
 }
+.home-menu .btn-start { grid-column: 1 / -1; }
 .home-side {
   position: fixed;
   right: calc(env(safe-area-inset-right, 0px) + 16px);
@@ -206,7 +165,7 @@ p, h1, h2, h3 { margin: 0; }
   max-width: 44%;
   text-align: right;
 }
-.tipline { color: #ffffff; text-shadow: var(--text-shadow); }
+.tipline { color: #ffffff; text-shadow: var(--stroke-sm); }
 .credit {
   position: fixed;
   right: calc(env(safe-area-inset-right, 0px) + 8px);
@@ -216,9 +175,9 @@ p, h1, h2, h3 { margin: 0; }
   text-shadow: 1px 1px 0 rgba(0, 0, 0, .6);
   pointer-events: none;
 }
-.btn-small { padding: 8px 12px 9px; }
+.btn-small { padding: 9px 12px 11px; }
 
-/* Panels: Shop, Inventar, Pause, Tod */
+/* Panels */
 .modal {
   position: fixed;
   inset: 0;
@@ -226,129 +185,141 @@ p, h1, h2, h3 { margin: 0; }
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: calc(env(safe-area-inset-top, 0px) + 12px) 16px calc(env(safe-area-inset-bottom, 0px) + 12px);
-  background: var(--modal-dim);
+  padding: calc(env(safe-area-inset-top, 0px) + 12px) 16px calc(env(safe-area-inset-bottom, 0px) + 14px);
+  background: rgba(10, 14, 24, .4);
 }
 .panel {
   width: min(780px, 100%);
   max-height: 100%;
   display: flex;
   flex-direction: column;
-  background: var(--panel-bg);
-  border: var(--panel-border);
-  border-radius: var(--panel-radius);
-  box-shadow: var(--panel-shadow);
-  color: var(--text);
-  text-shadow: var(--text-shadow);
+  background: linear-gradient(#e8edf3, #b9c3cf);
+  border: 3px solid var(--outline);
+  border-radius: 8px;
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .55), 0 6px 0 var(--outline), 0 16px 30px rgba(0, 0, 0, .35);
+  color: #ffffff;
+  text-shadow: var(--stroke-sm);
   overflow: hidden;
   animation: panelIn .28s cubic-bezier(.2, .9, .3, 1.2) both;
 }
-.panel.small { width: min(480px, 100%); }
+.panel.small { width: min(500px, 100%); }
 @keyframes panelIn { from { transform: translateY(24px) scale(.94); opacity: 0; } }
 .panel-head {
-  position: relative;
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 16px 14px;
-  background: var(--head-bg);
+  margin: 6px 6px 0;
+  padding: 8px 8px 8px 14px;
+  background: var(--grid), linear-gradient(var(--blue), var(--blue-lo));
+  border: 3px solid var(--outline);
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .4);
   color: #ffffff;
-  text-shadow: 2px 2px 0 #6e1712;
+  text-shadow: var(--stroke-sm);
 }
-.panel-head::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--head-trim); }
-.panel-head h2 { flex: 1; font: 24px/1 var(--font); }
+.panel-head.red { background: var(--grid), linear-gradient(var(--red), var(--red-lo)); }
+.panel-head h2 { flex: 1; font: 24px/1 var(--font); text-shadow: var(--stroke); }
+.panel-head .btn { padding: 10px 14px 12px; }
 .wallet { display: flex; align-items: center; gap: 6px; font-size: 24px; }
-.tabs { display: flex; gap: 8px; padding: 12px 16px 0; }
+.tabs { display: flex; gap: 8px; padding: 12px 12px 0; }
 .tab {
   font: 16px/1 var(--font);
-  padding: 9px 14px 10px;
-  border-radius: var(--btn-radius);
-  border: 3px solid var(--wood-edge);
-  background: #6e4524;
-  color: var(--text-soft);
-  text-shadow: var(--text-shadow);
+  padding: 9px 14px 11px;
+  border-radius: 6px;
+  border: 3px solid var(--outline);
+  background: var(--grid), linear-gradient(var(--slate), var(--slate-lo));
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .35);
+  color: #ffffff;
+  text-shadow: var(--stroke-sm);
   cursor: pointer;
   touch-action: manipulation;
 }
-.tab[aria-selected="true"] { background: #4f9a3c; color: #ffffff; }
+.tab[aria-selected="true"] { background: var(--grid), linear-gradient(var(--green), var(--green-lo)); }
 .scroll {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
   touch-action: pan-y;
   -webkit-overflow-scrolling: touch;
-  padding: 12px 16px 18px;
+  padding: 12px 12px 16px;
 }
-.scroll h3 { margin: 6px 0 10px; color: var(--text-soft); font: 16px var(--font); }
+.scroll h3 { margin: 4px 0 10px; color: #ffffff; text-shadow: var(--stroke-sm); font: 16px var(--font); }
 .scroll h3:not(:first-child) { margin-top: 18px; }
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
-.card {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 10px;
-  background: var(--card-bg);
-  border: var(--card-border);
-  border-radius: var(--card-radius);
-  color: var(--text);
-  text-shadow: var(--text-shadow);
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+.card, .pick, .lb-row, .me {
+  --g: linear-gradient(135deg, #46e08a, #22b8ff);
+  border: 3px solid var(--outline);
+  border-radius: 6px;
+  background: var(--grid), var(--g);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .4);
+  color: #ffffff;
+  text-shadow: var(--stroke-sm);
 }
+.card { display: flex; flex-direction: column; gap: 8px; padding: 10px; }
+.card:nth-child(4n+2), .pick:nth-child(4n+2) { --g: linear-gradient(135deg, #ffb341, #ff5f7a); }
+.card:nth-child(4n+3), .pick:nth-child(4n+3) { --g: linear-gradient(135deg, #b07cff, #4f8cff); }
+.card:nth-child(4n+4), .pick:nth-child(4n+4) { --g: linear-gradient(135deg, #ffd84d, #3fcf6a); }
 .card .prev { height: 66px; display: flex; align-items: center; justify-content: center; }
-.card canvas { image-rendering: pixelated; }
-.card .desc { color: var(--text-soft); line-height: 1.3; flex: 1; }
-.card .btn { width: 100%; padding: 9px 10px 10px; }
-.badge { align-self: flex-start; padding: 4px 10px 5px; border-radius: 4px; background: var(--good); color: #ffffff; text-shadow: 1px 1px 0 #234f19; }
-.empty { color: var(--text-soft); }
-.msg { margin: 10px 16px 0; padding: 8px 10px; border-radius: 4px; background: rgba(0, 0, 0, .35); color: #ffffff; text-shadow: none; }
+.card .desc { color: var(--yellow); line-height: 1.3; flex: 1; }
+.card .btn { width: 100%; padding: 10px 10px 12px; }
+.badge { align-self: flex-start; padding: 5px 10px 6px; border: 2px solid var(--outline); border-radius: 4px; background: linear-gradient(var(--green), var(--green-lo)); color: #ffffff; text-shadow: var(--stroke-sm); }
+.empty { color: #ffffff; text-shadow: var(--stroke-sm); }
+.msg { margin: 10px 12px 0; padding: 8px 10px; border: 2px solid var(--outline); border-radius: 4px; background: rgba(14, 18, 28, .7); color: #ffffff; }
 .panel-body { display: flex; flex-direction: column; gap: 14px; padding: 16px; }
 .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; text-align: center; }
-.stat-num { display: block; font-size: 24px; color: #ffffff; }
-.stat-lbl { display: block; margin-top: 4px; color: var(--text-soft); font-size: 8px; }
+.stat-num { display: block; font-size: 24px; color: #ffffff; text-shadow: var(--stroke); }
+.stat-lbl { display: block; margin-top: 6px; color: #ffffff; font-size: 8px; }
 .row { display: flex; gap: 12px; }
 .row .btn { flex: 1; }
 
 /* Katze einrichten */
-.field-lbl { color: var(--text-soft); }
+.field-lbl { color: #ffffff; text-shadow: var(--stroke-sm); }
 .name-input {
   width: 100%;
   margin: 8px 0 14px;
   padding: 12px 12px 13px;
-  border: 3px solid var(--wood-edge);
-  border-radius: 4px;
-  background: #5e3a1d;
+  border: 3px solid var(--outline);
+  border-radius: 6px;
+  background: rgba(14, 18, 28, .7);
   color: #ffffff;
   font: 16px/1 var(--font);
-  text-shadow: var(--text-shadow);
+  text-shadow: var(--stroke-sm);
   user-select: text;
   -webkit-user-select: text;
   touch-action: manipulation;
 }
-.name-input::placeholder { color: rgba(255, 255, 255, .45); }
-.name-input:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
-.breeds { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 8px 0 18px; }
-.breed {
+.name-input::placeholder { color: rgba(255, 255, 255, .5); }
+.name-input:focus-visible { outline: 3px solid #ffffff; outline-offset: 2px; }
+.picks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 8px 0 6px; }
+.picks.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.pick {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 6px;
   padding: 10px 6px;
-  border: 3px solid var(--wood-edge);
-  border-radius: 5px;
-  background: var(--card-bg);
-  color: #ffffff;
-  text-shadow: var(--text-shadow);
   font: 16px/1.2 var(--font);
   text-align: center;
   cursor: pointer;
   touch-action: manipulation;
 }
-.breed .hair { color: var(--text-soft); font-size: 8px; }
-.breed[aria-checked="true"] { border-color: #ffffff; box-shadow: 0 0 0 3px #5fae3e; }
-.breed:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
-.panel-head .setup-ok { font-size: 16px; padding: 12px 16px 12px; }
-#setupMsg { margin: 0 0 8px; }
-.me { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.pick .hair { font-size: 8px; color: var(--yellow); }
+.pick[aria-checked="true"] { border-color: #ffffff; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .6), 0 0 0 3px var(--outline), 0 0 0 6px var(--green); }
+.me { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 10px; }
 .me .who { flex: 1; min-width: 140px; display: flex; flex-direction: column; gap: 6px; }
+.me .who .desc { color: var(--yellow); }
+
+/* Bestenliste */
+.lb { display: flex; flex-direction: column; gap: 8px; }
+.lb-row { display: grid; grid-template-columns: 44px 1fr auto; align-items: center; gap: 10px; padding: 8px 12px 9px; }
+.lb-row:nth-child(n+4) { --g: linear-gradient(135deg, #7d8a9c, #56606f); }
+.lb-row:nth-child(1) { --g: linear-gradient(135deg, #ffd84d, #f29a00); }
+.lb-row:nth-child(2) { --g: linear-gradient(135deg, #e3e9f0, #9aa6b6); }
+.lb-row:nth-child(3) { --g: linear-gradient(135deg, #f0a46a, #b0632a); }
+.lb-row.me-row { border-color: #ffffff; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .6), 0 0 0 3px var(--green); }
+.lb-rank { font-size: 24px; text-shadow: var(--stroke); }
+.lb-best { font-size: 24px; text-align: right; text-shadow: var(--stroke); }
+.lb-sub { display: block; font-size: 8px; color: var(--yellow); margin-top: 4px; }
 
 /* Level-/Event-Titel */
 #banner {
@@ -368,9 +339,8 @@ p, h1, h2, h3 { margin: 0; }
   transition: opacity .3s, transform .3s cubic-bezier(.2, .9, .3, 1.4);
 }
 #banner.show { opacity: 1; transform: none; }
-#banner .lvl { font-size: 48px; line-height: 1; color: #ffffff; text-shadow: 0 3px 0 rgba(40, 22, 8, .45); }
-#banner .name { color: #ffffff; text-shadow: var(--text-shadow); }
-#banner .tip { color: #ffffff; text-shadow: var(--text-shadow); }
+#banner .lvl { font-size: 48px; line-height: 1; color: #ffffff; text-shadow: var(--stroke); }
+#banner .name, #banner .tip { color: #ffffff; text-shadow: var(--stroke-sm); }
 
 /* Sprung-Bewertung */
 #combo {
@@ -382,13 +352,13 @@ p, h1, h2, h3 { margin: 0; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   pointer-events: none;
   opacity: 0;
 }
 #combo.pop { animation: combo 1.15s cubic-bezier(.2, .9, .3, 1) both; }
-#comboWord { font-size: 32px; line-height: 1; color: #ffffff; text-shadow: 3px 3px 0 rgba(0, 0, 0, .55); }
-#comboMult { font-size: 24px; line-height: 1; color: #ffffff; text-shadow: 3px 3px 0 rgba(0, 0, 0, .55); }
+#comboWord { font-size: 32px; line-height: 1; color: #ffffff; text-shadow: var(--stroke); }
+#comboMult { font-size: 24px; line-height: 1; color: #ffffff; text-shadow: var(--stroke); }
 @keyframes combo {
   0% { opacity: 0; transform: scale(2.4) rotate(-10deg); }
   12% { opacity: 1; transform: scale(.85) rotate(5deg); }
@@ -396,7 +366,6 @@ p, h1, h2, h3 { margin: 0; }
   32% { transform: scale(1) rotate(0); }
   70% { opacity: 1; transform: translateY(0); }
   100% { opacity: 0; transform: translateY(-36px) scale(.9); }
-}
 }
 @keyframes fadeout { 0%, 70% { opacity: 1; } 100% { opacity: 0; } }
 
@@ -406,7 +375,7 @@ p, h1, h2, h3 { margin: 0; }
   right: 16px;
   text-align: center;
   color: #ffffff;
-  text-shadow: var(--text-shadow);
+  text-shadow: var(--stroke-sm);
   pointer-events: none;
   transition: opacity .6s;
 }
@@ -420,9 +389,9 @@ p, h1, h2, h3 { margin: 0; }
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--wipe);
+  background: var(--grid), linear-gradient(var(--blue), var(--blue-lo));
   color: #ffffff;
-  text-shadow: var(--text-shadow);
+  text-shadow: var(--stroke);
   font-size: 32px;
   pointer-events: none;
   clip-path: circle(0% at 12% 88%);
@@ -434,22 +403,21 @@ p, h1, h2, h3 { margin: 0; }
 
 @media (orientation: portrait) {
   .hud { flex-wrap: wrap; }
-  .breeds { grid-template-columns: 1fr; }
-  .breed { display: grid; grid-template-columns: auto 1fr; align-items: center; justify-items: start; column-gap: 14px; row-gap: 4px; padding: 8px 12px; text-align: left; }
-  .breed canvas { grid-row: 1 / 3; }
   .home-title { top: calc(env(safe-area-inset-top, 0px) + 74px); }
   .title { font-size: 40px; }
   .stats { grid-template-columns: repeat(2, 1fr); }
+  .picks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (orientation: landscape) and (max-height: 560px) {
   #banner { top: calc(env(safe-area-inset-top, 0px) + 84px); }
-  .grid { grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 10px; }
-  .card .prev { height: 52px; }
   #banner .lvl { font-size: 40px; }
   #combo { top: 54%; }
   .title { font-size: 40px; }
   .btn-start { font-size: 24px; padding: 13px 18px 15px; }
-  .home-menu { gap: 10px; }
+  .home-menu { gap: 8px; }
+  .home-menu .btn { padding-top: 11px; padding-bottom: 13px; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 10px; }
+  .card .prev { height: 52px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .panel, .box.bump { animation: none; }
@@ -458,10 +426,12 @@ p, h1, h2, h3 { margin: 0; }
   #wipe.closing { animation: none; clip-path: none; opacity: 1; }
   #wipe.opening { animation: fadeout .3s forwards; clip-path: none; }
 }
+
+.new-best { color: var(--yellow); text-shadow: var(--stroke-sm); }
 </style>
 </head>
 <body class="at-home">
-<canvas id="game" aria-label="Spielfeld: eine Katze springt auf der Alm über Adrian und Valentina, im Hintergrund schleckt Kirby Schnee"></canvas>
+<canvas id="game" aria-label="Spielfeld: eine Katze springt auf der Alm über Hindernisse, im Hintergrund schleckt Kirby Schnee"></canvas>
 
 <div class="hud">
   <div class="box play-only">
@@ -475,10 +445,10 @@ p, h1, h2, h3 { margin: 0; }
   <div class="box fishbox" id="fishBox" aria-label="Fische">
     <svg class="fish-ico" viewBox="0 0 9 5" shape-rendering="crispEdges" aria-hidden="true"><path fill="#ff9f43" d="M2 0h4v1h1v1h1V1h1v3H8V3H7v1H6v1H2V4H1V3H0V2h1V1h1z"/><path fill="#1e1c26" d="M2 1h1v1H2z"/></svg><span id="fish">0</span>
   </div>
-  <button class="btn btn2 icon-btn" id="reload" type="button" aria-label="Neu laden" title="Neu laden">
+  <button class="btn icon-btn" id="reload" type="button" aria-label="Neu laden" title="Neu laden">
     <svg viewBox="0 0 10 10" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M3 1h4v1h1v1h1v2H8V4H7V3H3v1H2v3h1v1h3v1H2V8H1V3h1V2h1zM7 5h3v1H9v1H8V6H7z"/></svg>
   </button>
-  <button class="btn btn2 icon-btn" id="mute" type="button" aria-pressed="false" aria-label="Ton aus" title="Ton">
+  <button class="btn icon-btn" id="mute" type="button" aria-pressed="false" aria-label="Ton aus" title="Ton">
     <svg class="on" viewBox="0 0 10 10" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M1 3h2V2h1V1h1v8H4V8H3V7H1zM7 3h1v4H7zM9 2h1v6H9z"/></svg>
     <svg class="off" viewBox="0 0 10 10" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M1 3h2V2h1V1h1v8H4V8H3V7H1z"/><path fill="#ff5555" d="M6 3h1v1h1V3h1v1H8v1h1v1H8v1H7V6H6V5h1V4H6z"/></svg>
   </button>
@@ -487,11 +457,12 @@ p, h1, h2, h3 { margin: 0; }
 <div id="home">
   <div class="home-title">
     <h1 class="title">Cat Jumper</h1>
-    <p class="subtitle" id="subtitle">Spring über Adrian &amp; Valentina!</p>
+    <p class="subtitle" id="subtitle">Spring über alles!</p>
   </div>
   <nav class="home-menu" aria-label="Hauptmenü">
-    <button class="btn btn2" id="shopBtn" type="button">Shop</button>
-    <button class="btn btn2" id="invBtn" type="button">Inventar</button>
+    <button class="btn btn-blue" id="shopBtn" type="button">Shop</button>
+    <button class="btn btn-brown" id="invBtn" type="button">Inventar</button>
+    <button class="btn btn-purple" id="boardBtn" type="button" style="grid-column: 1 / -1">Bestenliste</button>
     <button class="btn btn-start" id="startBtn" type="button">Start</button>
   </nav>
   <div class="home-side">
@@ -504,13 +475,36 @@ p, h1, h2, h3 { margin: 0; }
 
 <div id="setup" class="modal" hidden>
   <div class="panel small" role="dialog" aria-modal="true" aria-labelledby="setupTitle">
-    <div class="panel-head"><h2 id="setupTitle">Deine Katze</h2><button class="btn btn2" id="setupBack" type="button" hidden>Zurück</button><button class="btn btn-start setup-ok" id="setupOk" type="button">Fertig</button></div>
+    <div class="panel-head">
+      <h2 id="setupTitle">Deine Katze</h2>
+      <button class="btn btn-red" id="setupBack" type="button" hidden>Zurück</button>
+      <button class="btn" id="setupNext" type="button">Weiter</button>
+    </div>
     <div class="scroll">
-      <label class="field-lbl" for="catName">Wie heißt deine Katze?</label>
-      <input class="name-input" id="catName" type="text" maxlength="12" autocomplete="off" autocapitalize="words" spellcheck="false" placeholder="z. B. Mimi">
-      <p class="field-lbl">Wähle deine Katze</p>
-      <div class="breeds" id="breedList" role="radiogroup" aria-label="Katze"></div>
       <p class="msg" id="setupMsg" hidden></p>
+      <div id="step1">
+        <label class="field-lbl" for="catName">Wie heißt deine Katze?</label>
+        <input class="name-input" id="catName" type="text" maxlength="12" autocomplete="off" autocapitalize="words" spellcheck="false" placeholder="z. B. Mimi">
+        <p class="field-lbl">Wähle das Fell</p>
+        <div class="picks" id="breedList" role="radiogroup" aria-label="Fell"></div>
+      </div>
+      <div id="step2" hidden>
+        <p class="field-lbl">Dick oder dünn?</p>
+        <div class="picks two" id="bodyList" role="radiogroup" aria-label="Figur"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="board" class="modal" hidden>
+  <div class="panel small" role="dialog" aria-modal="true" aria-labelledby="boardTitle">
+    <div class="panel-head">
+      <h2 id="boardTitle">Bestenliste</h2>
+      <button class="btn close-x" type="button" data-close aria-label="Schließen"><svg viewBox="0 0 7 7" shape-rendering="crispEdges" aria-hidden="true"><path fill="#fff" d="M0 0h2v1h1v1h1V1h1V0h2v2H6v1H5v1h1v1h1v2H5V6H4V5H3v1H2v1H0V5h1V4h1V3H1V2H0z"/></svg></button>
+    </div>
+    <div class="scroll">
+      <p class="msg" id="boardMsg" hidden></p>
+      <div class="lb" id="boardList"></div>
     </div>
   </div>
 </div>
@@ -520,7 +514,7 @@ p, h1, h2, h3 { margin: 0; }
     <div class="panel-head">
       <h2 id="shopTitle">Shop</h2>
       <span class="wallet" aria-label="Deine Fische"><svg class="fish-ico" viewBox="0 0 9 5" shape-rendering="crispEdges" aria-hidden="true"><path fill="#ff9f43" d="M2 0h4v1h1v1h1V1h1v3H8V3H7v1H6v1H2V4H1V3H0V2h1V1h1z"/><path fill="#1e1c26" d="M2 1h1v1H2z"/></svg><span id="shopWallet">0</span></span>
-      <button class="btn btn2" type="button" data-close>Zurück</button>
+      <button class="btn close-x" type="button" data-close aria-label="Schließen"><svg viewBox="0 0 7 7" shape-rendering="crispEdges" aria-hidden="true"><path fill="#fff" d="M0 0h2v1h1v1h1V1h1V0h2v2H6v1H5v1h1v1h1v2H5V6H4V5H3v1H2v1H0V5h1V4h1V3H1V2H0z"/></svg></button>
     </div>
     <div class="tabs" role="tablist">
       <button class="tab" id="tabUp" type="button" role="tab" aria-selected="true">Upgrades</button>
@@ -536,7 +530,7 @@ p, h1, h2, h3 { margin: 0; }
     <div class="panel-head">
       <h2 id="invTitle">Inventar</h2>
       <span class="wallet" aria-label="Deine Fische"><svg class="fish-ico" viewBox="0 0 9 5" shape-rendering="crispEdges" aria-hidden="true"><path fill="#ff9f43" d="M2 0h4v1h1v1h1V1h1v3H8V3H7v1H6v1H2V4H1V3H0V2h1V1h1z"/><path fill="#1e1c26" d="M2 1h1v1H2z"/></svg><span id="invWallet">0</span></span>
-      <button class="btn btn2" type="button" data-close>Zurück</button>
+      <button class="btn close-x" type="button" data-close aria-label="Schließen"><svg viewBox="0 0 7 7" shape-rendering="crispEdges" aria-hidden="true"><path fill="#fff" d="M0 0h2v1h1v1h1V1h1V0h2v2H6v1H5v1h1v1h1v2H5V6H4V5H3v1H2v1H0V5h1V4h1V3H1V2H0z"/></svg></button>
     </div>
     <div class="scroll">
       <h3>Deine Katze</h3>
@@ -553,10 +547,10 @@ p, h1, h2, h3 { margin: 0; }
   <div class="panel small" role="dialog" aria-modal="true" aria-labelledby="pauseTitle">
     <div class="panel-head"><h2 id="pauseTitle">Pause</h2></div>
     <div class="panel-body">
-      <p>Adrian und Valentina warten.</p>
+      <p>Alle warten auf dich.</p>
       <div class="row">
         <button class="btn btn-start" id="resumeBtn" type="button">Weiter</button>
-        <button class="btn btn2" id="pauseLobbyBtn" type="button">Lobby</button>
+        <button class="btn btn-red" id="pauseLobbyBtn" type="button">Lobby</button>
       </div>
     </div>
   </div>
@@ -564,18 +558,19 @@ p, h1, h2, h3 { margin: 0; }
 
 <div id="over" class="modal" hidden>
   <div class="panel small" role="dialog" aria-modal="true" aria-labelledby="overTitle">
-    <div class="panel-head"><h2 id="overTitle">Autsch!</h2></div>
+    <div class="panel-head red"><h2 id="overTitle">Autsch!</h2></div>
     <div class="panel-body">
-      <p id="quip">Adrian hat dich erwischt.</p>
+      <p id="quip">Erwischt!</p>
       <div class="stats">
         <div><span class="stat-num" id="rFish">0</span><span class="stat-lbl">Fische</span></div>
         <div><span class="stat-num" id="rLevel">1</span><span class="stat-lbl">Level</span></div>
         <div><span class="stat-num" id="rJumped">0</span><span class="stat-lbl">Übersprungen</span></div>
         <div><span class="stat-num" id="rCombo">0x</span><span class="stat-lbl">Beste Serie</span></div>
       </div>
+      <p class="new-best" id="newBest" hidden>Neuer Rekord in der Bestenliste!</p>
       <div class="row">
         <button class="btn btn-start" id="againBtn" type="button">Nochmal</button>
-        <button class="btn btn2" id="lobbyBtn" type="button">Lobby</button>
+        <button class="btn btn-red" id="lobbyBtn" type="button">Lobby</button>
       </div>
     </div>
   </div>
@@ -669,7 +664,7 @@ const HITBOX = .8;
 // 8 Lauf-Bilder (Hoppel-Galopp), Bilder für Absprung, Fallen, Stehen, Schwanzwedeln und Blinzeln.
 // Drei Katzen mit unterschiedlich langem Fell, dazu Cosmetics (Hut, Kette, Pulli ...), die nicht zur Kollision zählen.
 const CAT_W = 26, CAT_H = 22, CAT_TOP = 4, RUN_FRAMES = 8;
-const CAT_BASE = { b: '#fbfbf7', s: '#dfe2e9', d: '#c9ced8', p: '#ffb3c1', n: '#ff7f9e', c: '#ffc7d4', e: '#2b3a6b', h: '#ffffff', x: '#d6333f' };
+const CAT_BASE = { o: '#8a5a3a', b: '#fbfbf7', s: '#dfe2e9', d: '#c9ced8', p: '#ffb3c1', n: '#ff7f9e', c: '#ffc7d4', e: '#2b3a6b', h: '#ffffff', x: '#d6333f' };
 const COS_PAL = { H: '#3f6b3a', J: '#d23b34', K: '#f4f4f0', L: '#ffffff', G: '#ffcc33', Y: '#d99a1e', Q: '#1b1b22', R: '#3c6fd6', M: '#e8edf5' };
 const COS_CHARS = Object.keys(COS_PAL).join('');
 function catRows(pose, look) {
@@ -728,17 +723,18 @@ function catRows(pose, look) {
     if (fur === 2 && u > .15 && i % 2) set(x + 1.4, y + .2, 'q');
   }
   set(E[0] + 1, E[1] - .6, 'u'); // Ringel an der Spitze
-  // kleiner, runder Körper mit Schatten am Bauch
-  ell(10.2, 11.7 + bob, 5.6, 3.3, 's');
-  ell(10.2, 11.2 + bob, 5.5, 3, 'b');
+  // kleiner, runder Körper mit Schatten am Bauch - dünn oder dick
+  const B = look.body === 'dick' ? { cx: 10.2, cy: 11.4, rx: 6.4, ry: 3.8 } : { cx: 10.4, cy: 11.1, rx: 5.2, ry: 2.4 };
+  ell(B.cx, B.cy + .5 + bob, B.rx + .1, B.ry + .3, 's');
+  ell(B.cx, B.cy + bob, B.rx, B.ry, 'b');
   // Fell: Fransen am Bauch und flauschiger Rücken (Halblang- und Langhaar)
   if (fur) {
-    for (let x = 5; x <= 15; x++) {
-      const k = 1 - ((x + .5 - 10.2) / 5.5) ** 2;
+    for (let x = Math.ceil(B.cx - B.rx); x <= B.cx + B.rx; x++) {
+      const k = 1 - ((x + .5 - B.cx) / B.rx) ** 2;
       if (k <= 0) continue;
-      const half = 3 * Math.sqrt(k);
-      if (fur === 2 || x % 2 === 0) set(x, 11.2 + bob + half + .8 + (fur === 2 && x % 2 ? .9 : 0), 's');
-      if ((fur === 2 && x % 2 === 0) || x % 3 === 0) set(x, 11.2 + bob - half - .6, 'b');
+      const half = B.ry * Math.sqrt(k);
+      if (fur === 2 || x % 2 === 0) set(x, B.cy + bob + half + .8 + (fur === 2 && x % 2 ? .9 : 0), 's');
+      if ((fur === 2 && x % 2 === 0) || x % 3 === 0) set(x, B.cy + bob - half - .6, 'b');
     }
   }
   // großer, runder Kopf mit Ohren
@@ -749,6 +745,7 @@ function catRows(pose, look) {
   }
   ell(18.6, hy, 5.1, 4.5, 'b');
   ell(18.6, hy + .5, 4.9, 4.3, 'b');
+  if (look.body === 'dick') ell(18.6, hy + 1.4, 5.5, 3.4, 'b'); // Pausbäckchen
   if (fur) { set(13.3, hy + 2, 'b'); set(24, hy + 2, 'b'); }
   if (fur === 2) { set(13.1, hy + 3, 'b'); set(24.2, hy + 3, 'b'); set(12.8, hy + 1, 'b'); }
   tri(13.9, hy - 2.2, 14.6, hy - 6.4, 17.6, hy - 3.9, 'a');
@@ -768,7 +765,14 @@ function catRows(pose, look) {
   // Beine auf dieser Seite
   leg(14.6, j, pose.fn, 'g');
   leg(8, j, pose.bn, 'g');
-  // Fellmuster: Streifen (getigert)
+  // Fellmuster: braune Flecken (weiß-braun) oder Streifen (getigert)
+  if (look.breed.patches) {
+    for (let y = 0; y < CAT_H; y++) for (let x = 0; x < CAT_W; x++) {
+      if (g[y][x] !== 'b') continue;
+      const yy = y - oy, xx = x - ox;
+      if ((yy < B.cy - .3 + bob && xx <= 15.5) || (yy <= hy - 1.6 && xx >= 14) || (xx >= 20.4 && xx <= 23.4 && yy >= hy - 1.6 && yy <= hy + .6)) g[y][x] = 'o';
+    }
+  }
   if (look.breed.stripes) {
     for (let y = 0; y < CAT_H; y++) for (let x = 0; x < CAT_W; x++) {
       if (g[y][x] !== 'b') continue;
@@ -781,8 +785,9 @@ function catRows(pose, look) {
   if (cos.has('pulli')) { // Strickpulli über dem Körper, mit weißem Zickzack
     for (let y = 0; y < CAT_H; y++) for (let x = 0; x < CAT_W; x++) {
       const yy = y - oy, xx = x - ox;
-      if (!'bst'.includes(g[y][x]) || yy < 7.6 + bob || yy > 13.6 + bob || xx > 16.4 || xx < 4.5) continue;
-      g[y][x] = (Math.round(yy - bob) === 11 && (xx % 2 === 0)) || (Math.round(yy - bob) === 12 && (xx % 2 === 1)) ? 'M' : 'R';
+      if (!'bsto'.includes(g[y][x]) || yy < B.cy - B.ry - .8 + bob || yy > B.cy + B.ry + .6 + bob || xx > 16.4 || xx < B.cx - B.rx - 1) continue;
+      const zy = Math.round(yy - bob - B.cy);
+      g[y][x] = (zy === 0 && xx % 2 === 0) || (zy === 1 && xx % 2 === 1) ? 'M' : 'R';
     }
   }
   if (cos.has('socken')) { // Ringelsocken an allen vier Pfoten
@@ -838,11 +843,12 @@ const POSE_STAND = { fn: [0, 0], ff: [.15, .05], bn: [0, 0], bf: [-.15, -.05], t
 const POSE_UP = { fn: [1.1, 1.4], ff: [.95, 1.25], bn: [-1, -1.3], bf: [-.85, -1.15], tail: -1.2, bob: 0 };
 const POSE_DOWN = { fn: [.5, .25], ff: [.35, .15], bn: [-.2, -.9], bf: [-.35, -1], tail: .8, bob: 0 };
 
-// Die drei Katzen zur Auswahl: Farbe und Felllänge
+// Die vier Katzen zur Auswahl: Fellfarbe und Felllänge
 const BREEDS = [
-  { id: 'weiss', name: 'Schneeweiß', hair: 'Kurzhaar', fur: 0, pal: {} },
-  { id: 'grau', name: 'Grau getigert', hair: 'Halblanghaar', fur: 1, pal: { b: '#b8bcc6', s: '#979ca8', d: '#80858f', u: '#80858f', e: '#2f5d34', c: '#e6a9b8' }, stripes: '#9a9fab' },
-  { id: 'rot', name: 'Rotes Fellknäuel', hair: 'Langhaar', fur: 2, pal: { b: '#f2a14a', s: '#d27a2a', d: '#b8661f', u: '#c8641c', p: '#ffc1a8', e: '#2f5d34', c: '#ffb08a' }, stripes: '#e48c35' },
+  { id: 'weiss', name: 'Weiß', hair: 'Kurzhaar', fur: 0, pal: {} },
+  { id: 'weissbraun', name: 'Weiß-Braun', hair: 'Langhaar', fur: 2, pal: { a: '#8a5a3a', q: '#8a5a3a', u: '#6e4429', e: '#2f5d34' }, patches: true },
+  { id: 'orange', name: 'Orange', hair: 'Halblanghaar', fur: 1, pal: { b: '#f2a14a', s: '#d27a2a', d: '#b8661f', u: '#c8641c', p: '#ffc1a8', e: '#2f5d34', c: '#ffb08a' }, stripes: '#e48c35' },
+  { id: 'braun', name: 'Braun', hair: 'Kurzhaar', fur: 0, pal: { b: '#8f5e3c', s: '#734a2d', d: '#5e3b22', u: '#4e2f1b', p: '#d9a08f', e: '#8fd16a', c: '#c98a7a' }, stripes: '#7a4e30' },
 ];
 // Cosmetics: pro Körperstelle ist eines gleichzeitig angezogen
 const COSMETICS = [
@@ -856,8 +862,8 @@ const COSMETICS = [
   { id: 'socken', slot: 'feet', name: 'Ringelsocken', price: 30, desc: 'Rot-weiß geringelt, an allen vier Pfoten.' },
 ];
 const catCache = {};
-function catSet(breedId, cosIds = []) {
-  const key = breedId + '|' + [...cosIds].sort().join(',');
+function catSet(breedId, cosIds = [], body = 'duenn') {
+  const key = breedId + '|' + body + '|' + [...cosIds].sort().join(',');
   if (!catCache[key]) {
     const breed = BREEDS.find((b) => b.id === breedId) || BREEDS[0];
     const cos = new Set(cosIds);
@@ -867,7 +873,7 @@ function catSet(breedId, cosIds = []) {
     pal.a = breed.pal.a || pal.b;
     pal.u = breed.pal.u || pal.s;
     pal.t = breed.stripes || pal.s;
-    const look = { breed, cos };
+    const look = { breed, cos, body };
     const mk = (pose) => shrinkHitbox(sprite(catRows(pose, look), pal, true, 'w', COS_CHARS), HITBOX);
     catCache[key] = {
       sparkle: cos.has('krone') ? '#fff6b0' : null,
@@ -883,8 +889,8 @@ function catSet(breedId, cosIds = []) {
 }
 let cat = null;
 
-const ADRIAN_PAL = { h: '#5a3a22', f: '#f2c29b', k: INK, m: '#b0443c', s: '#4f7fd6', p: '#2f3b5c', o: '#1c1c24', r: '#d6333f', y: '#ffd43b', x: '#e03a3e', w: '#d8dee8' };
-const ADRIAN_LEGS = [
+const PERSON_PAL = { h: '#5a3a22', f: '#f2c29b', k: INK, m: '#b0443c', s: '#4f7fd6', p: '#2f3b5c', o: '#1c1c24', r: '#d6333f', y: '#ffd43b', x: '#e03a3e', w: '#d8dee8' };
+const PERSON_LEGS = [
   '..ssssssss..',
   '..pppppppp..',
   '..ppp..ppp..',
@@ -892,7 +898,7 @@ const ADRIAN_LEGS = [
   '..ppp..ppp..',
   '.oooo..oooo.',
 ];
-const adrian = {
+const hiker = {
   stand: sprite([
     '...hhhhhh...',
     '..hhhhhhhh..',
@@ -907,8 +913,8 @@ const adrian = {
     'ssssssssssss',
     'f.ssssssss.f',
     'f.ssssssss.f',
-    ...ADRIAN_LEGS,
-  ], ADRIAN_PAL),
+    ...PERSON_LEGS,
+  ], PERSON_PAL),
   cheer: sprite([
     'f..........f',
     'f..hhhhhh..f',
@@ -923,8 +929,8 @@ const adrian = {
     '..ssssssss..',
     '..ssssssss..',
     '..ssssssss..',
-    ...ADRIAN_LEGS,
-  ], ADRIAN_PAL),
+    ...PERSON_LEGS,
+  ], PERSON_PAL),
   glide: sprite([
     '.....yyyyyyyyyyyy.....',
     '...yyrrrrrrrrrrrryy...',
@@ -944,7 +950,7 @@ const adrian = {
     '.......pppppppp.......',
     '.......pp....pp.......',
     '.......oo....oo.......',
-  ], ADRIAN_PAL),
+  ], PERSON_PAL),
   ski: sprite([
     '......hhhh........',
     '.....hhhhhh.......',
@@ -960,10 +966,10 @@ const adrian = {
     '..w.ppp.....ppp...',
     'x...ooo.....ooo...',
     '.xxxxxxxxxxxxxxxxx',
-  ], ADRIAN_PAL),
+  ], PERSON_PAL),
 };
 
-const GIRL_PAL = { ...ADRIAN_PAL, h: '#8b5a2b', d: '#c45fa0', y: '#ffd43b' };
+const GIRL_PAL = { ...PERSON_PAL, h: '#8b5a2b', d: '#c45fa0', y: '#ffd43b' };
 const girl = {
   stand: sprite([
     '...hhhhhh...',
@@ -1033,19 +1039,21 @@ const starSpr = sprite([
   '.yy.yy.',
   'yy...yy',
 ], { y: '#ffe14d', o: '#fff7b0' });
-// Schneebälle für die Lawine (Radius 4 bis 6)
-const snowSpr = {};
+// Rote Wollknäuel (Radius 4 bis 6) mit Fadenlinien
+const yarnSpr = {};
 for (const r of [4, 5, 6]) {
   const n = r * 2 + 1, rows = [];
   for (let y = 0; y < n; y++) {
     let row = '';
     for (let x = 0; x < n; x++) {
       const dx = x - r, dy = y - r, d = dx * dx + dy * dy;
-      row += d > r * r + r * .6 ? '.' : (dx + dy > r * .6 ? 'm' : (d < 2 && dx < 0 ? 'h' : 'n'));
+      if (d > r * r + r * .6) { row += '.'; continue; }
+      if (dx + dy < -r * .7 && d < r * r * .7) row += 'h';
+      else row += ((Math.round(dx * .8 + dy * 1.3) % 3) + 3) % 3 === 0 ? 'R' : 'r';
     }
     rows.push(row);
   }
-  snowSpr[r] = sprite(rows, { n: '#f4f8ff', m: '#c3d3ea', h: '#ffffff' });
+  yarnSpr[r] = sprite(rows, { r: '#d8322b', R: '#9e1f1a', h: '#ff7a6e' });
 }
 // Symbole für die Upgrades im Shop
 const ICON_SPR = {
@@ -1158,9 +1166,9 @@ const STARS = Array.from({ length: 70 }, () => ({ x: Math.random(), y: Math.rand
 /* ---------- Level ---------- */
 const LEVELS = [
   { name: 'Almwiese', tip: 'Tippen = springen', at: 0, speed: 140, gap: [.95, 1.7], pats: { stand: 6, cheer: 2 } },
-  { name: 'Adrian-Turm', tip: 'Neu: Sprung in der Luft! Nochmal tippen', at: 250, speed: 158, gap: [.9, 1.6], pats: { stand: 3, cheer: 2, duo: 3, tower: 3 } },
-  { name: 'Gleitschirm', tip: 'Fliegt Adrian hoch, lauf unten durch', at: 550, speed: 176, gap: [.85, 1.55], pats: { stand: 2, duo: 2, tower: 2, glideLow: 3, glideHigh: 3 } },
-  { name: 'Skipiste', tip: 'Ski-Adrian ist schneller, als du denkst', at: 900, speed: 194, gap: [.8, 1.45], pats: { stand: 2, cheer: 1, duo: 2, tower: 2, glideLow: 2, glideHigh: 2, ski: 4 } },
+  { name: 'Menschenturm', tip: 'Neu: Sprung in der Luft! Nochmal tippen', at: 250, speed: 158, gap: [.9, 1.6], pats: { stand: 3, cheer: 2, duo: 3, tower: 3 } },
+  { name: 'Gleitschirm', tip: 'Fliegt jemand hoch, lauf unten durch', at: 550, speed: 176, gap: [.85, 1.55], pats: { stand: 2, duo: 2, tower: 2, glideLow: 3, glideHigh: 3 } },
+  { name: 'Skipiste', tip: 'Skifahrer sind schneller, als du denkst', at: 900, speed: 194, gap: [.8, 1.45], pats: { stand: 2, cheer: 1, duo: 2, tower: 2, glideLow: 2, glideHigh: 2, ski: 4 } },
   { name: 'Alpenglühen', tip: 'Jetzt kommen sie zu dritt', at: 1300, speed: 212, gap: [.75, 1.4], pats: { stand: 1, duo: 2, trio: 3, tower: 3, glideLow: 2, glideHigh: 2, ski: 3, combo: 2 } },
   { name: 'Sternennacht', tip: 'Kirby schaut zu', at: 1750, speed: 230, gap: [.7, 1.3], pats: { stand: 1, cheer: 1, duo: 2, trio: 3, tower: 3, glideLow: 2, glideHigh: 2, ski: 3, combo: 3 } },
 ];
@@ -1241,7 +1249,10 @@ const save = {
   name: store.get('cj-name', ''),
   breed: store.get('cj-breed', 'weiss'),
   wear: store.get('cj-wear', {}),
+  body: store.get('cj-body', 'duenn'),
+  nameKey: store.get('cj-namekey', ''),
 };
+if (!BREEDS.some((b) => b.id === save.breed)) save.breed = save.breed === 'rot' ? 'orange' : 'weiss';
 // Früher gekaufte Farb-Skins gibt es nicht mehr: die Fische dafür gibt es zurück
 const OLD_SKIN_PRICES = { grau: 30, schwarz: 40, tiger: 60, siam: 80, gold: 150, galaxie: 200 };
 for (const k of [...save.owned]) {
@@ -1253,6 +1264,8 @@ function persist() {
   store.set('cj-name', save.name);
   store.set('cj-breed', save.breed);
   store.set('cj-wear', save.wear);
+  store.set('cj-body', save.body);
+  store.set('cj-namekey', save.nameKey);
 }
 persist();
 const has = (key) => save.owned.has(key);
@@ -1263,7 +1276,7 @@ const UPGRADES = [
   { id: 'lucky', name: 'Glückspfote', price: 120, desc: 'Mehr Fische auf der Strecke und bei Events.' },
 ];
 const wearing = () => Object.values(save.wear).filter(Boolean);
-const myCat = () => catSet(save.breed, wearing());
+const myCat = () => catSet(save.breed, wearing(), save.body);
 const catName = () => save.name || 'Deine Katze';
 cat = myCat();
 
@@ -1271,7 +1284,7 @@ cat = myCat();
 const V0 = 290;      // erster Sprung (Pixel/s)
 const V2 = 265;      // Sprung in der Luft
 const GRAV = 1250;
-const OVER_QUIPS = ['{n} hat {k} erwischt.', '{n} steht noch.', '{n} 1, {k} 0.', '{n} war im Weg.', '{n} lässt grüßen.', 'Kirby hat nichts gesehen.'];
+const OVER_QUIPS = ['Erwischt!', 'Da stand jemand im Weg.', '{k} war knapp zu langsam.', 'Ups, Zusammenstoß!', 'Das nächste Mal klappt es.', 'Kirby hat nichts gesehen.'];
 
 let mode = 'home';
 const P = { x: 24, y: 0, vy: 0, grounded: true, jumps: 0, anim: 0, buffer: 0, blink: 0, airT: 0, land: 0, flip: 0, jumpPassed: false, landT: 0, checkReset: false, inv: 0, invTick: 0 };
@@ -1292,48 +1305,48 @@ function freshGame() {
 }
 G = freshGame();
 
-// Hindernis-Personen: Adrian oder Valentina (sie gibt es stehend und jubelnd)
-function makeAdrian(kind, x, y = 0, extra = {}) {
-  const who = extra.who || 'adrian';
-  const spr = kind === 'glideLow' || kind === 'glideHigh' ? adrian.glide : (who === 'valentina' ? girl : adrian)[kind];
+// Hindernisse: Wanderer und Wanderinnen (stehend und jubelnd), Gleitschirm- und Skifahrer
+function makePerson(kind, x, y = 0, extra = {}) {
+  const who = extra.who || 'man';
+  const spr = kind === 'glideLow' || kind === 'glideHigh' ? hiker.glide : (who === 'girl' ? girl : hiker)[kind];
   const yy = kind === 'glideLow' ? 3 : kind === 'glideHigh' ? 25 : y;
   return Object.assign({
-    type: 'adrian', kind, spr, x, y: yy, w: spr.w, h: spr.h, passed: false,
+    type: 'person', kind, spr, x, y: yy, w: spr.w, h: spr.h, passed: false,
     vx: kind === 'ski' ? 95 : kind.startsWith('glide') ? 22 : 0, bob: Math.random() * 6,
-    who, name: who === 'valentina' ? 'Valentina' : 'Adrian',
+    who,
   }, extra);
 }
 function makeFish(x, y) {
   return { type: 'fish', x, y, w: fishSpr.w, h: fishSpr.h, vx: 0, bob: Math.random() * 6, got: false, spr: fishSpr };
 }
-function makeSnowball(x, r) {
-  const spr = snowSpr[r];
-  return { type: 'adrian', kind: 'snow', spr, x, y: 0, w: spr.w, h: spr.h, passed: false, vx: 85, rot: 0, bob: 0, who: 'snow', name: 'Die Lawine' };
+function makeYarn(x, r) {
+  const spr = yarnSpr[r];
+  return { type: 'person', kind: 'yarn', spr, x, y: 0, w: spr.w, h: spr.h, passed: false, vx: 85, rot: 0, bob: 0 };
 }
-const anyone = () => (Math.random() < .5 ? 'adrian' : 'valentina');
+const anyone = () => (Math.random() < .5 ? 'man' : 'girl');
 
 function pattern(kind, x) {
   const list = [];
   let w = 12, top = 19, extraGap = 0;
   switch (kind) {
     case 'stand': case 'cheer': case 'ski':
-      list.push(makeAdrian(kind, x, 0, { who: kind === 'ski' ? 'adrian' : anyone() })); w = list[0].w; top = list[0].h;
+      list.push(makePerson(kind, x, 0, { who: kind === 'ski' ? 'man' : anyone() })); w = list[0].w; top = list[0].h;
       if (kind === 'ski') extraGap = 45;
       break;
     case 'duo':
-      list.push(makeAdrian('stand', x, 0, { who: 'adrian' }), makeAdrian('cheer', x + 13, 0, { who: 'valentina' })); w = 25;
+      list.push(makePerson('stand', x, 0, { who: 'man' }), makePerson('cheer', x + 13, 0, { who: 'girl' })); w = 25;
       break;
     case 'trio':
-      list.push(makeAdrian('stand', x, 0, { who: anyone() }), makeAdrian('cheer', x + 13, 0, { who: anyone() }), makeAdrian('stand', x + 26, 0, { who: anyone() })); w = 38; extraGap = 20;
+      list.push(makePerson('stand', x, 0, { who: anyone() }), makePerson('cheer', x + 13, 0, { who: anyone() }), makePerson('stand', x + 26, 0, { who: anyone() })); w = 38; extraGap = 20;
       break;
     case 'tower':
-      list.push(makeAdrian('stand', x, 0), makeAdrian('cheer', x, 19, { who: 'valentina' })); top = 38; extraGap = 30;
+      list.push(makePerson('stand', x, 0), makePerson('cheer', x, 19, { who: 'girl' })); top = 38; extraGap = 30;
       break;
     case 'glideLow': case 'glideHigh':
-      list.push(makeAdrian(kind, x)); w = list[0].w; top = list[0].y + list[0].h;
+      list.push(makePerson(kind, x)); w = list[0].w; top = list[0].y + list[0].h;
       break;
     case 'combo':
-      list.push(makeAdrian('glideHigh', x), makeAdrian('stand', x + 78, 0, { who: anyone() })); w = 90; extraGap = 20;
+      list.push(makePerson('glideHigh', x), makePerson('stand', x + 78, 0, { who: anyone() })); w = 90; extraGap = 20;
       break;
   }
   // Fische als Belohnung
@@ -1363,10 +1376,10 @@ function spawn() {
 const EVENTS = {
   stars: { name: 'Sternschauer!', sub: 'Fang die Sterne, jeder bringt einen Fisch', dur: 7 },
   fishrain: { name: 'Fischregen!', sub: 'Schnell einsammeln', dur: 6 },
-  avalanche: { name: 'Lawine!', sub: 'Kirby hat zu fest geschleckt. Spring über die Schneebälle', dur: 7, minLevel: 2 },
+  wolle: { name: 'Wollknäuel!', sub: 'Rote Wollknäuel rollen heran. Spring drüber!', dur: 7, minLevel: 2 },
   turbo: { name: 'Turbo-Rausch!', sub: 'Keine Hindernisse, doppelte Fische', dur: 5 },
 };
-const noObstacles = () => G.event && (G.event.type === 'turbo' || G.event.type === 'avalanche');
+const noObstacles = () => G.event && (G.event.type === 'turbo' || G.event.type === 'wolle');
 function startEvent() {
   const pool = Object.keys(EVENTS).filter((k) => (EVENTS[k].minLevel || 1) <= G.level && (!G.lastEvent || k !== G.lastEvent));
   const type = pick(pool);
@@ -1397,11 +1410,10 @@ function tickEvent(dt) {
     case 'fishrain':
       if (e.acc > .2 / luck) { e.acc = 0; G.objects.push(Object.assign(makeFish(rand(30, viewW + 40), rand(48, 72)), { fall: -60 })); }
       break;
-    case 'avalanche':
-      V.lick += dt * 3; // Kirby schleckt wie verrückt
+    case 'wolle':
       if (e.acc > 1.25 && e.t < e.dur - 1.2) {
         e.acc = rand(-.35, .2);
-        G.objects.push(makeSnowball(viewW + 10, pick([4, 5, 6])));
+        G.objects.push(makeYarn(viewW + 10, pick([4, 5, 6])));
         shake = reduceMotion ? 0 : .15;
       }
       break;
@@ -1520,7 +1532,7 @@ async function keepAwake() {
 
 
 /* ---------- Ablauf ---------- */
-const screens = { home: $('home'), setup: $('setup'), shop: $('shop'), inv: $('inv'), pause: $('pause'), over: $('over') };
+const screens = { home: $('home'), setup: $('setup'), board: $('board'), shop: $('shop'), inv: $('inv'), pause: $('pause'), over: $('over') };
 function show(name) { for (const k in screens) screens[k].hidden = k !== name; }
 let hintTimer = 0, bannerTimer = 0;
 
@@ -1566,8 +1578,8 @@ function transition(text, cb) {
 function goHome() {
   mode = 'home';
   G = freshGame();
-  Object.assign(P, { x: Math.round(viewW * .3), y: 0, vy: 0, grounded: true, jumps: 0, buffer: 0, airT: 0, land: 0, flip: 0, inv: 0, jumpPassed: false, checkReset: false });
-  G.objects.push(makeAdrian('stand', Math.round(viewW * .52)), makeAdrian('stand', Math.round(viewW * .52) + 16, 0, { who: 'valentina' }));
+  Object.assign(P, { x: Math.round(viewW * .42), y: 0, vy: 0, grounded: true, jumps: 0, buffer: 0, airT: 0, land: 0, flip: 0, inv: 0, jumpPassed: false, checkReset: false });
+  G.objects.push(makePerson('stand', Math.round(viewW * .6)), makePerson('stand', Math.round(viewW * .6) + 16, 0, { who: 'girl' }));
   particles.length = 0;
   floaters.length = 0;
   document.body.classList.add('at-home');
@@ -1600,6 +1612,7 @@ $('pauseLobbyBtn').addEventListener('click', () => { if (mode === 'paused') tran
 $('resumeBtn').addEventListener('click', () => { if (mode === 'paused') resume(); });
 $('shopBtn').addEventListener('click', () => { audioOn(); renderShop(); show('shop'); });
 $('invBtn').addEventListener('click', () => { audioOn(); renderInv(); show('inv'); });
+$('boardBtn').addEventListener('click', () => { audioOn(); show('board'); renderBoard(); });
 document.querySelectorAll('[data-close]').forEach((b) => b.addEventListener('click', () => { if (mode === 'home') show('home'); }));
 
 function levelUp() {
@@ -1615,7 +1628,7 @@ function startInvincible(sec, title) {
   showBanner(title, 'Unverwundbar! Renn einfach durch', '', 1800);
   sfx.power();
 }
-// Mit Regenbogen-Kraft wird Adrian (oder Valentina, oder ein Schneeball) einfach weggeschleudert
+// Mit Regenbogen-Kraft wird jedes Hindernis einfach weggeschleudert
 function knock(o) {
   o.knocked = true;
   o.passed = true;
@@ -1632,11 +1645,13 @@ function gameOver(o) {
   shake = reduceMotion ? 0 : .35;
   sfx.hit();
   vibrate([60, 40, 120]);
-  $('quip').textContent = pick(OVER_QUIPS).replace('{n}', o.name).replace('{k}', catName());
+  $('quip').textContent = pick(OVER_QUIPS).replace('{k}', catName());
   $('rFish').textContent = G.fish;
   $('rLevel').textContent = G.level;
   $('rJumped').textContent = G.jumped;
   $('rCombo').textContent = G.bestCombo + 'x';
+  $('newBest').hidden = true;
+  syncPlayer({ jumped: G.jumped, level: G.level }).then((b) => { $('newBest').hidden = !b || !G.jumped; }).catch(() => {});
   $('hint').classList.add('gone');
   $('banner').classList.remove('show');
   updateHud(true);
@@ -1698,16 +1713,21 @@ function updateHud(force) {
 /* ---------- Shop und Inventar ---------- */
 const FISH_HTML = '<svg class="fish-ico" viewBox="0 0 9 5" shape-rendering="crispEdges" aria-hidden="true"><path fill="#ff9f43" d="M2 0h4v1h1v1h1V1h1v3H8V3H7v1H6v1H2V4H1V3H0V2h1V1h1z"/><path fill="#1e1c26" d="M2 1h1v1H2z"/></svg>';
 const ICONS = ICON_SPR;
+// Vorschaubilder in voller Bildschirmauflösung zeichnen, damit nichts verschwimmt
 function iconCanvas(spr, scale = 4) {
+  const r = Math.max(1, Math.round(window.devicePixelRatio || 1));
   const c = document.createElement('canvas');
-  c.width = spr.c.width;
-  c.height = spr.c.height;
-  c.getContext('2d').drawImage(spr.c, 0, 0);
+  c.className = 'pix';
+  c.width = spr.c.width * scale * r;
+  c.height = spr.c.height * scale * r;
+  const g = c.getContext('2d');
+  g.imageSmoothingEnabled = false;
+  g.drawImage(spr.c, 0, 0, c.width, c.height);
   c.style.width = spr.c.width * scale + 'px';
   c.style.height = spr.c.height * scale + 'px';
   return c;
 }
-const catPreview = (cosIds, breed = save.breed, scale = 3) => iconCanvas(catSet(breed, cosIds).idle[0], scale);
+const catPreview = (cosIds, breed = save.breed, scale = 3) => iconCanvas(catSet(breed, cosIds, save.body).idle[0], scale);
 function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
 let shopTab = 'up', msgTimer = 0;
 function shopMsg(text) {
@@ -1776,8 +1796,8 @@ function renderInv() {
   me.textContent = '';
   const who = el('div', 'who');
   const breed = BREEDS.find((b) => b.id === save.breed) || BREEDS[0];
-  who.append(el('p', 'name', catName()), el('p', 'desc', breed.name + ' · ' + breed.hair));
-  const change = el('button', 'btn btn2', 'Katze ändern');
+  who.append(el('p', 'name', catName()), el('p', 'desc', breed.name + ' · ' + breed.hair + ' · ' + (save.body === 'dick' ? 'Dick' : 'Dünn')));
+  const change = el('button', 'btn btn-blue', 'Katze ändern');
   change.type = 'button';
   change.addEventListener('click', () => openSetup(true));
   who.appendChild(change);
@@ -1812,52 +1832,172 @@ function renderInv() {
   }
 }
 
-/* ---------- Katze einrichten: Name und eine von drei Katzen ---------- */
-let pickBreed = save.breed;
+/* ---------- Katze einrichten: Name + Fell (Schritt 1), dick oder dünn (Schritt 2) ---------- */
+const BODIES = [
+  { id: 'duenn', name: 'Dünn', desc: 'Schlank und flink' },
+  { id: 'dick', name: 'Dick', desc: 'Rund und gemütlich' },
+];
+let pickBreed = save.breed, pickBody = save.body, setupStep = 1, setupFromInv = false;
 function openSetup(fromInv) {
+  setupFromInv = fromInv;
   pickBreed = save.breed;
+  pickBody = save.body;
   $('catName').value = save.name;
-  $('setupMsg').hidden = true;
-  $('setupBack').hidden = !fromInv;
-  renderBreeds();
+  setupGo(1);
   show('setup');
 }
-function renderBreeds() {
-  const list = $('breedList');
-  list.textContent = '';
-  for (const b of BREEDS) {
-    const card = el('button', 'breed');
-    card.type = 'button';
-    card.setAttribute('role', 'radio');
-    card.setAttribute('aria-checked', String(b.id === pickBreed));
-    card.append(catPreview([], b.id, 3), el('span', '', b.name), el('span', 'hair', b.hair));
-    card.addEventListener('click', () => { pickBreed = b.id; sfx.meow(); renderBreeds(); });
-    list.appendChild(card);
-  }
+function setupGo(step) {
+  setupStep = step;
+  $('setupMsg').hidden = true;
+  $('step1').hidden = step !== 1;
+  $('step2').hidden = step !== 2;
+  $('setupNext').textContent = step === 1 ? 'Weiter' : 'Fertig';
+  $('setupBack').hidden = step === 1 && !setupFromInv;
+  renderPicks();
 }
-$('setupOk').addEventListener('click', () => {
+function pickCard(id, label, sub, checked, preview, onPick) {
+  const card = el('button', 'pick');
+  card.type = 'button';
+  card.setAttribute('role', 'radio');
+  card.setAttribute('aria-checked', String(checked));
+  card.append(preview, el('span', '', label), el('span', 'hair', sub));
+  card.addEventListener('click', () => { onPick(id); sfx.meow(); renderPicks(); });
+  return card;
+}
+function renderPicks() {
+  const bl = $('breedList');
+  bl.textContent = '';
+  for (const b of BREEDS) bl.appendChild(pickCard(b.id, b.name, b.hair, b.id === pickBreed, iconCanvas(catSet(b.id, [], pickBody).idle[0], 3), (id) => { pickBreed = id; }));
+  const dl = $('bodyList');
+  dl.textContent = '';
+  for (const b of BODIES) dl.appendChild(pickCard(b.id, b.name, b.desc, b.id === pickBody, iconCanvas(catSet(pickBreed, [], b.id).idle[0], 4), (id) => { pickBody = id; }));
+}
+function setupMsg(text) {
+  $('setupMsg').textContent = text;
+  $('setupMsg').hidden = false;
+}
+let setupBusy = false;
+$('setupNext').addEventListener('click', async () => {
   audioOn();
-  const name = $('catName').value.trim().slice(0, 12);
-  if (!name) {
-    $('setupMsg').textContent = 'Gib deiner Katze bitte einen Namen.';
-    $('setupMsg').hidden = false;
-    $('catName').focus();
-    sfx.no();
+  if (setupBusy) return;
+  if (setupStep === 1) {
+    const name = $('catName').value.trim().slice(0, 12);
+    if (!name) { setupMsg('Gib deiner Katze bitte einen Namen.'); $('catName').focus(); sfx.no(); return; }
+    // Jeden Namen gibt es nur einmal
+    setupBusy = true;
+    let ok = true;
+    try { ok = await claimName(name); } catch (e) { ok = true; }
+    setupBusy = false;
+    if (!ok) { setupMsg('Den Namen "' + name + '" gibt es schon. Bitte nimm einen anderen.'); sfx.no(); return; }
+    save.name = name;
+    save.nameKey = nameKey(name);
+    persist();
+    $('catName').blur();
+    setupGo(2);
     return;
   }
-  save.name = name;
   save.breed = pickBreed;
+  save.body = pickBody;
   persist();
   cat = myCat();
   updateNames();
+  syncPlayer().catch(() => {});
   sfx.buy();
-  $('catName').blur();
   show('home');
 });
-$('setupBack').addEventListener('click', () => { renderInv(); show('inv'); });
-$('catName').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('setupOk').click(); });
+$('setupBack').addEventListener('click', () => {
+  if (setupStep === 2) { setupGo(1); return; }
+  renderInv();
+  show('inv');
+});
+$('catName').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('setupNext').click(); });
 function updateNames() {
-  $('subtitle').textContent = catName() + ' springt über Adrian & Valentina!';
+  $('subtitle').textContent = catName() + ' springt über alles!';
+}
+
+/* ---------- Bestenliste und eindeutige Namen ----------
+   Gemeinsam für alle über die Datenbank des Claude-Artefakts, wenn das Spiel dort läuft.
+   Sonst (z. B. GitHub Pages) nur der eigene Rekord auf diesem Gerät. */
+let cloud = null; // { db, uid }
+const nameKey = (n) => Array.from(n.trim().toLowerCase()).map((ch) => (/[a-z0-9]/.test(ch) ? ch : '_' + ch.codePointAt(0).toString(16))).join('').slice(0, 180) || '_';
+(async () => {
+  try {
+    if (!window.claude || typeof window.claude.use !== 'function') return;
+    const [db, user] = await Promise.all([window.claude.use('db'), window.claude.use('user')]);
+    if (!db || !user) return;
+    const uid = await user.id();
+    if (!uid) return;
+    cloud = { db, uid };
+  } catch (e) { cloud = null; }
+})();
+async function claimName(name) {
+  if (!cloud) return true;
+  const key = nameKey(name);
+  const ref = cloud.db.doc('names/' + key);
+  const lease = await ref.acquire({ holder: cloud.uid, ttlMs: 5000 });
+  if (!lease.acquired) return false;
+  const snap = await ref.get();
+  const owner = snap.exists ? snap.data().owner : null;
+  if (owner && owner !== cloud.uid) return false;
+  if (!owner) await ref.set({ owner: cloud.uid });
+  // alten Namen wieder freigeben
+  if (save.nameKey && save.nameKey !== key) {
+    try {
+      const old = cloud.db.doc('names/' + save.nameKey);
+      const os = await old.get();
+      if (os.exists && os.data().owner === cloud.uid) await old.delete();
+    } catch (e) { /* egal */ }
+  }
+  return true;
+}
+// eigenen Eintrag in der Bestenliste aktuell halten
+async function syncPlayer(run) {
+  const local = store.get('cj-best', null);
+  let better = false;
+  if (run && (!local || run.jumped > local.jumped)) { store.set('cj-best', run); better = true; }
+  if (!cloud || !save.name) return better;
+  const ref = cloud.db.doc('players/' + cloud.uid);
+  const snap = await ref.get();
+  const prev = snap.exists ? snap.data() : {};
+  const bestRun = store.get('cj-best', null) || { jumped: 0, level: 1 };
+  const best = Math.max(prev.best || 0, bestRun.jumped || 0);
+  const level = (prev.best || 0) >= (bestRun.jumped || 0) ? (prev.level || 1) : bestRun.level;
+  if (prev.best !== best || prev.name !== save.name || prev.breed !== save.breed) {
+    await ref.set({ name: save.name, best, level, breed: save.breed, body: save.body, t: Date.now() });
+  }
+  return better;
+}
+async function renderBoard() {
+  const list = $('boardList');
+  const msg = $('boardMsg');
+  list.textContent = '';
+  msg.hidden = true;
+  let rows = [];
+  if (cloud) {
+    try {
+      await syncPlayer();
+      const qs = await cloud.db.collection('players').orderBy('best', 'desc').limit(25).get();
+      rows = qs.docs.map((d) => ({ id: d.id, ...d.data() }));
+    } catch (e) {
+      msg.textContent = 'Die Bestenliste ist gerade nicht erreichbar. Versuch es gleich nochmal.';
+      msg.hidden = false;
+    }
+  } else {
+    msg.textContent = 'Hier ist keine gemeinsame Bestenliste verbunden. Du siehst deinen eigenen Rekord.';
+    msg.hidden = false;
+    const b = store.get('cj-best', null);
+    if (b && save.name) rows = [{ id: 'me', name: save.name, best: b.jumped, level: b.level }];
+  }
+  if (!rows.length) list.appendChild(el('p', 'empty', 'Noch keine Einträge. Spiel eine Runde!'));
+  rows.forEach((r, i) => {
+    const row = el('div', 'lb-row' + (r.id === 'me' || (cloud && r.id === cloud.uid) ? ' me-row' : ''));
+    const who = el('div');
+    who.append(el('span', '', String(r.name || 'Katze').slice(0, 12)), el('span', 'lb-sub', 'Level ' + (r.level || 1)));
+    const best = el('div', 'lb-best');
+    best.append(document.createTextNode(String(r.best || 0)), el('span', 'lb-sub', 'Sprünge'));
+    row.append(el('span', 'lb-rank', String(i + 1)), who, best);
+    list.appendChild(row);
+  });
 }
 
 /* ---------- Kollision (pixelgenau) ---------- */
@@ -1993,7 +2133,7 @@ function update(dt) {
       o.y += o.vy * dt;
       if (o.y < -4) o.got = true;
     }
-    if (o.type !== 'adrian') {
+    if (o.type !== 'person') {
       if (magnet && !o.got) {
         const dx = P.x + 13 - (o.x + o.w / 2), dy = P.y + 9 - (o.y + o.h / 2);
         if (dx * dx + dy * dy < 48 * 48) { o.x += dx * dt * 6; o.y += dy * dt * 6; }
@@ -2011,9 +2151,9 @@ function update(dt) {
     if (o.kind === 'ski' && Math.random() < dt * 30) {
       particles.push({ x: o.x + o.w - 2, y: 1, vx: rand(20, 70), vy: rand(20, 60), life: rand(.2, .4), c: '#ffffff' });
     }
-    if (o.kind === 'snow') {
+    if (o.kind === 'yarn') {
       o.rot += dt * 10;
-      if (Math.random() < dt * 20) particles.push({ x: o.x + o.w, y: rand(0, 3), vx: rand(20, 60), vy: rand(10, 40), life: rand(.2, .4), c: '#ffffff' });
+      if (Math.random() < dt * 14) particles.push({ x: o.x + o.w, y: rand(0, 3), vx: rand(20, 60), vy: rand(10, 40), life: rand(.2, .4), c: '#ff7a6e' }); // Wollfusseln
     }
     if (!o.passed && overlaps(cs, cx, cy, o.spr, Math.round(o.x), Math.round(-(oy + o.h)))) {
       if (P.inv > 0) { knock(o); continue; }
@@ -2237,19 +2377,23 @@ function draw() {
   }
   ctx.globalAlpha = 1;
 
-  // Fische, Sterne, Adrian, Valentina, Schneebälle
+  // Fische, Sterne, Menschen, Wollknäuel
   for (const o of G.objects) {
     const oy = objY(o);
     const spr = o.spr;
     const x0 = snap(o.x) - spr.pad, y0 = snap(-(oy + o.h)) - spr.pad;
     if (o.type === 'star') {
       ctx.drawImage(tinted(spr.c, RAINBOW[Math.floor(G.time * 12) % RAINBOW.length], .55), x0, y0);
-    } else if (o.knocked || o.kind === 'snow') {
+    } else if (o.knocked || o.kind === 'yarn') {
       ctx.save();
       ctx.translate(x0 + spr.c.width / 2, y0 + spr.c.height / 2);
       ctx.rotate(o.knocked ? o.krot : o.rot);
       ctx.drawImage(spr.c, -spr.c.width / 2, -spr.c.height / 2);
       ctx.restore();
+      if (o.kind === 'yarn' && !o.knocked) { // loser Faden, der hinterherweht
+        ctx.fillStyle = '#d8322b';
+        for (let i = 0; i < 10; i++) ctx.fillRect(x0 + spr.c.width - 2 + i, y0 + spr.c.height - 2 - Math.round(Math.sin(i * .9 + G.time * 14)), 1, 1);
+      }
     } else {
       ctx.drawImage(spr.c, x0, y0);
     }
