@@ -1,6 +1,6 @@
 # Cat Jumper
 
-Ein kleines Pixel-Spiel fürs Handy: Deine Katze läuft über eine Bergwiese und springt über alles, was im Weg steht: Wanderer, Gleitschirmflieger, Skifahrer und rote Wollknäuel. Im Hintergrund sitzt Kirby, die schwarz-weiße Katze, und schleckt den Schnee von den Gipfeln.
+Ein kleines Pixel-Spiel fürs Handy: Deine Katze läuft über eine Bergwiese und springt über alles, was im Weg steht: Wanderer in Lederhose und Wanderinnen im Dirndl, Gleitschirmflieger, Skifahrer und rote Wollknäuel. Im Hintergrund sitzt Kirby, die schwarz-weiße Katze, und schleckt den Schnee von den Gipfeln.
 
 **Spielen:** https://dnoadrian.github.io/Temp/ oder `index.html` direkt im Browser öffnen.
 
