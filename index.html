@@ -456,12 +456,12 @@ p, h1, h2, h3 { margin: 0; }
 <div id="banner" aria-live="polite">
   <span class="lvl" id="bLevel">Level 1</span>
   <span class="name" id="bName">Almwiese</span>
-  <span class="tip" id="bTip">Tippen = springen</span>
+  <span class="tip" id="bTip" hidden></span>
 </div>
 
 <p class="tipline" id="installHelp" hidden></p>
 
-<p id="hint" class="gone">Tippen = springen</p>
+<p id="hint" class="gone"></p>
 
 <div id="wipe"><span id="wipeText">Los geht's!</span></div>
 
@@ -496,6 +496,19 @@ const INK = '#1e1c26';
 
 // rows: Strings oder Zeichen-Arrays, '.' = leer. Das "ghost"-Zeichen (Schnurrhaare, Leinen)
 // bekommt keine Kontur und zählt nicht zur Kollision; Zeichen in noMask (Cosmetics) zählen nur nicht zur Kollision.
+// dunklere Version einer Farbe für den Umriss
+const darkCache = {};
+function darker(col) {
+  if (darkCache[col]) return darkCache[col];
+  let r = 0, g = 0, b = 0;
+  const m = /^#([0-9a-f]{6})$/i.exec(col) || /^#([0-9a-f]{3})$/i.exec(col);
+  if (m && m[1].length === 6) { r = parseInt(m[1].slice(0, 2), 16); g = parseInt(m[1].slice(2, 4), 16); b = parseInt(m[1].slice(4, 6), 16); }
+  else if (m) { r = parseInt(m[1][0] + m[1][0], 16); g = parseInt(m[1][1] + m[1][1], 16); b = parseInt(m[1][2] + m[1][2], 16); }
+  else return (darkCache[col] = col);
+  // weiße und helle Farben brauchen mehr Abdunklung, damit der Rand sichtbar bleibt
+  const k = (r + g + b) / 3 > 200 ? .62 : .58;
+  return (darkCache[col] = 'rgb(' + Math.round(r * k) + ',' + Math.round(g * k) + ',' + Math.round(b * k) + ')');
+}
 function sprite(rows, pal, outline = true, ghost = 'w', noMask = '') {
   const h = rows.length;
   const w = Math.max(...rows.map((r) => r.length));
@@ -506,6 +519,17 @@ function sprite(rows, pal, outline = true, ghost = 'w', noMask = '') {
   const g = c.getContext('2d');
   const mask = new Uint8Array(w * h);
   const at = (x, y) => (y >= 0 && y < h && x >= 0 && x < w ? rows[y][x] || '.' : '.');
+  if (outline) {
+    for (let y = -1; y <= h; y++) {
+      for (let x = -1; x <= w; x++) {
+        if (at(x, y) !== '.') continue;
+        const ch = [at(x - 1, y), at(x + 1, y), at(x, y - 1), at(x, y + 1)].find((c) => c !== '.' && c !== ghost && pal[c]);
+        if (!ch) continue;
+        g.fillStyle = darker(pal[ch]);
+        g.fillRect(x + pad, y + pad, 1, 1);
+      }
+    }
+  }
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
       const ch = at(x, y);
@@ -1049,8 +1073,8 @@ const STARS = Array.from({ length: 70 }, () => ({ x: Math.random(), y: Math.rand
 
 /* ---------- Level ---------- */
 const LEVELS = [
-  { name: 'Almwiese', tip: 'Tippen = springen', at: 0, speed: 140, gap: [.95, 1.7], pats: { stand: 6, cheer: 2 } },
-  { name: 'Menschenturm', tip: 'Neu: Sprung in der Luft! Nochmal tippen', at: 250, speed: 158, gap: [.9, 1.6], pats: { stand: 3, cheer: 2, duo: 3, tower: 3 } },
+  { name: 'Almwiese', tip: '', at: 0, speed: 140, gap: [.95, 1.7], pats: { stand: 6, cheer: 2 } },
+  { name: 'Menschenturm', tip: 'Jetzt stehen sie übereinander', at: 250, speed: 158, gap: [.9, 1.6], pats: { stand: 3, cheer: 2, duo: 3, tower: 3 } },
   { name: 'Gleitschirm', tip: 'Fliegt jemand hoch, lauf unten durch', at: 550, speed: 176, gap: [.85, 1.55], pats: { stand: 2, duo: 2, tower: 2, glideLow: 3, glideHigh: 3 } },
   { name: 'Skipiste', tip: 'Skifahrer sind schneller, als du denkst', at: 900, speed: 194, gap: [.8, 1.45], pats: { stand: 2, cheer: 1, duo: 2, tower: 2, glideLow: 2, glideHigh: 2, ski: 4 } },
   { name: 'Alpenglühen', tip: 'Jetzt kommen sie zu dritt', at: 1300, speed: 212, gap: [.75, 1.4], pats: { stand: 1, duo: 2, trio: 3, tower: 3, glideLow: 2, glideHigh: 2, ski: 3, combo: 2 } },
@@ -1507,7 +1531,6 @@ function levelUp() {
   G.untilSpawn = Math.max(G.untilSpawn, G.speed * 1.1); // kurze Verschnaufpause
   sfx.level();
   showLevelBanner(G.level);
-  if (G.level === 2) showHint(5000, has('up:triple') ? 'In der Luft bis zu zweimal nachtippen' : 'Nochmal tippen in der Luft = Doppelsprung');
 }
 
 function startInvincible(sec, title) {
@@ -2297,7 +2320,7 @@ function draw() {
   ctx.textBaseline = 'middle';
   for (const f of floaters) {
     ctx.globalAlpha = Math.min(1, f.t * 2);
-    ctx.fillStyle = '#3f2a00';
+    ctx.fillStyle = darker('#ffd43b');
     ctx.fillText(f.text, f.x + 1, -f.y + 1);
     ctx.fillStyle = '#ffd43b';
     ctx.fillText(f.text, f.x, -f.y);

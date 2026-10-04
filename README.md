@@ -12,7 +12,7 @@ In der Lobby spielt deine Katze mit einem Wollknäuel. Links oben stehen unterei
 
 Nur Tippen (bzw. Klicken):
 
-- **Tippen:** springen
+- **Tippen:** springen (im Spiel steht dazu keine Erklärung mehr)
 - **In der Luft nochmal tippen:** Doppelsprung (ab Level 2, mit Salto)
 
 Oben rechts installiert der kleine Download-Knopf die App (nur im Browser sichtbar), der Lautsprecher schaltet den Ton.
