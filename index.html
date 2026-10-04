@@ -7,12 +7,12 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Adrian">
-<meta name="description" content="Ein weißer Katzosaurus springt auf der Alm über Adrian, während Valentina den Schnee von den Gipfeln schleckt.">
+<meta name="apple-mobile-web-app-title" content="Cat Jumper">
+<meta name="description" content="Cat Jumper: Ein weißer Katzosaurus springt auf der Alm über Adrian, während Valentina den Schnee von den Gipfeln schleckt.">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<title>Spring über Adrian</title>
+<title>Cat Jumper</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600&family=Silkscreen:wght@400;700&display=swap">
@@ -309,8 +309,8 @@ h1 em { font-style: normal; color: var(--shirt); }
 <div id="start" class="screen">
   <div class="card">
     <div>
-      <p class="eyebrow">Ein Katzosaurus auf der Alm</p>
-      <h1>Spring über <em>Adrian</em></h1>
+      <p class="eyebrow">Spring über Adrian</p>
+      <h1>Cat <em>Jumper</em></h1>
     </div>
     <div>
       <p class="lead"><b>Tippen</b> springen. In der Luft <b>nochmal tippen</b> für den Doppelsprung.</p>
@@ -318,7 +318,7 @@ h1 em { font-style: normal; color: var(--shirt); }
       <p class="fine portrait-only">Am schönsten im Querformat.</p>
       <p class="cta">Tippen zum Starten</p>
       <button class="install" id="installBtn" type="button" hidden>Als App installieren</button>
-      <p class="fine" id="iosHint" hidden>Als App: Teilen-Knopf, dann „Zum Home-Bildschirm“.</p>
+      <p class="fine" id="installHelp" hidden></p>
     </div>
   </div>
 </div>
@@ -839,8 +839,19 @@ window.addEventListener('beforeinstallprompt', (e) => {
   installEvent = e;
   $('installBtn').hidden = false;
 });
+const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const isAndroid = /Android/i.test(navigator.userAgent);
 $('installBtn').addEventListener('click', async () => {
-  if (!installEvent) return;
+  if (!installEvent) {
+    // Browser bietet keinen Installations-Dialog an: Anleitung zeigen
+    $('installHelp').textContent = isIOS
+      ? 'In Safari unten auf den Teilen-Knopf tippen, dann „Zum Home-Bildschirm“.'
+      : isAndroid
+        ? 'Im Browser-Menü (⋮) auf „App installieren“ oder „Zum Startbildschirm hinzufügen“ tippen.'
+        : 'In der Adressleiste auf das Installieren-Symbol klicken oder im Browser-Menü „Cat Jumper installieren“ wählen.';
+    $('installHelp').hidden = false;
+    return;
+  }
   installEvent.prompt();
   try { await installEvent.userChoice; } catch (e) { /* abgebrochen */ }
   installEvent = null;
@@ -848,10 +859,9 @@ $('installBtn').addEventListener('click', async () => {
 });
 window.addEventListener('appinstalled', () => { $('installBtn').hidden = true; });
 const standalone = (window.matchMedia && matchMedia('(display-mode: standalone), (display-mode: fullscreen)').matches) || navigator.standalone === true;
-const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
   navigator.serviceWorker.register('sw.js').then(() => {
-    if (isIOS && !standalone) $('iosHint').hidden = false;
+    if (!standalone) $('installBtn').hidden = false;
   }).catch(() => { /* ohne Offline-Modus */ });
 }
 

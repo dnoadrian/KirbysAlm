@@ -1,5 +1,5 @@
-// Offline-Cache für "Spring über Adrian". Bei Änderungen die Versionsnummer erhöhen.
-const CACHE = 'spring-ueber-adrian-v2';
+// Offline-Cache für "Cat Jumper". Bei Änderungen die Versionsnummer erhöhen.
+const CACHE = 'cat-jumper-v3';
 const ASSETS = [
   './',
   './index.html',

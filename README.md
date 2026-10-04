@@ -1,6 +1,6 @@
-# Spring über Adrian
+# Cat Jumper
 
-Ein kleines Pixel-Spiel fürs Handy: Ein weißer Katzosaurus (halb Katze, halb Dinosaurier) läuft über eine Bergwiese und springt über Adrian. Im Hintergrund sitzt Valentina, die schwarz-weiße Katze, und schleckt den Schnee von den Gipfeln.
+Spring über Adrian! Ein kleines Pixel-Spiel fürs Handy: Ein weißer Katzosaurus (halb Katze, halb Dinosaurier) läuft über eine Bergwiese und springt über Adrian. Im Hintergrund sitzt Valentina, die schwarz-weiße Katze, und schleckt den Schnee von den Gipfeln.
 
 **Spielen:** https://dnoadrian.github.io/Temp/ (sobald GitHub Pages eingeschaltet ist), oder `index.html` direkt im Browser öffnen.
 
