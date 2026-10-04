@@ -54,10 +54,7 @@ Im **Shop** gibt es Upgrades (Regenbogen-Stern, Fisch-Magnet, Dreifachsprung, Gl
 
 ## Oberfläche
 
-Zwei Looks mit derselben Anordnung, weiße Schrift (Minecraft-Schrift), Grün für Los und Kaufen, Rot für Zurück und Schließen:
-
-- **Holz** (Standard): Holzknöpfe mit Rautengitter, Fenster aus Brettern mit rotem Kopf.
-- **Stein** (`#stein` hinten an der Adresse): graue Blöcke in den Farben der Berge mit großem Rautengitter und dunkelgrauen Kanten.
+Holzknöpfe mit Rautengitter und Fenster aus Brettern mit rotem Kopf. Die Schrift ist weiß (Minecraft-Schrift). Grün heißt los oder kaufen, Rot heißt zurück oder schließen, Braun ist alles andere.
 
 ## Level
 
@@ -71,7 +68,7 @@ Zwei Looks mit derselben Anordnung, weiße Schrift (Minecraft-Schrift), Grün f�
 | 6 | Sternennacht | Alles zusammen, bei Nacht |
 | 7+ | Endlos-Alm | Immer schneller |
 
-Mit jedem Level wird es 2,5 Stunden später: Level 1 beginnt um 08:00, Level 2 um 10:30, Level 5 zum Sonnenuntergang um 18:00, Level 7 um 23:00. Die Uhrzeit steht oben links, die Sonne wandert mit. Fische geben 20 Bonuspunkte.
+Mit jedem Level wird es 2,5 Stunden später: Level 1 beginnt um 08:00, Level 2 um 10:30, Level 5 zum Sonnenuntergang um 18:00, Level 7 um 23:00. Die Uhrzeit steht oben links, die Sonne wandert mit.
 
 ## Als App installieren
 

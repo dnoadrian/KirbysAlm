@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="de">
+<html lang="de" data-ui="gitterholz">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
@@ -13,15 +13,8 @@
 <link rel="icon" type="image/png" href="icons/cat-jumper-192.png">
 <link rel="apple-touch-icon" href="icons/cat-jumper-apple-180.png">
 <title>Cat Jumper</title>
-<script>
-(function () {
-  function apply() { document.documentElement.setAttribute('data-ui', location.hash === '#stein' ? 'stein' : 'gitterholz'); }
-  apply();
-  window.addEventListener('hashchange', apply);
-})();
-</script>
 <style>
-/* Cat Jumper GUI: zwei Looks, Holz (Standard) und Stein (#stein hinten an der Adresse). Schrift weiß. */
+/* Cat Jumper GUI: Holzknöpfe mit Rautengitter (Gitterholz), Braun, Grün und Rot, Schrift weiß. */
 /* Schrift: "Minecraft" von Pwnage_Block (fontstruct.com), CC BY-SA 3.0, um Ä Ö Ü ä ö ü ß · ergänzt. */
 @font-face {
   font-family: "CatJumperMC";
@@ -109,7 +102,7 @@ p, h1, h2, h3 { margin: 0; }
 .icon-btn { width: 31px; height: 31px; padding: 0; --c: var(--wood); --c-hi: var(--wood-hi); --c-lo: var(--wood-lo); }
 .icon-btn svg { width: 14px; height: 14px; display: block; filter: drop-shadow(1px 1px 0 var(--outline)) drop-shadow(-1px -1px 0 var(--outline)); }
 .close-x { width: 30px; height: 30px; padding: 0; }
-.close-x svg { width: 14px; height: 14px; filter: drop-shadow(1px 1px 0 var(--outline)) drop-shadow(-1px -1px 0 var(--outline)); }
+.close-x svg { width: 16px; height: 16px; filter: drop-shadow(1px 1px 0 var(--outline)) drop-shadow(-1px -1px 0 var(--outline)); }
 #mute .off { display: none; }
 #mute[aria-pressed="true"] .on { display: none; }
 #mute[aria-pressed="true"] .off { display: block; }
@@ -136,7 +129,6 @@ p, h1, h2, h3 { margin: 0; }
   font-size: 32px;
   padding: 14px 28px 16px;
 }
-.btn-small { padding: 5px 9px 6px; }
 
 .modal {
   position: fixed;
@@ -163,6 +155,8 @@ p, h1, h2, h3 { margin: 0; }
 .panel-head { display: flex; align-items: center; gap: 12px; padding: 8px 8px 8px 14px; color: #ffffff; }
 .panel-head h2 { flex: 1; font: 24px/1 var(--font); text-shadow: var(--stroke); }
 .panel-head .btn { padding: 6px 10px 7px; }
+.panel-head .close-x { padding: 0; }
+.close-x svg, .icon-btn svg { flex: none; }
 .wallet { display: flex; align-items: center; gap: 6px; font-size: 24px; }
 .tabs { display: flex; gap: 8px; padding: 12px 12px 0; flex-wrap: wrap; }
 .tab { font: 16px/1 var(--font); padding: 6px 10px 7px; color: #ffffff; text-shadow: var(--stroke-sm); cursor: pointer; touch-action: manipulation; }
@@ -254,43 +248,10 @@ p, h1, h2, h3 { margin: 0; }
 /* Bausteine: Rautengitter, Holzmaserung, Bretterfugen */
 :root {
   --diamond: repeating-linear-gradient(45deg, rgba(255, 255, 255, .13) 0 2px, transparent 2px 12px), repeating-linear-gradient(-45deg, rgba(255, 255, 255, .13) 0 2px, transparent 2px 12px);
-  --diamond-big: repeating-linear-gradient(45deg, rgba(255, 255, 255, .12) 0 3px, transparent 3px 18px), repeating-linear-gradient(-45deg, rgba(255, 255, 255, .12) 0 3px, transparent 3px 18px);
   --hole: linear-gradient(rgba(42, 23, 11, .45), rgba(42, 23, 11, .45));
   --holes: var(--hole) left 6px top 6px / 4px 4px no-repeat, var(--hole) right 6px top 6px / 4px 4px no-repeat, var(--hole) left 6px bottom 8px / 4px 4px no-repeat, var(--hole) right 6px bottom 8px / 4px 4px no-repeat;
-  --planks: repeating-linear-gradient(90deg, transparent 0 37px, rgba(0, 0, 0, .2) 37px 39px);
   --trim: repeating-linear-gradient(90deg, var(--red) 0 12px, var(--red-lo) 12px 24px);
-  /* Stein in den Farben der Berge */
-  --rock: #8e9db3; --rock-hi: #a8b5c8; --rock-lo: #6e7c93; --rock-dk: #56627a; --rock-edge: #3a404c;
 }
-
-/* ================= Stein: graue Blöcke wie die Berge, großes Rautengitter, dunkelgraue Kanten (#stein) ================= */
-[data-ui="stein"] { --outline: var(--rock-edge); }
-[data-ui="stein"] .btn, [data-ui="stein"] .tab {
-  border: 3px solid var(--rock-edge);
-  border-radius: 3px;
-  background: var(--diamond-big), linear-gradient(var(--c) 0 50%, var(--c-lo) 50%);
-  box-shadow: inset 0 3px 0 rgba(255, 255, 255, .28), 0 4px 0 var(--rock-edge);
-}
-[data-ui="stein"] .btn:active { transform: translateY(3px); box-shadow: inset 0 3px 0 rgba(255, 255, 255, .28), 0 1px 0 var(--rock-edge); }
-[data-ui="stein"] .btn2, [data-ui="stein"] .icon-btn, [data-ui="stein"] .tab { --c: var(--rock); --c-hi: var(--rock-hi); --c-lo: var(--rock-lo); }
-[data-ui="stein"] .tab[aria-selected="true"] { --c: var(--green); --c-lo: var(--green-lo); }
-[data-ui="stein"] .box { background: var(--diamond-big), linear-gradient(var(--rock) 0 50%, var(--rock-lo) 50%); border: 3px solid var(--rock-edge); border-radius: 3px; box-shadow: inset 0 3px 0 rgba(255, 255, 255, .22), 0 3px 0 var(--rock-edge); }
-[data-ui="stein"] .panel {
-  background: var(--diamond-big), linear-gradient(var(--rock), var(--rock-lo));
-  border: 3px solid var(--rock-edge);
-  border-radius: 3px;
-  box-shadow: inset 0 0 0 5px var(--rock-lo), inset 0 0 0 8px var(--rock-edge), 0 6px 0 var(--rock-edge), 0 18px 34px rgba(0, 0, 0, .3);
-  padding: 10px;
-}
-[data-ui="stein"] .panel-head { background: var(--diamond-big), linear-gradient(var(--rock-lo) 0 50%, var(--rock-dk) 50%); border: 3px solid var(--rock-edge); border-radius: 3px; box-shadow: inset 0 3px 0 rgba(255, 255, 255, .2); }
-[data-ui="stein"] .panel-head.red { background: var(--diamond-big), linear-gradient(var(--red) 0 50%, var(--red-lo) 50%); }
-[data-ui="stein"] .card, [data-ui="stein"] .me, [data-ui="stein"] .lb-row { background: var(--diamond-big), var(--rock-dk); border: 3px solid var(--rock-edge); border-radius: 3px; box-shadow: inset 0 3px 0 rgba(255, 255, 255, .1); }
-[data-ui="stein"] .lb-row:first-child { background: var(--diamond-big), var(--green-lo); }
-[data-ui="stein"] .badge, [data-ui="stein"] .msg { border: 3px solid var(--rock-edge); border-radius: 3px; }
-[data-ui="stein"] .msg { background: var(--rock-dk); }
-[data-ui="stein"] .name-input { border-color: var(--rock-edge); border-radius: 3px; background: var(--rock-dk); }
-[data-ui="stein"] .modal { background: rgba(58, 64, 76, .45); }
-[data-ui="stein"] #wipe { background: var(--diamond-big), var(--rock-lo); }
 
 /* ================= Gitterholz: Holzknöpfe mit Rautengitter, Bretter-Fenster mit rotem Kopf ================= */
 [data-ui="gitterholz"] .btn, [data-ui="gitterholz"] .tab {
@@ -333,10 +294,6 @@ p, h1, h2, h3 { margin: 0; }
   z-index: 11;
 }
 
-@media (orientation: portrait) {
-}
-@media (orientation: landscape) and (max-height: 560px) {
-}
 @media (orientation: portrait) {
   .hud { flex-wrap: wrap; }
   .home-title { top: auto; bottom: calc(env(safe-area-inset-bottom, 0px) + 120px); }
@@ -1684,7 +1641,7 @@ function renderShop() {
   const items = shopTab === 'up'
     ? UPGRADES.map((u) => ({ ...u, key: 'up:' + u.id, prev: () => iconCanvas(ICONS[u.id]) }))
     : shopTab === 'cats'
-      ? BREEDS.filter((b) => b.price > 0).map((b) => ({ ...b, key: 'cat:' + b.id, cat: true, desc: b.desc + ' ' + b.hair + '.', prev: () => catPreview(wearing(), b.id) }))
+      ? BREEDS.filter((b) => b.price > 0).map((b) => ({ ...b, key: 'cat:' + b.id, cat: true, desc: b.desc + ' ' + b.hair + '.', prev: () => catPreview([], b.id) }))
       : COSMETICS.map((c) => ({ ...c, key: 'cos:' + c.id, prev: () => catPreview([c.id]) }));
   for (const it of items) {
     const card = el('div', 'card');
@@ -1692,7 +1649,14 @@ function renderShop() {
     prev.appendChild(it.prev());
     const btn = el('button', 'btn btn-buy');
     btn.type = 'button';
-    if (has(it.key)) {
+    if (it.cat && has(it.key)) {
+      // eigene Katzen kann man direkt im Shop auswählen
+      const on = save.breed === it.id;
+      btn.textContent = on ? 'Ausgewählt' : 'Auswählen';
+      btn.classList.add('btn2');
+      btn.disabled = on;
+      btn.addEventListener('click', () => { save.breed = it.id; cat = myCat(); persist(); sfx.meow(); renderShop(); });
+    } else if (has(it.key)) {
       btn.textContent = 'Gekauft';
       btn.disabled = true;
     } else {
@@ -1751,7 +1715,7 @@ function renderInv() {
     const on = save.breed === b.id;
     const card = el('div', 'card');
     const prev = el('div', 'prev');
-    prev.appendChild(catPreview(wearing(), b.id));
+    prev.appendChild(catPreview([], b.id));
     const btn = el('button', 'btn' + (on ? '' : ' btn2'), on ? 'Ausgewählt' : 'Auswählen');
     btn.type = 'button';
     btn.disabled = on;
