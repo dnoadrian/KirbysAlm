@@ -419,6 +419,21 @@ function sprite(rows, pal, outline = true, ghost = 'w') {
   return { c, w, h, pad, mask };
 }
 
+// Verkleinert die Kollisionsform um den Mittelpunkt (0.8 = 20 % kleiner), das Bild bleibt gleich.
+function shrinkHitbox(spr, scale) {
+  const { w, h, mask } = spr;
+  const out = new Uint8Array(w * h);
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const sx = Math.floor(w / 2 + (x + .5 - w / 2) / scale);
+      const sy = Math.floor(h / 2 + (y + .5 - h / 2) / scale);
+      if (sx >= 0 && sx < w && sy >= 0 && sy < h && mask[sy * w + sx]) out[y * w + x] = 1;
+    }
+  }
+  return { ...spr, mask: out };
+}
+const HITBOX = .8;
+
 // Der Katzosaurus: weißer Katzenkopf mit Ohren und Schnurrhaaren, Dino-Körper mit Rückenzacken und Schwanz.
 const CAT_TOP = [
   '...............b.....b..',
@@ -442,11 +457,11 @@ const LEGS = {
 };
 const CAT_PAL = { b: '#fbfbf7', s: '#d9dde4', l: '#ffffff', g: '#3cc0a0', k: '#3a6fd8', p: '#ffb3c1', n: '#ff8fa3', w: '#aab3c2' };
 const cat = {
-  run1: sprite([...CAT_TOP, ...LEGS.run1], CAT_PAL),
-  run2: sprite([...CAT_TOP, ...LEGS.run2], CAT_PAL),
-  jump: sprite([...CAT_TOP, ...LEGS.jump], CAT_PAL),
-  blink: sprite([...CAT_TOP, ...LEGS.run1], { ...CAT_PAL, k: '#d9dde4' }),
-  dead: sprite([...CAT_TOP, ...LEGS.jump], { ...CAT_PAL, k: '#d6333f' }),
+  run1: shrinkHitbox(sprite([...CAT_TOP, ...LEGS.run1], CAT_PAL), HITBOX),
+  run2: shrinkHitbox(sprite([...CAT_TOP, ...LEGS.run2], CAT_PAL), HITBOX),
+  jump: shrinkHitbox(sprite([...CAT_TOP, ...LEGS.jump], CAT_PAL), HITBOX),
+  blink: shrinkHitbox(sprite([...CAT_TOP, ...LEGS.run1], { ...CAT_PAL, k: '#d9dde4' }), HITBOX),
+  dead: shrinkHitbox(sprite([...CAT_TOP, ...LEGS.jump], { ...CAT_PAL, k: '#d6333f' }), HITBOX),
 };
 
 const ADRIAN_PAL = { h: '#5a3a22', f: '#f2c29b', k: INK, m: '#b0443c', s: '#4f7fd6', p: '#2f3b5c', o: '#1c1c24', r: '#d6333f', y: '#ffd43b', x: '#e03a3e', w: '#d8dee8' };
