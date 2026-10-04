@@ -10,8 +10,8 @@
 <meta name="apple-mobile-web-app-title" content="Cat Jumper">
 <meta name="description" content="Cat Jumper: Eine weiße Katze springt auf der Alm über Adrian und Valentina, während Kirby den Schnee von den Gipfeln schleckt.">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" type="image/png" href="icons/icon-192.png">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icons/cat-jumper-192.png">
+<link rel="apple-touch-icon" href="icons/cat-jumper-apple-180.png">
 <title>Cat Jumper</title>
 <style>
 /* Layout: full-bleed pixel alm on canvas. Lobby: title top-left, menu (Shop, Inventar, Start) bottom-left.
@@ -469,9 +469,8 @@ p, h1, h2, h3 { margin: 0; }
   opacity: 0;
 }
 #combo.pop { animation: combo 1.15s cubic-bezier(.2, .9, .3, 1) both; }
-#comboWord { font-size: 32px; line-height: 1; text-shadow: 3px 3px 0 rgba(0, 0, 0, .55); }
-#comboMult { font-size: 24px; line-height: 1; color: #ffff55; text-shadow: 3px 3px 0 rgba(0, 0, 0, .55); }
-#combo.hot #comboWord { animation: rainbow .6s steps(6) infinite; }
+#comboWord { font-size: 32px; line-height: 1; color: #ffffff; text-shadow: 3px 3px 0 rgba(0, 0, 0, .55); }
+#comboMult { font-size: 24px; line-height: 1; color: #ffffff; text-shadow: 3px 3px 0 rgba(0, 0, 0, .55); }
 @keyframes combo {
   0% { opacity: 0; transform: scale(2.4) rotate(-10deg); }
   12% { opacity: 1; transform: scale(.85) rotate(5deg); }
@@ -480,9 +479,6 @@ p, h1, h2, h3 { margin: 0; }
   70% { opacity: 1; transform: translateY(0); }
   100% { opacity: 0; transform: translateY(-36px) scale(.9); }
 }
-@keyframes rainbow {
-  0% { color: #ff5555; } 17% { color: #ffaa00; } 33% { color: #ffff55; }
-  50% { color: #55ff55; } 67% { color: #55ffff; } 83% { color: #ff55ff; }
 }
 @keyframes fadeout { 0%, 70% { opacity: 1; } 100% { opacity: 0; } }
 
@@ -535,7 +531,7 @@ p, h1, h2, h3 { margin: 0; }
   .home-menu { gap: 10px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .panel, #combo.hot #comboWord, .box.bump { animation: none; }
+  .panel, .box.bump { animation: none; }
   #combo.pop { animation: fadeout 1.15s both; }
   #banner { transition: opacity .3s; transform: none; }
   #wipe.closing { animation: none; clip-path: none; opacity: 1; }
@@ -742,10 +738,10 @@ function shrinkHitbox(spr, scale) {
 }
 const HITBOX = .8;
 
-// Die Katze wird aus Formen gerastert. So bekommt sie 8 Lauf-Bilder (Galopp),
-// eigene Bilder für Absprung, Fallen, Stehen, Schwanzwedeln und Blinzeln - und jeder Skin seine Farben.
-const CAT_W = 30, CAT_H = 18, RUN_FRAMES = 8;
-const CAT_BASE = { b: '#fbfbf7', s: '#dcdfe6', d: '#c3c8d2', p: '#ffb3c1', n: '#ff8fa3', e: '#3b8fd6', x: '#d6333f' };
+// Die Katze wird aus Formen gerastert: süß und rund (großer Kopf, große Augen, kleiner Körper, kurze Beine).
+// 8 Lauf-Bilder (Hoppel-Galopp), eigene Bilder für Absprung, Fallen, Stehen, Schwanzwedeln und Blinzeln - und jeder Skin seine Farben.
+const CAT_W = 26, CAT_H = 18, RUN_FRAMES = 8;
+const CAT_BASE = { b: '#fbfbf7', s: '#dfe2e9', d: '#c9ced8', p: '#ffb3c1', n: '#ff7f9e', c: '#ffc7d4', e: '#2b3a6b', h: '#ffffff', x: '#d6333f' };
 function catRows(pose, skin = {}) {
   const g = Array.from({ length: CAT_H }, () => Array(CAT_W).fill('.'));
   const ox = 1, bob = pose.bob || 0;
@@ -773,74 +769,80 @@ function catRows(pose, skin = {}) {
       for (let t = 0; t < th; t++) set(x - (th - 1) / 2 + t, y, c);
     }
   };
+  // kurze Stummelbeine: Oberschenkel 1,8 + Unterschenkel 1,9
   const leg = (jx, jy, [a1, a2], c) => {
-    const kx = jx + Math.sin(a1) * 3.3, ky = jy + Math.cos(a1) * 3.3;
-    const fx = kx + Math.sin(a2) * 3.2, fy = ky + Math.cos(a2) * 3.2;
+    const kx = jx + Math.sin(a1) * 1.8, ky = jy + Math.cos(a1) * 1.8;
+    const fx = kx + Math.sin(a2) * 1.9, fy = ky + Math.cos(a2) * 1.9;
     line(jx, jy, kx, ky, c);
     line(kx, ky, fx, fy, c);
     set(fx + 1, fy, c); // Pfote
   };
-  const j = 10.4 + bob;
+  const j = 13.3 + bob;
   // Beine auf der anderen Seite (etwas dunkler, hinter dem Körper)
-  leg(18.6, j, pose.ff, 'd');
-  leg(7.2, j, pose.bf, 'd');
-  // Schwanz
+  leg(14, j, pose.ff, 'd');
+  leg(7.4, j, pose.bf, 'd');
+  // Schwanz: steht nach oben, die Spitze ringelt sich
   const t = pose.tail || 0;
-  const P0 = [4.6, 8.2 + bob], C = [0.2, 9 + bob], E = [0.6 + t * .8, 2.4 + bob - t * .5];
+  const P0 = [5, 11 + bob], C = [.4, 11 + bob], E = [1.6 + t * .9, 4.2 + bob - t * .4];
   for (let i = 0; i <= 24; i++) {
     const u = i / 24, v = 1 - u;
     const x = v * v * P0[0] + 2 * v * u * C[0] + u * u * E[0];
     const y = v * v * P0[1] + 2 * v * u * C[1] + u * u * E[1];
-    set(x, y, u > .8 ? 'u' : 'q');
-    if (u < .55) set(x + .6, y + .6, 'q');
+    set(x, y, u > .82 ? 'u' : 'q');
+    if (u < .6) set(x + .6, y + .6, 'q');
   }
-  // Körper mit Schatten am Bauch
-  for (const [c, dy] of [['s', .5], ['b', 0]]) {
-    ell(13, 9.3 + bob + dy, 8.4, 3.2, c);
-    ell(7, 9.3 + bob + dy, 3.5, 3.5, c);   // Hinterteil
-    ell(19, 9.2 + bob + dy, 3, 3.3, c);    // Brust
+  set(E[0] + 1, E[1] - .6, 'u'); // Ringel an der Spitze
+  // kleiner, runder Körper mit Schatten am Bauch
+  ell(10.2, 11.7 + bob, 5.6, 3.3, 's');
+  ell(10.2, 11.2 + bob, 5.5, 3, 'b');
+  // großer, runder Kopf mit Ohren
+  const hy = 6.3 + bob;
+  ell(18.6, hy, 5.1, 4.5, 'b');
+  ell(18.6, hy + .5, 4.9, 4.3, 'b');
+  tri(13.9, hy - 2.2, 14.6, hy - 6.4, 17.6, hy - 3.9, 'a');
+  tri(19.6, hy - 3.9, 22.6, hy - 6.4, 23.3, hy - 2.2, 'a');
+  set(15, hy - 4, 'p'); set(15.4, hy - 3.2, 'p');
+  set(22, hy - 4, 'p'); set(21.6, hy - 3.2, 'p');
+  // große Augen mit Glanzpunkt, rosa Bäckchen, kleine Nase
+  const eye = pose.eye;
+  for (const ex of [18, 21.4]) {
+    if (eye === 's') { set(ex, hy + .6, 's'); set(ex + 1, hy + .6, 's'); }        // blinzeln
+    else if (eye === 'x') { set(ex, hy - .4, 'x'); set(ex + 1, hy + .6, 'x'); set(ex + 1, hy - .4, 'x'); set(ex, hy + .6, 'x'); }
+    else { set(ex, hy - .4, 'e'); set(ex + 1, hy - .4, 'h'); set(ex, hy + .6, 'e'); set(ex + 1, hy + .6, 'e'); }
   }
-  // Hals, Kopf, Schnauze, Ohren
-  ell(21.4, 6.9 + bob, 2.4, 2.6, 'b');
-  ell(23.6, 5.2 + bob, 3.4, 3, 'b');
-  ell(26.6, 6.3 + bob, 1.7, 1.3, 'b');
-  set(25, 8 + bob, 's');
-  tri(20.8, 3.6 + bob, 21.6, .2 + bob, 23.4, 2.6 + bob, 'a');
-  tri(23.4, 2.5 + bob, 24.9, 0 + bob, 25.9, 3.4 + bob, 'a');
-  set(21.8, 2 + bob, 'p');
-  set(24.8, 1.6 + bob, 'p');
-  set(25, 4.3 + bob, pose.eye || 'e');
-  set(28, 5.6 + bob, 'n');
+  set(16.6, hy + 1.8, 'c'); set(23.2, hy + 1.8, 'c');
+  set(20.4, hy + 1.8, 'n');
   // Beine auf dieser Seite
-  leg(19.2, j, pose.fn, 'g');
-  leg(7.8, j, pose.bn, 'g');
+  leg(14.6, j, pose.fn, 'g');
+  leg(8, j, pose.bn, 'g');
   // Fellmuster: Streifen (getigert) oder Sternpunkte (Galaxie)
   if (skin.stripes || skin.dots) {
-    for (let y = 5; y < 13; y++) for (let x = 3; x < 25; x++) {
+    for (let y = 0; y < CAT_H; y++) for (let x = 0; x < CAT_W; x++) {
       if (g[y][x] !== 'b') continue;
-      if (skin.stripes ? x % 4 === 1 : hash(x * 7 + y * 13) < .14) g[y][x] = 't';
+      const onBody = y >= 9 && x <= 15, onHead = y <= 4 + bob && x >= 16;
+      if (skin.stripes ? (onBody || onHead) && x % 3 === 1 : hash(x * 7 + y * 13) < .14) g[y][x] = 't';
     }
   }
   return g;
 }
 function runPose(k) {
   const ph = k / RUN_FRAMES * Math.PI * 2;
-  // Vorderbeine: beim Vorschwingen knickt die Pfote nach hinten; Hinterbeine: Sprunggelenk knickt ein
-  const front = (q) => { const sw = Math.sin(q), lift = Math.max(0, Math.cos(q)); return [.6 * sw, .6 * sw - 1.2 * lift]; };
-  const back = (q) => { const sw = Math.sin(q), lift = Math.max(0, Math.cos(q)); return [.55 * sw + .3 * lift, .55 * sw - 1 * lift]; };
-  return { fn: front(ph), ff: front(ph + .7), bn: back(ph + Math.PI), bf: back(ph + Math.PI + .7), tail: Math.sin(ph) * .8, bob: Math.round(Math.sin(ph * 2) * .6) };
+  // kleine Hoppel-Schritte: Vorderpfoten knicken beim Vorschwingen ein, Hinterbeine federn
+  const front = (q) => { const sw = Math.sin(q), lift = Math.max(0, Math.cos(q)); return [.7 * sw, .7 * sw - 1.1 * lift]; };
+  const back = (q) => { const sw = Math.sin(q), lift = Math.max(0, Math.cos(q)); return [.65 * sw + .4 * lift, .65 * sw - 1 * lift]; };
+  return { fn: front(ph), ff: front(ph + .7), bn: back(ph + Math.PI), bf: back(ph + Math.PI + .7), tail: Math.sin(ph) * .8, bob: -Math.round(Math.abs(Math.sin(ph)) * .9) };
 }
-const POSE_STAND = { fn: [0, 0], ff: [.12, .05], bn: [0, 0], bf: [-.12, -.05], tail: 0, bob: 0 };
-const POSE_UP = { fn: [1.05, 1.35], ff: [.9, 1.2], bn: [-.95, -1.25], bf: [-.8, -1.1], tail: -1.2, bob: 0 };
-const POSE_DOWN = { fn: [.45, .2], ff: [.3, .1], bn: [-.15, -.9], bf: [-.3, -1], tail: .8, bob: 0 };
+const POSE_STAND = { fn: [0, 0], ff: [.15, .05], bn: [0, 0], bf: [-.15, -.05], tail: 0, bob: 0 };
+const POSE_UP = { fn: [1.1, 1.4], ff: [.95, 1.25], bn: [-1, -1.3], bf: [-.85, -1.15], tail: -1.2, bob: 0 };
+const POSE_DOWN = { fn: [.5, .25], ff: [.35, .15], bn: [-.2, -.9], bf: [-.35, -1], tail: .8, bob: 0 };
 const SKINS = [
   { id: 'weiss', name: 'Schneeweiß', price: 0, desc: 'Die klassische weiße Katze.', pal: {} },
-  { id: 'grau', name: 'Silbergrau', price: 30, desc: 'Grau getigert und leise wie ein Schatten.', pal: { b: '#b8bcc6', s: '#979ca8', d: '#80858f', u: '#80858f', e: '#4caf50' }, stripes: '#9a9fab' },
-  { id: 'schwarz', name: 'Mitternacht', price: 40, desc: 'Schwarz mit gelben Augen, wie Kirby.', pal: { b: '#3a3644', s: '#2a2733', d: '#1f1d27', u: '#2a2733', p: '#b07a88', e: '#e6d23a' } },
-  { id: 'tiger', name: 'Rotes Tigerle', price: 60, desc: 'Orange mit Streifen.', pal: { b: '#f2a14a', s: '#d27a2a', d: '#b8661f', u: '#c8641c', p: '#ffc1a8', e: '#4caf50' }, stripes: '#c8641c' },
-  { id: 'siam', name: 'Siam', price: 80, desc: 'Hell, mit dunklen Ohren, Pfoten und Schwanz.', pal: { b: '#f1e6d2', s: '#d9c6a6', d: '#4a3128', g: '#5b3d30', q: '#5b3d30', u: '#3f2a22', a: '#5b3d30', e: '#3b8fd6' } },
-  { id: 'gold', name: 'Goldkatze', price: 150, desc: 'Glänzt und glitzert beim Laufen.', pal: { b: '#ffd54a', s: '#e0a920', d: '#c48d12', u: '#e0a920', e: '#c0392b' }, sparkle: '#fff6b0' },
-  { id: 'galaxie', name: 'Galaxie', price: 200, desc: 'Voller Sterne, glitzert beim Laufen.', pal: { b: '#3a2f7a', s: '#2a2160', d: '#201a4d', u: '#ff7ad9', p: '#ff7ad9', n: '#ff7ad9', e: '#7cf7ff' }, dots: '#fff6a0', sparkle: '#b9a7ff' },
+  { id: 'grau', name: 'Silbergrau', price: 30, desc: 'Grau getigert und leise wie ein Schatten.', pal: { b: '#b8bcc6', s: '#979ca8', d: '#80858f', u: '#80858f', e: '#2f5d34', c: '#e6a9b8' }, stripes: '#9a9fab' },
+  { id: 'schwarz', name: 'Mitternacht', price: 40, desc: 'Schwarz mit gelben Augen, wie Kirby.', pal: { b: '#3a3644', s: '#2a2733', d: '#1f1d27', u: '#2a2733', p: '#b07a88', e: '#e6d23a', c: '#7a5363', h: '#3a3644' } },
+  { id: 'tiger', name: 'Rotes Tigerle', price: 60, desc: 'Orange mit Streifen.', pal: { b: '#f2a14a', s: '#d27a2a', d: '#b8661f', u: '#c8641c', p: '#ffc1a8', e: '#2f5d34', c: '#ffb08a' }, stripes: '#c8641c' },
+  { id: 'siam', name: 'Siam', price: 80, desc: 'Hell, mit dunklen Ohren, Pfoten und Schwanz.', pal: { b: '#f1e6d2', s: '#d9c6a6', d: '#4a3128', g: '#5b3d30', q: '#5b3d30', u: '#3f2a22', a: '#5b3d30', e: '#1f4f8f' } },
+  { id: 'gold', name: 'Goldkatze', price: 150, desc: 'Glänzt und glitzert beim Laufen.', pal: { b: '#ffd54a', s: '#e0a920', d: '#c48d12', u: '#e0a920', e: '#6b2a12', c: '#ffab7a' }, sparkle: '#fff6b0' },
+  { id: 'galaxie', name: 'Galaxie', price: 200, desc: 'Voller Sterne, glitzert beim Laufen.', pal: { b: '#3a2f7a', s: '#2a2160', d: '#201a4d', u: '#ff7ad9', p: '#ff7ad9', n: '#ff7ad9', e: '#7cf7ff', c: '#8a5fd0', h: '#ffffff' }, dots: '#fff6a0', sparkle: '#b9a7ff' },
 ];
 const catCache = {};
 function catSet(id) {
@@ -1640,12 +1642,10 @@ function cheer(gap) {
   if (G.combo % 5 === 0) { addFish(2, P.x + 14, P.y + 22); mult += '  +2 Fische'; } // alle 5 in Serie gibt es Fische
   const el = $('combo');
   $('comboWord').textContent = word;
-  $('comboWord').style.color = color;
   $('comboMult').textContent = mult;
   el.classList.remove('pop', 'hot');
   void el.offsetWidth;
   el.classList.add('pop');
-  if (G.combo >= 5) el.classList.add('hot');
   clearTimeout(comboTimer);
   comboTimer = setTimeout(() => el.classList.remove('pop', 'hot'), 1200);
 }
@@ -1901,11 +1901,11 @@ function update(dt) {
     }
     if (o.type !== 'adrian') {
       if (magnet && !o.got) {
-        const dx = P.x + 14 - (o.x + o.w / 2), dy = P.y + 9 - (o.y + o.h / 2);
+        const dx = P.x + 13 - (o.x + o.w / 2), dy = P.y + 9 - (o.y + o.h / 2);
         if (dx * dx + dy * dy < 48 * 48) { o.x += dx * dt * 6; o.y += dy * dt * 6; }
       }
       const oy = objY(o);
-      if (!o.got && o.x < P.x + 27 && o.x + o.w > P.x + 4 && oy < P.y + 17 && oy + o.h > P.y + 1) {
+      if (!o.got && o.x < P.x + 24 && o.x + o.w > P.x + 3 && oy < P.y + 17 && oy + o.h > P.y + 1) {
         o.got = true;
         if (o.type === 'star') startInvincible(5, 'Regenbogen-Stern!');
         else addFish(o.type === 'fish' && G.turbo > 1 ? 2 : 1, o.x + 4, oy + 6);
@@ -1933,11 +1933,11 @@ function update(dt) {
       return;
     }
     // knappster Abstand, solange die Katze über (oder unter) der Person ist
-    if (!o.passed && o.x < P.x + 27 && o.x + o.w > P.x + 4) {
+    if (!o.passed && o.x < P.x + 24 && o.x + o.w > P.x + 3) {
       const gap = o.kind === 'glideHigh' ? oy - (P.y + 17) : P.y - (oy + o.h);
       o.minGap = Math.min(o.minGap === undefined ? 99 : o.minGap, gap);
     }
-    if (!o.passed && o.x + o.w < P.x + 4) {
+    if (!o.passed && o.x + o.w < P.x + 3) {
       o.passed = true;
       G.jumped++;
       if (!P.grounded || G.time - P.landT < .3) P.jumpPassed = true;

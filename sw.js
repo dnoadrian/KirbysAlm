@@ -1,13 +1,13 @@
 // Offline-Cache für "Cat Jumper". Bei Änderungen die Versionsnummer erhöhen.
-const CACHE = 'cat-jumper-v8';
+const CACHE = 'cat-jumper-v9';
 const ASSETS = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
-  './icons/maskable-512.png',
-  './icons/apple-touch-icon.png',
+  './icons/cat-jumper-192.png',
+  './icons/cat-jumper-512.png',
+  './icons/cat-jumper-maskable-512.png',
+  './icons/cat-jumper-apple-180.png',
 ];
 
 self.addEventListener('install', (e) => {
