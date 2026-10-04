@@ -567,7 +567,7 @@ p, h1, h2, h3 { margin: 0; }
         <div><span class="stat-num" id="rJumped">0</span><span class="stat-lbl">Übersprungen</span></div>
         <div><span class="stat-num" id="rCombo">0x</span><span class="stat-lbl">Beste Serie</span></div>
       </div>
-      <p class="new-best" id="newBest" hidden>Neuer Rekord in der Bestenliste!</p>
+      <p class="new-best" id="newBest" hidden>Neuer Eintrag in deiner Bestenliste!</p>
       <div class="row">
         <button class="btn btn-start" id="againBtn" type="button">Nochmal</button>
         <button class="btn btn-red" id="lobbyBtn" type="button">Lobby</button>
@@ -1876,19 +1876,11 @@ function setupMsg(text) {
   $('setupMsg').textContent = text;
   $('setupMsg').hidden = false;
 }
-let setupBusy = false;
-$('setupNext').addEventListener('click', async () => {
+$('setupNext').addEventListener('click', () => {
   audioOn();
-  if (setupBusy) return;
   if (setupStep === 1) {
     const name = $('catName').value.trim().slice(0, 12);
     if (!name) { setupMsg('Gib deiner Katze bitte einen Namen.'); $('catName').focus(); sfx.no(); return; }
-    // Jeden Namen gibt es nur einmal
-    setupBusy = true;
-    let ok = true;
-    try { ok = await claimName(name); } catch (e) { ok = true; }
-    setupBusy = false;
-    if (!ok) { setupMsg('Den Namen "' + name + '" gibt es schon. Bitte nimm einen anderen.'); sfx.no(); return; }
     save.name = name;
     save.nameKey = nameKey(name);
     persist();
@@ -1901,7 +1893,6 @@ $('setupNext').addEventListener('click', async () => {
   persist();
   cat = myCat();
   updateNames();
-  syncPlayer().catch(() => {});
   sfx.buy();
   show('home');
 });
@@ -1915,86 +1906,32 @@ function updateNames() {
   $('subtitle').textContent = catName() + ' springt über alles!';
 }
 
-/* ---------- Bestenliste und eindeutige Namen ----------
-   Gemeinsam für alle über die Datenbank des Claude-Artefakts, wenn das Spiel dort läuft.
-   Sonst (z. B. GitHub Pages) nur der eigene Rekord auf diesem Gerät. */
-let cloud = null; // { db, uid }
-const nameKey = (n) => Array.from(n.trim().toLowerCase()).map((ch) => (/[a-z0-9]/.test(ch) ? ch : '_' + ch.codePointAt(0).toString(16))).join('').slice(0, 180) || '_';
-(async () => {
-  try {
-    if (!window.claude || typeof window.claude.use !== 'function') return;
-    const [db, user] = await Promise.all([window.claude.use('db'), window.claude.use('user')]);
-    if (!db || !user) return;
-    const uid = await user.id();
-    if (!uid) return;
-    cloud = { db, uid };
-  } catch (e) { cloud = null; }
-})();
-async function claimName(name) {
-  if (!cloud) return true;
-  const key = nameKey(name);
-  const ref = cloud.db.doc('names/' + key);
-  const lease = await ref.acquire({ holder: cloud.uid, ttlMs: 5000 });
-  if (!lease.acquired) return false;
-  const snap = await ref.get();
-  const owner = snap.exists ? snap.data().owner : null;
-  if (owner && owner !== cloud.uid) return false;
-  if (!owner) await ref.set({ owner: cloud.uid });
-  // alten Namen wieder freigeben
-  if (save.nameKey && save.nameKey !== key) {
-    try {
-      const old = cloud.db.doc('names/' + save.nameKey);
-      const os = await old.get();
-      if (os.exists && os.data().owner === cloud.uid) await old.delete();
-    } catch (e) { /* egal */ }
-  }
-  return true;
-}
-// eigenen Eintrag in der Bestenliste aktuell halten
+/* ---------- Bestenliste: deine 10 besten Runden auf diesem Gerät ---------- */
+const nameKey = (n) => n.trim().toLowerCase();
+// Runde eintragen; true, wenn sie in die Top 10 kommt
 async function syncPlayer(run) {
-  const local = store.get('cj-best', null);
-  let better = false;
-  if (run && (!local || run.jumped > local.jumped)) { store.set('cj-best', run); better = true; }
-  if (!cloud || !save.name) return better;
-  const ref = cloud.db.doc('players/' + cloud.uid);
-  const snap = await ref.get();
-  const prev = snap.exists ? snap.data() : {};
-  const bestRun = store.get('cj-best', null) || { jumped: 0, level: 1 };
-  const best = Math.max(prev.best || 0, bestRun.jumped || 0);
-  const level = (prev.best || 0) >= (bestRun.jumped || 0) ? (prev.level || 1) : bestRun.level;
-  if (prev.best !== best || prev.name !== save.name || prev.breed !== save.breed) {
-    await ref.set({ name: save.name, best, level, breed: save.breed, body: save.body, t: Date.now() });
-  }
-  return better;
+  if (!run || !run.jumped) return false;
+  const runs = store.get('cj-runs', []);
+  const entry = { name: save.name || 'Katze', jumped: run.jumped, level: run.level, t: Date.now() };
+  runs.push(entry);
+  runs.sort((x, y) => y.jumped - x.jumped || y.level - x.level || x.t - y.t);
+  const top = runs.slice(0, 10);
+  store.set('cj-runs', top);
+  return top.includes(entry);
 }
 async function renderBoard() {
   const list = $('boardList');
-  const msg = $('boardMsg');
   list.textContent = '';
-  msg.hidden = true;
-  let rows = [];
-  if (cloud) {
-    try {
-      await syncPlayer();
-      const qs = await cloud.db.collection('players').orderBy('best', 'desc').limit(25).get();
-      rows = qs.docs.map((d) => ({ id: d.id, ...d.data() }));
-    } catch (e) {
-      msg.textContent = 'Die Bestenliste ist gerade nicht erreichbar. Versuch es gleich nochmal.';
-      msg.hidden = false;
-    }
-  } else {
-    msg.textContent = 'Hier ist keine gemeinsame Bestenliste verbunden. Du siehst deinen eigenen Rekord.';
-    msg.hidden = false;
-    const b = store.get('cj-best', null);
-    if (b && save.name) rows = [{ id: 'me', name: save.name, best: b.jumped, level: b.level }];
-  }
+  $('boardMsg').hidden = true;
+  const rows = store.get('cj-runs', []);
   if (!rows.length) list.appendChild(el('p', 'empty', 'Noch keine Einträge. Spiel eine Runde!'));
   rows.forEach((r, i) => {
-    const row = el('div', 'lb-row' + (r.id === 'me' || (cloud && r.id === cloud.uid) ? ' me-row' : ''));
+    const row = el('div', 'lb-row');
     const who = el('div');
-    who.append(el('span', '', String(r.name || 'Katze').slice(0, 12)), el('span', 'lb-sub', 'Level ' + (r.level || 1)));
+    const day = new Date(r.t);
+    who.append(el('span', '', String(r.name || 'Katze').slice(0, 12)), el('span', 'lb-sub', 'Level ' + (r.level || 1) + ' · ' + day.getDate() + '.' + (day.getMonth() + 1) + '.'));
     const best = el('div', 'lb-best');
-    best.append(document.createTextNode(String(r.best || 0)), el('span', 'lb-sub', 'Sprünge'));
+    best.append(document.createTextNode(String(r.jumped || 0)), el('span', 'lb-sub', 'Sprünge'));
     row.append(el('span', 'lb-rank', String(i + 1)), who, best);
     list.appendChild(row);
   });

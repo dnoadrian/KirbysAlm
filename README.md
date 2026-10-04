@@ -23,7 +23,7 @@ Beim ersten Start gibst du deiner Katze einen Namen und wählst das Fell: Weiß 
 
 ## Bestenliste
 
-Gezählt wird, wie viele Hindernisse du in einer Runde überspringst. Läuft das Spiel als Claude-Artefakt, ist die Bestenliste für alle gemeinsam und jeder Katzenname kann nur einmal vergeben werden. Auf GitHub Pages gibt es (noch) keinen gemeinsamen Speicher; dort siehst du nur deinen eigenen Rekord.
+Die Bestenliste zeigt deine 10 besten Runden auf diesem Gerät: wie viele Hindernisse du übersprungen hast, mit Level und Datum.
 
 ## Fische, Shop und Inventar
 
