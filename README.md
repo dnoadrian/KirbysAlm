@@ -6,7 +6,7 @@ Ein kleines Pixel-Spiel fürs Handy: Deine Katze läuft über eine Bergwiese und
 
 ## Lobby
 
-In der Lobby stehen links unten **Shop**, **Inventar**, **Bestenliste** und **Start**. Start öffnet mit einem Kreis-Übergang das Spiel. Nach dem Verlieren geht es mit **Nochmal** direkt weiter oder mit **Lobby** zurück.
+In der Lobby spielt deine Katze mit einem Wollknäuel. Unten steht die Leiste mit **Shop**, **Inventar**, **Bestenliste** und **Start**. Start öffnet mit einem Kreis-Übergang das Spiel. Nach dem Verlieren geht es mit **Nochmal** sofort weiter (kurzer Übergang) oder mit **Lobby** zurück.
 
 ## Steuerung
 
@@ -15,7 +15,7 @@ Nur Tippen (bzw. Klicken):
 - **Tippen:** springen
 - **In der Luft nochmal tippen:** Doppelsprung (ab Level 2, mit Salto)
 
-Oben rechts lädt der Pfeil-Knopf die Seite bzw. App neu und holt die neueste Version, der Lautsprecher schaltet den Ton.
+Oben rechts lädt der Pfeil-Knopf die Seite bzw. App neu und holt die neueste Version, der Lautsprecher schaltet den Ton. Der kleine Download-Knopf daneben installiert die App (nur im Browser sichtbar).
 
 ## Deine Katze
 
@@ -26,7 +26,7 @@ Beim ersten Start gibst du deiner Katze nur einen Namen. Alle starten mit der we
 | Schneeweiß | Kurzhaar | gratis |
 | Grau getigert | Halblanghaar | 30 |
 | Mitternacht (schwarz) | Kurzhaar | 40 |
-| Weiß-Braun | Langhaar | 50 |
+| Weiß-Braun (brauner Körper und Schwanz) | Langhaar | 50 |
 | Orange | Halblanghaar | 60 |
 | Schoko (braun) | Kurzhaar | 60 |
 | Moppel (dicker grau-weißer Kater) | Kurzhaar | 80 |
@@ -54,11 +54,9 @@ Im **Shop** gibt es Upgrades (Regenbogen-Stern, Fisch-Magnet, Dreifachsprung, Gl
 
 ## Oberfläche
 
-Farben: Stein und Holz, dazu Grün und Rot. Die Schrift ist immer weiß (Minecraft-Schrift). Grün heißt los oder kaufen, Rot heißt zurück oder schließen, Braun ist alles andere.
+Stein in den Farben der Berge: kräftige graue Blöcke mit großem Rautengitter, dunkelgraue Kanten und Schatten, weiße Schrift (Minecraft-Schrift). Grün heißt los oder kaufen, Rot heißt zurück oder schließen. Der Titel steht mittig, das Menü als Leiste unten. In der Lobby spielt deine Katze mit einem roten Wollknäuel.
 
-**Stein & Holz:** Alle Knöpfe, Anzeigen und Fenster sind aus Stein mit Rautengitter und in Holz mit Nägeln eingefasst. Fensterköpfe sind Holzbretter, die Kärtchen dunkler Stein. Das Menü steht unten links.
-
-Die drei Vorschläge davor gibt es zum Vergleich noch mit einem Zusatz hinten an der Adresse: `#v1` Gitterholz, `#v2` Moosbretter, `#v3` Block-Leiste.
+Mit `#gitterholz` hinten an der Adresse gibt es stattdessen den Holz-Look (Holzknöpfe mit Rautengitter, Menü unten links).
 
 ## Level
 

@@ -15,7 +15,7 @@
 <title>Cat Jumper</title>
 <script>
 (function () {
-  var looks = ['stein', 'v1', 'v2', 'v3'];
+  var looks = ['stein', 'gitterholz'];
   function apply() {
     var h = location.hash.replace('#', '');
     var ui = looks.indexOf(h) >= 0 ? h : 'stein';
@@ -26,8 +26,8 @@
 })();
 </script>
 <style>
-/* Cat Jumper GUI: nur Braun (Holz), Grün und Rot, Schrift weiß.
-   Standard ist Stein & Holz, die früheren Varianten gibt es noch mit #v1, #v2 oder #v3 hinten an der Adresse. */
+/* Cat Jumper GUI: Stein (grau wie die Berge) mit Grün und Rot, Schrift weiß.
+   Standard ist Stein (grau wie die Berge), mit #gitterholz hinten an der Adresse gibt es den Holz-Look. */
 /* Schrift: "Minecraft" von Pwnage_Block (fontstruct.com), CC BY-SA 3.0, um Ä Ö Ü ä ö ü ß · ergänzt. */
 @font-face {
   font-family: "CatJumperMC";
@@ -83,7 +83,7 @@ p, h1, h2, h3 { margin: 0; }
   z-index: 10;
 }
 .box { display: flex; flex-direction: column; gap: 4px; padding: 7px 11px 8px; color: #ffffff; text-shadow: var(--stroke-sm); white-space: nowrap; }
-.fishbox { flex-direction: row; align-items: center; gap: 8px; margin-left: auto; min-height: 44px; font-size: 24px; }
+.fishbox { flex-direction: row; align-items: center; gap: 6px; margin-left: auto; min-height: 31px; padding-block: 4px; }
 .fish-ico { width: 27px; height: 15px; display: inline-block; flex: none; }
 .at-home .play-only { display: none; }
 .box.bump { animation: bump .3s ease-out; }
@@ -96,8 +96,8 @@ p, h1, h2, h3 { margin: 0; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 13px 18px 15px;
+  gap: 6px;
+  padding: 6px 12px 7px;
   color: #ffffff;
   text-shadow: var(--stroke-sm);
   font: 16px/1 var(--font);
@@ -111,11 +111,11 @@ p, h1, h2, h3 { margin: 0; }
 .btn.poor { filter: saturate(.45) brightness(.9); }
 .btn2 { --c: var(--wood); --c-hi: var(--wood-hi); --c-lo: var(--wood-lo); }
 .btn-red, .close-x { --c: var(--red); --c-hi: var(--red-hi); --c-lo: var(--red-lo); }
-.btn-start { font-size: 24px; padding: 16px 22px 18px; }
-.icon-btn { width: 44px; height: 44px; padding: 0; --c: var(--wood); --c-hi: var(--wood-hi); --c-lo: var(--wood-lo); }
-.icon-btn svg { width: 20px; height: 20px; display: block; filter: drop-shadow(1px 1px 0 var(--outline)) drop-shadow(-1px -1px 0 var(--outline)); }
-.close-x { width: 42px; height: 42px; padding: 0; }
-.close-x svg { width: 20px; height: 20px; filter: drop-shadow(1px 1px 0 var(--outline)) drop-shadow(-1px -1px 0 var(--outline)); }
+.btn-start { padding: 8px 16px 9px; }
+.icon-btn { width: 31px; height: 31px; padding: 0; --c: var(--wood); --c-hi: var(--wood-hi); --c-lo: var(--wood-lo); }
+.icon-btn svg { width: 14px; height: 14px; display: block; filter: drop-shadow(1px 1px 0 var(--outline)) drop-shadow(-1px -1px 0 var(--outline)); }
+.close-x { width: 30px; height: 30px; padding: 0; }
+.close-x svg { width: 14px; height: 14px; filter: drop-shadow(1px 1px 0 var(--outline)) drop-shadow(-1px -1px 0 var(--outline)); }
 #mute .off { display: none; }
 #mute[aria-pressed="true"] .on { display: none; }
 #mute[aria-pressed="true"] .off { display: block; }
@@ -145,7 +145,7 @@ p, h1, h2, h3 { margin: 0; }
   text-shadow: 1px 1px 0 rgba(0, 0, 0, .6);
   pointer-events: none;
 }
-.btn-small { padding: 9px 12px 11px; }
+.btn-small { padding: 5px 9px 6px; }
 
 .modal {
   position: fixed;
@@ -171,10 +171,10 @@ p, h1, h2, h3 { margin: 0; }
 @keyframes panelIn { from { transform: translateY(24px) scale(.94); opacity: 0; } }
 .panel-head { display: flex; align-items: center; gap: 12px; padding: 8px 8px 8px 14px; color: #ffffff; }
 .panel-head h2 { flex: 1; font: 24px/1 var(--font); text-shadow: var(--stroke); }
-.panel-head .btn { padding: 10px 14px 12px; }
+.panel-head .btn { padding: 6px 10px 7px; }
 .wallet { display: flex; align-items: center; gap: 6px; font-size: 24px; }
 .tabs { display: flex; gap: 8px; padding: 12px 12px 0; flex-wrap: wrap; }
-.tab { font: 16px/1 var(--font); padding: 9px 14px 11px; color: #ffffff; text-shadow: var(--stroke-sm); cursor: pointer; touch-action: manipulation; }
+.tab { font: 16px/1 var(--font); padding: 6px 10px 7px; color: #ffffff; text-shadow: var(--stroke-sm); cursor: pointer; touch-action: manipulation; }
 .scroll { flex: 1; min-height: 0; overflow-y: auto; touch-action: pan-y; -webkit-overflow-scrolling: touch; padding: 12px 12px 16px; }
 .scroll h3 { margin: 4px 0 10px; font: 16px var(--font); }
 .scroll h3:not(:first-child) { margin-top: 18px; }
@@ -182,7 +182,7 @@ p, h1, h2, h3 { margin: 0; }
 .card { display: flex; flex-direction: column; gap: 8px; padding: 10px; }
 .card .prev { height: 66px; display: flex; align-items: center; justify-content: center; }
 .card .desc { line-height: 1.3; flex: 1; opacity: .85; }
-.card .btn { width: 100%; padding: 10px 10px 12px; }
+.card .btn { width: 100%; padding: 6px 8px 7px; }
 .badge { align-self: flex-start; padding: 5px 10px 6px; background: var(--green); color: #ffffff; }
 .msg { margin: 10px 12px 0; padding: 8px 10px; background: rgba(42, 23, 11, .6); color: #ffffff; }
 .panel-body { display: flex; flex-direction: column; gap: 14px; padding: 16px; }
@@ -255,227 +255,123 @@ p, h1, h2, h3 { margin: 0; }
 }
 #wipe.closing { pointer-events: auto; animation: wipeClose .42s ease-in forwards; }
 #wipe.opening { animation: wipeOpen .45s ease-out forwards; }
+#wipe.fast.closing { animation-duration: .18s; }
+#wipe.fast.opening { animation-duration: .2s; }
 @keyframes wipeClose { from { clip-path: circle(0% at 12% 88%); } to { clip-path: circle(150% at 12% 88%); } }
 @keyframes wipeOpen { from { clip-path: circle(150% at 18% 78%); } to { clip-path: circle(0% at 18% 78%); } }
 
-/* Bausteine aus den zwei letzten Designs:
-   Rautengitter, dicke Ränder, schlichte Löcher (letztes Design) + Holzbretter, Nägel, Moos (vorletztes Design). */
+/* Bausteine: Rautengitter, Holzmaserung, Bretterfugen */
 :root {
   --diamond: repeating-linear-gradient(45deg, rgba(255, 255, 255, .13) 0 2px, transparent 2px 12px), repeating-linear-gradient(-45deg, rgba(255, 255, 255, .13) 0 2px, transparent 2px 12px);
   --diamond-big: repeating-linear-gradient(45deg, rgba(255, 255, 255, .12) 0 3px, transparent 3px 18px), repeating-linear-gradient(-45deg, rgba(255, 255, 255, .12) 0 3px, transparent 3px 18px);
   --hole: linear-gradient(rgba(42, 23, 11, .45), rgba(42, 23, 11, .45));
   --holes: var(--hole) left 6px top 6px / 4px 4px no-repeat, var(--hole) right 6px top 6px / 4px 4px no-repeat, var(--hole) left 6px bottom 8px / 4px 4px no-repeat, var(--hole) right 6px bottom 8px / 4px 4px no-repeat;
-  --nail: radial-gradient(circle, var(--wood-deep) 0 1.4px, rgba(255, 255, 255, .3) 1.5px 2.2px, transparent 2.4px);
-  --nails: var(--nail) left 4px top 5px / 6px 6px no-repeat, var(--nail) right 4px top 5px / 6px 6px no-repeat, var(--nail) left 4px bottom 4px / 6px 6px no-repeat, var(--nail) right 4px bottom 4px / 6px 6px no-repeat;
-  --planks: repeating-linear-gradient(90deg, transparent 0 37px, rgba(42, 23, 11, .28) 37px 39px);
-  --moss: polygon(0 100%, 0% 15%, 3% 55%, 6% 15%, 9% 80%, 12% 0%, 15% 55%, 18% 30%, 21% 55%, 24% 15%, 27% 80%, 30% 0%, 33% 80%, 36% 0%, 39% 55%, 42% 0%, 45% 70%, 48% 15%, 51% 55%, 54% 0%, 57% 55%, 60% 30%, 63% 70%, 66% 0%, 69% 80%, 72% 0%, 75% 55%, 78% 30%, 81% 80%, 84% 30%, 87% 55%, 90% 30%, 93% 80%, 96% 15%, 99% 55%, 100% 100%);
+  --planks: repeating-linear-gradient(90deg, transparent 0 37px, rgba(0, 0, 0, .2) 37px 39px);
   --trim: repeating-linear-gradient(90deg, var(--red) 0 12px, var(--red-lo) 12px 24px);
+  /* Stein in den Farben der Berge */
+  --rock: #8e9db3; --rock-hi: #a8b5c8; --rock-lo: #6e7c93; --rock-dk: #56627a; --rock-edge: #3a404c;
 }
 
-/* ================= Variante 1: Gitterholz =================
-   Knöpfe wie im letzten Design (Gitter, Löcher, weiße Innenkante), aber aus Holz.
-   Fenster aus Brettern mit rotem Kopf und rot gestreifter Borte. Menü unten links. */
-[data-ui="v1"] .btn, [data-ui="v1"] .tab {
-  border: 3px solid var(--wood-deep);
-  border-radius: 6px;
-  background: var(--holes), var(--diamond), var(--grain), linear-gradient(var(--c-hi), var(--c-lo));
-  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .32), inset 0 -5px 0 rgba(0, 0, 0, .18), 0 4px 0 var(--wood-deep);
+/* ================= Stein (Standard) =================
+   Kräftige Blöcke mit großem Rautengitter, grau wie die Berge, dunkelgraue Kanten und Schatten.
+   Grün für Los und Kaufen, Rot für Zurück und Schließen. Titel mittig, Menü als Leiste unten. */
+[data-ui="stein"] { --outline: var(--rock-edge); }
+[data-ui="stein"] .btn, [data-ui="stein"] .tab {
+  border: 3px solid var(--rock-edge);
+  border-radius: 3px;
+  background: var(--diamond-big), linear-gradient(var(--c) 0 50%, var(--c-lo) 50%);
+  box-shadow: inset 0 3px 0 rgba(255, 255, 255, .28), 0 4px 0 var(--rock-edge);
 }
-[data-ui="v1"] .btn:active { transform: translateY(3px); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .32), inset 0 -3px 0 rgba(0, 0, 0, .18), 0 1px 0 var(--wood-deep); }
-[data-ui="v1"] .icon-btn, [data-ui="v1"] .close-x, [data-ui="v1"] .tab { background: var(--diamond), var(--grain), linear-gradient(var(--c-hi), var(--c-lo)); }
-[data-ui="v1"] .tab { --c: var(--wood-lo); --c-hi: var(--wood-lo); --c-lo: var(--wood-dk); }
-[data-ui="v1"] .tab[aria-selected="true"] { --c: var(--green); --c-hi: var(--green-hi); --c-lo: var(--green-lo); }
-[data-ui="v1"] .box { background: var(--diamond), var(--grain), linear-gradient(var(--wood), var(--wood-lo)); border: 3px solid var(--wood-deep); border-radius: 6px; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .2), 0 3px 0 var(--wood-deep); }
-[data-ui="v1"] .fishbox { padding: 4px 12px; }
-[data-ui="v1"] .home-title { top: calc(env(safe-area-inset-top, 0px) + 14px); left: calc(env(safe-area-inset-left, 0px) + 16px); }
-[data-ui="v1"] .home-menu { left: calc(env(safe-area-inset-left, 0px) + 16px); bottom: calc(env(safe-area-inset-bottom, 0px) + 18px); grid-template-columns: 1fr 1fr; width: 270px; }
-[data-ui="v1"] .home-menu #boardBtn, [data-ui="v1"] .home-menu .btn-start { grid-column: 1 / -1; }
-[data-ui="v1"] .panel {
+[data-ui="stein"] .btn:active { transform: translateY(3px); box-shadow: inset 0 3px 0 rgba(255, 255, 255, .28), 0 1px 0 var(--rock-edge); }
+[data-ui="stein"] .btn2, [data-ui="stein"] .icon-btn, [data-ui="stein"] .tab { --c: var(--rock); --c-hi: var(--rock-hi); --c-lo: var(--rock-lo); }
+[data-ui="stein"] .tab[aria-selected="true"] { --c: var(--green); --c-lo: var(--green-lo); }
+[data-ui="stein"] .box { background: var(--diamond-big), linear-gradient(var(--rock) 0 50%, var(--rock-lo) 50%); border: 3px solid var(--rock-edge); border-radius: 3px; box-shadow: inset 0 3px 0 rgba(255, 255, 255, .22), 0 3px 0 var(--rock-edge); }
+[data-ui="stein"] .home-title { top: calc(env(safe-area-inset-top, 0px) + 22px); left: 0; right: 0; text-align: center; }
+[data-ui="stein"] .title { font-size: 56px; text-shadow: 0 4px 0 var(--rock-edge), 0 8px 0 rgba(58, 64, 76, .3); }
+[data-ui="stein"] .home-menu {
+  left: 50%; transform: translateX(-50%);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 4px);
+  grid-template-columns: repeat(4, auto); grid-template-areas: "a b c d"; align-items: end; gap: 6px;
+  padding: 4px 6px 7px;
+  background: var(--diamond-big), linear-gradient(var(--rock-lo) 0 50%, var(--rock-dk) 50%);
+  border: 3px solid var(--rock-edge);
+  border-radius: 3px;
+  box-shadow: inset 0 3px 0 rgba(255, 255, 255, .18), 0 4px 0 var(--rock-edge);
+}
+[data-ui="stein"] .home-menu .btn-start { grid-area: d; padding-block: 6px 7px; }
+[data-ui="stein"] .home-side { bottom: calc(env(safe-area-inset-bottom, 0px) + 60px); }
+[data-ui="stein"] .credit { bottom: auto; top: calc(env(safe-area-inset-top, 0px) + 6px); right: auto; left: calc(env(safe-area-inset-left, 0px) + 16px); }
+[data-ui="stein"] .panel {
+  background: var(--diamond-big), linear-gradient(var(--rock), var(--rock-lo));
+  border: 3px solid var(--rock-edge);
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 5px var(--rock-lo), inset 0 0 0 8px var(--rock-edge), 0 6px 0 var(--rock-edge), 0 18px 34px rgba(0, 0, 0, .3);
+  padding: 10px;
+}
+[data-ui="stein"] .panel-head { background: var(--diamond-big), linear-gradient(var(--rock-lo) 0 50%, var(--rock-dk) 50%); border: 3px solid var(--rock-edge); border-radius: 3px; box-shadow: inset 0 3px 0 rgba(255, 255, 255, .2); }
+[data-ui="stein"] .panel-head.red { background: var(--diamond-big), linear-gradient(var(--red) 0 50%, var(--red-lo) 50%); }
+[data-ui="stein"] .card, [data-ui="stein"] .me, [data-ui="stein"] .lb-row { background: var(--diamond-big), var(--rock-dk); border: 3px solid var(--rock-edge); border-radius: 3px; box-shadow: inset 0 3px 0 rgba(255, 255, 255, .1); }
+[data-ui="stein"] .lb-row:first-child { background: var(--diamond-big), var(--green-lo); }
+[data-ui="stein"] .badge, [data-ui="stein"] .msg { border: 3px solid var(--rock-edge); border-radius: 3px; }
+[data-ui="stein"] .msg { background: var(--rock-dk); }
+[data-ui="stein"] .name-input { border-color: var(--rock-edge); border-radius: 3px; background: var(--rock-dk); }
+[data-ui="stein"] .modal { background: rgba(58, 64, 76, .45); }
+[data-ui="stein"] #wipe { background: var(--diamond-big), var(--rock-lo); }
+
+/* ================= Gitterholz (Ersatz-Look, #gitterholz) ================= */
+[data-ui="gitterholz"] .btn, [data-ui="gitterholz"] .tab {
+  border: 3px solid var(--wood-deep);
+  border-radius: 5px;
+  background: var(--holes), var(--diamond), var(--grain), linear-gradient(var(--c-hi), var(--c-lo));
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .32), inset 0 -4px 0 rgba(0, 0, 0, .18), 0 4px 0 var(--wood-deep);
+}
+[data-ui="gitterholz"] .btn:active { transform: translateY(3px); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .32), 0 1px 0 var(--wood-deep); }
+[data-ui="gitterholz"] .icon-btn, [data-ui="gitterholz"] .close-x, [data-ui="gitterholz"] .tab, [data-ui="gitterholz"] .card .btn { background: var(--diamond), var(--grain), linear-gradient(var(--c-hi), var(--c-lo)); }
+[data-ui="gitterholz"] .tab { --c: var(--wood-lo); --c-hi: var(--wood-lo); --c-lo: var(--wood-dk); }
+[data-ui="gitterholz"] .tab[aria-selected="true"] { --c: var(--green); --c-hi: var(--green-hi); --c-lo: var(--green-lo); }
+[data-ui="gitterholz"] .box { background: var(--diamond), var(--grain), linear-gradient(var(--wood), var(--wood-lo)); border: 3px solid var(--wood-deep); border-radius: 5px; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .2), 0 3px 0 var(--wood-deep); }
+[data-ui="gitterholz"] .home-title { top: calc(env(safe-area-inset-top, 0px) + 14px); left: calc(env(safe-area-inset-left, 0px) + 16px); }
+[data-ui="gitterholz"] .home-menu { left: calc(env(safe-area-inset-left, 0px) + 16px); bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); grid-template-columns: 1fr 1fr; width: 220px; gap: 8px; }
+[data-ui="gitterholz"] .home-menu #boardBtn, [data-ui="gitterholz"] .home-menu .btn-start { grid-column: 1 / -1; }
+[data-ui="gitterholz"] .panel {
   background: repeating-linear-gradient(180deg, transparent 0 46px, rgba(42, 23, 11, .5) 46px 49px), var(--grain), linear-gradient(var(--wood), var(--wood-lo));
   border: 4px solid var(--wood-deep);
   border-radius: 8px;
   box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .18), 0 6px 0 var(--wood-deep), 0 16px 30px rgba(0, 0, 0, .35);
 }
-[data-ui="v1"] .panel-head {
-  margin: 6px 6px 0;
-  padding-bottom: 16px;
-  background: var(--trim) left bottom / 100% 8px no-repeat, var(--diamond), linear-gradient(var(--red-hi), var(--red-lo));
-  border: 3px solid var(--wood-deep);
-  border-radius: 6px;
-  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .3);
-}
-[data-ui="v1"] .panel-head .close-x { --c: var(--wood); --c-hi: var(--wood-hi); --c-lo: var(--wood-lo); }
-[data-ui="v1"] .card, [data-ui="v1"] .me, [data-ui="v1"] .lb-row { background: var(--diamond), var(--grain), var(--wood-dk); border: 3px solid var(--wood-deep); border-radius: 6px; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .14); }
-[data-ui="v1"] .lb-row:first-child { background: var(--diamond), var(--green-lo); }
-[data-ui="v1"] .badge, [data-ui="v1"] .msg { border: 2px solid var(--wood-deep); border-radius: 4px; }
-[data-ui="v1"] .name-input { border-radius: 6px; }
-[data-ui="v1"] #wipe { background: var(--diamond), var(--grain), var(--wood); }
+[data-ui="gitterholz"] .panel-head { margin: 6px 6px 0; padding-bottom: 16px; background: var(--trim) left bottom / 100% 8px no-repeat, var(--diamond), linear-gradient(var(--red-hi), var(--red-lo)); border: 3px solid var(--wood-deep); border-radius: 6px; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .3); }
+[data-ui="gitterholz"] .panel-head .close-x { --c: var(--wood); --c-hi: var(--wood-hi); --c-lo: var(--wood-lo); }
+[data-ui="gitterholz"] .card, [data-ui="gitterholz"] .me, [data-ui="gitterholz"] .lb-row { background: var(--diamond), var(--grain), var(--wood-dk); border: 3px solid var(--wood-deep); border-radius: 6px; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .14); }
+[data-ui="gitterholz"] .lb-row:first-child { background: var(--diamond), var(--green-lo); }
+[data-ui="gitterholz"] .badge, [data-ui="gitterholz"] .msg { border: 2px solid var(--wood-deep); border-radius: 4px; }
+[data-ui="gitterholz"] .name-input { border-radius: 6px; }
+[data-ui="gitterholz"] #wipe { background: var(--diamond), var(--grain), var(--wood); }
 
-/* ================= Variante 2: Moosbretter =================
-   Knöpfe wie im vorletzten Design (Bretter, Nägel, Moos obendrauf), aber mit Gitter und dicker Kontur.
-   Menü als Bretterstapel links. Fensterkopf grün mit Moos. */
-[data-ui="v2"] .btn {
-  border: 3px solid var(--wood-deep);
-  border-radius: 5px;
-  background: var(--nails), var(--diamond), var(--grain), var(--planks), linear-gradient(var(--c-hi), var(--c-lo));
-  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .25), inset 0 -3px 0 rgba(0, 0, 0, .18), 0 5px 0 var(--wood-deep);
+/* kleiner Installieren-Knopf oben in der Leiste */
+.install-btn svg { width: 14px; height: 14px; }
+#installHelp {
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 0px) + 52px);
+  right: calc(env(safe-area-inset-right, 0px) + 16px);
+  max-width: min(320px, calc(100% - 32px));
+  padding: 8px 10px;
+  background: rgba(42, 23, 11, .75);
+  font-size: 8px;
+  line-height: 1.6;
+  text-align: left;
+  z-index: 11;
 }
-[data-ui="v2"] .btn:not(.icon-btn):not(.close-x)::before {
-  content: "";
-  position: absolute;
-  left: 3px; right: 3px; top: -7px; height: 10px;
-  background: linear-gradient(var(--green-hi), var(--green-lo));
-  clip-path: var(--moss);
-  pointer-events: none;
-}
-[data-ui="v2"] .btn-start::before, [data-ui="v2"] .card .btn::before, [data-ui="v2"] .panel-head .btn::before, [data-ui="v2"] .row .btn::before { display: none; }
-[data-ui="v2"] .btn:active { transform: translateY(4px); box-shadow: inset 0 2px 0 rgba(255, 255, 255, .25), 0 1px 0 var(--wood-deep); }
-[data-ui="v2"] .icon-btn, [data-ui="v2"] .close-x { background: var(--diamond), var(--grain), linear-gradient(var(--c-hi), var(--c-lo)); }
-[data-ui="v2"] .tab { border: 3px solid var(--wood-deep); border-radius: 5px 5px 0 0; background: var(--grain), var(--wood-dk); box-shadow: inset 0 2px 0 rgba(255, 255, 255, .12); }
-[data-ui="v2"] .tab[aria-selected="true"] { background: var(--diamond), var(--grain), linear-gradient(var(--green-hi), var(--green-lo)); }
-[data-ui="v2"] .tabs { border-bottom: 3px solid var(--wood-deep); margin: 0 12px; padding: 12px 0 0; }
-[data-ui="v2"] .box { background: var(--nails), var(--grain), var(--planks), linear-gradient(var(--wood), var(--wood-lo)); border: 3px solid var(--wood-deep); border-radius: 5px; box-shadow: 0 3px 0 var(--wood-deep); padding-inline: 14px; }
-[data-ui="v2"] .home-title { top: calc(env(safe-area-inset-top, 0px) + 14px); left: calc(env(safe-area-inset-left, 0px) + 16px); }
-[data-ui="v2"] .home-menu { left: calc(env(safe-area-inset-left, 0px) + 16px); bottom: calc(env(safe-area-inset-bottom, 0px) + 18px); grid-template-columns: 1fr; width: 220px; gap: 14px; }
-[data-ui="v2"] .panel {
-  background: var(--diamond), var(--grain), var(--planks), linear-gradient(var(--wood), var(--wood-lo));
-  border: 4px solid var(--wood-deep);
-  border-radius: 7px;
-  box-shadow: 0 6px 0 var(--wood-deep), 0 14px 30px rgba(0, 0, 0, .35);
-  overflow: visible;
-}
-[data-ui="v2"] .panel-head { position: relative; padding: 12px 10px 12px 16px; background: var(--diamond), var(--grain), linear-gradient(var(--green-hi), var(--green-lo)); border-bottom: 4px solid var(--wood-deep); border-radius: 3px 3px 0 0; }
-[data-ui="v2"] .panel-head::before { content: ""; position: absolute; left: 0; right: 0; top: -10px; height: 12px; background: linear-gradient(var(--green-hi), var(--green-lo)); clip-path: var(--moss); }
-[data-ui="v2"] .panel-head.red { background: var(--diamond), var(--grain), linear-gradient(var(--red-hi), var(--red-lo)); }
-[data-ui="v2"] .scroll { border-radius: 0 0 4px 4px; }
-[data-ui="v2"] .card, [data-ui="v2"] .me, [data-ui="v2"] .lb-row { background: var(--nails), var(--grain), linear-gradient(var(--wood-lo), var(--wood-dk)); border: 3px solid var(--wood-deep); border-radius: 5px; box-shadow: inset 0 2px 0 rgba(255, 255, 255, .12); }
-[data-ui="v2"] .lb-row:first-child { background: var(--nails), var(--grain), var(--green-lo); }
-[data-ui="v2"] .badge, [data-ui="v2"] .msg { border: 2px solid var(--wood-deep); border-radius: 4px; }
-[data-ui="v2"] .name-input { border-radius: 5px; }
-[data-ui="v2"] #wipe { background: var(--diamond), var(--grain), var(--planks), var(--wood); }
-
-/* ================= Variante 3: Block-Leiste =================
-   Kräftige Blöcke mit großem Gitter und dicker Kontur (letztes Design) in einem Holzrahmen
-   mit Brettern und Nägeln (vorletztes Design). Titel mittig, Menü als Leiste unten. */
-[data-ui="v3"] .btn, [data-ui="v3"] .tab {
-  border: 4px solid var(--wood-deep);
-  border-radius: 3px;
-  background: var(--diamond-big), linear-gradient(var(--c) 0 50%, var(--c-lo) 50%);
-  box-shadow: inset 0 4px 0 rgba(255, 255, 255, .28), 0 6px 0 var(--wood-deep);
-}
-[data-ui="v3"] .btn:active { transform: translateY(5px); box-shadow: inset 0 4px 0 rgba(255, 255, 255, .28), 0 1px 0 var(--wood-deep); }
-[data-ui="v3"] .tab { --c: var(--wood-lo); --c-lo: var(--wood-dk); box-shadow: inset 0 3px 0 rgba(255, 255, 255, .18), 0 3px 0 var(--wood-deep); }
-[data-ui="v3"] .tab[aria-selected="true"] { --c: var(--green); --c-lo: var(--green-lo); }
-[data-ui="v3"] .box { background: var(--nails), var(--grain), var(--wood-lo); border: 4px solid var(--wood-deep); border-radius: 3px; padding-inline: 14px; }
-[data-ui="v3"] .home-title { top: calc(env(safe-area-inset-top, 0px) + 22px); left: 0; right: 0; text-align: center; }
-[data-ui="v3"] .title { font-size: 56px; text-shadow: 0 4px 0 var(--wood-deep), 0 8px 0 rgba(42, 23, 11, .3); }
-[data-ui="v3"] .home-menu {
-  left: 50%; transform: translateX(-50%);
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
-  grid-template-columns: repeat(3, 150px) 190px; grid-template-areas: "a b c d"; align-items: end;
-  padding: 12px 14px 16px;
-  background: var(--nails), var(--grain), var(--planks), linear-gradient(var(--wood), var(--wood-lo));
-  border: 4px solid var(--wood-deep);
-  border-radius: 4px;
-  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .14), 0 6px 0 var(--wood-deep);
-}
-[data-ui="v3"] .home-menu .btn-start { grid-area: d; }
-[data-ui="v3"] .home-side { bottom: calc(env(safe-area-inset-bottom, 0px) + 120px); }
-[data-ui="v3"] .credit { bottom: auto; top: calc(env(safe-area-inset-top, 0px) + 6px); right: auto; left: calc(env(safe-area-inset-left, 0px) + 16px); }
-[data-ui="v3"] .panel {
-  background: var(--nails), var(--grain), var(--planks), linear-gradient(var(--wood), var(--wood-lo));
-  border: 4px solid var(--wood-deep);
-  border-radius: 4px;
-  box-shadow: inset 0 0 0 6px var(--wood-lo), inset 0 0 0 9px var(--wood-deep), 0 8px 0 var(--wood-deep), 0 18px 34px rgba(0, 0, 0, .35);
-  padding: 10px;
-}
-[data-ui="v3"] .panel-head { background: var(--diamond-big), linear-gradient(var(--red) 0 50%, var(--red-lo) 50%); border: 4px solid var(--wood-deep); border-radius: 3px; box-shadow: inset 0 4px 0 rgba(255, 255, 255, .25); }
-[data-ui="v3"] .panel-head .close-x { --c: var(--wood); --c-lo: var(--wood-lo); }
-[data-ui="v3"] .card, [data-ui="v3"] .me, [data-ui="v3"] .lb-row { background: var(--diamond-big), var(--wood-dk); border: 4px solid var(--wood-deep); border-radius: 3px; box-shadow: inset 0 3px 0 rgba(255, 255, 255, .12); }
-[data-ui="v3"] .lb-row:first-child { background: var(--diamond-big), var(--green-lo); }
-[data-ui="v3"] .badge, [data-ui="v3"] .msg { border: 3px solid var(--wood-deep); border-radius: 3px; }
-[data-ui="v3"] .name-input { border-width: 4px; border-radius: 3px; }
-[data-ui="v3"] #wipe { background: var(--diamond-big), var(--green); }
 
 @media (orientation: portrait) {
-  [data-ui="v1"] .home-title, [data-ui="v2"] .home-title { top: calc(env(safe-area-inset-top, 0px) + 74px); }
-  [data-ui="v3"] .home-title { top: calc(env(safe-area-inset-top, 0px) + 80px); }
-  [data-ui="v3"] .home-menu { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-areas: "d d d" "a b c"; left: 16px; right: 16px; transform: none; }
-  [data-ui="v3"] .home-menu .btn { padding-inline: 4px; }
-  [data-ui="v3"] .credit { top: auto; left: auto; right: calc(env(safe-area-inset-right, 0px) + 8px); bottom: calc(env(safe-area-inset-bottom, 0px) + 1px); }
-  [data-ui="v3"] .home-side { bottom: calc(env(safe-area-inset-bottom, 0px) + 190px); }
+  [data-ui="gitterholz"] .home-title { top: calc(env(safe-area-inset-top, 0px) + 74px); }
+  [data-ui="stein"] .home-title { top: calc(env(safe-area-inset-top, 0px) + 80px); }
+  [data-ui="stein"] .home-menu { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-areas: "d d d" "a b c"; left: 16px; right: 16px; transform: none; }
+  [data-ui="stein"] .home-menu .btn { padding-inline: 4px; }
+  [data-ui="stein"] .credit { top: auto; left: auto; right: calc(env(safe-area-inset-right, 0px) + 8px); bottom: calc(env(safe-area-inset-bottom, 0px) + 1px); }
 }
 @media (orientation: landscape) and (max-height: 560px) {
-  [data-ui="v3"] .home-title { top: calc(env(safe-area-inset-top, 0px) + 64px); }
-  [data-ui="v3"] .title { font-size: 40px; }
-  [data-ui="v3"] .home-menu { grid-template-columns: repeat(3, 124px) 150px; gap: 8px; padding: 6px 8px 10px; bottom: calc(env(safe-area-inset-bottom, 0px) + 4px); }
-  [data-ui="v3"] .home-menu .btn { padding: 8px 10px 10px; border-width: 3px; box-shadow: inset 0 3px 0 rgba(255, 255, 255, .28), 0 4px 0 var(--wood-deep); }
-  [data-ui="v3"] .home-menu .btn-start { font-size: 20px; padding: 6px 10px 8px; }
-  [data-ui="v3"] .home-side { bottom: calc(env(safe-area-inset-bottom, 0px) + 84px); }
-  [data-ui="v2"] .home-menu { gap: 12px; width: 200px; }
-}
-/* ================= Stein & Holz (Standard) =================
-   Alle Knöpfe, Kästchen und Fenster aus Stein mit Rautengitter, eingefasst in Holz mit Nägeln.
-   Grün und Rot bleiben für Los/Kaufen und Zurück/Schließen. Menü unten links. */
-:root {
-  --stone: #8b8e94; --stone-hi: #a7aab0; --stone-lo: #6b6e74; --stone-dk: #4d4f54;
-  --speckle: radial-gradient(circle, rgba(255, 255, 255, .16) 0 1px, transparent 1.5px) 0 0 / 9px 11px, radial-gradient(circle, rgba(0, 0, 0, .16) 0 1.2px, transparent 1.7px) 4px 5px / 13px 9px;
-  --blocks: linear-gradient(rgba(0, 0, 0, .22) 2px, transparent 2px) 0 0 / 100% 26px, linear-gradient(90deg, rgba(0, 0, 0, .18) 2px, transparent 2px) 0 0 / 52px 100%;
-  --frame: inset 0 0 0 4px var(--wood), inset 0 0 0 6px var(--wood-deep);
-}
-[data-ui="stein"] .btn {
-  border: 3px solid var(--wood-deep);
-  border-radius: 4px;
-  padding-inline: 20px;
-  background: var(--nails), var(--diamond), var(--speckle), linear-gradient(var(--c-hi), var(--c-lo));
-  box-shadow: var(--frame), inset 0 9px 0 rgba(255, 255, 255, .14), 0 4px 0 var(--wood-deep);
-}
-[data-ui="stein"] .btn:active { transform: translateY(3px); box-shadow: var(--frame), 0 1px 0 var(--wood-deep); }
-[data-ui="stein"] .btn2, [data-ui="stein"] .icon-btn { --c: var(--stone); --c-hi: var(--stone-hi); --c-lo: var(--stone-lo); }
-[data-ui="stein"] .icon-btn, [data-ui="stein"] .close-x { padding: 0; background: var(--diamond), var(--speckle), linear-gradient(var(--c-hi), var(--c-lo)); }
-[data-ui="stein"] .tab {
-  border: 3px solid var(--wood-deep);
-  border-radius: 4px;
-  background: var(--diamond), var(--speckle), linear-gradient(var(--stone-lo), var(--stone-dk));
-  box-shadow: inset 0 0 0 3px var(--wood), 0 3px 0 var(--wood-deep);
-  padding: 10px 16px 12px;
-}
-[data-ui="stein"] .tab[aria-selected="true"] { background: var(--diamond), var(--speckle), linear-gradient(var(--green-hi), var(--green-lo)); }
-[data-ui="stein"] .box { background: var(--diamond), var(--speckle), linear-gradient(var(--stone), var(--stone-lo)); border: 3px solid var(--wood-deep); border-radius: 4px; box-shadow: inset 0 0 0 3px var(--wood), 0 3px 0 var(--wood-deep); padding: 8px 13px 9px; }
-[data-ui="stein"] .fishbox { padding-block: 4px; }
-[data-ui="stein"] .home-title { top: calc(env(safe-area-inset-top, 0px) + 14px); left: calc(env(safe-area-inset-left, 0px) + 16px); }
-[data-ui="stein"] .title { text-shadow: 0 4px 0 var(--stone-dk), 0 8px 14px rgba(0, 0, 0, .2); }
-[data-ui="stein"] .home-menu { left: calc(env(safe-area-inset-left, 0px) + 16px); bottom: calc(env(safe-area-inset-bottom, 0px) + 18px); grid-template-columns: 1fr 1fr; width: 280px; }
-[data-ui="stein"] .home-menu #boardBtn, [data-ui="stein"] .home-menu .btn-start { grid-column: 1 / -1; }
-[data-ui="stein"] .panel {
-  padding: 12px;
-  background: var(--speckle), var(--blocks), linear-gradient(var(--stone), var(--stone-lo));
-  border: 3px solid var(--wood-deep);
-  border-radius: 6px;
-  box-shadow: inset 0 0 0 9px var(--wood), inset 0 0 0 12px var(--wood-deep), 0 6px 0 var(--wood-deep), 0 16px 30px rgba(0, 0, 0, .35);
-}
-[data-ui="stein"] .panel-head {
-  margin: 2px 2px 0;
-  background: var(--nails), var(--grain), var(--planks), linear-gradient(var(--wood-hi), var(--wood-lo));
-  border: 3px solid var(--wood-deep);
-  border-radius: 4px;
-  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .2);
-}
-[data-ui="stein"] .panel-head.red { background: var(--nails), var(--diamond), var(--speckle), linear-gradient(var(--red-hi), var(--red-lo)); }
-[data-ui="stein"] .card, [data-ui="stein"] .me, [data-ui="stein"] .lb-row {
-  background: var(--diamond), var(--speckle), linear-gradient(var(--stone-lo), var(--stone-dk));
-  border: 3px solid var(--wood-deep);
-  border-radius: 4px;
-  box-shadow: inset 0 0 0 3px var(--wood), inset 0 5px 0 rgba(255, 255, 255, .08);
-  padding: 12px;
-}
-[data-ui="stein"] .lb-row:first-child { background: var(--diamond), var(--speckle), linear-gradient(var(--green), var(--green-lo)); }
-[data-ui="stein"] .badge { border: 2px solid var(--wood-deep); border-radius: 3px; }
-[data-ui="stein"] .msg { border: 3px solid var(--wood-deep); border-radius: 4px; background: var(--grain), var(--wood-lo); }
-[data-ui="stein"] .name-input { border-radius: 4px; background: var(--speckle), var(--stone-dk); box-shadow: inset 0 0 0 3px var(--wood); padding-inline: 14px; }
-[data-ui="stein"] #wipe { background: var(--diamond), var(--speckle), var(--blocks), var(--stone); }
-@media (orientation: portrait) {
-  [data-ui="stein"] .home-title { top: calc(env(safe-area-inset-top, 0px) + 74px); }
+  [data-ui="stein"] .home-title { top: calc(env(safe-area-inset-top, 0px) + 60px); }
+  [data-ui="stein"] .title { font-size: 40px; }
 }
 @media (orientation: portrait) {
   .hud { flex-wrap: wrap; }
@@ -487,9 +383,6 @@ p, h1, h2, h3 { margin: 0; }
   #banner .lvl { font-size: 40px; }
   #combo { top: 54%; }
   .title { font-size: 40px; }
-  .btn-start { font-size: 24px; padding: 13px 18px 15px; }
-  .home-menu { gap: 8px; }
-  .home-menu .btn { padding-top: 11px; padding-bottom: 13px; }
   .grid { grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 10px; }
   .card .prev { height: 52px; }
 }
@@ -517,6 +410,9 @@ p, h1, h2, h3 { margin: 0; }
   <div class="box fishbox" id="fishBox" aria-label="Fische">
     <svg class="fish-ico" viewBox="0 0 9 5" shape-rendering="crispEdges" aria-hidden="true"><path fill="#ff9f43" d="M2 0h4v1h1v1h1V1h1v3H8V3H7v1H6v1H2V4H1V3H0V2h1V1h1z"/><path fill="#1e1c26" d="M2 1h1v1H2z"/></svg><span id="fish">0</span>
   </div>
+  <button class="btn icon-btn install-btn" id="installBtn" type="button" aria-label="App installieren" title="App installieren" hidden>
+    <svg viewBox="0 0 10 10" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M4 0h2v5h2v1H7v1H6v1H4V7H3V6H2V5h2zM0 7h1v2h8V7h1v3H0z"/></svg>
+  </button>
   <button class="btn icon-btn" id="reload" type="button" aria-label="Neu laden" title="Neu laden">
     <svg viewBox="0 0 10 10" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M3 1h4v1h1v1h1v2H8V4H7V3H3v1H2v3h1v1h3v1H2V8H1V3h1V2h1zM7 5h3v1H9v1H8V6H7z"/></svg>
   </button>
@@ -539,8 +435,6 @@ p, h1, h2, h3 { margin: 0; }
   </nav>
   <div class="home-side">
     <p class="tipline">Tippen = springen</p>
-    <button class="btn btn2 btn-small" id="installBtn" type="button" hidden>App installieren</button>
-    <p class="tipline" id="installHelp" hidden></p>
   </div>
   <p class="credit">Schrift: Minecraft von Pwnage_Block (CC BY-SA 3.0)</p>
 </div>
@@ -652,6 +546,8 @@ p, h1, h2, h3 { margin: 0; }
   <span class="name" id="bName">Almwiese</span>
   <span class="tip" id="bTip">Tippen = springen</span>
 </div>
+
+<p class="tipline" id="installHelp" hidden></p>
 
 <p id="hint" class="gone">Tippen = springen</p>
 
@@ -842,6 +738,14 @@ function catRows(pose, look) {
       if ((yy < B.cy - .3 + bob && xx <= 15.5) || (yy <= hy - 1.6 && xx >= 14) || (xx >= 20.4 && xx <= 23.4 && yy >= hy - 1.6 && yy <= hy + .6)) g[y][x] = 'o';
     }
   }
+  if (look.breed.saddle) { // ganzer Körper braun, Kopf, Brust und Beine weiß
+    for (let y = 0; y < CAT_H; y++) for (let x = 0; x < CAT_W; x++) {
+      const xx = x - ox;
+      if (xx > 14.2) continue;
+      if (g[y][x] === 'b') g[y][x] = 'o';
+      else if (g[y][x] === 's') g[y][x] = 'u';
+    }
+  }
   if (look.breed.dots) {
     for (let y = 0; y < CAT_H; y++) for (let x = 0; x < CAT_W; x++) if (g[y][x] === 'b' && hash(x * 7 + y * 13) < .13) g[y][x] = 't';
   }
@@ -921,7 +825,7 @@ const BREEDS = [
   { id: 'weiss', name: 'Schneeweiß', hair: 'Kurzhaar', fur: 0, price: 0, desc: 'Deine erste Katze.', pal: {} },
   { id: 'grau', name: 'Grau getigert', hair: 'Halblanghaar', fur: 1, price: 30, desc: 'Grau mit dunklen Streifen.', pal: { b: '#b8bcc6', s: '#979ca8', d: '#80858f', u: '#80858f', e: '#2f5d34', c: '#e6a9b8' }, stripes: '#9a9fab' },
   { id: 'schwarz', name: 'Mitternacht', hair: 'Kurzhaar', fur: 0, price: 40, desc: 'Schwarz mit gelben Augen, wie Kirby.', pal: { b: '#3a3644', s: '#2a2733', d: '#1f1d27', u: '#2a2733', p: '#b07a88', e: '#e6d23a', c: '#7a5363', h: '#3a3644' } },
-  { id: 'weissbraun', name: 'Weiß-Braun', hair: 'Langhaar', fur: 2, price: 50, desc: 'Weiß mit braunen Flecken, flauschig.', pal: { a: '#8a5a3a', q: '#8a5a3a', u: '#6e4429', e: '#2f5d34' }, patches: '#8a5a3a' },
+  { id: 'weissbraun', name: 'Weiß-Braun', hair: 'Langhaar', fur: 2, price: 50, desc: 'Brauner Körper und Schwanz, weißer Kopf und Pfoten.', pal: { a: '#8a5a3a', q: '#8a5a3a', u: '#6e4429', e: '#2f5d34' }, saddle: ['#8a5a3a', '#6e4429'] },
   { id: 'orange', name: 'Orange', hair: 'Halblanghaar', fur: 1, price: 60, desc: 'Rot getigert.', pal: { b: '#f2a14a', s: '#d27a2a', d: '#b8661f', u: '#c8641c', p: '#ffc1a8', e: '#2f5d34', c: '#ffb08a' }, stripes: '#e48c35' },
   { id: 'braun', name: 'Schoko', hair: 'Kurzhaar', fur: 0, price: 60, desc: 'Schokobraun mit Streifen.', pal: { b: '#8f5e3c', s: '#734a2d', d: '#5e3b22', u: '#4e2f1b', p: '#d9a08f', e: '#8fd16a', c: '#c98a7a' }, stripes: '#7a4e30' },
   { id: 'moppel', name: 'Moppel', hair: 'Kurzhaar', fur: 0, price: 80, body: 'dick', desc: 'Ein dicker grau-weißer Kater.', pal: { a: '#8f95a1', q: '#8f95a1', u: '#6f7580', e: '#2f5d34' }, patches: '#9aa0ab' },
@@ -952,7 +856,7 @@ function catSet(breedId, cosIds = []) {
     pal.a = breed.pal.a || pal.b;
     pal.u = breed.pal.u || pal.s;
     pal.t = breed.stripes || breed.dots || pal.s;
-    pal.o = breed.patches || pal.o;
+    pal.o = breed.patches || (breed.saddle && breed.saddle[0]) || pal.o;
     const look = { breed, cos, body: breed.body || 'duenn' };
     const mk = (pose) => shrinkHitbox(sprite(catRows(pose, look), pal, true, 'w', COS_CHARS), HITBOX);
     catCache[key] = {
@@ -1584,7 +1488,7 @@ $('installBtn').addEventListener('click', async () => {
       : isAndroid
         ? 'Im Browser-Menü (die drei Punkte) auf "App installieren" oder "Zum Startbildschirm hinzufügen" tippen.'
         : 'In der Adressleiste auf das Installieren-Symbol klicken oder im Browser-Menü "Cat Jumper installieren" wählen.';
-    $('installHelp').hidden = false;
+    $('installHelp').hidden = !$('installHelp').hidden;
     return;
   }
   installEvent.prompt();
@@ -1640,11 +1544,12 @@ function showHint(ms, text) {
 
 // Kreis-Übergang: zu, umschalten, wieder auf
 let wiping = false;
-function transition(text, cb) {
+function transition(text, cb, fast = false) {
   if (wiping) return;
   wiping = true;
   const w = $('wipe');
   $('wipeText').textContent = text;
+  w.classList.toggle('fast', fast);
   w.classList.remove('opening');
   w.classList.add('closing');
   sfx.whoosh();
@@ -1652,15 +1557,16 @@ function transition(text, cb) {
     cb();
     w.classList.remove('closing');
     w.classList.add('opening');
-    setTimeout(() => { w.classList.remove('opening'); wiping = false; }, 470);
-  }, 440);
+    setTimeout(() => { w.classList.remove('opening', 'fast'); wiping = false; }, fast ? 200 : 470);
+  }, fast ? 180 : 440);
 }
 
 function goHome() {
   mode = 'home';
   G = freshGame();
   Object.assign(P, { x: Math.round(viewW * .42), y: 0, vy: 0, grounded: true, jumps: 0, buffer: 0, airT: 0, land: 0, flip: 0, inv: 0, jumpPassed: false, checkReset: false });
-  G.objects.push(makePerson('stand', Math.round(viewW * .6)), makePerson('stand', Math.round(viewW * .6) + 16, 0, { who: 'girl' }));
+  const toy = yarnSpr[4];
+  G.objects.push({ type: 'toy', kind: 'yarn', spr: toy, x: P.x + 30, y: 0, w: toy.w, h: toy.h, vx: 40, rot: 0, bob: 0, wait: 1.2, passed: true });
   particles.length = 0;
   floaters.length = 0;
   document.body.classList.add('at-home');
@@ -1687,7 +1593,7 @@ function pause() { mode = 'paused'; show('pause'); }
 function resume() { mode = 'play'; show(null); last = performance.now(); }
 
 $('startBtn').addEventListener('click', () => { audioOn(); if (mode === 'home') transition("Los geht's!", startGame); });
-$('againBtn').addEventListener('click', () => { audioOn(); if (mode === 'over') transition("Los geht's!", startGame); });
+$('againBtn').addEventListener('click', () => { audioOn(); if (mode === 'over') transition('', startGame, true); });
 $('lobbyBtn').addEventListener('click', () => { if (mode === 'over') transition('Lobby', goHome); });
 $('pauseLobbyBtn').addEventListener('click', () => { if (mode === 'paused') transition('Lobby', goHome); });
 $('resumeBtn').addEventListener('click', () => { if (mode === 'paused') resume(); });
@@ -2019,6 +1925,30 @@ function catSprite() {
 const objY = (o) => (o.type === 'fish' || o.type === 'star' ? o.y + Math.round(Math.sin(G.time * 5 + o.bob)) : o.kind && o.kind.startsWith('glide') ? o.y + Math.round(Math.sin(G.time * 3 + o.bob) * 1.5) : o.y);
 const RAINBOW = ['#ff5555', '#ffaa00', '#ffff55', '#55ff55', '#55ffff', '#5599ff', '#ff55ff'];
 
+/* ---------- Lobby: die Katze spielt mit dem Wollknäuel ---------- */
+function playWithYarn(dt) {
+  const T = G.objects.find((o) => o.type === 'toy');
+  if (!T) return;
+  const paw = P.x + 22; // vor der Vorderpfote
+  // das Knäuel rollt weg, bremst ab und kullert langsam zurück
+  T.vx -= 30 * dt;
+  T.vx *= Math.pow(.55, dt);
+  T.x += T.vx * dt;
+  if (T.x < paw) { T.x = paw; T.vx = Math.max(0, -T.vx * .3); }
+  T.rot += T.vx * dt / 4.5;
+  if (!P.grounded) {
+    P.vy -= GRAV * dt;
+    P.y += P.vy * dt;
+    if (P.y <= 0) {
+      P.y = 0; P.vy = 0; P.grounded = true;
+      if (T.x - paw < 12) { T.vx = rand(60, 95); for (let i = 0; i < 4; i++) particles.push({ x: T.x + 4, y: 2, vx: rand(10, 50), vy: rand(10, 40), life: rand(.2, .4), c: '#ff7a6e' }); }
+    }
+  } else {
+    T.wait -= dt;
+    if (T.wait <= 0 && T.x - paw < 6) { P.grounded = false; P.vy = rand(190, 240); T.wait = rand(1.4, 2.6); }
+  }
+}
+
 /* ---------- Update ---------- */
 function update(dt) {
   P.blink -= dt;
@@ -2049,7 +1979,7 @@ function update(dt) {
 
   G.time += dt;
   if (mode !== 'play') {
-    if (mode === 'home') G.scroll += 10 * dt; // Wolken ziehen langsam
+    if (mode === 'home') { G.scroll += 10 * dt; playWithYarn(dt); } // Wolken ziehen langsam
     return;
   }
 
