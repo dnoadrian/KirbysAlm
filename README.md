@@ -10,12 +10,25 @@ In der Lobby spielt deine Katze mit einem Wollknäuel. Links oben stehen unterei
 
 ## Steuerung
 
-Nur Tippen (bzw. Klicken):
+Handy: nur Tippen (bzw. Klicken).
 
-- **Tippen:** springen (im Spiel steht dazu keine Erklärung mehr)
+- **Tippen:** springen
 - **In der Luft nochmal tippen:** Doppelsprung (ab Level 2, mit Salto)
 
+PC:
+
+- **Leertaste** (oder Pfeil hoch / W): springen; in der Lobby startet sie das Spiel, nach dem Verlieren „Nochmal“
+- **Enter:** Start bzw. Nochmal
+- **Escape:** Pause und weiter, Fenster schließen
+- **Maus:** Klick springt wie Tippen
+
 Oben rechts installiert der kleine Download-Knopf die App (nur im Browser sichtbar), der Lautsprecher schaltet den Ton.
+
+## Admin-Panel
+
+Taste **0** öffnet das Admin-Panel (Benutzer `Adrian`, Passwort `1234`). Dort kann man sich Fische geben und mit **Alle User löschen** alle Spielstände löschen, den eigenen eingeschlossen; danach startet das Spiel mit der Namensfrage neu.
+
+Das Spiel hat keinen Server: Jeder Spielstand liegt nur im Browser des jeweiligen Geräts. Das Panel wirkt deshalb nur auf dem Gerät, auf dem es geöffnet wird. Benutzer und Passwort stehen im Quelltext, sind also kein echter Schutz.
 
 ## Deine Katze
 

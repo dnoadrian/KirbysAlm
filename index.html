@@ -143,6 +143,13 @@ p, h1, h2, h3 { margin: 0; }
   padding: 14px 28px 16px;
 }
 
+.admin-row { align-items: flex-start; }
+.admin-row .name-input { flex: 1; margin-top: 0; }
+.admin-row .btn { flex: none; }
+#adminLogin { display: flex; flex-direction: column; }
+#adminTools { display: flex; flex-direction: column; gap: 10px; }
+#adminTools .row { margin: 0; }
+#admin .msg { margin: 0 0 12px; }
 .modal {
   position: fixed;
   inset: 0;
@@ -385,6 +392,37 @@ p, h1, h2, h3 { margin: 0; }
       <div class="grid" id="invUpgrades"></div>
       <h3>Cosmetics</h3>
       <div class="grid" id="invCos"></div>
+    </div>
+  </div>
+</div>
+
+<div id="admin" class="modal" hidden>
+  <div class="panel small" role="dialog" aria-modal="true" aria-labelledby="adminTitle">
+    <div class="panel-head">
+      <h2 id="adminTitle">Admin</h2>
+      <button class="btn close-x" type="button" id="adminClose" aria-label="Schließen"><svg viewBox="0 0 7 7" shape-rendering="crispEdges" aria-hidden="true"><path fill="#fff" d="M0 0h2v1h1v1h1V1h1V0h2v2H6v1H5v1h1v1h1v2H5V6H4V5H3v1H2v1H0V5h1V4h1V3H1V2H0z"/></svg></button>
+    </div>
+    <div class="scroll">
+      <p class="msg" id="adminMsg" hidden></p>
+      <form id="adminLogin" autocomplete="off">
+        <label class="field-lbl" for="adminUser">Benutzer</label>
+        <input class="name-input" id="adminUser" type="text" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <label class="field-lbl" for="adminPass">Passwort</label>
+        <input class="name-input" id="adminPass" type="password" autocomplete="off">
+        <button class="btn" id="adminLoginBtn" type="submit">Anmelden</button>
+      </form>
+      <div id="adminTools" hidden>
+        <p class="field-lbl" id="adminWho"></p>
+        <label class="field-lbl" for="adminFish">Fische vergeben</label>
+        <div class="row admin-row">
+          <input class="name-input" id="adminFish" type="number" inputmode="numeric" min="1" max="99999" value="100">
+          <button class="btn" id="adminGive" type="button">Geben</button>
+        </div>
+        <p class="field-lbl small-note">Alle User löschen entfernt jeden Spielstand auf diesem Gerät, auch deinen eigenen. Danach startet das Spiel neu mit der Namensfrage.</p>
+        <div class="row">
+          <button class="btn btn-red" id="adminWipe" type="button">Alle User löschen</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -1345,6 +1383,94 @@ document.addEventListener('gesturestart', (e) => e.preventDefault());
 document.addEventListener('contextmenu', (e) => e.preventDefault());
 document.addEventListener('dblclick', (e) => e.preventDefault());
 
+/* ---------- PC: Leertaste springt, Enter startet, Escape pausiert, 0 öffnet das Admin-Panel ---------- */
+window.addEventListener('keydown', (e) => {
+  const typing = e.target.closest && e.target.closest('input, textarea');
+  if (typing || e.ctrlKey || e.metaKey || e.altKey) return;
+  const anyModal = Object.keys(screens).some((k) => k !== 'home' && !screens[k].hidden);
+  if (e.key === '0') { e.preventDefault(); openAdmin(); return; }
+  if (!screens.admin.hidden) { if (e.key === 'Escape') closeAdmin(); return; }
+  if (e.code === 'Space' || e.key === ' ' || e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
+    e.preventDefault();
+    if (e.repeat) return;
+    audioOn();
+    if (mode === 'play' || mode === 'paused') press();
+    else if (mode === 'home' && !anyModal) $('startBtn').click();
+    else if (mode === 'over' && !screens.over.hidden) $('againBtn').click();
+  } else if (e.key === 'Enter') {
+    if (mode === 'home' && !anyModal) { e.preventDefault(); $('startBtn').click(); }
+    else if (mode === 'over' && !screens.over.hidden) { e.preventDefault(); $('againBtn').click(); }
+  } else if (e.key === 'Escape') {
+    if (mode === 'play') pause();
+    else if (mode === 'paused') resume();
+    else if (!screens.admin.hidden) closeAdmin();
+    else if (mode === 'home' && anyModal) show('home');
+  }
+});
+
+/* ---------- Admin-Panel (Taste 0) ----------
+   Ohne Server gibt es nur die Spielstände auf diesem Gerät: "Alle User löschen" leert sie alle. */
+const ADMIN = { user: 'Adrian', pass: '1234' };
+let adminBack = null, adminWipeArmed = false;
+function adminMsg(text) { $('adminMsg').textContent = text; $('adminMsg').hidden = !text; }
+function openAdmin() {
+  if (!screens.admin.hidden) return;
+  if (mode === 'play') pause();
+  adminBack = Object.keys(screens).find((k) => !screens[k].hidden) || null;
+  adminWipeArmed = false;
+  $('adminWipe').textContent = 'Alle User löschen';
+  adminMsg('');
+  $('adminLogin').hidden = false;
+  $('adminTools').hidden = true;
+  $('adminUser').value = '';
+  $('adminPass').value = '';
+  show('admin');
+  setTimeout(() => $('adminUser').focus(), 50);
+}
+function closeAdmin() {
+  show(adminBack && adminBack !== 'admin' ? adminBack : (mode === 'home' ? 'home' : null));
+  if (mode === 'paused' && adminBack !== 'pause') show('pause');
+}
+function renderAdmin() {
+  $('adminWho').textContent = 'Dein Account: ' + (save.name || 'ohne Namen') + ' · ' + save.fish + ' Fische';
+}
+$('adminLogin').addEventListener('submit', (e) => {
+  e.preventDefault();
+  if ($('adminUser').value.trim() === ADMIN.user && $('adminPass').value === ADMIN.pass) {
+    $('adminLogin').hidden = true;
+    $('adminTools').hidden = false;
+    adminMsg('Angemeldet.');
+    renderAdmin();
+    sfx.buy();
+  } else {
+    adminMsg('Benutzer oder Passwort falsch.');
+    $('adminPass').value = '';
+    sfx.no();
+  }
+});
+$('adminGive').addEventListener('click', () => {
+  const n = Math.floor(Number($('adminFish').value));
+  if (!Number.isFinite(n) || n < 1 || n > 99999) { adminMsg('Bitte eine Zahl von 1 bis 99999 eingeben.'); sfx.no(); return; }
+  save.fish += n;
+  persist();
+  updateHud(true);
+  renderAdmin();
+  adminMsg(n + ' Fische vergeben.');
+  sfx.fish();
+});
+$('adminWipe').addEventListener('click', () => {
+  if (!adminWipeArmed) { // Sicherheitsabfrage im Spiel: zweimal drücken
+    adminWipeArmed = true;
+    $('adminWipe').textContent = 'Wirklich alles löschen?';
+    adminMsg('Nochmal drücken, um alle User zu löschen.');
+    return;
+  }
+  try { Object.keys(localStorage).filter((k) => k.startsWith('cj-')).forEach((k) => localStorage.removeItem(k)); } catch (e) { /* egal */ }
+  store.set('cj-save-version', SAVE_VERSION);
+  location.reload();
+});
+$('adminClose').addEventListener('click', closeAdmin);
+
 const muteBtn = $('mute');
 function syncMute() {
   muteBtn.setAttribute('aria-pressed', String(muted));
@@ -1409,7 +1535,7 @@ async function keepAwake() {
 
 
 /* ---------- Ablauf ---------- */
-const screens = { home: $('home'), setup: $('setup'), shop: $('shop'), inv: $('inv'), pause: $('pause'), over: $('over') };
+const screens = { admin: $('admin'), home: $('home'), setup: $('setup'), shop: $('shop'), inv: $('inv'), pause: $('pause'), over: $('over') };
 function show(name) { for (const k in screens) screens[k].hidden = k !== name; }
 let hintTimer = 0, bannerTimer = 0;
 
