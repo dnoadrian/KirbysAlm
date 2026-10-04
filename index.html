@@ -3,24 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#24182e">
+<meta name="theme-color" content="#1e1c26">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="description" content="Ein Katzosaurus springt über Adrian. Ein kleines Handy-Spiel.">
+<meta name="apple-mobile-web-app-title" content="Adrian">
+<meta name="description" content="Ein weißer Katzosaurus springt auf der Alm über Adrian, während Valentina den Schnee von den Gipfeln schleckt.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <title>Spring über Adrian</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600&family=Silkscreen:wght@400;700&display=swap">
 <style>
-/* Layout: full-bleed pixel canvas; HUD pinned to the top, menus as paper badges over the sky. */
+/* Layout: full-bleed pixel alm on canvas; HUD pinned top, menus as snow-white badges (two columns in landscape). */
 :root {
-  --ink: #24182e;
-  --paper: #fff4e0;
-  --tabby: #f4a23c;
-  --tabby-deep: #c76a1c;
-  --spike: #2fb79a;
-  --shirt: #4f7fd6;
+  --ink: #1e1c26;          /* Valentinas Fell */
+  --snow: #f7fbff;
+  --meadow: #6cc04a;
+  --meadow-light: #a6e27c;
+  --meadow-deep: #2f7a3a;
+  --nose: #ff8fa3;         /* Valentinas Nase */
+  --eye: #d9d23a;          /* Valentinas Augen */
+  --shirt: #4f7fd6;        /* Adrians T-Shirt */
   --font-display: "Silkscreen", "Courier New", monospace;
   --font-body: "Pixelify Sans", "Trebuchet MS", system-ui, sans-serif;
   color-scheme: light;
@@ -47,13 +53,12 @@ html, body {
   width: 100%;
   height: 100%;
   display: block;
-  image-rendering: pixelated;
 }
 
 /* HUD */
 .hud {
   position: fixed;
-  top: calc(env(safe-area-inset-top, 0px) + 12px);
+  top: calc(env(safe-area-inset-top, 0px) + 10px);
   left: calc(env(safe-area-inset-left, 0px) + 16px);
   right: calc(env(safe-area-inset-right, 0px) + 16px);
   display: flex;
@@ -67,53 +72,54 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-width: 52px;
   padding: 6px 10px;
   background: var(--ink);
-  color: var(--paper);
-  box-shadow: 3px 3px 0 rgba(36, 24, 46, .35);
+  color: var(--snow);
+  box-shadow: 3px 3px 0 rgba(30, 28, 38, .3);
 }
 .pill .lbl {
   font-size: 9px;
   letter-spacing: .08em;
   text-transform: uppercase;
-  color: var(--tabby);
+  color: var(--meadow-light);
 }
 .pill .val { font-size: 18px; line-height: 1; }
 .pill .sub { font-size: 9px; letter-spacing: .06em; opacity: .75; }
-.pill.score { margin-left: auto; text-align: right; align-items: flex-end; }
+.pill.score { margin-left: auto; align-items: flex-end; }
 .pill.flash .val { animation: flash .5s steps(2) 2; }
-@keyframes flash { 50% { color: var(--tabby); } }
-#mute {
+@keyframes flash { 50% { color: var(--eye); } }
+.hud button {
   pointer-events: auto;
   width: 44px;
   height: 44px;
   border: 0;
   padding: 0;
   background: var(--ink);
-  color: var(--paper);
+  color: var(--snow);
   font-family: var(--font-display);
   font-size: 11px;
   cursor: pointer;
-  box-shadow: 3px 3px 0 rgba(36, 24, 46, .35);
+  box-shadow: 3px 3px 0 rgba(30, 28, 38, .3);
   touch-action: manipulation;
 }
-#mute:focus-visible { outline: 3px solid var(--tabby); outline-offset: 2px; }
-#mute[aria-pressed="true"] { color: var(--tabby); text-decoration: line-through; }
+.hud button:focus-visible, .card button:focus-visible { outline: 3px solid var(--eye); outline-offset: 2px; }
+#mute[aria-pressed="true"] { color: var(--nose); text-decoration: line-through; }
 
-/* Menus */
+/* Menüs */
 .screen {
   position: fixed;
   inset: 0;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: calc(env(safe-area-inset-top, 0px) + 76px) 16px 16px;
+  padding: calc(env(safe-area-inset-top, 0px) + 72px) 16px 16px;
   pointer-events: none;
 }
 .card {
   width: 100%;
   max-width: 340px;
-  background: var(--paper);
+  background: var(--snow);
   border: 3px solid var(--ink);
   box-shadow: 6px 6px 0 var(--ink);
   padding: 16px 18px 14px;
@@ -122,6 +128,7 @@ html, body {
   gap: 10px;
   animation: pop .25s steps(4) both;
 }
+.card > div { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
 @keyframes pop { from { transform: translateY(12px); } }
 .eyebrow {
   margin: 0;
@@ -129,7 +136,7 @@ html, body {
   font-size: 10px;
   letter-spacing: .1em;
   text-transform: uppercase;
-  color: var(--tabby-deep);
+  color: var(--meadow-deep);
 }
 h1, h2 {
   margin: 0;
@@ -141,23 +148,11 @@ h1, h2 {
 h1 { font-size: clamp(28px, 9vw, 38px); }
 h2 { font-size: 30px; }
 h1 em { font-style: normal; color: var(--shirt); }
-.howto {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 4px;
-  font-size: 15px;
-}
-.howto li { display: grid; grid-template-columns: 7.5em 1fr; gap: 8px; }
-.howto b {
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-size: 11px;
-  letter-spacing: .04em;
-  align-self: center;
-  color: var(--tabby-deep);
-}
+.lead { margin: 0; font-size: 16px; line-height: 1.3; }
+.lead b { font-family: var(--font-display); font-weight: 400; font-size: 12px; color: var(--meadow-deep); }
+.fine { margin: 0; font-size: 13px; line-height: 1.3; opacity: .72; }
+.portrait-only { display: none; }
+@media (orientation: portrait) { .portrait-only { display: block; } }
 .results {
   margin: 0;
   display: grid;
@@ -176,7 +171,7 @@ h1 em { font-style: normal; color: var(--shirt); }
   margin: 0;
   align-self: flex-start;
   padding: 3px 8px;
-  background: var(--spike);
+  background: var(--nose);
   color: var(--ink);
   font-family: var(--font-display);
   font-size: 11px;
@@ -185,7 +180,7 @@ h1 em { font-style: normal; color: var(--shirt); }
 .cta {
   margin: 0;
   padding: 10px 12px;
-  background: var(--tabby);
+  background: var(--meadow);
   border: 3px solid var(--ink);
   font-family: var(--font-display);
   font-size: 12px;
@@ -193,38 +188,112 @@ h1 em { font-style: normal; color: var(--shirt); }
   text-align: center;
   animation: blink 1.1s steps(2) infinite;
 }
-@keyframes blink { 50% { background: var(--paper); } }
-.fine { margin: 0; font-size: 13px; line-height: 1.3; opacity: .7; }
+@keyframes blink { 50% { background: var(--snow); } }
+.install {
+  pointer-events: auto;
+  border: 3px solid var(--ink);
+  background: var(--ink);
+  color: var(--snow);
+  padding: 8px 10px;
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: .04em;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+/* Level-Banner */
+#banner {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  top: 26%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity .3s, transform .3s steps(3);
+}
+#banner.show { opacity: 1; transform: none; }
+#banner .lvl {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(30px, 8vw, 46px);
+  line-height: 1;
+  color: var(--snow);
+  text-shadow: 3px 3px 0 var(--ink), -2px -2px 0 var(--ink), 2px -2px 0 var(--ink), -2px 2px 0 var(--ink);
+}
+#banner .name {
+  padding: 4px 10px;
+  background: var(--ink);
+  color: var(--eye);
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: .06em;
+}
+#banner .tip {
+  padding: 3px 8px;
+  background: var(--snow);
+  border: 2px solid var(--ink);
+  font-size: 15px;
+}
 
 #hint {
   position: fixed;
   left: 16px;
   right: 16px;
+  margin: 0;
   text-align: center;
   font-family: var(--font-display);
   font-size: 11px;
   letter-spacing: .06em;
-  color: var(--paper);
+  color: var(--snow);
+  text-shadow: 1px 1px 0 var(--ink);
   pointer-events: none;
   transition: opacity .6s;
 }
 #hint.gone { opacity: 0; }
 
-@media (max-height: 520px) {
-  .screen { padding-top: calc(env(safe-area-inset-top, 0px) + 12px); align-items: flex-start; }
-  .card { max-width: 460px; gap: 8px; padding: 12px 16px; }
-  h1 { font-size: 28px; }
-  .howto { font-size: 14px; }
+/* Querformat: Karte zweispaltig und kompakt, damit die Alm sichtbar bleibt */
+@media (orientation: landscape) and (max-height: 560px) {
+  .screen { padding-top: calc(env(safe-area-inset-top, 0px) + 62px); }
+  .screen { justify-content: flex-start; }
+  .card {
+    max-width: 470px;
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    column-gap: 18px;
+    padding: 12px 16px;
+  }
+  .card > div { gap: 8px; }
+  h1 { font-size: 30px; }
+  h2 { font-size: 26px; }
+  .lead { font-size: 15px; }
+  .cta { padding: 8px 10px; }
+  #banner { top: 22%; }
+}
+@media (orientation: landscape) and (max-height: 400px) {
+  .screen { padding-top: calc(env(safe-area-inset-top, 0px) + 58px); }
+  .fine.extra { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .card, .cta, .pill.flash .val { animation: none; }
+  #banner { transition: none; }
 }
 </style>
 </head>
 <body>
-<canvas id="game" aria-label="Spielfeld: ein Katzosaurus läuft und springt über Adrian"></canvas>
+<canvas id="game" aria-label="Spielfeld: ein weißer Katzosaurus springt auf der Alm über Adrian, im Hintergrund schleckt Valentina Schnee"></canvas>
 
 <div class="hud">
+  <div class="pill">
+    <span class="lbl">Level</span>
+    <span class="val" id="level">1</span>
+  </div>
   <div class="pill">
     <span class="lbl">Adrians</span>
     <span class="val" id="jumped">0</span>
@@ -239,41 +308,59 @@ h1 em { font-style: normal; color: var(--shirt); }
 
 <div id="start" class="screen">
   <div class="card">
-    <p class="eyebrow">Ein Katzosaurus-Spiel</p>
-    <h1>Spring über <em>Adrian</em></h1>
-    <ul class="howto">
-      <li><b>Tippen</b><span>springen</span></li>
-      <li><b>Gedrückt halten</b><span>höher springen</span></li>
-      <li><b>Nach unten wischen</b><span>schneller landen</span></li>
-    </ul>
-    <p class="fine">Fliegt Adrian hoch oben, lauf einfach drunter durch.</p>
-    <p class="cta">Tippen zum Starten</p>
+    <div>
+      <p class="eyebrow">Ein Katzosaurus auf der Alm</p>
+      <h1>Spring über <em>Adrian</em></h1>
+    </div>
+    <div>
+      <p class="lead"><b>Tippen</b> springen. In der Luft <b>nochmal tippen</b> für den Doppelsprung.</p>
+      <p class="fine extra">Valentina schleckt derweil den Schnee von den Gipfeln. Jedes Level bringt neue Adrians.</p>
+      <p class="fine portrait-only">Am schönsten im Querformat.</p>
+      <p class="cta">Tippen zum Starten</p>
+      <button class="install" id="installBtn" type="button" hidden>Als App installieren</button>
+      <p class="fine" id="iosHint" hidden>Als App: Teilen-Knopf, dann „Zum Home-Bildschirm“.</p>
+    </div>
   </div>
 </div>
 
 <div id="pause" class="screen" hidden>
   <div class="card">
-    <p class="eyebrow">Pause</p>
-    <h2>Adrian wartet.</h2>
-    <p class="cta">Tippen zum Weiterlaufen</p>
+    <div>
+      <p class="eyebrow">Pause</p>
+      <h2>Adrian wartet.</h2>
+    </div>
+    <div>
+      <p class="cta">Tippen zum Weiterlaufen</p>
+    </div>
   </div>
 </div>
 
 <div id="over" class="screen" hidden>
   <div class="card">
-    <p class="eyebrow" id="quip">Adrian hat dich erwischt.</p>
-    <h2>Autsch!</h2>
-    <dl class="results">
-      <div><dt>Punkte</dt><dd id="rScore">0</dd></div>
-      <div><dt>Adrians geschafft</dt><dd id="rJumped">0</dd></div>
-      <div><dt>Rekord</dt><dd id="rBest">0</dd></div>
-    </dl>
-    <p class="new-best" id="newBest" hidden>Neuer Rekord!</p>
-    <p class="cta">Tippen für neue Runde</p>
+    <div>
+      <p class="eyebrow" id="quip">Adrian hat dich erwischt.</p>
+      <h2>Autsch!</h2>
+      <p class="new-best" id="newBest" hidden>Neuer Rekord!</p>
+    </div>
+    <div>
+      <dl class="results">
+        <div><dt>Punkte</dt><dd id="rScore">0</dd></div>
+        <div><dt>Adrians</dt><dd id="rJumped">0</dd></div>
+        <div><dt>Level</dt><dd id="rLevel">1</dd></div>
+      </dl>
+      <p class="fine">Rekord: <span id="rBest">0</span> Punkte</p>
+      <p class="cta">Tippen für neue Runde</p>
+    </div>
   </div>
 </div>
 
-<p id="hint" class="gone">Tippen = springen · Halten = höher</p>
+<div id="banner" aria-live="polite">
+  <span class="lvl" id="bLevel">Level 1</span>
+  <span class="name" id="bName">Almwiese</span>
+  <span class="tip" id="bTip">Tippen = springen</span>
+</div>
+
+<p id="hint" class="gone">Tippen = springen · nochmal tippen = Doppelsprung</p>
 
 <script>
 (() => {
@@ -285,6 +372,8 @@ const $ = (id) => document.getElementById(id);
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const rand = (a, b) => a + Math.random() * (b - a);
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+const hash = (i) => { const s = Math.sin(i * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
+const tri = (u) => 1 - Math.abs(2 * (u - Math.floor(u)) - 1);
 const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* ---------- Speicher (nur Rekord + Ton, darf fehlen) ---------- */
@@ -294,10 +383,11 @@ const store = {
 };
 
 /* ---------- Pixel-Sprites ---------- */
-const INK = '#24182e';
+const INK = '#1e1c26';
 
-// rows: Strings, '.' = leer. pal: Zeichen -> Farbe. 'w' (Schnurrhaare) zählt nicht zur Kollision.
-function sprite(rows, pal, outline = true) {
+// rows: Strings oder Zeichen-Arrays, '.' = leer. Das "ghost"-Zeichen (Schnurrhaare, Leinen)
+// bekommt keine Kontur und zählt nicht zur Kollision.
+function sprite(rows, pal, outline = true, ghost = 'w') {
   const h = rows.length;
   const w = Math.max(...rows.map((r) => r.length));
   const pad = outline ? 1 : 0;
@@ -313,7 +403,7 @@ function sprite(rows, pal, outline = true) {
       for (let x = -1; x <= w; x++) {
         if (at(x, y) !== '.') continue;
         const n = [at(x - 1, y), at(x + 1, y), at(x, y - 1), at(x, y + 1)];
-        if (n.some((ch) => ch !== '.' && ch !== 'w')) g.fillRect(x + pad, y + pad, 1, 1);
+        if (n.some((ch) => ch !== '.' && ch !== ghost)) g.fillRect(x + pad, y + pad, 1, 1);
       }
     }
   }
@@ -323,19 +413,19 @@ function sprite(rows, pal, outline = true) {
       if (ch === '.') continue;
       g.fillStyle = pal[ch] || '#f0f';
       g.fillRect(x + pad, y + pad, 1, 1);
-      if (ch !== 'w') mask[y * w + x] = 1;
+      if (ch !== ghost) mask[y * w + x] = 1;
     }
   }
   return { c, w, h, pad, mask };
 }
 
-// Der Katzosaurus: Katzenkopf mit Ohren und Schnurrhaaren, Dino-Körper mit Rückenzacken und Schwanz.
+// Der Katzosaurus: weißer Katzenkopf mit Ohren und Schnurrhaaren, Dino-Körper mit Rückenzacken und Schwanz.
 const CAT_TOP = [
   '...............b.....b..',
   '..............bbb...bbb.',
-  '..............bbbbbbbbb.',
+  '..............bpbbbbbpb.',
   '..............bbkbbbkbb.',
-  '.............wbbbbpbbbbw',
+  '.............wbbbbnbbbbw',
   '.......g..g...bbbbbbbbb.',
   '......ggggggggbbbbbbbbb.',
   'b....bbbbssbbbsbbbbbbb..',
@@ -350,16 +440,16 @@ const LEGS = {
   run2: ['........bb.....bb.......', '.......bb.......bb......', '.......b.........bbb....'],
   jump: ['.......bb.....bb........', '......bb.....bb.........', '........................'],
 };
-const CAT_PAL = { b: '#f4a23c', s: '#c76a1c', l: '#ffe2b0', g: '#2fb79a', k: INK, p: '#ff8fa3', w: '#fff4e0' };
+const CAT_PAL = { b: '#fbfbf7', s: '#d9dde4', l: '#ffffff', g: '#3cc0a0', k: '#3a6fd8', p: '#ffb3c1', n: '#ff8fa3', w: '#aab3c2' };
 const cat = {
   run1: sprite([...CAT_TOP, ...LEGS.run1], CAT_PAL),
   run2: sprite([...CAT_TOP, ...LEGS.run2], CAT_PAL),
   jump: sprite([...CAT_TOP, ...LEGS.jump], CAT_PAL),
-  blink: sprite([...CAT_TOP, ...LEGS.run1], { ...CAT_PAL, k: '#c76a1c' }),
-  dead: sprite([...CAT_TOP, ...LEGS.jump], { ...CAT_PAL, k: '#d6333f', b: '#e8913a' }),
+  blink: sprite([...CAT_TOP, ...LEGS.run1], { ...CAT_PAL, k: '#d9dde4' }),
+  dead: sprite([...CAT_TOP, ...LEGS.jump], { ...CAT_PAL, k: '#d6333f' }),
 };
 
-const ADRIAN_PAL = { h: '#5a3a22', f: '#f2c29b', k: INK, m: '#b0443c', s: '#4f7fd6', p: '#2f3b5c', o: '#1c1c24', r: '#d6333f' };
+const ADRIAN_PAL = { h: '#5a3a22', f: '#f2c29b', k: INK, m: '#b0443c', s: '#4f7fd6', p: '#2f3b5c', o: '#1c1c24', r: '#d6333f', y: '#ffd43b', x: '#e03a3e', w: '#d8dee8' };
 const ADRIAN_LEGS = [
   '..ssssssss..',
   '..pppppppp..',
@@ -401,16 +491,51 @@ const adrian = {
     '..ssssssss..',
     ...ADRIAN_LEGS,
   ], ADRIAN_PAL),
-  fly: sprite([
-    '....hhhh..............',
-    '...hhhhhh.......rrrr..',
-    '...fkfffh..ssssssrrrrr',
-    '...ffmff.sssssssssrrr.',
-    'ffffffffsssssssssppppp',
-    '.........sssssssppppoo',
-    '................ppppoo',
+  glide: sprite([
+    '.....yyyyyyyyyyyy.....',
+    '...yyrrrrrrrrrrrryy...',
+    '..yr..............ry..',
+    '..w................w..',
+    '...w..............w...',
+    '....w............w....',
+    '.....w..........w.....',
+    '......w..hhhh..w......',
+    '.......whhhhhhw.......',
+    '........fkffkf........',
+    '........ffmmff........',
+    '.........ffff.........',
+    '.......ssssssss.......',
+    '......fssssssssf......',
+    '.......ssssssss.......',
+    '.......pppppppp.......',
+    '.......pp....pp.......',
+    '.......oo....oo.......',
+  ], ADRIAN_PAL),
+  ski: sprite([
+    '......hhhh........',
+    '.....hhhhhh.......',
+    '.....fkfffh.......',
+    '.....fmfff........',
+    '......ffff........',
+    '....rrssssss......',
+    '..ffsssssssss.....',
+    '..w..sssssssss....',
+    '..w...ssssssss....',
+    '..w...pppppppp....',
+    '..w..ppppp.pppp...',
+    '..w.ppp.....ppp...',
+    'x...ooo.....ooo...',
+    '.xxxxxxxxxxxxxxxxx',
   ], ADRIAN_PAL),
 };
+
+const fishSpr = sprite([
+  '..bbbb..b',
+  '.bkbbbbbb',
+  'bbbbbbbb.',
+  '.bbbbbbbb',
+  '..bbbb..b',
+], { b: '#ff9f43', k: INK });
 
 const cloudSpr = sprite([
   '.....cccc.....',
@@ -419,30 +544,105 @@ const cloudSpr = sprite([
   'cccccccccccccc',
 ], { c: '#ffffff' }, false);
 
-/* ---------- Tag & Nacht ---------- */
-const DAY = { top: '#7cc4f0', bot: '#d9f1f6', far: '#a6cfdb', near: '#74b08f', ground: '#cf9f66', line: '#7a5534', deep: '#a77b4c', stars: 0 };
-const DUSK = { top: '#3b2f6b', bot: '#f39a6b', far: '#a06c8e', near: '#5f4775', ground: '#a06d57', line: '#4a2f3a', deep: '#74495a', stars: .35 };
-const NIGHT = { top: '#0e1430', bot: '#2c2f5c', far: '#2c3160', near: '#1c2242', ground: '#3d3753', line: '#16121f', deep: '#2b2640', stars: 1 };
-const DAWN = { top: '#5a6db0', bot: '#f6c48b', far: '#9ba3c6', near: '#5f8a85', ground: '#b88e66', line: '#5a3e30', deep: '#8c6a4c', stars: .2 };
-const CYCLE = [[0, DAY], [.38, DAY], [.5, DUSK], [.6, NIGHT], [.84, NIGHT], [.93, DAWN], [1, DAY]];
-const hexToRgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
-const lerpHex = (a, b, t) => {
-  const A = hexToRgb(a), B = hexToRgb(b);
-  return 'rgb(' + A.map((v, i) => Math.round(v + (B[i] - v) * t)).join(',') + ')';
-};
-function sky(t) {
-  for (let i = 0; i < CYCLE.length - 1; i++) {
-    const [t0, a] = CYCLE[i], [t1, b] = CYCLE[i + 1];
-    if (t >= t0 && t <= t1) {
-      const k = t1 === t0 ? 0 : (t - t0) / (t1 - t0);
-      const out = {};
-      for (const key in a) out[key] = key === 'stars' ? a[key] + (b[key] - a[key]) * k : lerpHex(a[key], b[key], k);
-      return out;
+/* ---------- Valentina (schwarz-weiße Katze, gelbe Augen, rosa Nase) ---------- */
+const VAL_W = 44, VAL_H = 37;
+function valentinaRows(blink) {
+  const g = Array.from({ length: VAL_H }, () => Array(VAL_W).fill('.'));
+  const set = (x, y, c) => { if (x >= 0 && x < VAL_W && y >= 0 && y < VAL_H) g[y][x] = c; };
+  const ell = (cx, cy, rx, ry, c) => {
+    for (let y = 0; y < VAL_H; y++) for (let x = 0; x < VAL_W; x++) {
+      if (((x + .5 - cx) / rx) ** 2 + ((y + .5 - cy) / ry) ** 2 <= 1) set(x, y, c);
+    }
+  };
+  const triangle = (ax, ay, bx, by, cx, cy, c) => {
+    const s = (px, py, qx, qy, rx, ry) => (px - rx) * (qy - ry) - (qx - rx) * (py - ry);
+    for (let y = 0; y < VAL_H; y++) for (let x = 0; x < VAL_W; x++) {
+      const px = x + .5, py = y + .5;
+      const d1 = s(px, py, ax, ay, bx, by), d2 = s(px, py, bx, by, cx, cy), d3 = s(px, py, cx, cy, ax, ay);
+      const neg = d1 < 0 || d2 < 0 || d3 < 0, pos = d1 > 0 || d2 > 0 || d3 > 0;
+      if (!(neg && pos)) set(x, y, c);
+    }
+  };
+  const line = (x0, y0, x1, y1, c) => {
+    const n = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0));
+    for (let i = 0; i <= n; i++) set(Math.round(x0 + (x1 - x0) * i / n), Math.round(y0 + (y1 - y0) * i / n), c);
+  };
+  ell(22, 40, 14, 10, 'k');            // Schultern
+  ell(22, 37, 5, 6, 'W');              // weißes Lätzchen
+  triangle(6, 16, 9, 1, 18, 8, 'k');   // Ohren
+  triangle(38, 16, 35, 1, 26, 8, 'k');
+  triangle(9, 12, 10, 4, 15, 9, 'e');
+  triangle(35, 12, 34, 4, 29, 9, 'e');
+  ell(22, 18, 16, 12.5, 'k');          // Kopf
+  triangle(22, 9, 18.5, 24, 25.5, 24, 'W'); // weiße Blesse
+  ell(22, 25.5, 7.5, 4.5, 'W');        // Schnauze
+  ell(22, 28.5, 4.5, 2.2, 'W');        // Kinn
+  for (const ex of [14.5, 29.5]) {
+    const cx = Math.floor(ex);
+    if (blink) {
+      line(cx - 2, 18, cx + 2, 18, 'y');
+    } else {
+      ell(ex, 18.2, 3.2, 2.4, 'y');
+      for (let x = cx - 3; x <= cx + 3; x++) if (g[16][x] === 'y') g[16][x] = 'k'; // müde Lider
+      set(cx, 17, 'p'); set(cx, 18, 'p'); set(cx, 19, 'p');
     }
   }
-  return sky(0);
+  for (let x = 20; x <= 23; x++) set(x, 23, 'n');
+  set(21, 24, 'n'); set(22, 24, 'n');
+  set(21, 25, 'm'); set(22, 25, 'm');
+  set(19, 26, 'm'); set(20, 26, 'm'); set(23, 26, 'm'); set(24, 26, 'm');
+  line(16, 25, 3, 23, 'v'); line(16, 26, 2, 27, 'v'); line(16, 27, 4, 30, 'v');
+  line(27, 25, 40, 23, 'v'); line(27, 26, 41, 27, 'v'); line(27, 27, 39, 30, 'v');
+  return g;
 }
-const STARS = Array.from({ length: 60 }, () => ({ x: Math.random(), y: Math.random() * .9, p: Math.random() * 6 }));
+const VAL_PAL = { k: '#2a2733', W: '#f4f4f0', e: '#5b3f4c', y: '#d9d23a', p: INK, n: '#f7a1ad', m: '#5a4250', v: '#f4f4f0' };
+const valentina = {
+  open: sprite(valentinaRows(false), VAL_PAL, true, 'v'),
+  blink: sprite(valentinaRows(true), VAL_PAL, true, 'v'),
+};
+
+/* ---------- Tageszeiten pro Level ---------- */
+const STONE = { stone: '#8d919c', stoneDk: '#6f7380', soil: '#7d5f45' };
+const PALETTES = [
+  { top: '#8fd3f7', bot: '#eaf8fc', sun: '#ffe27a', rock: '#8e9db3', rockSh: '#6e7c93', snow: '#ffffff', snowSh: '#d3e2f1', hill: '#83c46f', pine: '#3f8a4e', grass: '#9bdb6f', meadow: '#72c157', meadowDk: '#5ca848', ...STONE, stars: 0, sunY: .55, sunR: 8 },
+  { top: '#4aaced', bot: '#c6edfb', sun: '#fff1a6', rock: '#8597b0', rockSh: '#647590', snow: '#ffffff', snowSh: '#cfe0f2', hill: '#76bd62', pine: '#357f45', grass: '#a3e273', meadow: '#6cbd50', meadowDk: '#56a443', ...STONE, stars: 0, sunY: .82, sunR: 8 },
+  { top: '#68a8df', bot: '#f4e4b6', sun: '#ffd36b', rock: '#93949f', rockSh: '#727587', snow: '#fffaf0', snowSh: '#e6dccb', hill: '#86b860', pine: '#3d7a42', grass: '#a8d468', meadow: '#78b450', meadowDk: '#629c42', ...STONE, stars: 0, sunY: .5, sunR: 9 },
+  { top: '#514a8c', bot: '#f59d78', sun: '#ff8a4c', rock: '#8d6f8c', rockSh: '#6a5272', snow: '#ffd0c8', snowSh: '#f0a3ab', hill: '#6a945f', pine: '#2f5a45', grass: '#86b35e', meadow: '#5f964f', meadowDk: '#4f8243', soil: '#6b4c43', stone: '#7d7486', stoneDk: '#625a6d', stars: .15, sunY: .2, sunR: 11 },
+  { top: '#24306a', bot: '#8a6aa6', sun: '#ff9a6a', rock: '#5b5f86', rockSh: '#454868', snow: '#cdd1f2', snowSh: '#9fa5d3', hill: '#3f6658', pine: '#22413d', grass: '#5d8f5a', meadow: '#44704a', meadowDk: '#38603f', soil: '#4e3c3e', stone: '#5c5b72', stoneDk: '#47465c', stars: .55, sunY: .03, sunR: 10 },
+  { top: '#0b1230', bot: '#22325e', sun: '#ffd9a0', rock: '#3a466c', rockSh: '#2b3555', snow: '#b8c6ec', snowSh: '#8a99c6', hill: '#1f3d45', pine: '#122a30', grass: '#3d7650', meadow: '#2c5a3e', meadowDk: '#244c34', soil: '#3a2f38', stone: '#3f4258', stoneDk: '#30324a', stars: 1, sunY: -.3, sunR: 8 },
+];
+const hexToRgb = (h) => (h[0] === '#' ? [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)) : h.slice(4, -1).split(',').map(Number));
+function lerpPal(a, b, t) {
+  const out = {};
+  for (const k in a) {
+    if (typeof a[k] === 'number') out[k] = a[k] + (b[k] - a[k]) * t;
+    else {
+      const A = hexToRgb(a[k]), B = hexToRgb(b[k]);
+      out[k] = 'rgb(' + A.map((v, i) => Math.round(v + (B[i] - v) * t)).join(',') + ')';
+    }
+  }
+  return out;
+}
+const STARS = Array.from({ length: 70 }, () => ({ x: Math.random(), y: Math.random() * .85, p: Math.random() * 6 }));
+
+/* ---------- Level ---------- */
+const LEVELS = [
+  { name: 'Almwiese', tip: 'Tippen = springen', at: 0, speed: 140, gap: [.95, 1.7], pats: { stand: 6, cheer: 2 } },
+  { name: 'Adrian-Turm', tip: 'In der Luft nochmal tippen = Doppelsprung', at: 250, speed: 158, gap: [.9, 1.6], pats: { stand: 3, cheer: 2, duo: 3, tower: 3 } },
+  { name: 'Gleitschirm', tip: 'Fliegt Adrian hoch, lauf unten durch', at: 550, speed: 176, gap: [.85, 1.55], pats: { stand: 2, duo: 2, tower: 2, glideLow: 3, glideHigh: 3 } },
+  { name: 'Alpenglühen', tip: 'Ski-Adrian ist schneller, als du denkst', at: 900, speed: 194, gap: [.8, 1.45], pats: { stand: 2, cheer: 1, duo: 2, tower: 2, glideLow: 2, glideHigh: 2, ski: 4 } },
+  { name: 'Gipfelsturm', tip: 'Jetzt kommen sie zu dritt', at: 1300, speed: 212, gap: [.75, 1.4], pats: { stand: 1, duo: 2, trio: 3, tower: 3, glideLow: 2, glideHigh: 2, ski: 3, combo: 2 } },
+  { name: 'Sternennacht', tip: 'Valentina schaut zu', at: 1750, speed: 230, gap: [.7, 1.3], pats: { stand: 1, cheer: 1, duo: 2, trio: 3, tower: 3, glideLow: 2, glideHigh: 2, ski: 3, combo: 3 } },
+];
+function levelInfo(n) {
+  if (n <= LEVELS.length) return LEVELS[n - 1];
+  const extra = n - LEVELS.length;
+  return {
+    name: 'Endlos-Alm', tip: 'Wie weit kommst du?', at: 1750 + extra * 500,
+    speed: Math.min(330, 230 + extra * 12), gap: [.66, 1.25], pats: LEVELS[LEVELS.length - 1].pats,
+  };
+}
+const paletteFor = (n) => PALETTES[(n - 1) % PALETTES.length];
 
 /* ---------- Ton ---------- */
 let actx = null;
@@ -469,138 +669,150 @@ function tone(f0, f1, dur, type = 'square', vol = .07, delay = 0) {
 }
 const sfx = {
   jump() { tone(380, 760, .11); },
+  jump2() { tone(620, 1240, .12, 'square', .06); },
   meow() { tone(650, 1050, .07, 'triangle', .06); tone(1050, 520, .16, 'triangle', .06, .07); },
+  fish() { tone(1200, 1800, .06, 'triangle', .06); tone(1800, 2400, .08, 'triangle', .05, .06); },
   point() { tone(880, 880, .07, 'square', .05); tone(1320, 1320, .1, 'square', .05, .08); },
+  level() { [523, 659, 784, 1047].forEach((f, i) => tone(f, f, .12, 'square', .06, i * .1)); },
   hit() { tone(320, 55, .4, 'sawtooth', .1); tone(140, 40, .3, 'square', .08, .05); },
 };
 function vibrate(ms) { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) { /* nicht unterstützt */ } }
 
 /* ---------- Bildschirm ---------- */
-let W = 0, H = 0, dpr = 1, px = 3, groundY = 0, viewW = 0;
+let W = 0, H = 0, dpr = 1, px = 3, groundY = 0, viewW = 0, skyH = 0;
 function resize() {
   dpr = Math.min(window.devicePixelRatio || 1, 3);
   W = window.innerWidth;
   H = window.innerHeight;
   canvas.width = Math.round(W * dpr);
   canvas.height = Math.round(H * dpr);
-  px = clamp(Math.min(W / 200, H / 120), 1.5, 4.5);
   const portrait = H > W * 1.1;
+  px = clamp(portrait ? W / 200 : Math.min(W / 230, H / 110), 1.5, 4.5);
   groundY = Math.round(H * (portrait ? .66 : .8));
   viewW = W / px;
-  $('hint').style.top = Math.min(H - 40, groundY + 48) + 'px';
+  skyH = groundY / px;
+  $('hint').style.top = Math.min(H - 30, groundY + Math.max(22, (H - groundY) * .35)) + 'px';
 }
 window.addEventListener('resize', resize);
 window.addEventListener('orientationchange', () => setTimeout(resize, 150));
 resize();
 
 /* ---------- Spielzustand ---------- */
-const V0 = 300;      // Absprunggeschwindigkeit (Pixel/s)
-const GRAV = 1100;   // Schwerkraft beim Halten
-const GCUT = 1900;   // Schwerkraft nach dem Loslassen
-const MIN_HOLD = .08;
-const PASS_QUIPS = ['Hey!', 'Ey!', 'Frechheit!', 'Na warte!', 'Hallo?!', 'Nicht schon wieder!', 'Mein Haar!', 'Wie bitte?!', 'Miau?!', 'Unglaublich!', 'Das zählt nicht!'];
-const OVER_QUIPS = ['Adrian hat dich erwischt.', 'Adrian steht noch.', 'Adrian 1, Katzosaurus 0.', 'Adrian war im Weg.', 'Adrian lässt grüßen.', 'Adrian freut sich.'];
+const V0 = 290;      // erster Sprung (Pixel/s)
+const V2 = 265;      // Doppelsprung
+const GRAV = 1250;
+const PASS_QUIPS = ['Hey!', 'Ey!', 'Frechheit!', 'Na warte!', 'Hallo?!', 'Nicht schon wieder!', 'Mein Haar!', 'Wie bitte?!', 'Miau?!', 'Unglaublich!', 'Das zählt nicht!', 'Servus!'];
+const OVER_QUIPS = ['Adrian hat dich erwischt.', 'Adrian steht noch.', 'Adrian 1, Katzosaurus 0.', 'Adrian war im Weg.', 'Adrian lässt grüßen.', 'Valentina hat nichts gesehen.'];
 
 let mode = 'start';
 let best = store.get('katzosaurus-best', 0);
-const P = { x: 22, y: 0, vy: 0, grounded: true, held: false, airT: 0, anim: 0, buffer: 0, blink: 0 };
+const P = { x: 24, y: 0, vy: 0, grounded: true, jumps: 0, anim: 0, buffer: 0, blink: 0 };
+const V = { lick: 0, blink: 0, say: '', sayT: 0 };
 let G = null;
 let overAt = 0;
 let shake = 0;
 const particles = [];
+const floaters = [];
 
 function freshGame() {
-  return { speed: 140, dist: 0, scroll: G ? G.scroll : 0, score: 0, jumped: 0, milestone: 0, obstacles: [], untilSpawn: 90, time: 0, cycle: 0, hitBy: null };
+  return {
+    speed: 140, dist: 0, bonus: 0, scroll: G ? G.scroll : 0, score: 0, jumped: 0, milestone: 0,
+    level: 1, objects: [], untilSpawn: 100, time: 0,
+    palFrom: PALETTES[0], palTo: PALETTES[0], palT: 1,
+  };
 }
 G = freshGame();
-// Auf dem Startbildschirm steht schon ein Adrian bereit.
-G.obstacles.push(makeAdrian('stand', Math.max(110, viewW * .62)));
 
-function makeAdrian(kind, x) {
-  const spr = kind === 'flyLow' || kind === 'flyHigh' ? adrian.fly : adrian[kind];
-  const y = kind === 'flyLow' ? 10 : kind === 'flyHigh' ? 27 : 0;
-  return { kind, spr, x, y, w: spr.w, h: spr.h, passed: false, quip: '', quipT: 0, vx: kind.startsWith('fly') ? 30 : 0, bob: Math.random() * 6 };
+function makeAdrian(kind, x, y = 0, extra = {}) {
+  const spr = kind === 'glideLow' || kind === 'glideHigh' ? adrian.glide : adrian[kind];
+  const yy = kind === 'glideLow' ? 3 : kind === 'glideHigh' ? 25 : y;
+  return Object.assign({
+    type: 'adrian', kind, spr, x, y: yy, w: spr.w, h: spr.h, passed: false, quip: '', quipT: 0,
+    vx: kind === 'ski' ? 95 : kind.startsWith('glide') ? 22 : 0, bob: Math.random() * 6, tag: true,
+  }, extra);
+}
+function makeFish(x, y) {
+  return { type: 'fish', x, y, w: fishSpr.w, h: fishSpr.h, vx: 0, bob: Math.random() * 6, got: false };
+}
+// Auf dem Startbildschirm steht schon ein Adrian bereit.
+G.objects.push(makeAdrian('stand', Math.max(110, viewW * .45)));
+
+function pattern(kind, x) {
+  const list = [];
+  let w = 12, top = 19, extraGap = 0;
+  switch (kind) {
+    case 'stand': case 'cheer': case 'ski':
+      list.push(makeAdrian(kind, x)); w = list[0].w; top = list[0].h;
+      if (kind === 'ski') extraGap = 45;
+      break;
+    case 'duo':
+      list.push(makeAdrian('stand', x), makeAdrian('cheer', x + 13)); w = 25;
+      break;
+    case 'trio':
+      list.push(makeAdrian('stand', x), makeAdrian('cheer', x + 13), makeAdrian('stand', x + 26)); w = 38; extraGap = 20;
+      break;
+    case 'tower':
+      list.push(makeAdrian('stand', x, 0, { tag: false }), makeAdrian('cheer', x, 19)); top = 38; extraGap = 30;
+      break;
+    case 'glideLow': case 'glideHigh':
+      list.push(makeAdrian(kind, x)); w = list[0].w; top = list[0].y + list[0].h;
+      break;
+    case 'combo':
+      list.push(makeAdrian('glideHigh', x), makeAdrian('stand', x + 78)); w = 90; extraGap = 20;
+      break;
+  }
+  // Fische als Belohnung
+  if (kind === 'glideHigh' && Math.random() < .6) {
+    for (let i = 0; i < 3; i++) list.push(makeFish(x + 2 + i * 8, 3));
+  } else if (Math.random() < .35) {
+    const cx = x + w / 2 - 4;
+    const base = Math.min(46, top + 8);
+    list.push(makeFish(cx - 11, base), makeFish(cx, base + 4), makeFish(cx + 11, base));
+  }
+  return { list, w, extraGap };
 }
 
 function spawn() {
-  const s = G.score;
-  const pool = [['stand', 6]];
-  if (s > 60) pool.push(['cheer', 3]);
-  if (s > 180) pool.push(['duo', 2]);
-  if (s > 320) pool.push(['flyLow', 2], ['flyHigh', 2]);
-  const total = pool.reduce((a, [, w]) => a + w, 0);
+  const L = levelInfo(G.level);
+  const entries = Object.entries(L.pats);
+  const total = entries.reduce((a, [, w]) => a + w, 0);
   let r = Math.random() * total;
-  let kind = pool[0][0];
-  for (const [k, w] of pool) { if ((r -= w) < 0) { kind = k; break; } }
-  const x = viewW + 12;
-  let width;
-  if (kind === 'duo') {
-    G.obstacles.push(makeAdrian('stand', x), makeAdrian('stand', x + 14));
-    width = 26;
-  } else {
-    const o = makeAdrian(kind, x);
-    G.obstacles.push(o);
-    width = o.w;
-  }
-  G.untilSpawn = width + G.speed * rand(.72, 1.55) + 48;
+  let kind = entries[0][0];
+  for (const [k, w] of entries) { if ((r -= w) < 0) { kind = k; break; } }
+  const { list, w, extraGap } = pattern(kind, viewW + 14);
+  G.objects.push(...list);
+  G.untilSpawn = w + G.speed * rand(L.gap[0], L.gap[1]) + 50 + extraGap;
 }
 
-/* ---------- Steuerung ---------- */
-function jump() {
-  P.vy = V0;
+/* ---------- Steuerung: nur Tippen / Klicken ---------- */
+function jump(v) {
+  P.vy = v;
   P.grounded = false;
-  P.airT = 0;
   P.buffer = 0;
-  sfx.jump();
+  if (P.jumps === 2) {
+    sfx.jump2();
+    for (let i = 0; i < 6; i++) particles.push({ x: P.x + 10, y: P.y + 2, vx: rand(-60, 20), vy: rand(-40, 10), life: rand(.2, .4), c: '#ffffff' });
+  } else sfx.jump();
 }
 function press() {
   if (mode === 'start') { startGame(); return; }
   if (mode === 'over') { if (performance.now() - overAt > 650) startGame(); return; }
   if (mode === 'paused') { resume(); return; }
-  P.held = true;
-  if (P.grounded) jump();
-  else P.buffer = .14; // kurz vor der Landung gedrückt: Sprung merken
-}
-function release() { P.held = false; }
-function fastFall() {
-  if (mode === 'play' && !P.grounded) P.vy = Math.min(P.vy, -420);
+  if (P.grounded) { P.jumps = 1; jump(V0); }
+  else if (P.jumps < 2) { P.jumps = 2; jump(Math.max(V2, P.vy)); }
+  else P.buffer = .14; // kurz vor der Landung getippt: Sprung merken
 }
 
-let activePointer = null, startY = 0, swiped = false;
 window.addEventListener('pointerdown', (e) => {
   if (e.target.closest && e.target.closest('button')) return;
   e.preventDefault();
   audioOn();
-  activePointer = e.pointerId;
-  startY = e.clientY;
-  swiped = false;
   press();
 }, { passive: false });
-window.addEventListener('pointermove', (e) => {
-  if (e.pointerId !== activePointer || swiped) return;
-  if (e.clientY - startY > 26) { swiped = true; release(); fastFall(); }
-});
-const endPointer = (e) => { if (e.pointerId === activePointer) { activePointer = null; release(); } };
-window.addEventListener('pointerup', endPointer);
-window.addEventListener('pointercancel', endPointer);
 document.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
 document.addEventListener('gesturestart', (e) => e.preventDefault());
 document.addEventListener('contextmenu', (e) => e.preventDefault());
 document.addEventListener('dblclick', (e) => e.preventDefault());
-
-window.addEventListener('keydown', (e) => {
-  if (e.repeat) return;
-  if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW' || e.code === 'Enter') {
-    e.preventDefault(); audioOn(); press();
-  } else if (e.code === 'ArrowDown' || e.code === 'KeyS') {
-    e.preventDefault(); fastFall();
-  } else if (e.code === 'KeyP' || e.code === 'Escape') {
-    if (mode === 'play') pause(); else if (mode === 'paused') resume();
-  }
-});
-window.addEventListener('keyup', (e) => {
-  if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW' || e.code === 'Enter') release();
-});
 
 const muteBtn = $('mute');
 function syncMute() {
@@ -620,68 +832,128 @@ document.addEventListener('visibilitychange', () => {
   if (document.hidden && mode === 'play') pause();
 });
 
+/* ---------- Als App installieren ---------- */
+let installEvent = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  installEvent = e;
+  $('installBtn').hidden = false;
+});
+$('installBtn').addEventListener('click', async () => {
+  if (!installEvent) return;
+  installEvent.prompt();
+  try { await installEvent.userChoice; } catch (e) { /* abgebrochen */ }
+  installEvent = null;
+  $('installBtn').hidden = true;
+});
+window.addEventListener('appinstalled', () => { $('installBtn').hidden = true; });
+const standalone = (window.matchMedia && matchMedia('(display-mode: standalone), (display-mode: fullscreen)').matches) || navigator.standalone === true;
+const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+  navigator.serviceWorker.register('sw.js').then(() => {
+    if (isIOS && !standalone) $('iosHint').hidden = false;
+  }).catch(() => { /* ohne Offline-Modus */ });
+}
+
 /* ---------- Bildschirm-Sperre verhindern (optional) ---------- */
 let wakeLock = null;
 async function keepAwake() {
-  try { if ('wakeLock' in navigator && !wakeLock) { wakeLock = await navigator.wakeLock.request('screen'); wakeLock.addEventListener('release', () => { wakeLock = null; }); } } catch (e) { wakeLock = null; }
+  try {
+    if ('wakeLock' in navigator && !wakeLock) {
+      wakeLock = await navigator.wakeLock.request('screen');
+      wakeLock.addEventListener('release', () => { wakeLock = null; });
+    }
+  } catch (e) { wakeLock = null; }
 }
 
 /* ---------- Ablauf ---------- */
 const screens = { start: $('start'), pause: $('pause'), over: $('over') };
 function show(name) { for (const k in screens) screens[k].hidden = k !== name; }
-let hintTimer = 0;
+let hintTimer = 0, bannerTimer = 0;
+
+function showBanner(n) {
+  const L = levelInfo(n);
+  $('bLevel').textContent = 'Level ' + n;
+  $('bName').textContent = L.name;
+  $('bTip').textContent = L.tip;
+  const b = $('banner');
+  b.classList.add('show');
+  clearTimeout(bannerTimer);
+  bannerTimer = setTimeout(() => b.classList.remove('show'), 2600);
+}
+function showHint(ms) {
+  $('hint').classList.remove('gone');
+  clearTimeout(hintTimer);
+  hintTimer = setTimeout(() => $('hint').classList.add('gone'), ms);
+}
 
 function startGame() {
   G = freshGame();
-  Object.assign(P, { y: 0, vy: 0, grounded: true, held: false, airT: 0, buffer: 0 });
+  Object.assign(P, { y: 0, vy: 0, grounded: true, jumps: 0, buffer: 0 });
   particles.length = 0;
+  floaters.length = 0;
+  V.sayT = 0;
   mode = 'play';
   show(null);
-  $('hint').classList.remove('gone');
-  clearTimeout(hintTimer);
-  hintTimer = setTimeout(() => $('hint').classList.add('gone'), 5000);
+  showBanner(1);
+  showHint(5000);
   keepAwake();
   updateHud(true);
 }
-function pause() { mode = 'paused'; P.held = false; show('pause'); }
+function pause() { mode = 'paused'; show('pause'); }
 function resume() { mode = 'play'; show(null); last = performance.now(); }
+
+function levelUp() {
+  G.level++;
+  G.palFrom = currentPalette();
+  G.palTo = paletteFor(G.level);
+  G.palT = 0;
+  G.untilSpawn = Math.max(G.untilSpawn, G.speed * 1.1); // kurze Verschnaufpause
+  sfx.level();
+  showBanner(G.level);
+  if (G.level === 2) showHint(4000);
+  V.say = pick(['Miau!', 'Mrrp!', 'Schleck!', 'Weiter so!']);
+  V.sayT = 2.2;
+}
 
 function gameOver(o) {
   mode = 'over';
   overAt = performance.now();
-  G.hitBy = o;
   o.quip = 'Hab dich!';
   o.quipT = 99;
   shake = reduceMotion ? 0 : .35;
   sfx.hit();
   vibrate([60, 40, 120]);
+  V.say = 'Mrrr…';
+  V.sayT = 99;
   const isBest = G.score > best;
   if (isBest) { best = G.score; store.set('katzosaurus-best', best); }
   $('quip').textContent = pick(OVER_QUIPS);
   $('rScore').textContent = G.score;
   $('rJumped').textContent = G.jumped;
+  $('rLevel').textContent = G.level;
   $('rBest').textContent = best;
   $('newBest').hidden = !isBest || best === 0;
   $('hint').classList.add('gone');
+  $('banner').classList.remove('show');
   updateHud(true);
-  setTimeout(() => { if (mode === 'over') show('over'); }, 380);
+  setTimeout(() => { if (mode === 'over') show('over'); }, 420);
 }
 
 const pad5 = (n) => String(Math.min(99999, n)).padStart(5, '0');
 let hudCache = '';
 function updateHud(force) {
-  const key = G.score + '|' + G.jumped + '|' + best;
+  const key = G.score + '|' + G.jumped + '|' + best + '|' + G.level;
   if (!force && key === hudCache) return;
   hudCache = key;
   $('score').textContent = pad5(G.score);
   $('jumped').textContent = G.jumped;
   $('best').textContent = pad5(best);
+  $('level').textContent = G.level;
 }
 
-function dust(n, x, y) {
-  for (let i = 0; i < n; i++) {
-    particles.push({ x: x + rand(-2, 4), y: y + rand(0, 2), vx: rand(-40, -10), vy: rand(10, 45), life: rand(.25, .5) });
-  }
+function currentPalette() {
+  return G.palT >= 1 ? G.palTo : lerpPal(G.palFrom, G.palTo, G.palT);
 }
 
 /* ---------- Kollision (pixelgenau) ---------- */
@@ -700,16 +972,23 @@ function overlaps(a, ax, ay, b, bx, by) {
 function catSprite() {
   if (mode === 'over') return cat.dead;
   if (!P.grounded) return cat.jump;
-  if (mode === 'start' || mode === 'paused') return P.blink > 0 ? cat.blink : cat.run1;
+  if (mode !== 'play') return P.blink > 0 ? cat.blink : cat.run1;
   return Math.floor(P.anim) % 2 ? cat.run2 : cat.run1;
 }
+const objY = (o) => (o.type === 'fish' ? o.y + Math.round(Math.sin(G.time * 5 + o.bob)) : o.kind.startsWith('glide') ? o.y + Math.round(Math.sin(G.time * 3 + o.bob) * 1.5) : o.y);
 
 /* ---------- Update ---------- */
 function update(dt) {
-  // Blinzeln im Stand
   P.blink -= dt;
   if (P.blink < -rand(2, 4)) P.blink = .14;
   if (shake > 0) shake -= dt;
+  if (G.palT < 1) G.palT = Math.min(1, G.palT + dt / 2.5);
+
+  // Valentina schleckt alle paar Sekunden am Gipfel
+  V.lick += dt;
+  V.blink -= dt;
+  if (V.blink < -rand(3, 6)) V.blink = .18;
+  if (V.sayT > 0 && V.sayT < 50) V.sayT -= dt;
 
   for (let i = particles.length - 1; i >= 0; i--) {
     const q = particles[i];
@@ -717,56 +996,77 @@ function update(dt) {
     q.x += q.vx * dt; q.y += q.vy * dt; q.vy -= 160 * dt;
     if (q.life <= 0) particles.splice(i, 1);
   }
-  for (const o of G.obstacles) if (o.quipT > 0 && o.quipT < 50) o.quipT -= dt;
+  for (let i = floaters.length - 1; i >= 0; i--) {
+    floaters[i].t -= dt;
+    floaters[i].y += 14 * dt;
+    if (floaters[i].t <= 0) floaters.splice(i, 1);
+  }
+  for (const o of G.objects) if (o.quipT > 0 && o.quipT < 50) o.quipT -= dt;
 
   if (mode !== 'play') {
-    if (mode === 'start') G.scroll += 12 * dt; // Wolken ziehen langsam
+    G.time += dt;
+    if (mode === 'start') G.scroll += 10 * dt; // Wolken ziehen langsam
     return;
   }
 
   G.time += dt;
-  G.speed = 140 + Math.min(190, G.score * .12);
+  const L = levelInfo(G.level);
+  const inLevel = G.score - L.at;
+  G.speed = Math.min(340, L.speed + Math.min(20, inLevel * .04));
   const step = G.speed * dt;
   G.dist += step;
   G.scroll += step;
-  G.score = Math.floor(G.dist / 8);
+  G.score = Math.floor(G.dist / 8) + G.bonus;
+  if (G.score >= levelInfo(G.level + 1).at) levelUp();
 
   // Katzosaurus
   P.anim += dt * G.speed / 22;
   P.buffer -= dt;
   if (!P.grounded) {
-    P.airT += dt;
-    const g = P.vy > 0 && !P.held && P.airT > MIN_HOLD ? GCUT : GRAV;
-    P.vy -= g * dt;
+    P.vy -= GRAV * dt;
     P.y += P.vy * dt;
     if (P.y <= 0) {
-      P.y = 0; P.vy = 0; P.grounded = true;
-      dust(4, P.x + 8, 0);
-      if (P.buffer > 0) jump();
+      P.y = 0; P.vy = 0; P.grounded = true; P.jumps = 0;
+      for (let i = 0; i < 4; i++) particles.push({ x: P.x + 8 + rand(-2, 4), y: rand(0, 2), vx: rand(-40, -10), vy: rand(10, 45), life: rand(.25, .5) });
+      if (P.buffer > 0) { P.jumps = 1; jump(V0); }
     }
   } else if (Math.random() < dt * 6) {
-    dust(1, P.x + 6, 0);
+    particles.push({ x: P.x + 6, y: 0, vx: rand(-40, -10), vy: rand(10, 40), life: rand(.2, .4) });
   }
 
-  // Adrians
   G.untilSpawn -= step;
   if (G.untilSpawn <= 0) spawn();
+
   const cs = catSprite();
   const cx = Math.round(P.x), cy = Math.round(-(P.y + cs.h));
-  for (const o of G.obstacles) {
+  for (const o of G.objects) {
     o.x -= step + o.vx * dt;
-    const oy = o.kind.startsWith('fly') ? o.y + Math.round(Math.sin(G.time * 6 + o.bob)) : o.y;
-    o.drawY = oy;
+    const oy = objY(o);
+    if (o.type === 'fish') {
+      if (!o.got && o.x < P.x + 22 && o.x + o.w > P.x + 3 && oy < P.y + 15 && oy + o.h > P.y + 1) {
+        o.got = true;
+        G.bonus += 20;
+        sfx.fish();
+        floaters.push({ text: '+20', x: o.x + 4, y: oy + 6, t: .8 });
+        for (let i = 0; i < 5; i++) particles.push({ x: o.x + 4, y: oy + 2, vx: rand(-50, 50), vy: rand(10, 60), life: rand(.2, .45), c: '#ffd43b' });
+      }
+      continue;
+    }
+    if (o.kind === 'ski' && Math.random() < dt * 30) {
+      particles.push({ x: o.x + o.w - 2, y: 1, vx: rand(20, 70), vy: rand(20, 60), life: rand(.2, .4), c: '#ffffff' });
+    }
     if (overlaps(cs, cx, cy, o.spr, Math.round(o.x), Math.round(-(oy + o.h)))) { gameOver(o); return; }
     if (!o.passed && o.x + o.w < P.x) {
       o.passed = true;
       G.jumped++;
-      o.quip = pick(PASS_QUIPS);
-      o.quipT = 1.2;
-      sfx.meow();
+      if (o.tag) {
+        o.quip = pick(PASS_QUIPS);
+        o.quipT = 1.2;
+        sfx.meow();
+      }
     }
   }
-  G.obstacles = G.obstacles.filter((o) => o.x > -60);
+  G.objects = G.objects.filter((o) => o.x > -70 && !(o.type === 'fish' && o.got));
 
   const m = Math.floor(G.score / 100);
   if (m > G.milestone) {
@@ -780,15 +1080,6 @@ function update(dt) {
 
 /* ---------- Zeichnen ---------- */
 const snap = (v) => Math.round(v * px * dpr) / (px * dpr);
-function hills(scroll, factor, base, a1, f1, a2, f2, color) {
-  ctx.fillStyle = color;
-  const off = scroll * factor;
-  for (let sx = 0; sx < viewW + 2; sx += 2) {
-    const wx = Math.floor((sx + off) / 2) * 2;
-    const h = Math.round(base + a1 * Math.sin(wx * f1) + a2 * Math.sin(wx * f2 + 1.3));
-    ctx.fillRect(sx - (off % 2), -h, 2, h);
-  }
-}
 function pixelDisc(cx, cy, r, color) {
   ctx.fillStyle = color;
   for (let dy = -r; dy <= r; dy++) {
@@ -796,57 +1087,104 @@ function pixelDisc(cx, cy, r, color) {
     ctx.fillRect(Math.round(cx - half), Math.round(cy + dy), half * 2, 1);
   }
 }
-const hash = (i) => { const s = Math.sin(i * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
-
 function bubble(text, x, y) {
   ctx.font = '600 6px "Pixelify Sans", sans-serif';
   const tw = Math.ceil(ctx.measureText(text).width);
   const w = tw + 6, h = 9;
-  const bx = Math.round(x - w / 2), by = Math.round(y - h);
+  const bx = Math.round(clamp(x - w / 2, 2, viewW - w - 2)), by = Math.round(y - h);
   ctx.fillStyle = INK;
   ctx.fillRect(bx - 1, by - 1, w + 2, h + 2);
   ctx.fillRect(Math.round(x) - 1, by + h, 3, 3);
-  ctx.fillStyle = '#fff4e0';
+  ctx.fillStyle = '#f7fbff';
   ctx.fillRect(bx, by, w, h);
   ctx.fillRect(Math.round(x), by + h, 1, 2);
   ctx.fillStyle = INK;
   ctx.textBaseline = 'middle';
   ctx.textAlign = 'center';
-  ctx.fillText(text, Math.round(x), by + h / 2 + .5);
+  ctx.fillText(text, bx + w / 2, by + h / 2 + .5);
 }
-function nameTag(x, y) {
+function nameTag(text, x, y, accent) {
   ctx.font = '700 5px "Silkscreen", monospace';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  const w = 28, h = 7;
+  const w = Math.ceil(ctx.measureText(text).width) + 7, h = 7;
   const bx = Math.round(x - w / 2), by = Math.round(y - h);
   ctx.fillStyle = INK;
   ctx.fillRect(bx, by, w, h);
-  ctx.fillStyle = '#4f7fd6';
+  ctx.fillStyle = accent;
   ctx.fillRect(bx, by, 2, h);
-  ctx.fillStyle = '#fff4e0';
-  ctx.fillText('ADRIAN', bx + w / 2 + 1, by + h / 2 + .5);
+  ctx.fillStyle = '#f7fbff';
+  ctx.fillText(text, bx + w / 2 + 1, by + h / 2 + .5);
+}
+
+// Valentina sitzt weit weg hinter den Bergen und schleckt Schnee von ihrem Gipfel.
+function drawValentina(pal) {
+  const vs = skyH > 170 ? 2 : 1;
+  const vx = Math.round(viewW * (H > W * 1.1 ? .58 : .8));
+  const apexH = Math.round(clamp(skyH * .32, 26, 100));
+  ctx.save();
+  ctx.translate(vx, -apexH);
+  ctx.scale(vs, vs);
+  ctx.translate(-22, -32);
+  const spr = V.blink > 0 ? valentina.blink : valentina.open;
+  ctx.drawImage(spr.c, -1, -1);
+  // ihr Gipfel
+  const rows = Math.ceil(apexH / vs) + 2;
+  const snowRows = Math.round(rows * .3);
+  for (let r = 0; r < rows; r++) {
+    const half = Math.round(1 + r * 1.7 + (r > 3 ? hash(r) * 1.5 : 0));
+    const y = 32 + r;
+    const snowy = r < snowRows;
+    ctx.fillStyle = snowy ? pal.snow : pal.rock;
+    ctx.fillRect(22 - half, y, half, 1);
+    ctx.fillStyle = snowy ? pal.snowSh : pal.rockSh;
+    ctx.fillRect(22, y, half, 1);
+    if (!snowy && r < snowRows + 5) {
+      ctx.fillStyle = pal.snow;
+      const tl = Math.max(0, 3 - (r - snowRows) * .7);
+      for (const f of [-.65, -.15, .4]) ctx.fillRect(Math.round(22 + f * half), y, Math.round(tl), 1);
+    }
+  }
+  // Zunge
+  const cycle = V.lick % 3.2;
+  let len = 0;
+  if (cycle > 2) len = Math.min(7, (cycle - 2) * 30) - Math.max(0, (cycle - 2.9) * 30);
+  if (len > 0) {
+    const L = Math.max(1, Math.round(len + (cycle > 2.25 && cycle < 2.85 ? Math.sin(cycle * 40) : 0)));
+    ctx.fillStyle = '#5a4250';
+    ctx.fillRect(20, 26, 4, 1);
+    ctx.fillStyle = '#f27b95';
+    ctx.fillRect(21, 26, 2, L);
+    ctx.fillStyle = '#d95f7c';
+    ctx.fillRect(21, 26 + L - 1, 2, 1);
+    if (L >= 6 && Math.random() < .25) {
+      particles.push({ x: vx + rand(-3, 3), y: apexH + rand(0, 2), vx: rand(-25, 25), vy: rand(10, 35), life: rand(.3, .6), c: '#ffffff' });
+    }
+  }
+  ctx.restore();
+  if (mode === 'start' || V.sayT > 0) nameTag('VALENTINA', vx, -(apexH - 4 * vs), '#ff8fa3');
+  if (V.sayT > 0) bubble(V.say, vx + 26 * vs + 6, -(apexH + 18 * vs));
 }
 
 function draw() {
-  const sk = sky(mode === 'start' ? 0 : (G.score / 900) % 1);
+  const pal = currentPalette();
   const sx = shake > 0 ? Math.round(rand(-2, 2)) : 0;
   const sy = shake > 0 ? Math.round(rand(-1, 1)) : 0;
+  const now = performance.now();
 
   // Himmel (CSS-Pixel)
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   const grad = ctx.createLinearGradient(0, 0, 0, groundY);
-  grad.addColorStop(0, sk.top);
-  grad.addColorStop(1, sk.bot);
+  grad.addColorStop(0, pal.top);
+  grad.addColorStop(1, pal.bot);
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, W, groundY + 2);
-  if (sk.stars > .02) {
+  if (pal.stars > .02) {
+    ctx.fillStyle = '#f7fbff';
+    const size = Math.max(1, Math.round(px * .6));
     for (const s of STARS) {
-      const tw = .55 + .45 * Math.sin(performance.now() / 600 + s.p);
-      ctx.globalAlpha = sk.stars * tw;
-      ctx.fillStyle = '#fff4e0';
-      const size = Math.max(1, Math.round(px * .6));
-      ctx.fillRect(Math.round(s.x * W), Math.round(s.y * groundY * .8), size, size);
+      ctx.globalAlpha = pal.stars * (.55 + .45 * Math.sin(now / 600 + s.p));
+      ctx.fillRect(Math.round(s.x * W), Math.round(s.y * groundY * .75), size, size);
     }
     ctx.globalAlpha = 1;
   }
@@ -855,75 +1193,144 @@ function draw() {
   const k = px * dpr;
   ctx.setTransform(k, 0, 0, k, sx * dpr, (groundY + sy) * dpr);
   ctx.imageSmoothingEnabled = false;
-  const skyH = groundY / px;
 
   // Sonne / Mond
-  ctx.globalAlpha = 1 - sk.stars;
-  pixelDisc(viewW * .78, -skyH * .72, 8, '#ffd166');
-  ctx.globalAlpha = sk.stars;
-  pixelDisc(viewW * .22, -skyH * .7, 6, '#f4f1ff');
-  ctx.fillStyle = sk.top;
-  ctx.globalAlpha = sk.stars;
-  pixelDisc(viewW * .22 + 3, -skyH * .7 - 2, 5, sk.top);
+  if (pal.stars < .98) {
+    ctx.globalAlpha = 1 - pal.stars;
+    pixelDisc(viewW * .17, -skyH * pal.sunY - 10, Math.round(pal.sunR), pal.sun);
+  }
+  if (pal.stars > .3) {
+    ctx.globalAlpha = pal.stars;
+    pixelDisc(viewW * .2, -skyH * .72, 6, '#f4f1ff');
+    pixelDisc(viewW * .2 + 3, -skyH * .72 - 2, 5, pal.top);
+  }
   ctx.globalAlpha = 1;
+
+  drawValentina(pal);
 
   // Wolken
   const span = viewW + 60;
   for (let i = 0; i < 4; i++) {
-    const cxw = ((i * span / 4 + hash(i) * 30 - G.scroll * .25) % span + span) % span - 30;
-    const cyw = -skyH * (.42 + hash(i + 9) * .3);
-    ctx.globalAlpha = .85 - sk.stars * .6;
+    const cxw = ((i * span / 4 + hash(i) * 30 - G.scroll * .2) % span + span) % span - 30;
+    const cyw = -skyH * (.45 + hash(i + 9) * .32);
+    ctx.globalAlpha = .9 - pal.stars * .65;
     ctx.drawImage(cloudSpr.c, Math.round(cxw), Math.round(cyw));
   }
   ctx.globalAlpha = 1;
 
-  hills(G.scroll, .12, 22, 7, .021, 4, .057, sk.far);
-  hills(G.scroll, .3, 11, 4, .033, 3, .091, sk.near);
-
-  // Boden
-  const below = (H - groundY) / px + 4;
-  ctx.fillStyle = sk.ground;
-  ctx.fillRect(-4, 0, viewW + 8, below);
-  ctx.fillStyle = sk.line;
-  ctx.fillRect(-4, 0, viewW + 8, 1);
-  ctx.fillStyle = sk.deep;
-  const tile = 6;
-  const first = Math.floor(G.scroll / tile);
-  const rows = Math.min(14, Math.ceil(below / 5));
-  for (let i = first; i < first + viewW / tile + 2; i++) {
-    const xx = i * tile - G.scroll;
-    for (let r = 0; r < rows; r++) {
-      const hv = hash(i * 31 + r * 7);
-      if (hv < .38) ctx.fillRect(Math.round(xx + hv * 5), 3 + r * 5 + Math.round(hv * 3), hv < .12 ? 2 : 1, 1);
+  // Schneeberge (weit weg, langsam)
+  const farMax = Math.min(skyH * .27, 42);
+  const farBase = farMax * .25, farAmp = farMax * .75;
+  const farH = (x) => farBase + farAmp * (.62 * tri(x / 71) + .38 * tri(x / 29 + .37));
+  const offF = G.scroll * .08;
+  const fracF = offF - Math.floor(offF);
+  for (let s = 0; s < viewW + 2; s++) {
+    const wx = s + Math.floor(offF);
+    const h = Math.round(farH(wx));
+    const shaded = farH(wx + 1) < farH(wx);
+    ctx.fillStyle = shaded ? pal.rockSh : pal.rock;
+    ctx.fillRect(s - fracF, -h, 1, h);
+    const snowline = Math.round(farBase + farAmp * .52 + hash(wx) * 2);
+    if (h > snowline) {
+      ctx.fillStyle = shaded ? pal.snowSh : pal.snow;
+      ctx.fillRect(s - fracF, -h, 1, h - snowline);
     }
   }
-  ctx.fillStyle = sk.line;
-  for (let i = first; i < first + viewW / tile + 2; i++) {
-    if (hash(i) > .8) ctx.fillRect(Math.round(i * tile - G.scroll), -1, hash(i + 3) > .5 ? 2 : 1, 1);
+
+  // Grüne Hügel mit Tannen
+  const midBase = Math.min(skyH * .08, 10) + 4;
+  const offM = G.scroll * .3;
+  const fracM = offM - Math.floor(offM);
+  for (let s = 0; s < viewW + 2; s++) {
+    const wx = s + Math.floor(offM);
+    const hill = Math.round(midBase + 3 * Math.sin(wx * .045) + 2 * Math.sin(wx * .11 + 1));
+    let tree = 0;
+    const i0 = Math.floor(wx / 7);
+    for (let i = i0 - 1; i <= i0 + 1; i++) {
+      if (hash(i) < .35) continue;
+      const th = 5 + hash(i * 3) * 8;
+      const d = Math.abs(wx - (i * 7 + 3 + Math.floor(hash(i * 5) * 2)));
+      tree = Math.max(tree, Math.round(th - d * 2.2));
+    }
+    ctx.fillStyle = pal.hill;
+    ctx.fillRect(s - fracM, -hill, 1, hill);
+    if (tree > 0) {
+      ctx.fillStyle = pal.pine;
+      ctx.fillRect(s - fracM, -hill - tree + 2, 1, tree);
+    }
   }
 
-  // Adrians
-  for (const o of G.obstacles) {
-    const oy = o.drawY !== undefined ? o.drawY : o.y;
-    const top = -(oy + o.h);
-    ctx.drawImage(o.spr.c, snap(o.x) - o.spr.pad, snap(top) - o.spr.pad);
+  // Bergwiese mit Blumen, darunter Fels
+  const below = (H - groundY) / px + 4;
+  ctx.fillStyle = pal.meadow;
+  ctx.fillRect(-4, 0, viewW + 8, Math.min(below, 12));
+  ctx.fillStyle = pal.soil;
+  ctx.fillRect(-4, 12, viewW + 8, 3);
+  for (let y = 15, band = 0; y < below; y += 7, band++) {
+    ctx.fillStyle = band % 2 ? pal.stoneDk : pal.stone;
+    ctx.fillRect(-4, y, viewW + 8, 7);
   }
-  for (const o of G.obstacles) {
-    const oy = o.drawY !== undefined ? o.drawY : o.y;
-    const top = -(oy + o.h);
-    const midX = snap(o.x) + o.w / 2 + (o.kind.startsWith('fly') ? -5 : 0);
-    nameTag(midX, top - 2);
+  ctx.fillStyle = pal.grass;
+  ctx.fillRect(-4, 0, viewW + 8, 1);
+  const tile = 5;
+  const first = Math.floor(G.scroll / tile);
+  const FLOWERS = ['#ffffff', '#3b5bdb', '#ffd43b', '#ff8fa3'];
+  for (let i = first; i < first + viewW / tile + 2; i++) {
+    const xx = Math.round(i * tile - G.scroll);
+    const h0 = hash(i);
+    if (h0 > .55) { ctx.fillStyle = pal.grass; ctx.fillRect(xx, -1, 1, 1); if (h0 > .85) ctx.fillRect(xx + 2, -2, 1, 2); }
+    for (let r = 0; r < 3; r++) {
+      const hv = hash(i * 31 + r * 7);
+      if (hv < .2) {
+        ctx.fillStyle = FLOWERS[Math.floor(hash(i * 13 + r) * 4)];
+        ctx.fillRect(xx + Math.round(hv * 15), 2 + r * 3, 1, 1);
+      } else if (hv < .45) {
+        ctx.fillStyle = pal.meadowDk;
+        ctx.fillRect(xx + Math.round(hv * 8), 2 + r * 3, 2, 1);
+      }
+    }
+    if (below > 20 && hash(i * 7 + 3) < .25) {
+      ctx.fillStyle = pal.stoneDk;
+      ctx.fillRect(xx, 17 + Math.floor(hash(i * 9) * Math.max(1, below - 22)), 2, 1);
+    }
+  }
+
+  // Fische und Adrians
+  for (const o of G.objects) {
+    const oy = objY(o);
+    if (o.type === 'fish') ctx.drawImage(fishSpr.c, snap(o.x) - 1, snap(-(oy + o.h)) - 1);
+    else ctx.drawImage(o.spr.c, snap(o.x) - o.spr.pad, snap(-(oy + o.h)) - o.spr.pad);
+  }
+  for (const o of G.objects) {
+    if (o.type !== 'adrian' || !o.tag) continue;
+    const top = -(objY(o) + o.h);
+    const midX = snap(o.x) + o.w / 2 + (o.kind === 'ski' ? -3 : 0);
+    nameTag('ADRIAN', midX, top - 2, '#4f7fd6');
     if (o.quipT > 0) bubble(o.quip, midX, top - 11);
   }
 
-  // Staub
-  ctx.fillStyle = sk.line;
-  for (const q of particles) ctx.fillRect(Math.round(q.x), -Math.round(q.y) - 1, 1, 1);
+  // Partikel
+  for (const q of particles) {
+    ctx.fillStyle = q.c || pal.meadowDk;
+    ctx.fillRect(Math.round(q.x), -Math.round(q.y) - 1, 1, 1);
+  }
 
   // Katzosaurus
   const cs = catSprite();
-  const sq = !P.grounded && P.vy > 120 ? -1 : 0;
-  ctx.drawImage(cs.c, snap(P.x) - cs.pad, snap(-(P.y + cs.h)) - cs.pad + sq);
+  ctx.drawImage(cs.c, snap(P.x) - cs.pad, snap(-(P.y + cs.h)) - cs.pad);
+
+  // +20
+  ctx.font = '700 6px "Silkscreen", monospace';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  for (const f of floaters) {
+    ctx.globalAlpha = Math.min(1, f.t * 2);
+    ctx.fillStyle = INK;
+    ctx.fillText(f.text, f.x + .5, -f.y + .5);
+    ctx.fillStyle = '#ffd43b';
+    ctx.fillText(f.text, f.x, -f.y);
+  }
+  ctx.globalAlpha = 1;
 }
 
 /* ---------- Schleife ---------- */
