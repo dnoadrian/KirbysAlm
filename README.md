@@ -31,7 +31,7 @@ Im **Shop** gibt es Upgrades (Regenbogen-Stern, Fisch-Magnet, Dreifachsprung, Gl
 
 ## Oberfläche
 
-Drei Stile zum Ausprobieren: Almhütte (Standard), `#bonbon` und `#neon` an die Adresse anhängen.
+Almhütte: Holzbretter, rot-weiße Kopfleiste, grüner Start-Knopf, dazu die Minecraft-Schrift.
 
 ## Level
 

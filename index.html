@@ -15,7 +15,7 @@
 <title>Cat Jumper</title>
 <style>
 /* Layout: full-bleed pixel alm on canvas. Lobby: title top-left, menu (Shop, Inventar, Start) bottom-left.
-   Shop/Inventar/Pause/Tod as panels. Three switchable looks via data-ui on <html>: holz (default), bonbon, neon. */
+   Shop/Inventar/Pause/Tod as wooden panels with a red-and-white header (Almhütte look). */
 /* Schrift: "Minecraft" von Pwnage_Block (fontstruct.com), CC BY-SA 3.0, um Ä Ö Ü ä ö ü ß · ergänzt. */
 @font-face {
   font-family: "CatJumperMC";
@@ -23,8 +23,8 @@
   font-display: block;
 }
 
-/* ---- Look 1: Almhütte (Holz, rot-weiß) ---- */
-:root, [data-ui="holz"] {
+/* ---- Look: Almhütte (Holz, rot-weiß) ---- */
+:root {
   --font: "CatJumperMC", "Courier New", monospace;
   --ink: #1e1c26;
   --hud-bg: #6b4424;
@@ -88,126 +88,6 @@
   --modal-dim: rgba(30, 18, 8, .45);
   color-scheme: dark;
 }
-/* ---- Look 2: Bonbon (Pastell, rund) ---- */
-[data-ui="bonbon"] {
-  --hud-bg: #ffffff;
-  --hud-border: 3px solid #ff9ccf;
-  --hud-radius: 18px;
-  --hud-shadow: 0 4px 0 #e06aa8;
-  --hud-text: #6b3d7a;
-  --hud-text-shadow: none;
-  --hud-muted: #b07ac0;
-  --hud-accent: #ff5fa8;
-  --panel-bg: linear-gradient(#fff7fc, #ffe9f5);
-  --panel-border: 4px solid #ffffff;
-  --panel-radius: 28px;
-  --panel-shadow: 0 8px 0 #f06aa9, 0 16px 34px rgba(160, 60, 120, .35);
-  --panel-text: #6b3d7a;
-  --panel-text-shadow: none;
-  --panel-muted: #a77bb6;
-  --head-bg: linear-gradient(90deg, #ff9ccf, #c9a7ff);
-  --head-text: #ffffff;
-  --head-shadow: 0 2px 0 rgba(150, 50, 120, .45);
-  --head-trim: linear-gradient(90deg, #ffd36e, #7ee3c9);
-  --card-bg: #ffffff;
-  --card-border: 3px solid #ffd1ea;
-  --card-radius: 20px;
-  --card-text: #6b3d7a;
-  --card-muted: #a77bb6;
-  --btn-radius: 999px;
-  --btn-bg: linear-gradient(#ff8cc6, #ff5fa8);
-  --btn-border: #ffffff;
-  --btn-text: #ffffff;
-  --btn-text-shadow: 0 2px 0 rgba(160, 30, 90, .5);
-  --btn-depth: #c63c86;
-  --btn2-bg: linear-gradient(#c3b0ff, #9479ff);
-  --btn2-border: #ffffff;
-  --btn2-text: #ffffff;
-  --btn2-text-shadow: 0 2px 0 rgba(70, 40, 160, .5);
-  --btn2-depth: #5b40c9;
-  --start-bg: linear-gradient(#ffd36e, #ffae1a);
-  --start-border: #ffffff;
-  --start-text: #ffffff;
-  --start-text-shadow: 0 2px 0 rgba(150, 80, 0, .6);
-  --start-depth: #c97c00;
-  --tab-bg: #ffe0f0;
-  --tab-border: #ffffff;
-  --tab-text: #b07ac0;
-  --tab-active-bg: #ff7ab8;
-  --tab-active-text: #ffffff;
-  --title: #ffffff;
-  --title-shadow: 3px 3px 0 #ff5fa8, -3px -3px 0 #ff5fa8, 3px -3px 0 #ff5fa8, -3px 3px 0 #ff5fa8, 0 8px 0 #c63c86;
-  --subtitle: #ffffff;
-  --subtitle-shadow: 2px 2px 0 #9479ff;
-  --scene-shadow: 2px 2px 0 rgba(120, 40, 100, .7);
-  --good: #7ee3c9;
-  --focus: #ffffff;
-  --wipe: #ff8cc6;
-  --modal-dim: rgba(120, 40, 100, .3);
-}
-/* ---- Look 3: Neon (dunkles Glas, Leuchtkanten) ---- */
-[data-ui="neon"] {
-  --hud-bg: rgba(10, 14, 34, .72);
-  --hud-border: 2px solid #39f3ff;
-  --hud-radius: 10px;
-  --hud-shadow: 0 0 12px rgba(57, 243, 255, .45);
-  --hud-text: #e9fbff;
-  --hud-text-shadow: 0 0 6px rgba(57, 243, 255, .6);
-  --hud-muted: #8fb6d9;
-  --hud-accent: #ff4fd8;
-  --panel-bg: rgba(10, 12, 30, .84);
-  --panel-border: 2px solid #39f3ff;
-  --panel-radius: 16px;
-  --panel-shadow: 0 0 26px rgba(57, 243, 255, .35), inset 0 0 26px rgba(255, 79, 216, .12);
-  --panel-blur: blur(10px);
-  --panel-text: #e9fbff;
-  --panel-text-shadow: none;
-  --panel-muted: #8fb6d9;
-  --head-bg: transparent;
-  --head-text: #ff4fd8;
-  --head-shadow: 0 0 10px rgba(255, 79, 216, .8);
-  --head-trim: linear-gradient(90deg, transparent, #39f3ff, #ff4fd8, transparent);
-  --card-bg: rgba(255, 255, 255, .04);
-  --card-border: 1px solid rgba(57, 243, 255, .4);
-  --card-radius: 12px;
-  --card-text: #e9fbff;
-  --card-muted: #8fb6d9;
-  --btn-radius: 10px;
-  --btn-border-w: 2px;
-  --btn-bg: rgba(255, 79, 216, .14);
-  --btn-border: #ff4fd8;
-  --btn-text: #ffd6f6;
-  --btn-text-shadow: 0 0 8px #ff4fd8;
-  --btn-depth: transparent;
-  --btn-glow: 0 0 14px rgba(255, 79, 216, .55);
-  --btn2-bg: rgba(57, 243, 255, .1);
-  --btn2-border: #39f3ff;
-  --btn2-text: #d6fbff;
-  --btn2-text-shadow: 0 0 8px #39f3ff;
-  --btn2-depth: transparent;
-  --btn2-glow: 0 0 14px rgba(57, 243, 255, .5);
-  --start-bg: rgba(182, 255, 59, .14);
-  --start-border: #b6ff3b;
-  --start-text: #efffd6;
-  --start-text-shadow: 0 0 8px #b6ff3b;
-  --start-depth: transparent;
-  --start-glow: 0 0 18px rgba(182, 255, 59, .6);
-  --tab-bg: transparent;
-  --tab-border: rgba(57, 243, 255, .5);
-  --tab-text: #8fb6d9;
-  --tab-active-bg: rgba(57, 243, 255, .18);
-  --tab-active-text: #e9fbff;
-  --title: #e9fbff;
-  --title-shadow: 0 0 6px #39f3ff, 0 0 18px #ff4fd8, 3px 3px 0 #2a1450;
-  --subtitle: #ff4fd8;
-  --subtitle-shadow: 0 0 10px rgba(255, 79, 216, .8);
-  --scene-shadow: 0 0 6px rgba(10, 12, 30, .9), 2px 2px 0 #0a0c1e;
-  --good: #b6ff3b;
-  --focus: #39f3ff;
-  --wipe: #0a0c1e;
-  --modal-dim: rgba(5, 6, 16, .5);
-}
-
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 html, body {
@@ -676,15 +556,6 @@ const store = {
   get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* egal */ } },
 };
-
-/* ---------- Oberflächen-Stil: holz (Standard), bonbon oder neon über #bonbon / #neon ---------- */
-const LOOKS = ['holz', 'bonbon', 'neon'];
-function applyLook() {
-  const h = location.hash.slice(1);
-  document.documentElement.dataset.ui = LOOKS.includes(h) ? h : 'holz';
-}
-applyLook();
-window.addEventListener('hashchange', applyLook);
 
 /* ---------- Pixel-Sprites ---------- */
 const INK = '#1e1c26';
