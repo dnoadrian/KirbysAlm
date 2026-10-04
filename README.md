@@ -54,7 +54,7 @@ Im **Shop** gibt es Upgrades (Regenbogen-Stern, Fisch-Magnet, Dreifachsprung, Gl
 
 ## Spannung
 
-- **Sprung-Bewertung:** Super!, Perfekt!, Unglaublich! mit Serie (1x, 2x ...).
+- **Sprung-Bewertung:** Super!, Perfekt!, Unglaublich! mit Serie (1x, 2x ...), direkt neben der Katze. Gesammelte Fische zeigen ein oranges „+1“.
 - **Regenbogen-Stern:** liegt selten auf der Strecke oder rettet dich einmal pro Runde (Upgrade). 4 bis 5 Sekunden unverwundbar, Gegner fliegen weg.
 - **Zufalls-Events:** Sternschauer, Fischregen, Wollknäuel (ab Level 2: rote Wollknäuel rollen heran) und Turbo-Rausch.
 

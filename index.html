@@ -110,7 +110,6 @@ p, h1, h2, h3 { margin: 0; }
 
 .home-title { position: fixed; pointer-events: none; }
 .title { font: 48px/1 var(--font); color: #ffffff; text-shadow: 0 4px 0 rgba(74, 41, 19, .45), 0 8px 16px rgba(74, 41, 19, .2); }
-.subtitle { margin-top: 12px; color: #ffffff; text-shadow: var(--stroke-sm); }
 #home.leaving, #home.entering { pointer-events: none; }
 #home.entering .home-title { animation: homeInTop .55s cubic-bezier(.25, 1, .5, 1) .15s both; }
 #home.entering .home-menu .btn:not(.btn-start) { animation: homeInLeft .55s cubic-bezier(.25, 1, .5, 1) .15s both; }
@@ -229,7 +228,7 @@ p, h1, h2, h3 { margin: 0; }
 #banner.show { opacity: 1; transform: none; }
 #banner .lvl { font-size: 48px; line-height: 1; color: #ffffff; text-shadow: var(--stroke); }
 #banner .name, #banner .tip { color: #ffffff; text-shadow: var(--stroke-sm); }
-#combo { position: fixed; left: 16px; right: 16px; top: 40%; z-index: 5; display: flex; flex-direction: column; align-items: center; gap: 6px; pointer-events: none; opacity: 0; }
+#combo { position: fixed; left: 0; top: 0; z-index: 5; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; pointer-events: none; opacity: 0; white-space: nowrap; transform-origin: left bottom; }
 #combo.pop { animation: combo 1.15s cubic-bezier(.2, .9, .3, 1) both; }
 #comboWord { font-size: 16px; line-height: 1; color: #ffffff; text-shadow: var(--stroke-sm); }
 #comboMult { font-size: 16px; line-height: 1; color: #ffffff; text-shadow: var(--stroke-sm); }
@@ -242,8 +241,6 @@ p, h1, h2, h3 { margin: 0; }
   100% { opacity: 0; transform: translateY(-36px) scale(.9); }
 }
 @keyframes fadeout { 0%, 70% { opacity: 1; } 100% { opacity: 0; } }
-#hint { position: fixed; left: 16px; right: 16px; text-align: center; color: #ffffff; text-shadow: var(--stroke-sm); pointer-events: none; transition: opacity .6s; }
-#hint.gone { opacity: 0; }
 
 
 /* Bausteine: Rautengitter, Holzmaserung, Bretterfugen */
@@ -301,7 +298,6 @@ p, h1, h2, h3 { margin: 0; }
 @media (orientation: landscape) and (max-height: 560px) {
   #banner { top: calc(env(safe-area-inset-top, 0px) + 84px); }
   #banner .lvl { font-size: 40px; }
-  #combo { top: 54%; }
   .title { font-size: 40px; }
   .grid { grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 10px; }
   .card .prev { height: 52px; }
@@ -333,7 +329,6 @@ p, h1, h2, h3 { margin: 0; }
 <div id="home">
   <div class="home-title">
     <h1 class="title">Cat Jumper</h1>
-    <p class="subtitle" id="subtitle">Spring über alles!</p>
   </div>
   <nav class="home-menu" aria-label="Hauptmenü">
     <button class="btn btn2" id="shopBtn" type="button">Shop</button>
@@ -469,7 +464,6 @@ p, h1, h2, h3 { margin: 0; }
 
 <p class="tipline" id="installHelp" hidden></p>
 
-<p id="hint" class="gone"></p>
 
 
 <script>
@@ -1160,7 +1154,6 @@ function resize() {
   groundY = Math.round(H * (portrait ? .66 : .8));
   viewW = W / px;
   skyH = groundY / px;
-  $('hint').style.top = Math.min(H - 30, groundY + Math.max(22, (H - groundY) * .35)) + 'px';
 }
 window.addEventListener('resize', resize);
 window.addEventListener('orientationchange', () => setTimeout(resize, 150));
@@ -1537,7 +1530,7 @@ async function keepAwake() {
 /* ---------- Ablauf ---------- */
 const screens = { admin: $('admin'), home: $('home'), setup: $('setup'), shop: $('shop'), inv: $('inv'), pause: $('pause'), over: $('over') };
 function show(name) { for (const k in screens) screens[k].hidden = k !== name; }
-let hintTimer = 0, bannerTimer = 0;
+let bannerTimer = 0;
 
 function showBanner(title, name, tip, ms = 2600) {
   $('bLevel').textContent = title;
@@ -1552,12 +1545,6 @@ function showBanner(title, name, tip, ms = 2600) {
 function showLevelBanner(n) {
   const L = levelInfo(n);
   showBanner('Level ' + n, L.name + ' · ' + fmtClock(startHour(n)) + ' Uhr', L.tip);
-}
-function showHint(ms, text) {
-  $('hint').textContent = text;
-  $('hint').classList.remove('gone');
-  clearTimeout(hintTimer);
-  hintTimer = setTimeout(() => $('hint').classList.add('gone'), ms);
 }
 
 function goHome(smooth = false) {
@@ -1582,9 +1569,7 @@ function goHome(smooth = false) {
   floaters.length = 0;
   document.body.classList.add('at-home');
   $('banner').classList.remove('show');
-  $('hint').classList.add('gone');
   show('home');
-  updateNames();
   updateHud(true);
 }
 function startGame() {
@@ -1654,7 +1639,6 @@ function gameOver(o) {
   $('rLevel').textContent = G.level;
   $('rJumped').textContent = G.jumped;
   $('rCombo').textContent = G.bestCombo + 'x';
-  $('hint').classList.add('gone');
   $('banner').classList.remove('show');
   updateHud(true);
   setTimeout(() => { if (mode === 'over') show('over'); }, 420);
@@ -1686,6 +1670,9 @@ function cheer(gap) {
   let mult = G.combo + 'x';
   if (G.combo % 5 === 0) { addFish(2, P.x + 14, P.y + 22); mult += '  +2 Fische'; } // alle 5 in Serie gibt es Fische
   const el = $('combo');
+  // rechts oben neben der Katze, damit man nicht vom Spiel wegschauen muss
+  el.style.left = Math.round(Math.min(W - 150, (P.x + CAT_W + 2) * px)) + 'px';
+  el.style.top = Math.round(Math.max(60, groundY - (P.y + CAT_H + 6) * px - 34)) + 'px';
   $('comboWord').textContent = word;
   $('comboMult').textContent = mult;
   el.classList.remove('pop', 'hot');
@@ -1800,7 +1787,7 @@ function buy(it) {
   }
   save.fish -= it.price;
   save.owned.add(it.key);
-  if (it.cat) { save.breed = it.id; cat = myCat(); updateNames(); shopMsg(it.name + ' gekauft! Du spielst jetzt mit dieser Katze.'); }
+  if (it.cat) { save.breed = it.id; cat = myCat(); shopMsg(it.name + ' gekauft! Du spielst jetzt mit dieser Katze.'); }
   else if (it.slot) { wear(it, true); shopMsg(it.name + ' gekauft und angezogen!'); }
   else shopMsg(it.name + ' gekauft! Es ist ab jetzt immer aktiv.');
   persist();
@@ -1894,16 +1881,12 @@ $('setupNext').addEventListener('click', () => {
   save.name = name;
   persist();
   $('catName').blur();
-  updateNames();
   sfx.buy();
   document.body.classList.remove('first-run');
   if (setupFromInv) { renderInv(); show('inv'); } else show('home');
 });
 $('setupBack').addEventListener('click', () => { renderInv(); show('inv'); });
 $('catName').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('setupNext').click(); });
-function updateNames() {
-  $('subtitle').textContent = catName() + ' springt über alles!';
-}
 
 /* ---------- Kollision (pixelgenau) ---------- */
 function overlaps(a, ax, ay, b, bx, by) {
@@ -2105,7 +2088,7 @@ function update(dt) {
         o.got = true;
         if (o.type === 'star') startInvincible(5, 'Regenbogen-Stern!');
         else addFish(o.type === 'fish' && G.turbo > 1 ? 2 : 1, o.x + 4, oy + 6);
-        for (let i = 0; i < 6; i++) particles.push({ x: o.x + 4, y: oy + 2, vx: rand(-50, 50), vy: rand(10, 60), life: rand(.2, .45), c: o.type === 'fish' ? '#ffd43b' : pick(RAINBOW) });
+        for (let i = 0; i < 6; i++) particles.push({ x: o.x + 4, y: oy + 2, vx: rand(-50, 50), vy: rand(10, 60), life: rand(.2, .45), c: o.type === 'fish' ? FISH_PAL.b : pick(RAINBOW) });
       }
       continue;
     }
@@ -2406,9 +2389,9 @@ function draw() {
   ctx.textBaseline = 'middle';
   for (const f of floaters) {
     ctx.globalAlpha = Math.min(1, f.t * 2);
-    ctx.fillStyle = darker('#ffd43b');
+    ctx.fillStyle = darker(FISH_PAL.b);
     ctx.fillText(f.text, f.x + 1, -f.y + 1);
-    ctx.fillStyle = '#ffd43b';
+    ctx.fillStyle = FISH_PAL.b;
     ctx.fillText(f.text, f.x, -f.y);
   }
   ctx.globalAlpha = 1;
