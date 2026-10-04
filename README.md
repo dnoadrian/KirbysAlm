@@ -6,7 +6,7 @@ Ein kleines Pixel-Spiel fürs Handy: Deine Katze läuft über eine Bergwiese und
 
 ## Lobby
 
-In der Lobby spielt deine Katze mit einem Wollknäuel. Unten steht die Leiste mit **Shop**, **Inventar**, **Bestenliste** und **Start**. Start öffnet mit einem Kreis-Übergang das Spiel. Nach dem Verlieren geht es mit **Nochmal** sofort weiter (kurzer Übergang) oder mit **Lobby** zurück.
+In der Lobby spielt deine Katze mit einem Wollknäuel. Links oben stehen untereinander **Bestenliste**, **Shop** und **Inventar**, rechts unten der große **Start**-Knopf. Start öffnet mit einem Kreis-Übergang das Spiel. Nach dem Verlieren geht es mit **Nochmal** sofort weiter (kurzer Übergang) oder mit **Lobby** zurück.
 
 ## Steuerung
 
@@ -15,7 +15,7 @@ Nur Tippen (bzw. Klicken):
 - **Tippen:** springen
 - **In der Luft nochmal tippen:** Doppelsprung (ab Level 2, mit Salto)
 
-Oben rechts lädt der Pfeil-Knopf die Seite bzw. App neu und holt die neueste Version, der Lautsprecher schaltet den Ton. Der kleine Download-Knopf daneben installiert die App (nur im Browser sichtbar).
+Oben rechts installiert der kleine Download-Knopf die App (nur im Browser sichtbar), der Lautsprecher schaltet den Ton.
 
 ## Deine Katze
 
@@ -54,9 +54,10 @@ Im **Shop** gibt es Upgrades (Regenbogen-Stern, Fisch-Magnet, Dreifachsprung, Gl
 
 ## Oberfläche
 
-Stein in den Farben der Berge: kräftige graue Blöcke mit großem Rautengitter, dunkelgraue Kanten und Schatten, weiße Schrift (Minecraft-Schrift). Grün heißt los oder kaufen, Rot heißt zurück oder schließen. Der Titel steht mittig, das Menü als Leiste unten. In der Lobby spielt deine Katze mit einem roten Wollknäuel.
+Zwei Looks mit derselben Anordnung, weiße Schrift (Minecraft-Schrift), Grün für Los und Kaufen, Rot für Zurück und Schließen:
 
-Mit `#gitterholz` hinten an der Adresse gibt es stattdessen den Holz-Look (Holzknöpfe mit Rautengitter, Menü unten links).
+- **Holz** (Standard): Holzknöpfe mit Rautengitter, Fenster aus Brettern mit rotem Kopf.
+- **Stein** (`#stein` hinten an der Adresse): graue Blöcke in den Farben der Berge mit großem Rautengitter und dunkelgrauen Kanten.
 
 ## Level
 

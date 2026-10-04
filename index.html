@@ -15,19 +15,13 @@
 <title>Cat Jumper</title>
 <script>
 (function () {
-  var looks = ['stein', 'gitterholz'];
-  function apply() {
-    var h = location.hash.replace('#', '');
-    var ui = looks.indexOf(h) >= 0 ? h : 'stein';
-    document.documentElement.setAttribute('data-ui', ui);
-  }
+  function apply() { document.documentElement.setAttribute('data-ui', location.hash === '#stein' ? 'stein' : 'gitterholz'); }
   apply();
   window.addEventListener('hashchange', apply);
 })();
 </script>
 <style>
-/* Cat Jumper GUI: Stein (grau wie die Berge) mit Grün und Rot, Schrift weiß.
-   Standard ist Stein (grau wie die Berge), mit #gitterholz hinten an der Adresse gibt es den Holz-Look. */
+/* Cat Jumper GUI: zwei Looks, Holz (Standard) und Stein (#stein hinten an der Adresse). Schrift weiß. */
 /* Schrift: "Minecraft" von Pwnage_Block (fontstruct.com), CC BY-SA 3.0, um Ä Ö Ü ä ö ü ß · ergänzt. */
 @font-face {
   font-family: "CatJumperMC";
@@ -123,27 +117,24 @@ p, h1, h2, h3 { margin: 0; }
 .home-title { position: fixed; pointer-events: none; }
 .title { font: 48px/1 var(--font); color: #ffffff; text-shadow: 0 4px 0 rgba(42, 23, 11, .45), 0 8px 16px rgba(0, 0, 0, .2); }
 .subtitle { margin-top: 12px; color: #ffffff; text-shadow: var(--stroke-sm); }
-.home-menu { position: fixed; display: grid; gap: 10px; }
-.home-side {
+/* Lobby: Titel mittig oben, links oben Bestenliste, Shop, Inventar untereinander, großer Start-Knopf rechts unten */
+.home-title { top: calc(env(safe-area-inset-top, 0px) + 14px); left: 0; right: 0; text-align: center; }
+.home-menu {
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 0px) + 14px);
+  left: calc(env(safe-area-inset-left, 0px) + 16px);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  width: 170px;
+}
+.home-menu .btn-start {
   position: fixed;
   right: calc(env(safe-area-inset-right, 0px) + 16px);
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 26px);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 8px;
-  max-width: 40%;
-  text-align: right;
-}
-.tipline { color: #ffffff; text-shadow: var(--stroke-sm); }
-.credit {
-  position: fixed;
-  right: calc(env(safe-area-inset-right, 0px) + 8px);
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 6px);
-  font-size: 8px;
-  color: #ffffff;
-  text-shadow: 1px 1px 0 rgba(0, 0, 0, .6);
-  pointer-events: none;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+  min-width: 210px;
+  font-size: 32px;
+  padding: 14px 28px 16px;
 }
 .btn-small { padding: 5px 9px 6px; }
 
@@ -272,9 +263,7 @@ p, h1, h2, h3 { margin: 0; }
   --rock: #8e9db3; --rock-hi: #a8b5c8; --rock-lo: #6e7c93; --rock-dk: #56627a; --rock-edge: #3a404c;
 }
 
-/* ================= Stein (Standard) =================
-   Kräftige Blöcke mit großem Rautengitter, grau wie die Berge, dunkelgraue Kanten und Schatten.
-   Grün für Los und Kaufen, Rot für Zurück und Schließen. Titel mittig, Menü als Leiste unten. */
+/* ================= Stein: graue Blöcke wie die Berge, großes Rautengitter, dunkelgraue Kanten (#stein) ================= */
 [data-ui="stein"] { --outline: var(--rock-edge); }
 [data-ui="stein"] .btn, [data-ui="stein"] .tab {
   border: 3px solid var(--rock-edge);
@@ -286,21 +275,6 @@ p, h1, h2, h3 { margin: 0; }
 [data-ui="stein"] .btn2, [data-ui="stein"] .icon-btn, [data-ui="stein"] .tab { --c: var(--rock); --c-hi: var(--rock-hi); --c-lo: var(--rock-lo); }
 [data-ui="stein"] .tab[aria-selected="true"] { --c: var(--green); --c-lo: var(--green-lo); }
 [data-ui="stein"] .box { background: var(--diamond-big), linear-gradient(var(--rock) 0 50%, var(--rock-lo) 50%); border: 3px solid var(--rock-edge); border-radius: 3px; box-shadow: inset 0 3px 0 rgba(255, 255, 255, .22), 0 3px 0 var(--rock-edge); }
-[data-ui="stein"] .home-title { top: calc(env(safe-area-inset-top, 0px) + 22px); left: 0; right: 0; text-align: center; }
-[data-ui="stein"] .title { font-size: 56px; text-shadow: 0 4px 0 var(--rock-edge), 0 8px 0 rgba(58, 64, 76, .3); }
-[data-ui="stein"] .home-menu {
-  left: 50%; transform: translateX(-50%);
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 4px);
-  grid-template-columns: repeat(4, auto); grid-template-areas: "a b c d"; align-items: end; gap: 6px;
-  padding: 4px 6px 7px;
-  background: var(--diamond-big), linear-gradient(var(--rock-lo) 0 50%, var(--rock-dk) 50%);
-  border: 3px solid var(--rock-edge);
-  border-radius: 3px;
-  box-shadow: inset 0 3px 0 rgba(255, 255, 255, .18), 0 4px 0 var(--rock-edge);
-}
-[data-ui="stein"] .home-menu .btn-start { grid-area: d; padding-block: 6px 7px; }
-[data-ui="stein"] .home-side { bottom: calc(env(safe-area-inset-bottom, 0px) + 60px); }
-[data-ui="stein"] .credit { bottom: auto; top: calc(env(safe-area-inset-top, 0px) + 6px); right: auto; left: calc(env(safe-area-inset-left, 0px) + 16px); }
 [data-ui="stein"] .panel {
   background: var(--diamond-big), linear-gradient(var(--rock), var(--rock-lo));
   border: 3px solid var(--rock-edge);
@@ -318,7 +292,7 @@ p, h1, h2, h3 { margin: 0; }
 [data-ui="stein"] .modal { background: rgba(58, 64, 76, .45); }
 [data-ui="stein"] #wipe { background: var(--diamond-big), var(--rock-lo); }
 
-/* ================= Gitterholz (Ersatz-Look, #gitterholz) ================= */
+/* ================= Gitterholz: Holzknöpfe mit Rautengitter, Bretter-Fenster mit rotem Kopf ================= */
 [data-ui="gitterholz"] .btn, [data-ui="gitterholz"] .tab {
   border: 3px solid var(--wood-deep);
   border-radius: 5px;
@@ -330,9 +304,6 @@ p, h1, h2, h3 { margin: 0; }
 [data-ui="gitterholz"] .tab { --c: var(--wood-lo); --c-hi: var(--wood-lo); --c-lo: var(--wood-dk); }
 [data-ui="gitterholz"] .tab[aria-selected="true"] { --c: var(--green); --c-hi: var(--green-hi); --c-lo: var(--green-lo); }
 [data-ui="gitterholz"] .box { background: var(--diamond), var(--grain), linear-gradient(var(--wood), var(--wood-lo)); border: 3px solid var(--wood-deep); border-radius: 5px; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .2), 0 3px 0 var(--wood-deep); }
-[data-ui="gitterholz"] .home-title { top: calc(env(safe-area-inset-top, 0px) + 14px); left: calc(env(safe-area-inset-left, 0px) + 16px); }
-[data-ui="gitterholz"] .home-menu { left: calc(env(safe-area-inset-left, 0px) + 16px); bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); grid-template-columns: 1fr 1fr; width: 220px; gap: 8px; }
-[data-ui="gitterholz"] .home-menu #boardBtn, [data-ui="gitterholz"] .home-menu .btn-start { grid-column: 1 / -1; }
 [data-ui="gitterholz"] .panel {
   background: repeating-linear-gradient(180deg, transparent 0 46px, rgba(42, 23, 11, .5) 46px 49px), var(--grain), linear-gradient(var(--wood), var(--wood-lo));
   border: 4px solid var(--wood-deep);
@@ -363,18 +334,12 @@ p, h1, h2, h3 { margin: 0; }
 }
 
 @media (orientation: portrait) {
-  [data-ui="gitterholz"] .home-title { top: calc(env(safe-area-inset-top, 0px) + 74px); }
-  [data-ui="stein"] .home-title { top: calc(env(safe-area-inset-top, 0px) + 80px); }
-  [data-ui="stein"] .home-menu { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-areas: "d d d" "a b c"; left: 16px; right: 16px; transform: none; }
-  [data-ui="stein"] .home-menu .btn { padding-inline: 4px; }
-  [data-ui="stein"] .credit { top: auto; left: auto; right: calc(env(safe-area-inset-right, 0px) + 8px); bottom: calc(env(safe-area-inset-bottom, 0px) + 1px); }
 }
 @media (orientation: landscape) and (max-height: 560px) {
-  [data-ui="stein"] .home-title { top: calc(env(safe-area-inset-top, 0px) + 60px); }
-  [data-ui="stein"] .title { font-size: 40px; }
 }
 @media (orientation: portrait) {
   .hud { flex-wrap: wrap; }
+  .home-title { top: auto; bottom: calc(env(safe-area-inset-bottom, 0px) + 120px); }
   .title { font-size: 40px; }
   .stats { grid-template-columns: repeat(2, 1fr); }
 }
@@ -413,9 +378,6 @@ p, h1, h2, h3 { margin: 0; }
   <button class="btn icon-btn install-btn" id="installBtn" type="button" aria-label="App installieren" title="App installieren" hidden>
     <svg viewBox="0 0 10 10" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M4 0h2v5h2v1H7v1H6v1H4V7H3V6H2V5h2zM0 7h1v2h8V7h1v3H0z"/></svg>
   </button>
-  <button class="btn icon-btn" id="reload" type="button" aria-label="Neu laden" title="Neu laden">
-    <svg viewBox="0 0 10 10" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M3 1h4v1h1v1h1v2H8V4H7V3H3v1H2v3h1v1h3v1H2V8H1V3h1V2h1zM7 5h3v1H9v1H8V6H7z"/></svg>
-  </button>
   <button class="btn icon-btn" id="mute" type="button" aria-pressed="false" aria-label="Ton aus" title="Ton">
     <svg class="on" viewBox="0 0 10 10" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M1 3h2V2h1V1h1v8H4V8H3V7H1zM7 3h1v4H7zM9 2h1v6H9z"/></svg>
     <svg class="off" viewBox="0 0 10 10" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M1 3h2V2h1V1h1v8H4V8H3V7H1z"/><path fill="#ff5555" d="M6 3h1v1h1V3h1v1H8v1h1v1H8v1H7V6H6V5h1V4H6z"/></svg>
@@ -428,15 +390,11 @@ p, h1, h2, h3 { margin: 0; }
     <p class="subtitle" id="subtitle">Spring über alles!</p>
   </div>
   <nav class="home-menu" aria-label="Hauptmenü">
+    <button class="btn btn2" id="boardBtn" type="button">Bestenliste</button>
     <button class="btn btn2" id="shopBtn" type="button">Shop</button>
     <button class="btn btn2" id="invBtn" type="button">Inventar</button>
-    <button class="btn btn2" id="boardBtn" type="button">Bestenliste</button>
     <button class="btn btn-start" id="startBtn" type="button">Start</button>
   </nav>
-  <div class="home-side">
-    <p class="tipline">Tippen = springen</p>
-  </div>
-  <p class="credit">Schrift: Minecraft von Pwnage_Block (CC BY-SA 3.0)</p>
 </div>
 
 <div id="setup" class="modal" hidden>
@@ -1445,14 +1403,6 @@ document.addEventListener('gesturestart', (e) => e.preventDefault());
 document.addEventListener('contextmenu', (e) => e.preventDefault());
 document.addEventListener('dblclick', (e) => e.preventDefault());
 
-$('reload').addEventListener('click', async () => {
-  // Neu laden holt auch gleich die neueste Version der App
-  try {
-    const reg = navigator.serviceWorker && await navigator.serviceWorker.getRegistration();
-    if (reg) await reg.update();
-  } catch (e) { /* egal, trotzdem neu laden */ }
-  location.reload();
-});
 const muteBtn = $('mute');
 function syncMute() {
   muteBtn.setAttribute('aria-pressed', String(muted));
