@@ -19,7 +19,22 @@ Oben rechts lädt der Pfeil-Knopf die Seite bzw. App neu und holt die neueste Ve
 
 ## Deine Katze
 
-Beim ersten Start gibst du deiner Katze einen Namen und wählst das Fell: Weiß (Kurzhaar), Weiß-Braun (Langhaar), Orange (Halblanghaar) oder Braun (Kurzhaar). Danach wählst du **dick** oder **dünn**. Im Inventar kannst du das später unter "Katze ändern" anpassen.
+Beim ersten Start gibst du deiner Katze nur einen Namen. Alle starten mit der weißen Katze. Weitere Katzen gibt es im Shop unter **Katzen**, jede mit eigener Felllänge:
+
+| Katze | Fell | Fische |
+| --- | --- | --- |
+| Schneeweiß | Kurzhaar | gratis |
+| Grau getigert | Halblanghaar | 30 |
+| Mitternacht (schwarz) | Kurzhaar | 40 |
+| Weiß-Braun | Langhaar | 50 |
+| Orange | Halblanghaar | 60 |
+| Schoko (braun) | Kurzhaar | 60 |
+| Moppel (dicker grau-weißer Kater) | Kurzhaar | 80 |
+| Siam | Kurzhaar | 90 |
+| Goldkatze (glitzert) | Halblanghaar | 150 |
+| Galaxie (glitzert) | Langhaar | 200 |
+
+Im Inventar wählst du, mit welcher deiner Katzen du spielst, und kannst den Namen ändern.
 
 ## Bestenliste
 
@@ -29,7 +44,7 @@ Die Bestenliste zeigt deine 10 besten Runden auf diesem Gerät: wie viele Hinder
 
 Es gibt keine Punkte, nur Fische. Sie sind die Währung und werden im Browser gespeichert. Fische gibt es auf der Strecke, bei Events, für jede 5er-Serie (+2) und für jeden Gegner, den du mit Regenbogen-Kraft wegschleuderst.
 
-Im **Shop** gibt es Upgrades (Regenbogen-Stern, Fisch-Magnet, Dreifachsprung, Glückspfote) und 8 Cosmetics: Tirolerhut, Weihnachtsmütze, Krone, Sonnenbrille, Goldkette, Schal, Strickpulli und Ringelsocken. Pro Körperstelle (Kopf, Augen, Hals, Körper, Pfoten) ist eines angezogen. Im **Inventar** siehst du deine Katze, deine Upgrades und ziehst Cosmetics an oder aus. Cosmetics zählen nicht zur Hitbox.
+Im **Shop** gibt es Upgrades (Regenbogen-Stern, Fisch-Magnet, Dreifachsprung, Glückspfote), Katzen (siehe oben) und 8 Cosmetics: Tirolerhut, Weihnachtsmütze, Krone, Sonnenbrille, Goldkette, Schal, Strickpulli und Ringelsocken. Pro Körperstelle (Kopf, Augen, Hals, Körper, Pfoten) ist eines angezogen. Im **Inventar** siehst du deine Katze, wählst eine deiner Katzen, siehst deine Upgrades und ziehst Cosmetics an oder aus. Cosmetics zählen nicht zur Hitbox.
 
 ## Spannung
 
@@ -39,7 +54,13 @@ Im **Shop** gibt es Upgrades (Regenbogen-Stern, Fisch-Magnet, Dreifachsprung, Gl
 
 ## Oberfläche
 
-Kräftige Farbflächen mit Rauten-Gitter, dicke dunkle Ränder und weiße Schrift mit Umrandung (Minecraft-Schrift).
+Nur drei Farben: Braun (Holz), Grün und Rot. Die Schrift ist immer weiß (Minecraft-Schrift). Grün heißt los oder kaufen, Rot heißt zurück oder schließen, Braun ist alles andere.
+
+Zur Auswahl stehen drei Varianten, die das Rautengitter und die dicken Ränder des vorigen Designs mit den Holzbrettern, Nägeln und dem Moos der Almhütte verbinden. Umschalten mit einem Zusatz hinten an der Adresse:
+
+- `#v1` **Gitterholz** (Standard): Holzknöpfe mit Rautengitter, roter Fensterkopf mit gestreifter Borte, Menü unten links.
+- `#v2` **Moosbretter**: Bretter mit Nägeln und Moos obendrauf, grüner Fensterkopf, Menü als Bretterstapel links.
+- `#v3` **Block-Leiste**: kräftige Blöcke mit großem Gitter in einem Holzrahmen, Titel mittig, Menü als Leiste unten.
 
 ## Level
 

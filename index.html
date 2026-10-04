@@ -13,9 +13,21 @@
 <link rel="icon" type="image/png" href="icons/cat-jumper-192.png">
 <link rel="apple-touch-icon" href="icons/cat-jumper-apple-180.png">
 <title>Cat Jumper</title>
+<script>
+(function () {
+  var looks = ['v1', 'v2', 'v3'];
+  function apply() {
+    var h = location.hash.replace('#', '');
+    var ui = looks.indexOf(h) >= 0 ? h : 'v1';
+    document.documentElement.setAttribute('data-ui', ui);
+  }
+  apply();
+  window.addEventListener('hashchange', apply);
+})();
+</script>
 <style>
-/* Layout: full-bleed pixel alm on canvas. Lobby: title top-left, menu (Shop, Inventar, Bestenliste, Start) bottom-left.
-   Look: bold colour blocks with a diamond grid, thick dark outlines, white text with a dark outline (game-UI style). */
+/* Cat Jumper GUI: nur Braun (Holz), Grün und Rot, Schrift weiß.
+   Drei Looks zum Ausprobieren, umschalten mit #v1, #v2 oder #v3 hinten an der Adresse. */
 /* Schrift: "Minecraft" von Pwnage_Block (fontstruct.com), CC BY-SA 3.0, um Ä Ö Ü ä ö ü ß · ergänzt. */
 @font-face {
   font-family: "CatJumperMC";
@@ -24,23 +36,16 @@
 }
 :root {
   --font: "CatJumperMC", "Courier New", monospace;
-  --ink: #1e1c26;
-  --outline: #15171d;
-  /* weiße Schrift mit dunkler Umrandung */
+  /* Nur drei Farben: Braun (Holz), Grün, Rot. Schrift immer weiß. */
+  --wood: #9b6436; --wood-hi: #b97c47; --wood-lo: #6e4220; --wood-dk: #3d2312; --wood-deep: #2a170b;
+  --green: #4fae3c; --green-hi: #6cc955; --green-lo: #2e7a22;
+  --red: #d2452f; --red-hi: #e8634b; --red-lo: #922515;
+  --ink: var(--wood-deep);
+  --outline: var(--wood-deep);
   --stroke: -2px -2px 0 var(--outline), 2px -2px 0 var(--outline), -2px 2px 0 var(--outline), 2px 2px 0 var(--outline), 0 -2px 0 var(--outline), 0 2px 0 var(--outline), -2px 0 0 var(--outline), 2px 0 0 var(--outline), 0 4px 0 rgba(0, 0, 0, .35);
   --stroke-sm: -1px -1px 0 var(--outline), 1px -1px 0 var(--outline), -1px 1px 0 var(--outline), 1px 1px 0 var(--outline), 0 2px 0 rgba(0, 0, 0, .45);
-  /* Rauten-Gitter über allen Knöpfen und Kärtchen */
-  --grid: repeating-linear-gradient(45deg, rgba(255, 255, 255, .15) 0 2px, transparent 2px 12px), repeating-linear-gradient(-45deg, rgba(255, 255, 255, .15) 0 2px, transparent 2px 12px);
-  /* schlichte Bohrlöcher in den Ecken */
-  --hole: linear-gradient(rgba(0, 0, 0, .32), rgba(0, 0, 0, .32));
-  --holes: var(--hole) left 6px top 6px / 4px 4px no-repeat, var(--hole) right 6px top 6px / 4px 4px no-repeat, var(--hole) left 6px bottom 8px / 4px 4px no-repeat, var(--hole) right 6px bottom 8px / 4px 4px no-repeat;
-  --green: #a4f25a; --green-lo: #4cc31f;
-  --blue: #66d4ff; --blue-lo: #1f8fe6;
-  --red: #ff6f62; --red-lo: #d9281f;
-  --brown: #cf9658; --brown-lo: #8a5a2b;
-  --purple: #c69aff; --purple-lo: #7b45e0;
-  --slate: #9aa6b6; --slate-lo: #5f6b7a;
-  --yellow: #fff36b;
+  /* Holzmaserung */
+  --grain: repeating-linear-gradient(180deg, rgba(0, 0, 0, .07) 0 2px, transparent 2px 7px, rgba(255, 255, 255, .05) 7px 8px, transparent 8px 13px);
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -64,7 +69,7 @@ html, body {
 canvas.pix { image-rendering: pixelated; image-rendering: crisp-edges; }
 p, h1, h2, h3 { margin: 0; }
 
-/* HUD */
+/* ================= Gemeinsames Gerüst (alle vier Looks) ================= */
 .hud {
   position: fixed;
   top: calc(env(safe-area-inset-top, 0px) + 10px);
@@ -77,28 +82,15 @@ p, h1, h2, h3 { margin: 0; }
   font-variant-numeric: tabular-nums;
   z-index: 10;
 }
-.box {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 7px 11px 8px;
-  background: rgba(14, 18, 28, .55);
-  border: 2px solid rgba(0, 0, 0, .45);
-  border-radius: 8px;
-  color: #ffffff;
-  text-shadow: var(--stroke-sm);
-  white-space: nowrap;
-}
-.box .lbl { color: rgba(255, 255, 255, .8); }
+.box { display: flex; flex-direction: column; gap: 4px; padding: 7px 11px 8px; color: #ffffff; text-shadow: var(--stroke-sm); white-space: nowrap; }
 .fishbox { flex-direction: row; align-items: center; gap: 8px; margin-left: auto; min-height: 44px; font-size: 24px; }
 .fish-ico { width: 27px; height: 15px; display: inline-block; flex: none; }
 .at-home .play-only { display: none; }
 .box.bump { animation: bump .3s ease-out; }
 @keyframes bump { 40% { transform: scale(1.12); } }
 
-/* Knöpfe: kräftige Farbe, Rauten-Gitter, dicker Rand, schlichte Bohrlöcher */
 .btn {
-  --c: var(--green); --c-lo: var(--green-lo);
+  --c: var(--green); --c-hi: var(--green-hi); --c-lo: var(--green-lo);
   position: relative;
   pointer-events: auto;
   display: inline-flex;
@@ -106,54 +98,32 @@ p, h1, h2, h3 { margin: 0; }
   justify-content: center;
   gap: 8px;
   padding: 13px 18px 15px;
-  border: 3px solid var(--outline);
-  border-radius: 6px;
-  background: var(--holes), var(--grid), linear-gradient(var(--c), var(--c-lo));
   color: #ffffff;
   text-shadow: var(--stroke-sm);
-  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .45), inset 0 -5px 0 rgba(0, 0, 0, .18), 0 4px 0 var(--outline);
   font: 16px/1 var(--font);
   cursor: pointer;
   touch-action: manipulation;
   transition: transform .08s, box-shadow .08s, filter .12s;
 }
-.btn:hover { filter: brightness(1.06); }
-.btn:active { transform: translateY(3px); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .45), inset 0 -3px 0 rgba(0, 0, 0, .18), 0 1px 0 var(--outline); }
-.btn:focus-visible, .tab:focus-visible, .pick:focus-visible { outline: 3px solid #ffffff; outline-offset: 3px; }
-.btn[disabled] { filter: saturate(.35) brightness(.9); cursor: default; transform: none; }
-.btn.poor { filter: saturate(.5); }
-.btn2, .btn-brown { --c: var(--brown); --c-lo: var(--brown-lo); }
-.btn-blue { --c: var(--blue); --c-lo: var(--blue-lo); }
-.btn-red { --c: var(--red); --c-lo: var(--red-lo); }
-.btn-purple { --c: var(--purple); --c-lo: var(--purple-lo); }
-.btn-start { font-size: 24px; padding: 16px 20px 18px; }
-.icon-btn { width: 44px; height: 44px; padding: 0; --c: var(--blue); --c-lo: var(--blue-lo); background: var(--grid), linear-gradient(var(--c), var(--c-lo)); }
+.btn:hover { filter: brightness(1.07); }
+.btn:focus-visible, .tab:focus-visible { outline: 3px solid #ffffff; outline-offset: 3px; }
+.btn[disabled] { filter: saturate(.4) brightness(.85); cursor: default; transform: none; }
+.btn.poor { filter: saturate(.45) brightness(.9); }
+.btn2 { --c: var(--wood); --c-hi: var(--wood-hi); --c-lo: var(--wood-lo); }
+.btn-red, .close-x { --c: var(--red); --c-hi: var(--red-hi); --c-lo: var(--red-lo); }
+.btn-start { font-size: 24px; padding: 16px 22px 18px; }
+.icon-btn { width: 44px; height: 44px; padding: 0; --c: var(--wood); --c-hi: var(--wood-hi); --c-lo: var(--wood-lo); }
 .icon-btn svg { width: 20px; height: 20px; display: block; filter: drop-shadow(1px 1px 0 var(--outline)) drop-shadow(-1px -1px 0 var(--outline)); }
-.close-x { width: 42px; height: 42px; padding: 0; --c: var(--red); --c-lo: var(--red-lo); background: var(--grid), linear-gradient(var(--c), var(--c-lo)); }
-.close-x svg { width: 22px; height: 22px; filter: drop-shadow(1px 1px 0 var(--outline)) drop-shadow(-1px -1px 0 var(--outline)); }
+.close-x { width: 42px; height: 42px; padding: 0; }
+.close-x svg { width: 20px; height: 20px; filter: drop-shadow(1px 1px 0 var(--outline)) drop-shadow(-1px -1px 0 var(--outline)); }
 #mute .off { display: none; }
 #mute[aria-pressed="true"] .on { display: none; }
 #mute[aria-pressed="true"] .off { display: block; }
 
-/* Lobby */
-.home-title {
-  position: fixed;
-  top: calc(env(safe-area-inset-top, 0px) + 14px);
-  left: calc(env(safe-area-inset-left, 0px) + 16px);
-  pointer-events: none;
-}
-.title { font: 48px/1 var(--font); color: #ffffff; text-shadow: 0 3px 0 rgba(20, 30, 50, .3), 0 6px 14px rgba(0, 0, 0, .18); }
-.subtitle { margin-top: 14px; color: #ffffff; text-shadow: var(--stroke-sm); }
-.home-menu {
-  position: fixed;
-  left: calc(env(safe-area-inset-left, 0px) + 16px);
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 18px);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  width: 260px;
-}
-.home-menu .btn-start { grid-column: 1 / -1; }
+.home-title { position: fixed; pointer-events: none; }
+.title { font: 48px/1 var(--font); color: #ffffff; text-shadow: 0 4px 0 rgba(42, 23, 11, .45), 0 8px 16px rgba(0, 0, 0, .2); }
+.subtitle { margin-top: 12px; color: #ffffff; text-shadow: var(--stroke-sm); }
+.home-menu { position: fixed; display: grid; gap: 10px; }
 .home-side {
   position: fixed;
   right: calc(env(safe-area-inset-right, 0px) + 16px);
@@ -162,7 +132,7 @@ p, h1, h2, h3 { margin: 0; }
   flex-direction: column;
   align-items: flex-end;
   gap: 8px;
-  max-width: 44%;
+  max-width: 40%;
   text-align: right;
 }
 .tipline { color: #ffffff; text-shadow: var(--stroke-sm); }
@@ -177,7 +147,6 @@ p, h1, h2, h3 { margin: 0; }
 }
 .btn-small { padding: 9px 12px 11px; }
 
-/* Panels */
 .modal {
   position: fixed;
   inset: 0;
@@ -186,17 +155,13 @@ p, h1, h2, h3 { margin: 0; }
   align-items: center;
   justify-content: center;
   padding: calc(env(safe-area-inset-top, 0px) + 12px) 16px calc(env(safe-area-inset-bottom, 0px) + 14px);
-  background: rgba(10, 14, 24, .4);
+  background: rgba(42, 23, 11, .45);
 }
 .panel {
   width: min(780px, 100%);
   max-height: 100%;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(#e8edf3, #b9c3cf);
-  border: 3px solid var(--outline);
-  border-radius: 8px;
-  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .55), 0 6px 0 var(--outline), 0 16px 30px rgba(0, 0, 0, .35);
   color: #ffffff;
   text-shadow: var(--stroke-sm);
   overflow: hidden;
@@ -204,83 +169,39 @@ p, h1, h2, h3 { margin: 0; }
 }
 .panel.small { width: min(500px, 100%); }
 @keyframes panelIn { from { transform: translateY(24px) scale(.94); opacity: 0; } }
-.panel-head {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 6px 6px 0;
-  padding: 8px 8px 8px 14px;
-  background: var(--grid), linear-gradient(var(--blue), var(--blue-lo));
-  border: 3px solid var(--outline);
-  border-radius: 6px;
-  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .4);
-  color: #ffffff;
-  text-shadow: var(--stroke-sm);
-}
-.panel-head.red { background: var(--grid), linear-gradient(var(--red), var(--red-lo)); }
+.panel-head { display: flex; align-items: center; gap: 12px; padding: 8px 8px 8px 14px; color: #ffffff; }
 .panel-head h2 { flex: 1; font: 24px/1 var(--font); text-shadow: var(--stroke); }
 .panel-head .btn { padding: 10px 14px 12px; }
 .wallet { display: flex; align-items: center; gap: 6px; font-size: 24px; }
-.tabs { display: flex; gap: 8px; padding: 12px 12px 0; }
-.tab {
-  font: 16px/1 var(--font);
-  padding: 9px 14px 11px;
-  border-radius: 6px;
-  border: 3px solid var(--outline);
-  background: var(--grid), linear-gradient(var(--slate), var(--slate-lo));
-  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .35);
-  color: #ffffff;
-  text-shadow: var(--stroke-sm);
-  cursor: pointer;
-  touch-action: manipulation;
-}
-.tab[aria-selected="true"] { background: var(--grid), linear-gradient(var(--green), var(--green-lo)); }
-.scroll {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  touch-action: pan-y;
-  -webkit-overflow-scrolling: touch;
-  padding: 12px 12px 16px;
-}
-.scroll h3 { margin: 4px 0 10px; color: #ffffff; text-shadow: var(--stroke-sm); font: 16px var(--font); }
+.tabs { display: flex; gap: 8px; padding: 12px 12px 0; flex-wrap: wrap; }
+.tab { font: 16px/1 var(--font); padding: 9px 14px 11px; color: #ffffff; text-shadow: var(--stroke-sm); cursor: pointer; touch-action: manipulation; }
+.scroll { flex: 1; min-height: 0; overflow-y: auto; touch-action: pan-y; -webkit-overflow-scrolling: touch; padding: 12px 12px 16px; }
+.scroll h3 { margin: 4px 0 10px; font: 16px var(--font); }
 .scroll h3:not(:first-child) { margin-top: 18px; }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
-.card, .pick, .lb-row, .me {
-  --g: linear-gradient(135deg, #46e08a, #22b8ff);
-  border: 3px solid var(--outline);
-  border-radius: 6px;
-  background: var(--grid), var(--g);
-  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .4);
-  color: #ffffff;
-  text-shadow: var(--stroke-sm);
-}
 .card { display: flex; flex-direction: column; gap: 8px; padding: 10px; }
-.card:nth-child(4n+2), .pick:nth-child(4n+2) { --g: linear-gradient(135deg, #ffb341, #ff5f7a); }
-.card:nth-child(4n+3), .pick:nth-child(4n+3) { --g: linear-gradient(135deg, #b07cff, #4f8cff); }
-.card:nth-child(4n+4), .pick:nth-child(4n+4) { --g: linear-gradient(135deg, #ffd84d, #3fcf6a); }
 .card .prev { height: 66px; display: flex; align-items: center; justify-content: center; }
-.card .desc { color: var(--yellow); line-height: 1.3; flex: 1; }
+.card .desc { line-height: 1.3; flex: 1; opacity: .85; }
 .card .btn { width: 100%; padding: 10px 10px 12px; }
-.badge { align-self: flex-start; padding: 5px 10px 6px; border: 2px solid var(--outline); border-radius: 4px; background: linear-gradient(var(--green), var(--green-lo)); color: #ffffff; text-shadow: var(--stroke-sm); }
-.empty { color: #ffffff; text-shadow: var(--stroke-sm); }
-.msg { margin: 10px 12px 0; padding: 8px 10px; border: 2px solid var(--outline); border-radius: 4px; background: rgba(14, 18, 28, .7); color: #ffffff; }
+.badge { align-self: flex-start; padding: 5px 10px 6px; background: var(--green); color: #ffffff; }
+.msg { margin: 10px 12px 0; padding: 8px 10px; background: rgba(42, 23, 11, .6); color: #ffffff; }
 .panel-body { display: flex; flex-direction: column; gap: 14px; padding: 16px; }
 .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; text-align: center; }
-.stat-num { display: block; font-size: 24px; color: #ffffff; text-shadow: var(--stroke); }
-.stat-lbl { display: block; margin-top: 6px; color: #ffffff; font-size: 8px; }
+.stat-num { display: block; font-size: 24px; text-shadow: var(--stroke); }
+.stat-lbl { display: block; margin-top: 6px; font-size: 8px; }
 .row { display: flex; gap: 12px; }
 .row .btn { flex: 1; }
+.new-best { text-shadow: var(--stroke-sm); }
 
-/* Katze einrichten */
-.field-lbl { color: #ffffff; text-shadow: var(--stroke-sm); }
+.setup-cat { display: flex; justify-content: center; padding: 4px 0 12px; }
+.field-lbl { color: #ffffff; }
+.small-note { font-size: 8px; opacity: .85; }
 .name-input {
   width: 100%;
   margin: 8px 0 14px;
   padding: 12px 12px 13px;
-  border: 3px solid var(--outline);
-  border-radius: 6px;
-  background: rgba(14, 18, 28, .7);
+  border: 3px solid var(--wood-deep);
+  background: rgba(42, 23, 11, .65);
   color: #ffffff;
   font: 16px/1 var(--font);
   text-shadow: var(--stroke-sm);
@@ -290,72 +211,26 @@ p, h1, h2, h3 { margin: 0; }
 }
 .name-input::placeholder { color: rgba(255, 255, 255, .5); }
 .name-input:focus-visible { outline: 3px solid #ffffff; outline-offset: 2px; }
-.picks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 8px 0 6px; }
-.picks.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.pick {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: 10px 6px;
-  font: 16px/1.2 var(--font);
-  text-align: center;
-  cursor: pointer;
-  touch-action: manipulation;
-}
-.pick .hair { font-size: 8px; color: var(--yellow); }
-.pick[aria-checked="true"] { border-color: #ffffff; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .6), 0 0 0 3px var(--outline), 0 0 0 6px var(--green); }
 .me { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 10px; }
 .me .who { flex: 1; min-width: 140px; display: flex; flex-direction: column; gap: 6px; }
-.me .who .desc { color: var(--yellow); }
+.me .who .desc { opacity: .85; }
 
-/* Bestenliste */
 .lb { display: flex; flex-direction: column; gap: 8px; }
 .lb-row { display: grid; grid-template-columns: 44px 1fr auto; align-items: center; gap: 10px; padding: 8px 12px 9px; }
-.lb-row:nth-child(n+4) { --g: linear-gradient(135deg, #7d8a9c, #56606f); }
-.lb-row:nth-child(1) { --g: linear-gradient(135deg, #ffd84d, #f29a00); }
-.lb-row:nth-child(2) { --g: linear-gradient(135deg, #e3e9f0, #9aa6b6); }
-.lb-row:nth-child(3) { --g: linear-gradient(135deg, #f0a46a, #b0632a); }
-.lb-row.me-row { border-color: #ffffff; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .6), 0 0 0 3px var(--green); }
 .lb-rank { font-size: 24px; text-shadow: var(--stroke); }
 .lb-best { font-size: 24px; text-align: right; text-shadow: var(--stroke); }
-.lb-sub { display: block; font-size: 8px; color: var(--yellow); margin-top: 4px; }
+.lb-sub { display: block; font-size: 8px; margin-top: 4px; opacity: .85; }
 
-/* Level-/Event-Titel */
 #banner {
-  position: fixed;
-  left: 16px;
-  right: 16px;
-  top: 22%;
-  z-index: 5;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  text-align: center;
-  pointer-events: none;
-  opacity: 0;
-  transform: scale(.9);
+  position: fixed; left: 16px; right: 16px; top: 22%; z-index: 5;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  text-align: center; pointer-events: none; opacity: 0; transform: scale(.9);
   transition: opacity .3s, transform .3s cubic-bezier(.2, .9, .3, 1.4);
 }
 #banner.show { opacity: 1; transform: none; }
 #banner .lvl { font-size: 48px; line-height: 1; color: #ffffff; text-shadow: var(--stroke); }
 #banner .name, #banner .tip { color: #ffffff; text-shadow: var(--stroke-sm); }
-
-/* Sprung-Bewertung */
-#combo {
-  position: fixed;
-  left: 16px;
-  right: 16px;
-  top: 40%;
-  z-index: 5;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  pointer-events: none;
-  opacity: 0;
-}
+#combo { position: fixed; left: 16px; right: 16px; top: 40%; z-index: 5; display: flex; flex-direction: column; align-items: center; gap: 6px; pointer-events: none; opacity: 0; }
 #combo.pop { animation: combo 1.15s cubic-bezier(.2, .9, .3, 1) both; }
 #comboWord { font-size: 32px; line-height: 1; color: #ffffff; text-shadow: var(--stroke); }
 #comboMult { font-size: 24px; line-height: 1; color: #ffffff; text-shadow: var(--stroke); }
@@ -368,45 +243,181 @@ p, h1, h2, h3 { margin: 0; }
   100% { opacity: 0; transform: translateY(-36px) scale(.9); }
 }
 @keyframes fadeout { 0%, 70% { opacity: 1; } 100% { opacity: 0; } }
-
-#hint {
-  position: fixed;
-  left: 16px;
-  right: 16px;
-  text-align: center;
-  color: #ffffff;
-  text-shadow: var(--stroke-sm);
-  pointer-events: none;
-  transition: opacity .6s;
-}
+#hint { position: fixed; left: 16px; right: 16px; text-align: center; color: #ffffff; text-shadow: var(--stroke-sm); pointer-events: none; transition: opacity .6s; }
 #hint.gone { opacity: 0; }
 
-/* Übergang Lobby <-> Spiel */
 #wipe {
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--grid), linear-gradient(var(--blue), var(--blue-lo));
-  color: #ffffff;
-  text-shadow: var(--stroke);
-  font-size: 32px;
-  pointer-events: none;
-  clip-path: circle(0% at 12% 88%);
+  position: fixed; inset: 0; z-index: 60;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--grain), var(--wood);
+  color: #ffffff; text-shadow: var(--stroke); font-size: 32px;
+  pointer-events: none; clip-path: circle(0% at 12% 88%);
 }
 #wipe.closing { pointer-events: auto; animation: wipeClose .42s ease-in forwards; }
 #wipe.opening { animation: wipeOpen .45s ease-out forwards; }
 @keyframes wipeClose { from { clip-path: circle(0% at 12% 88%); } to { clip-path: circle(150% at 12% 88%); } }
 @keyframes wipeOpen { from { clip-path: circle(150% at 18% 78%); } to { clip-path: circle(0% at 18% 78%); } }
 
+/* Bausteine aus den zwei letzten Designs:
+   Rautengitter, dicke Ränder, schlichte Löcher (letztes Design) + Holzbretter, Nägel, Moos (vorletztes Design). */
+:root {
+  --diamond: repeating-linear-gradient(45deg, rgba(255, 255, 255, .13) 0 2px, transparent 2px 12px), repeating-linear-gradient(-45deg, rgba(255, 255, 255, .13) 0 2px, transparent 2px 12px);
+  --diamond-big: repeating-linear-gradient(45deg, rgba(255, 255, 255, .12) 0 3px, transparent 3px 18px), repeating-linear-gradient(-45deg, rgba(255, 255, 255, .12) 0 3px, transparent 3px 18px);
+  --hole: linear-gradient(rgba(42, 23, 11, .45), rgba(42, 23, 11, .45));
+  --holes: var(--hole) left 6px top 6px / 4px 4px no-repeat, var(--hole) right 6px top 6px / 4px 4px no-repeat, var(--hole) left 6px bottom 8px / 4px 4px no-repeat, var(--hole) right 6px bottom 8px / 4px 4px no-repeat;
+  --nail: radial-gradient(circle, var(--wood-deep) 0 1.4px, rgba(255, 255, 255, .3) 1.5px 2.2px, transparent 2.4px);
+  --nails: var(--nail) left 4px top 5px / 6px 6px no-repeat, var(--nail) right 4px top 5px / 6px 6px no-repeat, var(--nail) left 4px bottom 4px / 6px 6px no-repeat, var(--nail) right 4px bottom 4px / 6px 6px no-repeat;
+  --planks: repeating-linear-gradient(90deg, transparent 0 37px, rgba(42, 23, 11, .28) 37px 39px);
+  --moss: polygon(0 100%, 0% 15%, 3% 55%, 6% 15%, 9% 80%, 12% 0%, 15% 55%, 18% 30%, 21% 55%, 24% 15%, 27% 80%, 30% 0%, 33% 80%, 36% 0%, 39% 55%, 42% 0%, 45% 70%, 48% 15%, 51% 55%, 54% 0%, 57% 55%, 60% 30%, 63% 70%, 66% 0%, 69% 80%, 72% 0%, 75% 55%, 78% 30%, 81% 80%, 84% 30%, 87% 55%, 90% 30%, 93% 80%, 96% 15%, 99% 55%, 100% 100%);
+  --trim: repeating-linear-gradient(90deg, var(--red) 0 12px, var(--red-lo) 12px 24px);
+}
+
+/* ================= Variante 1: Gitterholz =================
+   Knöpfe wie im letzten Design (Gitter, Löcher, weiße Innenkante), aber aus Holz.
+   Fenster aus Brettern mit rotem Kopf und rot gestreifter Borte. Menü unten links. */
+[data-ui="v1"] .btn, [data-ui="v1"] .tab {
+  border: 3px solid var(--wood-deep);
+  border-radius: 6px;
+  background: var(--holes), var(--diamond), var(--grain), linear-gradient(var(--c-hi), var(--c-lo));
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .32), inset 0 -5px 0 rgba(0, 0, 0, .18), 0 4px 0 var(--wood-deep);
+}
+[data-ui="v1"] .btn:active { transform: translateY(3px); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .32), inset 0 -3px 0 rgba(0, 0, 0, .18), 0 1px 0 var(--wood-deep); }
+[data-ui="v1"] .icon-btn, [data-ui="v1"] .close-x, [data-ui="v1"] .tab { background: var(--diamond), var(--grain), linear-gradient(var(--c-hi), var(--c-lo)); }
+[data-ui="v1"] .tab { --c: var(--wood-lo); --c-hi: var(--wood-lo); --c-lo: var(--wood-dk); }
+[data-ui="v1"] .tab[aria-selected="true"] { --c: var(--green); --c-hi: var(--green-hi); --c-lo: var(--green-lo); }
+[data-ui="v1"] .box { background: var(--diamond), var(--grain), linear-gradient(var(--wood), var(--wood-lo)); border: 3px solid var(--wood-deep); border-radius: 6px; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .2), 0 3px 0 var(--wood-deep); }
+[data-ui="v1"] .fishbox { padding: 4px 12px; }
+[data-ui="v1"] .home-title { top: calc(env(safe-area-inset-top, 0px) + 14px); left: calc(env(safe-area-inset-left, 0px) + 16px); }
+[data-ui="v1"] .home-menu { left: calc(env(safe-area-inset-left, 0px) + 16px); bottom: calc(env(safe-area-inset-bottom, 0px) + 18px); grid-template-columns: 1fr 1fr; width: 270px; }
+[data-ui="v1"] .home-menu #boardBtn, [data-ui="v1"] .home-menu .btn-start { grid-column: 1 / -1; }
+[data-ui="v1"] .panel {
+  background: repeating-linear-gradient(180deg, transparent 0 46px, rgba(42, 23, 11, .5) 46px 49px), var(--grain), linear-gradient(var(--wood), var(--wood-lo));
+  border: 4px solid var(--wood-deep);
+  border-radius: 8px;
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .18), 0 6px 0 var(--wood-deep), 0 16px 30px rgba(0, 0, 0, .35);
+}
+[data-ui="v1"] .panel-head {
+  margin: 6px 6px 0;
+  padding-bottom: 16px;
+  background: var(--trim) left bottom / 100% 8px no-repeat, var(--diamond), linear-gradient(var(--red-hi), var(--red-lo));
+  border: 3px solid var(--wood-deep);
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .3);
+}
+[data-ui="v1"] .panel-head .close-x { --c: var(--wood); --c-hi: var(--wood-hi); --c-lo: var(--wood-lo); }
+[data-ui="v1"] .card, [data-ui="v1"] .me, [data-ui="v1"] .lb-row { background: var(--diamond), var(--grain), var(--wood-dk); border: 3px solid var(--wood-deep); border-radius: 6px; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .14); }
+[data-ui="v1"] .lb-row:first-child { background: var(--diamond), var(--green-lo); }
+[data-ui="v1"] .badge, [data-ui="v1"] .msg { border: 2px solid var(--wood-deep); border-radius: 4px; }
+[data-ui="v1"] .name-input { border-radius: 6px; }
+[data-ui="v1"] #wipe { background: var(--diamond), var(--grain), var(--wood); }
+
+/* ================= Variante 2: Moosbretter =================
+   Knöpfe wie im vorletzten Design (Bretter, Nägel, Moos obendrauf), aber mit Gitter und dicker Kontur.
+   Menü als Bretterstapel links. Fensterkopf grün mit Moos. */
+[data-ui="v2"] .btn {
+  border: 3px solid var(--wood-deep);
+  border-radius: 5px;
+  background: var(--nails), var(--diamond), var(--grain), var(--planks), linear-gradient(var(--c-hi), var(--c-lo));
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .25), inset 0 -3px 0 rgba(0, 0, 0, .18), 0 5px 0 var(--wood-deep);
+}
+[data-ui="v2"] .btn:not(.icon-btn):not(.close-x)::before {
+  content: "";
+  position: absolute;
+  left: 3px; right: 3px; top: -7px; height: 10px;
+  background: linear-gradient(var(--green-hi), var(--green-lo));
+  clip-path: var(--moss);
+  pointer-events: none;
+}
+[data-ui="v2"] .btn-start::before, [data-ui="v2"] .card .btn::before, [data-ui="v2"] .panel-head .btn::before, [data-ui="v2"] .row .btn::before { display: none; }
+[data-ui="v2"] .btn:active { transform: translateY(4px); box-shadow: inset 0 2px 0 rgba(255, 255, 255, .25), 0 1px 0 var(--wood-deep); }
+[data-ui="v2"] .icon-btn, [data-ui="v2"] .close-x { background: var(--diamond), var(--grain), linear-gradient(var(--c-hi), var(--c-lo)); }
+[data-ui="v2"] .tab { border: 3px solid var(--wood-deep); border-radius: 5px 5px 0 0; background: var(--grain), var(--wood-dk); box-shadow: inset 0 2px 0 rgba(255, 255, 255, .12); }
+[data-ui="v2"] .tab[aria-selected="true"] { background: var(--diamond), var(--grain), linear-gradient(var(--green-hi), var(--green-lo)); }
+[data-ui="v2"] .tabs { border-bottom: 3px solid var(--wood-deep); margin: 0 12px; padding: 12px 0 0; }
+[data-ui="v2"] .box { background: var(--nails), var(--grain), var(--planks), linear-gradient(var(--wood), var(--wood-lo)); border: 3px solid var(--wood-deep); border-radius: 5px; box-shadow: 0 3px 0 var(--wood-deep); padding-inline: 14px; }
+[data-ui="v2"] .home-title { top: calc(env(safe-area-inset-top, 0px) + 14px); left: calc(env(safe-area-inset-left, 0px) + 16px); }
+[data-ui="v2"] .home-menu { left: calc(env(safe-area-inset-left, 0px) + 16px); bottom: calc(env(safe-area-inset-bottom, 0px) + 18px); grid-template-columns: 1fr; width: 220px; gap: 14px; }
+[data-ui="v2"] .panel {
+  background: var(--diamond), var(--grain), var(--planks), linear-gradient(var(--wood), var(--wood-lo));
+  border: 4px solid var(--wood-deep);
+  border-radius: 7px;
+  box-shadow: 0 6px 0 var(--wood-deep), 0 14px 30px rgba(0, 0, 0, .35);
+  overflow: visible;
+}
+[data-ui="v2"] .panel-head { position: relative; padding: 12px 10px 12px 16px; background: var(--diamond), var(--grain), linear-gradient(var(--green-hi), var(--green-lo)); border-bottom: 4px solid var(--wood-deep); border-radius: 3px 3px 0 0; }
+[data-ui="v2"] .panel-head::before { content: ""; position: absolute; left: 0; right: 0; top: -10px; height: 12px; background: linear-gradient(var(--green-hi), var(--green-lo)); clip-path: var(--moss); }
+[data-ui="v2"] .panel-head.red { background: var(--diamond), var(--grain), linear-gradient(var(--red-hi), var(--red-lo)); }
+[data-ui="v2"] .scroll { border-radius: 0 0 4px 4px; }
+[data-ui="v2"] .card, [data-ui="v2"] .me, [data-ui="v2"] .lb-row { background: var(--nails), var(--grain), linear-gradient(var(--wood-lo), var(--wood-dk)); border: 3px solid var(--wood-deep); border-radius: 5px; box-shadow: inset 0 2px 0 rgba(255, 255, 255, .12); }
+[data-ui="v2"] .lb-row:first-child { background: var(--nails), var(--grain), var(--green-lo); }
+[data-ui="v2"] .badge, [data-ui="v2"] .msg { border: 2px solid var(--wood-deep); border-radius: 4px; }
+[data-ui="v2"] .name-input { border-radius: 5px; }
+[data-ui="v2"] #wipe { background: var(--diamond), var(--grain), var(--planks), var(--wood); }
+
+/* ================= Variante 3: Block-Leiste =================
+   Kräftige Blöcke mit großem Gitter und dicker Kontur (letztes Design) in einem Holzrahmen
+   mit Brettern und Nägeln (vorletztes Design). Titel mittig, Menü als Leiste unten. */
+[data-ui="v3"] .btn, [data-ui="v3"] .tab {
+  border: 4px solid var(--wood-deep);
+  border-radius: 3px;
+  background: var(--diamond-big), linear-gradient(var(--c) 0 50%, var(--c-lo) 50%);
+  box-shadow: inset 0 4px 0 rgba(255, 255, 255, .28), 0 6px 0 var(--wood-deep);
+}
+[data-ui="v3"] .btn:active { transform: translateY(5px); box-shadow: inset 0 4px 0 rgba(255, 255, 255, .28), 0 1px 0 var(--wood-deep); }
+[data-ui="v3"] .tab { --c: var(--wood-lo); --c-lo: var(--wood-dk); box-shadow: inset 0 3px 0 rgba(255, 255, 255, .18), 0 3px 0 var(--wood-deep); }
+[data-ui="v3"] .tab[aria-selected="true"] { --c: var(--green); --c-lo: var(--green-lo); }
+[data-ui="v3"] .box { background: var(--nails), var(--grain), var(--wood-lo); border: 4px solid var(--wood-deep); border-radius: 3px; padding-inline: 14px; }
+[data-ui="v3"] .home-title { top: calc(env(safe-area-inset-top, 0px) + 22px); left: 0; right: 0; text-align: center; }
+[data-ui="v3"] .title { font-size: 56px; text-shadow: 0 4px 0 var(--wood-deep), 0 8px 0 rgba(42, 23, 11, .3); }
+[data-ui="v3"] .home-menu {
+  left: 50%; transform: translateX(-50%);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
+  grid-template-columns: repeat(3, 150px) 190px; grid-template-areas: "a b c d"; align-items: end;
+  padding: 12px 14px 16px;
+  background: var(--nails), var(--grain), var(--planks), linear-gradient(var(--wood), var(--wood-lo));
+  border: 4px solid var(--wood-deep);
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .14), 0 6px 0 var(--wood-deep);
+}
+[data-ui="v3"] .home-menu .btn-start { grid-area: d; }
+[data-ui="v3"] .home-side { bottom: calc(env(safe-area-inset-bottom, 0px) + 120px); }
+[data-ui="v3"] .credit { bottom: auto; top: calc(env(safe-area-inset-top, 0px) + 6px); right: auto; left: calc(env(safe-area-inset-left, 0px) + 16px); }
+[data-ui="v3"] .panel {
+  background: var(--nails), var(--grain), var(--planks), linear-gradient(var(--wood), var(--wood-lo));
+  border: 4px solid var(--wood-deep);
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 6px var(--wood-lo), inset 0 0 0 9px var(--wood-deep), 0 8px 0 var(--wood-deep), 0 18px 34px rgba(0, 0, 0, .35);
+  padding: 10px;
+}
+[data-ui="v3"] .panel-head { background: var(--diamond-big), linear-gradient(var(--red) 0 50%, var(--red-lo) 50%); border: 4px solid var(--wood-deep); border-radius: 3px; box-shadow: inset 0 4px 0 rgba(255, 255, 255, .25); }
+[data-ui="v3"] .panel-head .close-x { --c: var(--wood); --c-lo: var(--wood-lo); }
+[data-ui="v3"] .card, [data-ui="v3"] .me, [data-ui="v3"] .lb-row { background: var(--diamond-big), var(--wood-dk); border: 4px solid var(--wood-deep); border-radius: 3px; box-shadow: inset 0 3px 0 rgba(255, 255, 255, .12); }
+[data-ui="v3"] .lb-row:first-child { background: var(--diamond-big), var(--green-lo); }
+[data-ui="v3"] .badge, [data-ui="v3"] .msg { border: 3px solid var(--wood-deep); border-radius: 3px; }
+[data-ui="v3"] .name-input { border-width: 4px; border-radius: 3px; }
+[data-ui="v3"] #wipe { background: var(--diamond-big), var(--green); }
+
+@media (orientation: portrait) {
+  [data-ui="v1"] .home-title, [data-ui="v2"] .home-title { top: calc(env(safe-area-inset-top, 0px) + 74px); }
+  [data-ui="v3"] .home-title { top: calc(env(safe-area-inset-top, 0px) + 80px); }
+  [data-ui="v3"] .home-menu { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-areas: "d d d" "a b c"; left: 16px; right: 16px; transform: none; }
+  [data-ui="v3"] .home-menu .btn { padding-inline: 4px; }
+  [data-ui="v3"] .credit { top: auto; left: auto; right: calc(env(safe-area-inset-right, 0px) + 8px); bottom: calc(env(safe-area-inset-bottom, 0px) + 1px); }
+  [data-ui="v3"] .home-side { bottom: calc(env(safe-area-inset-bottom, 0px) + 190px); }
+}
+@media (orientation: landscape) and (max-height: 560px) {
+  [data-ui="v3"] .home-title { top: calc(env(safe-area-inset-top, 0px) + 64px); }
+  [data-ui="v3"] .title { font-size: 40px; }
+  [data-ui="v3"] .home-menu { grid-template-columns: repeat(3, 124px) 150px; gap: 8px; padding: 6px 8px 10px; bottom: calc(env(safe-area-inset-bottom, 0px) + 4px); }
+  [data-ui="v3"] .home-menu .btn { padding: 8px 10px 10px; border-width: 3px; box-shadow: inset 0 3px 0 rgba(255, 255, 255, .28), 0 4px 0 var(--wood-deep); }
+  [data-ui="v3"] .home-menu .btn-start { font-size: 20px; padding: 6px 10px 8px; }
+  [data-ui="v3"] .home-side { bottom: calc(env(safe-area-inset-bottom, 0px) + 84px); }
+  [data-ui="v2"] .home-menu { gap: 12px; width: 200px; }
+}
 @media (orientation: portrait) {
   .hud { flex-wrap: wrap; }
-  .home-title { top: calc(env(safe-area-inset-top, 0px) + 74px); }
   .title { font-size: 40px; }
   .stats { grid-template-columns: repeat(2, 1fr); }
-  .picks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (orientation: landscape) and (max-height: 560px) {
   #banner { top: calc(env(safe-area-inset-top, 0px) + 84px); }
@@ -426,8 +437,6 @@ p, h1, h2, h3 { margin: 0; }
   #wipe.closing { animation: none; clip-path: none; opacity: 1; }
   #wipe.opening { animation: fadeout .3s forwards; clip-path: none; }
 }
-
-.new-best { color: var(--yellow); text-shadow: var(--stroke-sm); }
 </style>
 </head>
 <body class="at-home">
@@ -460,14 +469,14 @@ p, h1, h2, h3 { margin: 0; }
     <p class="subtitle" id="subtitle">Spring über alles!</p>
   </div>
   <nav class="home-menu" aria-label="Hauptmenü">
-    <button class="btn btn-blue" id="shopBtn" type="button">Shop</button>
-    <button class="btn btn-brown" id="invBtn" type="button">Inventar</button>
-    <button class="btn btn-purple" id="boardBtn" type="button" style="grid-column: 1 / -1">Bestenliste</button>
+    <button class="btn btn2" id="shopBtn" type="button">Shop</button>
+    <button class="btn btn2" id="invBtn" type="button">Inventar</button>
+    <button class="btn btn2" id="boardBtn" type="button">Bestenliste</button>
     <button class="btn btn-start" id="startBtn" type="button">Start</button>
   </nav>
   <div class="home-side">
     <p class="tipline">Tippen = springen</p>
-    <button class="btn btn-small" id="installBtn" type="button" hidden>App installieren</button>
+    <button class="btn btn2 btn-small" id="installBtn" type="button" hidden>App installieren</button>
     <p class="tipline" id="installHelp" hidden></p>
   </div>
   <p class="credit">Schrift: Minecraft von Pwnage_Block (CC BY-SA 3.0)</p>
@@ -478,20 +487,14 @@ p, h1, h2, h3 { margin: 0; }
     <div class="panel-head">
       <h2 id="setupTitle">Deine Katze</h2>
       <button class="btn btn-red" id="setupBack" type="button" hidden>Zurück</button>
-      <button class="btn" id="setupNext" type="button">Weiter</button>
+      <button class="btn" id="setupNext" type="button">Fertig</button>
     </div>
     <div class="scroll">
       <p class="msg" id="setupMsg" hidden></p>
-      <div id="step1">
-        <label class="field-lbl" for="catName">Wie heißt deine Katze?</label>
-        <input class="name-input" id="catName" type="text" maxlength="12" autocomplete="off" autocapitalize="words" spellcheck="false" placeholder="z. B. Mimi">
-        <p class="field-lbl">Wähle das Fell</p>
-        <div class="picks" id="breedList" role="radiogroup" aria-label="Fell"></div>
-      </div>
-      <div id="step2" hidden>
-        <p class="field-lbl">Dick oder dünn?</p>
-        <div class="picks two" id="bodyList" role="radiogroup" aria-label="Figur"></div>
-      </div>
+      <div class="setup-cat" id="setupCat"></div>
+      <label class="field-lbl" for="catName">Wie heißt deine Katze?</label>
+      <input class="name-input" id="catName" type="text" maxlength="12" autocomplete="off" autocapitalize="words" spellcheck="false" placeholder="z. B. Mimi">
+      <p class="field-lbl small-note">Weitere Katzen-Farben gibt es im Shop.</p>
     </div>
   </div>
 </div>
@@ -518,6 +521,7 @@ p, h1, h2, h3 { margin: 0; }
     </div>
     <div class="tabs" role="tablist">
       <button class="tab" id="tabUp" type="button" role="tab" aria-selected="true">Upgrades</button>
+      <button class="tab" id="tabCats" type="button" role="tab" aria-selected="false">Katzen</button>
       <button class="tab" id="tabCos" type="button" role="tab" aria-selected="false">Cosmetics</button>
     </div>
     <p class="msg" id="shopMsg" hidden></p>
@@ -535,6 +539,8 @@ p, h1, h2, h3 { margin: 0; }
     <div class="scroll">
       <h3>Deine Katze</h3>
       <div class="me" id="invMe"></div>
+      <h3>Katzen</h3>
+      <div class="grid" id="invCats"></div>
       <h3>Upgrades</h3>
       <div class="grid" id="invUpgrades"></div>
       <h3>Cosmetics</h3>
@@ -773,6 +779,9 @@ function catRows(pose, look) {
       if ((yy < B.cy - .3 + bob && xx <= 15.5) || (yy <= hy - 1.6 && xx >= 14) || (xx >= 20.4 && xx <= 23.4 && yy >= hy - 1.6 && yy <= hy + .6)) g[y][x] = 'o';
     }
   }
+  if (look.breed.dots) {
+    for (let y = 0; y < CAT_H; y++) for (let x = 0; x < CAT_W; x++) if (g[y][x] === 'b' && hash(x * 7 + y * 13) < .13) g[y][x] = 't';
+  }
   if (look.breed.stripes) {
     for (let y = 0; y < CAT_H; y++) for (let x = 0; x < CAT_W; x++) {
       if (g[y][x] !== 'b') continue;
@@ -843,12 +852,19 @@ const POSE_STAND = { fn: [0, 0], ff: [.15, .05], bn: [0, 0], bf: [-.15, -.05], t
 const POSE_UP = { fn: [1.1, 1.4], ff: [.95, 1.25], bn: [-1, -1.3], bf: [-.85, -1.15], tail: -1.2, bob: 0 };
 const POSE_DOWN = { fn: [.5, .25], ff: [.35, .15], bn: [-.2, -.9], bf: [-.35, -1], tail: .8, bob: 0 };
 
-// Die vier Katzen zur Auswahl: Fellfarbe und Felllänge
+// Katzenfarben: am Anfang gibt es nur die weiße Katze, alle anderen gibt es im Shop.
+// Jede Farbe hat ihre eigene Felllänge, "Moppel" ist ein dicker Kater.
 const BREEDS = [
-  { id: 'weiss', name: 'Weiß', hair: 'Kurzhaar', fur: 0, pal: {} },
-  { id: 'weissbraun', name: 'Weiß-Braun', hair: 'Langhaar', fur: 2, pal: { a: '#8a5a3a', q: '#8a5a3a', u: '#6e4429', e: '#2f5d34' }, patches: true },
-  { id: 'orange', name: 'Orange', hair: 'Halblanghaar', fur: 1, pal: { b: '#f2a14a', s: '#d27a2a', d: '#b8661f', u: '#c8641c', p: '#ffc1a8', e: '#2f5d34', c: '#ffb08a' }, stripes: '#e48c35' },
-  { id: 'braun', name: 'Braun', hair: 'Kurzhaar', fur: 0, pal: { b: '#8f5e3c', s: '#734a2d', d: '#5e3b22', u: '#4e2f1b', p: '#d9a08f', e: '#8fd16a', c: '#c98a7a' }, stripes: '#7a4e30' },
+  { id: 'weiss', name: 'Schneeweiß', hair: 'Kurzhaar', fur: 0, price: 0, desc: 'Deine erste Katze.', pal: {} },
+  { id: 'grau', name: 'Grau getigert', hair: 'Halblanghaar', fur: 1, price: 30, desc: 'Grau mit dunklen Streifen.', pal: { b: '#b8bcc6', s: '#979ca8', d: '#80858f', u: '#80858f', e: '#2f5d34', c: '#e6a9b8' }, stripes: '#9a9fab' },
+  { id: 'schwarz', name: 'Mitternacht', hair: 'Kurzhaar', fur: 0, price: 40, desc: 'Schwarz mit gelben Augen, wie Kirby.', pal: { b: '#3a3644', s: '#2a2733', d: '#1f1d27', u: '#2a2733', p: '#b07a88', e: '#e6d23a', c: '#7a5363', h: '#3a3644' } },
+  { id: 'weissbraun', name: 'Weiß-Braun', hair: 'Langhaar', fur: 2, price: 50, desc: 'Weiß mit braunen Flecken, flauschig.', pal: { a: '#8a5a3a', q: '#8a5a3a', u: '#6e4429', e: '#2f5d34' }, patches: '#8a5a3a' },
+  { id: 'orange', name: 'Orange', hair: 'Halblanghaar', fur: 1, price: 60, desc: 'Rot getigert.', pal: { b: '#f2a14a', s: '#d27a2a', d: '#b8661f', u: '#c8641c', p: '#ffc1a8', e: '#2f5d34', c: '#ffb08a' }, stripes: '#e48c35' },
+  { id: 'braun', name: 'Schoko', hair: 'Kurzhaar', fur: 0, price: 60, desc: 'Schokobraun mit Streifen.', pal: { b: '#8f5e3c', s: '#734a2d', d: '#5e3b22', u: '#4e2f1b', p: '#d9a08f', e: '#8fd16a', c: '#c98a7a' }, stripes: '#7a4e30' },
+  { id: 'moppel', name: 'Moppel', hair: 'Kurzhaar', fur: 0, price: 80, body: 'dick', desc: 'Ein dicker grau-weißer Kater.', pal: { a: '#8f95a1', q: '#8f95a1', u: '#6f7580', e: '#2f5d34' }, patches: '#9aa0ab' },
+  { id: 'siam', name: 'Siam', hair: 'Kurzhaar', fur: 0, price: 90, desc: 'Hell, mit dunklen Ohren, Pfoten und Schwanz.', pal: { b: '#f1e6d2', s: '#d9c6a6', d: '#4a3128', g: '#5b3d30', q: '#5b3d30', u: '#3f2a22', a: '#5b3d30', e: '#1f4f8f' } },
+  { id: 'gold', name: 'Goldkatze', hair: 'Halblanghaar', fur: 1, price: 150, desc: 'Glänzt und glitzert beim Laufen.', pal: { b: '#ffd54a', s: '#e0a920', d: '#c48d12', u: '#e0a920', e: '#6b2a12', c: '#ffab7a' }, sparkle: '#fff6b0' },
+  { id: 'galaxie', name: 'Galaxie', hair: 'Langhaar', fur: 2, price: 200, desc: 'Voller Sterne, glitzert beim Laufen.', pal: { b: '#3a2f7a', s: '#2a2160', d: '#201a4d', u: '#ff7ad9', p: '#ff7ad9', n: '#ff7ad9', e: '#7cf7ff', c: '#8a5fd0', h: '#ffffff' }, dots: '#fff6a0', sparkle: '#b9a7ff' },
 ];
 // Cosmetics: pro Körperstelle ist eines gleichzeitig angezogen
 const COSMETICS = [
@@ -862,8 +878,8 @@ const COSMETICS = [
   { id: 'socken', slot: 'feet', name: 'Ringelsocken', price: 30, desc: 'Rot-weiß geringelt, an allen vier Pfoten.' },
 ];
 const catCache = {};
-function catSet(breedId, cosIds = [], body = 'duenn') {
-  const key = breedId + '|' + body + '|' + [...cosIds].sort().join(',');
+function catSet(breedId, cosIds = []) {
+  const key = breedId + '|' + [...cosIds].sort().join(',');
   if (!catCache[key]) {
     const breed = BREEDS.find((b) => b.id === breedId) || BREEDS[0];
     const cos = new Set(cosIds);
@@ -872,11 +888,12 @@ function catSet(breedId, cosIds = [], body = 'duenn') {
     pal.q = breed.pal.q || pal.b;
     pal.a = breed.pal.a || pal.b;
     pal.u = breed.pal.u || pal.s;
-    pal.t = breed.stripes || pal.s;
-    const look = { breed, cos, body };
+    pal.t = breed.stripes || breed.dots || pal.s;
+    pal.o = breed.patches || pal.o;
+    const look = { breed, cos, body: breed.body || 'duenn' };
     const mk = (pose) => shrinkHitbox(sprite(catRows(pose, look), pal, true, 'w', COS_CHARS), HITBOX);
     catCache[key] = {
-      sparkle: cos.has('krone') ? '#fff6b0' : null,
+      sparkle: breed.sparkle || (cos.has('krone') ? '#fff6b0' : null),
       run: Array.from({ length: RUN_FRAMES }, (_, k) => mk(runPose(k))),
       up: mk(POSE_UP),
       down: mk(POSE_DOWN),
@@ -1249,10 +1266,12 @@ const save = {
   name: store.get('cj-name', ''),
   breed: store.get('cj-breed', 'weiss'),
   wear: store.get('cj-wear', {}),
-  body: store.get('cj-body', 'duenn'),
   nameKey: store.get('cj-namekey', ''),
 };
-if (!BREEDS.some((b) => b.id === save.breed)) save.breed = save.breed === 'rot' ? 'orange' : 'weiss';
+// Die weiße Katze hat jeder. Wer früher schon eine andere Farbe gewählt hatte, behält sie.
+if (save.breed === 'rot') save.breed = 'orange';
+if (!BREEDS.some((b) => b.id === save.breed)) save.breed = 'weiss';
+if (save.breed !== 'weiss') save.owned.add('cat:' + save.breed);
 // Früher gekaufte Farb-Skins gibt es nicht mehr: die Fische dafür gibt es zurück
 const OLD_SKIN_PRICES = { grau: 30, schwarz: 40, tiger: 60, siam: 80, gold: 150, galaxie: 200 };
 for (const k of [...save.owned]) {
@@ -1264,7 +1283,6 @@ function persist() {
   store.set('cj-name', save.name);
   store.set('cj-breed', save.breed);
   store.set('cj-wear', save.wear);
-  store.set('cj-body', save.body);
   store.set('cj-namekey', save.nameKey);
 }
 persist();
@@ -1276,7 +1294,7 @@ const UPGRADES = [
   { id: 'lucky', name: 'Glückspfote', price: 120, desc: 'Mehr Fische auf der Strecke und bei Events.' },
 ];
 const wearing = () => Object.values(save.wear).filter(Boolean);
-const myCat = () => catSet(save.breed, wearing(), save.body);
+const myCat = () => catSet(save.breed, wearing());
 const catName = () => save.name || 'Deine Katze';
 cat = myCat();
 
@@ -1727,7 +1745,7 @@ function iconCanvas(spr, scale = 4) {
   c.style.height = spr.c.height * scale + 'px';
   return c;
 }
-const catPreview = (cosIds, breed = save.breed, scale = 3) => iconCanvas(catSet(breed, cosIds, save.body).idle[0], scale);
+const catPreview = (cosIds, breed = save.breed, scale = 3) => iconCanvas(catSet(breed, cosIds).idle[0], scale);
 function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
 let shopTab = 'up', msgTimer = 0;
 function shopMsg(text) {
@@ -1740,12 +1758,15 @@ function shopMsg(text) {
 function renderShop() {
   $('shopWallet').textContent = save.fish;
   $('tabUp').setAttribute('aria-selected', String(shopTab === 'up'));
+  $('tabCats').setAttribute('aria-selected', String(shopTab === 'cats'));
   $('tabCos').setAttribute('aria-selected', String(shopTab === 'cos'));
   const list = $('shopList');
   list.textContent = '';
   const items = shopTab === 'up'
     ? UPGRADES.map((u) => ({ ...u, key: 'up:' + u.id, prev: () => iconCanvas(ICONS[u.id]) }))
-    : COSMETICS.map((c) => ({ ...c, key: 'cos:' + c.id, prev: () => catPreview([c.id]) }));
+    : shopTab === 'cats'
+      ? BREEDS.filter((b) => b.price > 0).map((b) => ({ ...b, key: 'cat:' + b.id, cat: true, desc: b.desc + ' ' + b.hair + '.', prev: () => catPreview(wearing(), b.id) }))
+      : COSMETICS.map((c) => ({ ...c, key: 'cos:' + c.id, prev: () => catPreview([c.id]) }));
   for (const it of items) {
     const card = el('div', 'card');
     const prev = el('div', 'prev');
@@ -1780,7 +1801,8 @@ function buy(it) {
   }
   save.fish -= it.price;
   save.owned.add(it.key);
-  if (it.slot) { wear(it, true); shopMsg(it.name + ' gekauft und angezogen!'); }
+  if (it.cat) { save.breed = it.id; cat = myCat(); updateNames(); shopMsg(it.name + ' gekauft! Du spielst jetzt mit dieser Katze.'); }
+  else if (it.slot) { wear(it, true); shopMsg(it.name + ' gekauft und angezogen!'); }
   else shopMsg(it.name + ' gekauft! Es ist ab jetzt immer aktiv.');
   persist();
   sfx.buy();
@@ -1788,6 +1810,7 @@ function buy(it) {
   updateHud(true);
 }
 $('tabUp').addEventListener('click', () => { shopTab = 'up'; renderShop(); });
+$('tabCats').addEventListener('click', () => { shopTab = 'cats'; renderShop(); });
 $('tabCos').addEventListener('click', () => { shopTab = 'cos'; renderShop(); });
 function renderInv() {
   $('invWallet').textContent = save.fish;
@@ -1796,12 +1819,27 @@ function renderInv() {
   me.textContent = '';
   const who = el('div', 'who');
   const breed = BREEDS.find((b) => b.id === save.breed) || BREEDS[0];
-  who.append(el('p', 'name', catName()), el('p', 'desc', breed.name + ' · ' + breed.hair + ' · ' + (save.body === 'dick' ? 'Dick' : 'Dünn')));
-  const change = el('button', 'btn btn-blue', 'Katze ändern');
+  who.append(el('p', 'name', catName()), el('p', 'desc', breed.name + ' · ' + breed.hair));
+  const change = el('button', 'btn btn2', 'Namen ändern');
   change.type = 'button';
   change.addEventListener('click', () => openSetup(true));
   who.appendChild(change);
   me.append(catPreview(wearing(), save.breed, 4), who);
+  // Katzen (Farben)
+  const kl = $('invCats');
+  kl.textContent = '';
+  for (const b of BREEDS.filter((x) => x.price === 0 || has('cat:' + x.id))) {
+    const on = save.breed === b.id;
+    const card = el('div', 'card');
+    const prev = el('div', 'prev');
+    prev.appendChild(catPreview(wearing(), b.id));
+    const btn = el('button', 'btn' + (on ? '' : ' btn2'), on ? 'Ausgewählt' : 'Auswählen');
+    btn.type = 'button';
+    btn.disabled = on;
+    btn.addEventListener('click', () => { save.breed = b.id; cat = myCat(); persist(); sfx.meow(); renderInv(); });
+    card.append(prev, el('p', 'name', b.name), el('p', 'desc', b.hair), btn);
+    kl.appendChild(card);
+  }
   // Upgrades
   const up = $('invUpgrades');
   up.textContent = '';
@@ -1832,45 +1870,17 @@ function renderInv() {
   }
 }
 
-/* ---------- Katze einrichten: Name + Fell (Schritt 1), dick oder dünn (Schritt 2) ---------- */
-const BODIES = [
-  { id: 'duenn', name: 'Dünn', desc: 'Schlank und flink' },
-  { id: 'dick', name: 'Dick', desc: 'Rund und gemütlich' },
-];
-let pickBreed = save.breed, pickBody = save.body, setupStep = 1, setupFromInv = false;
+/* ---------- Katze einrichten: nur der Name (man startet immer mit der weißen Katze) ---------- */
+let setupFromInv = false;
 function openSetup(fromInv) {
   setupFromInv = fromInv;
-  pickBreed = save.breed;
-  pickBody = save.body;
   $('catName').value = save.name;
-  setupGo(1);
-  show('setup');
-}
-function setupGo(step) {
-  setupStep = step;
   $('setupMsg').hidden = true;
-  $('step1').hidden = step !== 1;
-  $('step2').hidden = step !== 2;
-  $('setupNext').textContent = step === 1 ? 'Weiter' : 'Fertig';
-  $('setupBack').hidden = step === 1 && !setupFromInv;
-  renderPicks();
-}
-function pickCard(id, label, sub, checked, preview, onPick) {
-  const card = el('button', 'pick');
-  card.type = 'button';
-  card.setAttribute('role', 'radio');
-  card.setAttribute('aria-checked', String(checked));
-  card.append(preview, el('span', '', label), el('span', 'hair', sub));
-  card.addEventListener('click', () => { onPick(id); sfx.meow(); renderPicks(); });
-  return card;
-}
-function renderPicks() {
-  const bl = $('breedList');
-  bl.textContent = '';
-  for (const b of BREEDS) bl.appendChild(pickCard(b.id, b.name, b.hair, b.id === pickBreed, iconCanvas(catSet(b.id, [], pickBody).idle[0], 3), (id) => { pickBreed = id; }));
-  const dl = $('bodyList');
-  dl.textContent = '';
-  for (const b of BODIES) dl.appendChild(pickCard(b.id, b.name, b.desc, b.id === pickBody, iconCanvas(catSet(pickBreed, [], b.id).idle[0], 4), (id) => { pickBody = id; }));
+  $('setupBack').hidden = !fromInv;
+  const prev = $('setupCat');
+  prev.textContent = '';
+  prev.appendChild(catPreview(wearing(), save.breed, 4));
+  show('setup');
 }
 function setupMsg(text) {
   $('setupMsg').textContent = text;
@@ -1878,29 +1888,16 @@ function setupMsg(text) {
 }
 $('setupNext').addEventListener('click', () => {
   audioOn();
-  if (setupStep === 1) {
-    const name = $('catName').value.trim().slice(0, 12);
-    if (!name) { setupMsg('Gib deiner Katze bitte einen Namen.'); $('catName').focus(); sfx.no(); return; }
-    save.name = name;
-    save.nameKey = nameKey(name);
-    persist();
-    $('catName').blur();
-    setupGo(2);
-    return;
-  }
-  save.breed = pickBreed;
-  save.body = pickBody;
+  const name = $('catName').value.trim().slice(0, 12);
+  if (!name) { setupMsg('Gib deiner Katze bitte einen Namen.'); $('catName').focus(); sfx.no(); return; }
+  save.name = name;
   persist();
-  cat = myCat();
+  $('catName').blur();
   updateNames();
   sfx.buy();
-  show('home');
+  if (setupFromInv) { renderInv(); show('inv'); } else show('home');
 });
-$('setupBack').addEventListener('click', () => {
-  if (setupStep === 2) { setupGo(1); return; }
-  renderInv();
-  show('inv');
-});
+$('setupBack').addEventListener('click', () => { renderInv(); show('inv'); });
 $('catName').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('setupNext').click(); });
 function updateNames() {
   $('subtitle').textContent = catName() + ' springt über alles!';
