@@ -464,7 +464,7 @@ const store = {
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* egal */ } },
 };
 // Neustart für alle: Spielstände aus älteren Versionen werden einmal gelöscht (Name, Fische, Gekauftes, Bestenliste)
-const SAVE_VERSION = 2;
+const SAVE_VERSION = 3;
 if (store.get('cj-save-version', 0) !== SAVE_VERSION) {
   try { Object.keys(localStorage).filter((k) => k.startsWith('cj-')).forEach((k) => localStorage.removeItem(k)); } catch (e) { /* egal */ }
   store.set('cj-save-version', SAVE_VERSION);
