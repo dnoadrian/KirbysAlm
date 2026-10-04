@@ -4,6 +4,10 @@ Spring über Adrian und Valentina! Ein kleines Pixel-Spiel fürs Handy: Eine wei
 
 **Spielen:** https://dnoadrian.github.io/Temp/ (sobald GitHub Pages eingeschaltet ist), oder `index.html` direkt im Browser öffnen.
 
+## Lobby
+
+In der Lobby stehen links unten **Shop**, **Inventar** und **Start**. Start öffnet mit einem Kreis-Übergang das Spiel. Nach dem Verlieren geht es mit **Nochmal** direkt weiter oder mit **Lobby** zurück.
+
 ## Steuerung
 
 Nur Tippen (bzw. Klicken):
@@ -11,9 +15,23 @@ Nur Tippen (bzw. Klicken):
 - **Tippen:** springen
 - **In der Luft nochmal tippen:** Doppelsprung (ab Level 2, mit Salto)
 
-Jeder geschaffte Sprung wird bewertet: je knapper, desto besser ("Super!", "Perfekt!", "Unglaublich!"), dazu die Serie (1x, 2x, 3x ...). Ab 5x leuchtet die Anzeige in Regenbogenfarben, jede zehnte Serie ist "Legendär!". Ein Sprung ohne Übersprungenen beendet die Serie. Je länger die Serie, desto mehr Bonuspunkte.
+Oben rechts lädt der Pfeil-Knopf die Seite bzw. App neu und holt die neueste Version, der Lautsprecher schaltet den Ton.
 
-Oben rechts lädt der kleine Pfeil-Knopf die Seite bzw. App neu und holt dabei die neueste Version. Daneben schaltet der Lautsprecher den Ton an und aus.
+## Fische, Shop und Inventar
+
+Es gibt keine Punkte mehr, nur Fische. Sie sind die Währung und werden im Browser gespeichert. Fische gibt es auf der Strecke, bei Events, für jede 5er-Serie (+2) und für jeden Gegner, den du mit Regenbogen-Kraft wegschleuderst.
+
+Im **Shop** gibt es Upgrades (Regenbogen-Stern, Fisch-Magnet, Dreifachsprung, Glückspfote) und Katzen-Skins (Silbergrau, Mitternacht, Rotes Tigerle, Siam, Goldkatze, Galaxie). Im **Inventar** siehst du deine Upgrades und ziehst Skins an.
+
+## Spannung
+
+- **Sprung-Bewertung:** Super!, Perfekt!, Unglaublich! mit Serie (1x, 2x ...).
+- **Regenbogen-Stern:** liegt selten auf der Strecke oder rettet dich einmal pro Runde (Upgrade). 4 bis 5 Sekunden unverwundbar, Gegner fliegen weg.
+- **Zufalls-Events:** Sternschauer, Fischregen, Lawine (ab Level 2) und Turbo-Rausch.
+
+## Oberfläche
+
+Drei Stile zum Ausprobieren: Almhütte (Standard), `#bonbon` und `#neon` an die Adresse anhängen.
 
 ## Level
 

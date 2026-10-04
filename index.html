@@ -14,31 +14,200 @@
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <title>Cat Jumper</title>
 <style>
-/* Layout: full-bleed pixel alm on canvas; Minecraft-style GUI: tooltip boxes in the HUD, stone buttons, title-screen menu centred over the scene. */
+/* Layout: full-bleed pixel alm on canvas. Lobby: title top-left, menu (Shop, Inventar, Start) bottom-left.
+   Shop/Inventar/Pause/Tod as panels. Three switchable looks via data-ui on <html>: holz (default), bonbon, neon. */
 /* Schrift: "Minecraft" von Pwnage_Block (fontstruct.com), CC BY-SA 3.0, um Ä Ö Ü ä ö ü ß · ergänzt. */
 @font-face {
   font-family: "CatJumperMC";
   src: url(data:font/woff2;base64,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) format("woff2");
   font-display: block;
 }
-:root {
-  --text: #ffffff;
-  --shadow: #3f3f3f;      /* Minecraft-Textschatten */
-  --yellow: #ffff55;
-  --yellow-shadow: #3f3f15;
-  --gold: #ffaa00;
-  --aqua: #55ffff;
-  --green: #55ff55;
-  --gray: #aaaaaa;
-  --stone: #6f6f6f;
-  --stone-light: #a8a8a8;
-  --stone-dark: #474747;
-  --tooltip: rgba(16, 0, 16, .9);
-  --tooltip-line: rgba(80, 0, 255, .5);
+
+/* ---- Look 1: Almhütte (Holz, rot-weiß) ---- */
+:root, [data-ui="holz"] {
+  --font: "CatJumperMC", "Courier New", monospace;
   --ink: #1e1c26;
-  --font-mc: "CatJumperMC", "Courier New", monospace;
+  --hud-bg: #6b4424;
+  --hud-border: 3px solid #3b2412;
+  --hud-radius: 8px;
+  --hud-shadow: 0 3px 0 #3b2412;
+  --hud-text: #fff4dc;
+  --hud-text-shadow: 2px 2px 0 #3b2412;
+  --hud-muted: #e8c99a;
+  --hud-accent: #ffd27a;
+  --panel-bg: repeating-linear-gradient(0deg, #a26f40 0 22px, #8f5f34 22px 24px);
+  --panel-border: 4px solid #4a2c15;
+  --panel-radius: 12px;
+  --panel-shadow: 0 6px 0 #3b2412, 0 14px 30px rgba(0, 0, 0, .35);
+  --panel-blur: none;
+  --panel-text: #fff4dc;
+  --panel-text-shadow: 2px 2px 0 #3b2412;
+  --panel-muted: #f3d9b0;
+  --head-bg: #c8382f;
+  --head-text: #ffffff;
+  --head-shadow: 2px 2px 0 #6e1712;
+  --head-trim: repeating-linear-gradient(90deg, #c8382f 0 12px, #ffffff 12px 24px);
+  --card-bg: #f6e7c8;
+  --card-border: 3px solid #4a2c15;
+  --card-radius: 10px;
+  --card-text: #4a2c15;
+  --card-muted: #7a5634;
+  --btn-radius: 10px;
+  --btn-border-w: 3px;
+  --btn-bg: #d0453b;
+  --btn-border: #5a1d18;
+  --btn-text: #ffffff;
+  --btn-text-shadow: 2px 2px 0 #7a241e;
+  --btn-depth: #5a1d18;
+  --btn-glow: 0 0 0 transparent;
+  --btn2-bg: #c48a52;
+  --btn2-border: #5a3818;
+  --btn2-text: #fff4dc;
+  --btn2-text-shadow: 2px 2px 0 #5a3818;
+  --btn2-depth: #5a3818;
+  --btn2-glow: 0 0 0 transparent;
+  --start-bg: #3fa34d;
+  --start-border: #1f5a27;
+  --start-text: #ffffff;
+  --start-text-shadow: 2px 2px 0 #1f5a27;
+  --start-depth: #1f5a27;
+  --start-glow: 0 0 0 transparent;
+  --tab-bg: #8f5f34;
+  --tab-border: #4a2c15;
+  --tab-text: #f3d9b0;
+  --tab-active-bg: #f6e7c8;
+  --tab-active-text: #4a2c15;
+  --title: #fff4dc;
+  --title-shadow: 3px 3px 0 #4a2c15, -2px -2px 0 #4a2c15, 2px -2px 0 #4a2c15, -2px 2px 0 #4a2c15, 0 7px 0 #4a2c15;
+  --subtitle: #ffd27a;
+  --subtitle-shadow: 2px 2px 0 #4a2c15;
+  --scene-shadow: 2px 2px 0 rgba(30, 20, 10, .75);
+  --good: #7ed37a;
+  --focus: #ffd27a;
+  --wipe: #6b4424;
+  --modal-dim: rgba(30, 18, 8, .45);
   color-scheme: dark;
 }
+/* ---- Look 2: Bonbon (Pastell, rund) ---- */
+[data-ui="bonbon"] {
+  --hud-bg: #ffffff;
+  --hud-border: 3px solid #ff9ccf;
+  --hud-radius: 18px;
+  --hud-shadow: 0 4px 0 #e06aa8;
+  --hud-text: #6b3d7a;
+  --hud-text-shadow: none;
+  --hud-muted: #b07ac0;
+  --hud-accent: #ff5fa8;
+  --panel-bg: linear-gradient(#fff7fc, #ffe9f5);
+  --panel-border: 4px solid #ffffff;
+  --panel-radius: 28px;
+  --panel-shadow: 0 8px 0 #f06aa9, 0 16px 34px rgba(160, 60, 120, .35);
+  --panel-text: #6b3d7a;
+  --panel-text-shadow: none;
+  --panel-muted: #a77bb6;
+  --head-bg: linear-gradient(90deg, #ff9ccf, #c9a7ff);
+  --head-text: #ffffff;
+  --head-shadow: 0 2px 0 rgba(150, 50, 120, .45);
+  --head-trim: linear-gradient(90deg, #ffd36e, #7ee3c9);
+  --card-bg: #ffffff;
+  --card-border: 3px solid #ffd1ea;
+  --card-radius: 20px;
+  --card-text: #6b3d7a;
+  --card-muted: #a77bb6;
+  --btn-radius: 999px;
+  --btn-bg: linear-gradient(#ff8cc6, #ff5fa8);
+  --btn-border: #ffffff;
+  --btn-text: #ffffff;
+  --btn-text-shadow: 0 2px 0 rgba(160, 30, 90, .5);
+  --btn-depth: #c63c86;
+  --btn2-bg: linear-gradient(#c3b0ff, #9479ff);
+  --btn2-border: #ffffff;
+  --btn2-text: #ffffff;
+  --btn2-text-shadow: 0 2px 0 rgba(70, 40, 160, .5);
+  --btn2-depth: #5b40c9;
+  --start-bg: linear-gradient(#ffd36e, #ffae1a);
+  --start-border: #ffffff;
+  --start-text: #ffffff;
+  --start-text-shadow: 0 2px 0 rgba(150, 80, 0, .6);
+  --start-depth: #c97c00;
+  --tab-bg: #ffe0f0;
+  --tab-border: #ffffff;
+  --tab-text: #b07ac0;
+  --tab-active-bg: #ff7ab8;
+  --tab-active-text: #ffffff;
+  --title: #ffffff;
+  --title-shadow: 3px 3px 0 #ff5fa8, -3px -3px 0 #ff5fa8, 3px -3px 0 #ff5fa8, -3px 3px 0 #ff5fa8, 0 8px 0 #c63c86;
+  --subtitle: #ffffff;
+  --subtitle-shadow: 2px 2px 0 #9479ff;
+  --scene-shadow: 2px 2px 0 rgba(120, 40, 100, .7);
+  --good: #7ee3c9;
+  --focus: #ffffff;
+  --wipe: #ff8cc6;
+  --modal-dim: rgba(120, 40, 100, .3);
+}
+/* ---- Look 3: Neon (dunkles Glas, Leuchtkanten) ---- */
+[data-ui="neon"] {
+  --hud-bg: rgba(10, 14, 34, .72);
+  --hud-border: 2px solid #39f3ff;
+  --hud-radius: 10px;
+  --hud-shadow: 0 0 12px rgba(57, 243, 255, .45);
+  --hud-text: #e9fbff;
+  --hud-text-shadow: 0 0 6px rgba(57, 243, 255, .6);
+  --hud-muted: #8fb6d9;
+  --hud-accent: #ff4fd8;
+  --panel-bg: rgba(10, 12, 30, .84);
+  --panel-border: 2px solid #39f3ff;
+  --panel-radius: 16px;
+  --panel-shadow: 0 0 26px rgba(57, 243, 255, .35), inset 0 0 26px rgba(255, 79, 216, .12);
+  --panel-blur: blur(10px);
+  --panel-text: #e9fbff;
+  --panel-text-shadow: none;
+  --panel-muted: #8fb6d9;
+  --head-bg: transparent;
+  --head-text: #ff4fd8;
+  --head-shadow: 0 0 10px rgba(255, 79, 216, .8);
+  --head-trim: linear-gradient(90deg, transparent, #39f3ff, #ff4fd8, transparent);
+  --card-bg: rgba(255, 255, 255, .04);
+  --card-border: 1px solid rgba(57, 243, 255, .4);
+  --card-radius: 12px;
+  --card-text: #e9fbff;
+  --card-muted: #8fb6d9;
+  --btn-radius: 10px;
+  --btn-border-w: 2px;
+  --btn-bg: rgba(255, 79, 216, .14);
+  --btn-border: #ff4fd8;
+  --btn-text: #ffd6f6;
+  --btn-text-shadow: 0 0 8px #ff4fd8;
+  --btn-depth: transparent;
+  --btn-glow: 0 0 14px rgba(255, 79, 216, .55);
+  --btn2-bg: rgba(57, 243, 255, .1);
+  --btn2-border: #39f3ff;
+  --btn2-text: #d6fbff;
+  --btn2-text-shadow: 0 0 8px #39f3ff;
+  --btn2-depth: transparent;
+  --btn2-glow: 0 0 14px rgba(57, 243, 255, .5);
+  --start-bg: rgba(182, 255, 59, .14);
+  --start-border: #b6ff3b;
+  --start-text: #efffd6;
+  --start-text-shadow: 0 0 8px #b6ff3b;
+  --start-depth: transparent;
+  --start-glow: 0 0 18px rgba(182, 255, 59, .6);
+  --tab-bg: transparent;
+  --tab-border: rgba(57, 243, 255, .5);
+  --tab-text: #8fb6d9;
+  --tab-active-bg: rgba(57, 243, 255, .18);
+  --tab-active-text: #e9fbff;
+  --title: #e9fbff;
+  --title-shadow: 0 0 6px #39f3ff, 0 0 18px #ff4fd8, 3px 3px 0 #2a1450;
+  --subtitle: #ff4fd8;
+  --subtitle-shadow: 0 0 10px rgba(255, 79, 216, .8);
+  --scene-shadow: 0 0 6px rgba(10, 12, 30, .9), 2px 2px 0 #0a0c1e;
+  --good: #b6ff3b;
+  --focus: #39f3ff;
+  --wipe: #0a0c1e;
+  --modal-dim: rgba(5, 6, 16, .5);
+}
+
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 html, body {
@@ -47,8 +216,8 @@ html, body {
   overflow: hidden;
   overscroll-behavior: none;
   background: var(--ink);
-  color: var(--text);
-  font: 16px/1.25 var(--font-mc);
+  color: #ffffff;
+  font: 16px/1.25 var(--font);
   -webkit-font-smoothing: none;
   touch-action: none;
   -webkit-user-select: none;
@@ -57,10 +226,9 @@ html, body {
   -webkit-tap-highlight-color: transparent;
 }
 #game { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
-.t { text-shadow: 2px 2px 0 var(--shadow); }
-p { margin: 0; }
+p, h1, h2, h3 { margin: 0; }
 
-/* HUD: Minecraft-Tooltip-Kästen */
+/* HUD */
 .hud {
   position: fixed;
   top: calc(env(safe-area-inset-top, 0px) + 10px);
@@ -71,142 +239,228 @@ p { margin: 0; }
   gap: 8px;
   pointer-events: none;
   font-variant-numeric: tabular-nums;
+  z-index: 10;
 }
 .box {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: 6px 10px 6px;
-  background: var(--tooltip);
-  box-shadow: inset 0 0 0 2px var(--tooltip-line);
-  text-shadow: 2px 2px 0 var(--shadow);
+  padding: 6px 10px 7px;
+  background: var(--hud-bg);
+  border: var(--hud-border);
+  border-radius: var(--hud-radius);
+  box-shadow: var(--hud-shadow);
+  color: var(--hud-text);
+  text-shadow: var(--hud-text-shadow);
+  backdrop-filter: var(--panel-blur);
   white-space: nowrap;
 }
-.box .lbl { color: var(--gray); }
-.box .clock { color: var(--aqua); }
-.box .num { color: var(--yellow); text-shadow: 2px 2px 0 var(--yellow-shadow); }
-.box.score { margin-left: auto; align-items: flex-end; }
-.box.flash .num { animation: flash .5s steps(2) 2; }
-@keyframes flash { 50% { color: var(--green); } }
+.box .lbl { color: var(--hud-muted); }
+.box .clock { color: var(--hud-accent); }
+.fishbox { flex-direction: row; align-items: center; gap: 8px; margin-left: auto; min-height: 44px; font-size: 24px; }
+.fish-ico { width: 27px; height: 15px; display: inline-block; flex: none; }
+.at-home .play-only { display: none; }
+.box.bump { animation: bump .3s ease-out; }
+@keyframes bump { 40% { transform: scale(1.12); } }
 
-/* Stein-Knöpfe wie in Minecraft */
-.mc-btn {
+/* Knöpfe */
+.btn {
   pointer-events: auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 40px;
-  padding: 10px 16px 12px;
-  border: 2px solid #000;
-  background: var(--stone);
-  box-shadow: inset 2px 2px 0 var(--stone-light), inset -2px -4px 0 var(--stone-dark);
-  color: var(--text);
-  font: 16px/1 var(--font-mc);
-  text-shadow: 2px 2px 0 var(--shadow);
+  gap: 8px;
+  padding: 12px 16px 13px;
+  border: var(--btn-border-w) solid var(--btn-border);
+  border-radius: var(--btn-radius);
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  text-shadow: var(--btn-text-shadow);
+  box-shadow: 0 5px 0 var(--btn-depth), var(--btn-glow);
+  font: 16px/1 var(--font);
   cursor: pointer;
   touch-action: manipulation;
+  transition: transform .08s, box-shadow .08s;
 }
-.mc-btn:hover, .mc-btn:focus-visible { outline: 2px solid #fff; outline-offset: -2px; }
-.mc-btn:active { box-shadow: inset 2px 2px 0 var(--stone-dark), inset -2px -2px 0 var(--stone-light); }
-.icon-btn { width: 40px; padding: 0; }
-.icon-btn svg { width: 20px; height: 20px; display: block; filter: drop-shadow(2px 2px 0 var(--shadow)); }
+.btn:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--btn-depth), var(--btn-glow); }
+.btn:focus-visible, .tab:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.btn[disabled] { opacity: .65; cursor: default; transform: none; }
+.btn.poor { opacity: .7; }
+.btn2 {
+  --btn-bg: var(--btn2-bg); --btn-border: var(--btn2-border); --btn-text: var(--btn2-text);
+  --btn-text-shadow: var(--btn2-text-shadow); --btn-depth: var(--btn2-depth); --btn-glow: var(--btn2-glow);
+}
+.btn-start {
+  --btn-bg: var(--start-bg); --btn-border: var(--start-border); --btn-text: var(--start-text);
+  --btn-text-shadow: var(--start-text-shadow); --btn-depth: var(--start-depth); --btn-glow: var(--start-glow);
+  font-size: 24px;
+  padding: 16px 20px 18px;
+}
+.icon-btn { width: 44px; height: 44px; padding: 0; }
+.icon-btn svg { width: 20px; height: 20px; display: block; }
 #mute .off { display: none; }
 #mute[aria-pressed="true"] .on { display: none; }
 #mute[aria-pressed="true"] .off { display: block; }
 
-/* Menüs */
-.screen {
+/* Lobby */
+.home-title {
   position: fixed;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: calc(env(safe-area-inset-top, 0px) + 70px) 16px calc(env(safe-area-inset-bottom, 0px) + 16px);
-  text-align: center;
+  top: calc(env(safe-area-inset-top, 0px) + 14px);
+  left: calc(env(safe-area-inset-left, 0px) + 16px);
   pointer-events: none;
 }
-#start { background: linear-gradient(to bottom, rgba(0, 0, 0, .35), rgba(0, 0, 0, .1) 60%, rgba(0, 0, 0, 0)); justify-content: flex-start; }
-#pause { background: rgba(0, 0, 0, .55); }
-#over { background: linear-gradient(to bottom, rgba(80, 0, 0, .45), rgba(160, 32, 32, .7)); }
-.logo { position: relative; margin: 6px 0 10px; }
-.logo h1 {
-  margin: 0;
-  font: 48px/1 var(--font-mc);
-  color: #e3e3e3;
-  letter-spacing: 2px;
-  text-shadow: 3px 3px 0 #8a8a8a, 6px 6px 0 #4a4a4a, 9px 9px 0 #1e1e1e;
+.title { font: 48px/1 var(--font); color: var(--title); text-shadow: var(--title-shadow); }
+.subtitle { margin-top: 14px; color: var(--subtitle); text-shadow: var(--subtitle-shadow); }
+.home-menu {
+  position: fixed;
+  left: calc(env(safe-area-inset-left, 0px) + 16px);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 18px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 210px;
 }
-.splash {
-  display: block;
-  margin-top: 14px;
-  color: var(--yellow);
-  text-shadow: 2px 2px 0 var(--yellow-shadow);
-  transform: rotate(-4deg);
-  animation: splash .5s ease-in-out infinite alternate;
+.home-side {
+  position: fixed;
+  right: calc(env(safe-area-inset-right, 0px) + 16px);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 26px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  max-width: 44%;
+  text-align: right;
 }
-@keyframes splash { to { transform: rotate(-4deg) scale(1.06); } }
-.menu { display: flex; flex-direction: column; gap: 8px; width: min(100%, 300px); }
-.menu .mc-btn { width: 100%; }
-.help {
-  width: fit-content;
-  max-width: min(100%, 34em);
-  padding: 4px 8px 6px;
-  background: rgba(0, 0, 0, .5);   /* wie der Minecraft-Chat */
-}
-.help .key { color: var(--yellow); text-shadow: 2px 2px 0 var(--yellow-shadow); }
-.muted { color: var(--gray); }
-.portrait-only { display: none; }
-@media (orientation: portrait) {
-  .portrait-only { display: block; }
-  .hud { flex-wrap: wrap; }
-  .screen { padding-top: calc(env(safe-area-inset-top, 0px) + 150px); }
-}
-@media (orientation: landscape) { .help.extra { display: none; } }
-h2 { margin: 0; font: 40px/1 var(--font-mc); text-shadow: 4px 4px 0 var(--shadow); }
-.stats { display: flex; flex-direction: column; gap: 6px; font-variant-numeric: tabular-nums; }
-.stats .num { color: var(--yellow); text-shadow: 2px 2px 0 var(--yellow-shadow); }
-.new-best { color: var(--gold); text-shadow: 2px 2px 0 #3f2a00; animation: flash 1s steps(2) infinite; }
+.tipline { color: #ffffff; text-shadow: var(--scene-shadow); }
 .credit {
   position: fixed;
-  left: calc(env(safe-area-inset-left, 0px) + 8px);
   right: calc(env(safe-area-inset-right, 0px) + 8px);
   bottom: calc(env(safe-area-inset-bottom, 0px) + 6px);
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
   font-size: 8px;
-  color: var(--text);
-  text-shadow: 1px 1px 0 var(--shadow);
+  color: #ffffff;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, .6);
+  pointer-events: none;
 }
+.btn-small { padding: 8px 12px 9px; }
 
-/* Level-Titel wie der /title-Befehl */
+/* Panels: Shop, Inventar, Pause, Tod */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(env(safe-area-inset-top, 0px) + 12px) 16px calc(env(safe-area-inset-bottom, 0px) + 12px);
+  background: var(--modal-dim);
+}
+.panel {
+  width: min(780px, 100%);
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--panel-bg);
+  border: var(--panel-border);
+  border-radius: var(--panel-radius);
+  box-shadow: var(--panel-shadow);
+  color: var(--panel-text);
+  text-shadow: var(--panel-text-shadow);
+  backdrop-filter: var(--panel-blur);
+  overflow: hidden;
+  animation: panelIn .28s cubic-bezier(.2, .9, .3, 1.2) both;
+}
+.panel.small { width: min(480px, 100%); }
+@keyframes panelIn { from { transform: translateY(24px) scale(.94); opacity: 0; } }
+.panel-head {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px 14px;
+  background: var(--head-bg);
+  color: var(--head-text);
+  text-shadow: var(--head-shadow);
+}
+.panel-head::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--head-trim); }
+.panel-head h2 { flex: 1; font: 24px/1 var(--font); }
+.wallet { display: flex; align-items: center; gap: 6px; font-size: 24px; }
+.tabs { display: flex; gap: 8px; padding: 12px 16px 0; }
+.tab {
+  font: 16px/1 var(--font);
+  padding: 9px 14px 10px;
+  border-radius: var(--btn-radius);
+  border: 2px solid var(--tab-border);
+  background: var(--tab-bg);
+  color: var(--tab-text);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.tab[aria-selected="true"] { background: var(--tab-active-bg); color: var(--tab-active-text); }
+.scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+  padding: 12px 16px 18px;
+}
+.scroll h3 { margin: 6px 0 10px; color: var(--panel-muted); font: 16px var(--font); }
+.scroll h3:not(:first-child) { margin-top: 18px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  background: var(--card-bg);
+  border: var(--card-border);
+  border-radius: var(--card-radius);
+  color: var(--card-text);
+  text-shadow: none;
+}
+.card .prev { height: 66px; display: flex; align-items: center; justify-content: center; }
+.card canvas { image-rendering: pixelated; }
+.card .desc { color: var(--card-muted); line-height: 1.3; flex: 1; }
+.card .btn { width: 100%; padding: 9px 10px 10px; }
+.badge { align-self: flex-start; padding: 4px 10px 5px; border-radius: 999px; background: var(--good); color: #10301a; }
+.empty { color: var(--panel-muted); }
+.msg { margin: 10px 16px 0; padding: 8px 10px; border-radius: 8px; background: rgba(0, 0, 0, .35); color: #ffffff; text-shadow: none; }
+.panel-body { display: flex; flex-direction: column; gap: 14px; padding: 16px; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; text-align: center; }
+.stat-num { display: block; font-size: 24px; color: var(--subtitle); text-shadow: var(--subtitle-shadow); }
+.stat-lbl { display: block; margin-top: 4px; color: var(--panel-muted); font-size: 8px; }
+.row { display: flex; gap: 12px; }
+.row .btn { flex: 1; }
+
+/* Level-/Event-Titel */
 #banner {
   position: fixed;
   left: 16px;
   right: 16px;
-  top: 24%;
+  top: 22%;
+  z-index: 5;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   text-align: center;
   pointer-events: none;
   opacity: 0;
-  transition: opacity .4s;
+  transform: scale(.9);
+  transition: opacity .3s, transform .3s cubic-bezier(.2, .9, .3, 1.4);
 }
-#banner.show { opacity: 1; }
-#banner .lvl { font-size: 48px; line-height: 1; text-shadow: 4px 4px 0 var(--shadow); }
-#banner .name { color: var(--gold); text-shadow: 2px 2px 0 #3f2a00; }
-#banner .tip { text-shadow: 2px 2px 0 var(--shadow); }
+#banner.show { opacity: 1; transform: none; }
+#banner .lvl { font-size: 48px; line-height: 1; color: var(--title); text-shadow: var(--title-shadow); }
+#banner .name { color: var(--subtitle); text-shadow: var(--subtitle-shadow); }
+#banner .tip { color: #ffffff; text-shadow: var(--scene-shadow); }
 
-/* Sprung-Bewertung: springt rein, wackelt, schwebt nach oben weg */
+/* Sprung-Bewertung */
 #combo {
   position: fixed;
   left: 16px;
   right: 16px;
   top: 40%;
+  z-index: 5;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -216,7 +470,7 @@ h2 { margin: 0; font: 40px/1 var(--font-mc); text-shadow: 4px 4px 0 var(--shadow
 }
 #combo.pop { animation: combo 1.15s cubic-bezier(.2, .9, .3, 1) both; }
 #comboWord { font-size: 32px; line-height: 1; text-shadow: 3px 3px 0 rgba(0, 0, 0, .55); }
-#comboMult { font-size: 24px; line-height: 1; color: var(--yellow); text-shadow: 3px 3px 0 var(--yellow-shadow); }
+#comboMult { font-size: 24px; line-height: 1; color: #ffff55; text-shadow: 3px 3px 0 rgba(0, 0, 0, .55); }
 #combo.hot #comboWord { animation: rainbow .6s steps(6) infinite; }
 @keyframes combo {
   0% { opacity: 0; transform: scale(2.4) rotate(-10deg); }
@@ -237,89 +491,162 @@ h2 { margin: 0; font: 40px/1 var(--font-mc); text-shadow: 4px 4px 0 var(--shadow
   left: 16px;
   right: 16px;
   text-align: center;
-  text-shadow: 2px 2px 0 var(--shadow);
+  color: #ffffff;
+  text-shadow: var(--scene-shadow);
   pointer-events: none;
   transition: opacity .6s;
 }
 #hint.gone { opacity: 0; }
 
-/* Querformat auf dem Handy: alles etwas kompakter */
-@media (orientation: landscape) and (max-height: 560px) {
-  .screen { padding-top: calc(env(safe-area-inset-top, 0px) + 58px); gap: 8px; }
-  .logo h1 { font-size: 40px; }
-  h2 { font-size: 32px; }
-  #banner { top: 14%; }
-  #combo { top: 46%; }
-  #banner .lvl { font-size: 40px; }
+/* Übergang Lobby <-> Spiel */
+#wipe {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--wipe);
+  color: var(--title);
+  text-shadow: var(--title-shadow);
+  font-size: 32px;
+  pointer-events: none;
+  clip-path: circle(0% at 12% 88%);
 }
-@media (orientation: landscape) and (max-height: 400px) {
-  .help .extra { display: none; }
-  .logo { margin: 0 0 6px; }
+#wipe.closing { pointer-events: auto; animation: wipeClose .42s ease-in forwards; }
+#wipe.opening { animation: wipeOpen .45s ease-out forwards; }
+@keyframes wipeClose { from { clip-path: circle(0% at 12% 88%); } to { clip-path: circle(150% at 12% 88%); } }
+@keyframes wipeOpen { from { clip-path: circle(150% at 18% 78%); } to { clip-path: circle(0% at 18% 78%); } }
+
+@media (orientation: portrait) {
+  .hud { flex-wrap: wrap; }
+  .home-title { top: calc(env(safe-area-inset-top, 0px) + 74px); }
+  .title { font-size: 40px; }
+  .stats { grid-template-columns: repeat(2, 1fr); }
+}
+@media (orientation: landscape) and (max-height: 560px) {
+  #banner { top: calc(env(safe-area-inset-top, 0px) + 84px); }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 10px; }
+  .card .prev { height: 52px; }
+  #banner .lvl { font-size: 40px; }
+  #combo { top: 54%; }
+  .title { font-size: 40px; }
+  .btn-start { font-size: 24px; padding: 13px 18px 15px; }
+  .home-menu { gap: 10px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .splash, .box.flash .num, .new-best, #combo.hot #comboWord { animation: none; }
+  .panel, #combo.hot #comboWord, .box.bump { animation: none; }
   #combo.pop { animation: fadeout 1.15s both; }
-  #banner { transition: none; }
+  #banner { transition: opacity .3s; transform: none; }
+  #wipe.closing { animation: none; clip-path: none; opacity: 1; }
+  #wipe.opening { animation: fadeout .3s forwards; clip-path: none; }
 }
 </style>
 </head>
-<body>
-<canvas id="game" aria-label="Spielfeld: eine weiße Katze springt auf der Alm über Adrian und Valentina, im Hintergrund schleckt Kirby Schnee"></canvas>
+<body class="at-home">
+<canvas id="game" aria-label="Spielfeld: eine Katze springt auf der Alm über Adrian und Valentina, im Hintergrund schleckt Kirby Schnee"></canvas>
 
 <div class="hud">
-  <div class="box">
+  <div class="box play-only">
     <span><span class="lbl">Level</span> <span id="level">1</span></span>
     <span class="clock" id="clock">08:00 Uhr</span>
   </div>
-  <div class="box">
+  <div class="box play-only">
     <span class="lbl">Übersprungen</span>
     <span id="jumped">0</span>
   </div>
-  <div class="box score" id="scorePill">
-    <span><span class="lbl">Punkte</span> <span class="num" id="score">00000</span></span>
-    <span class="lbl">Rekord <span id="best">00000</span></span>
+  <div class="box fishbox" id="fishBox" aria-label="Fische">
+    <svg class="fish-ico" viewBox="0 0 9 5" shape-rendering="crispEdges" aria-hidden="true"><path fill="#ff9f43" d="M2 0h4v1h1v1h1V1h1v3H8V3H7v1H6v1H2V4H1V3H0V2h1V1h1z"/><path fill="#1e1c26" d="M2 1h1v1H2z"/></svg><span id="fish">0</span>
   </div>
-  <button class="mc-btn icon-btn" id="reload" type="button" aria-label="Neu laden" title="Neu laden">
-    <svg viewBox="0 0 10 10" shape-rendering="crispEdges" aria-hidden="true"><path fill="#fff" d="M3 1h4v1h1v1h1v2H8V4H7V3H3v1H2v3h1v1h3v1H2V8H1V3h1V2h1zM7 5h3v1H9v1H8V6H7z"/></svg>
+  <button class="btn btn2 icon-btn" id="reload" type="button" aria-label="Neu laden" title="Neu laden">
+    <svg viewBox="0 0 10 10" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M3 1h4v1h1v1h1v2H8V4H7V3H3v1H2v3h1v1h3v1H2V8H1V3h1V2h1zM7 5h3v1H9v1H8V6H7z"/></svg>
   </button>
-  <button class="mc-btn icon-btn" id="mute" type="button" aria-pressed="false" aria-label="Ton aus" title="Ton">
-    <svg class="on" viewBox="0 0 10 10" shape-rendering="crispEdges" aria-hidden="true"><path fill="#fff" d="M1 3h2V2h1V1h1v8H4V8H3V7H1zM7 3h1v4H7zM9 2h1v6H9z"/></svg>
-    <svg class="off" viewBox="0 0 10 10" shape-rendering="crispEdges" aria-hidden="true"><path fill="#fff" d="M1 3h2V2h1V1h1v8H4V8H3V7H1z"/><path fill="#ff5555" d="M6 3h1v1h1V3h1v1H8v1h1v1H8v1H7V6H6V5h1V4H6z"/></svg>
+  <button class="btn btn2 icon-btn" id="mute" type="button" aria-pressed="false" aria-label="Ton aus" title="Ton">
+    <svg class="on" viewBox="0 0 10 10" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M1 3h2V2h1V1h1v8H4V8H3V7H1zM7 3h1v4H7zM9 2h1v6H9z"/></svg>
+    <svg class="off" viewBox="0 0 10 10" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M1 3h2V2h1V1h1v8H4V8H3V7H1z"/><path fill="#ff5555" d="M6 3h1v1h1V3h1v1H8v1h1v1H8v1H7V6H6V5h1V4H6z"/></svg>
   </button>
 </div>
 
-<div id="start" class="screen">
-  <div class="logo">
-    <h1>Cat Jumper</h1>
-    <span class="splash">Spring über Adrian &amp; Valentina!</span>
+<div id="home">
+  <div class="home-title">
+    <h1 class="title">Cat Jumper</h1>
+    <p class="subtitle">Spring über Adrian &amp; Valentina!</p>
   </div>
-  <div class="menu">
-    <button class="mc-btn" id="playBtn" type="button">Spielen</button>
-    <button class="mc-btn" id="installBtn" type="button" hidden>Als App installieren</button>
+  <nav class="home-menu" aria-label="Hauptmenü">
+    <button class="btn btn2" id="shopBtn" type="button">Shop</button>
+    <button class="btn btn2" id="invBtn" type="button">Inventar</button>
+    <button class="btn btn-start" id="startBtn" type="button">Start</button>
+  </nav>
+  <div class="home-side">
+    <p class="tipline">Tippen = springen</p>
+    <button class="btn btn-small" id="installBtn" type="button" hidden>App installieren</button>
+    <p class="tipline" id="installHelp" hidden></p>
   </div>
-  <p class="help t" id="installHelp" hidden></p>
-  <p class="help t"><span class="key">Tippen</span> = springen. Ab Level 2: in der Luft <span class="key">nochmal tippen</span> = Doppelsprung</p>
-  <p class="help t muted extra">Kirby schleckt derweil Schnee von den Gipfeln. Mit jedem Level wird es später.</p>
-  <p class="help t muted portrait-only">Am schönsten im Querformat.</p>
-  <div class="credit"><span>Cat Jumper 1.0</span><span>Schrift: Minecraft von Pwnage_Block (CC BY-SA 3.0)</span></div>
+  <p class="credit">Schrift: Minecraft von Pwnage_Block (CC BY-SA 3.0)</p>
 </div>
 
-<div id="pause" class="screen" hidden>
-  <h2>Spiel pausiert</h2>
-  <div class="menu"><button class="mc-btn" id="resumeBtn" type="button">Zurück zum Spiel</button></div>
+<div id="shop" class="modal" hidden>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="shopTitle">
+    <div class="panel-head">
+      <h2 id="shopTitle">Shop</h2>
+      <span class="wallet" aria-label="Deine Fische"><svg class="fish-ico" viewBox="0 0 9 5" shape-rendering="crispEdges" aria-hidden="true"><path fill="#ff9f43" d="M2 0h4v1h1v1h1V1h1v3H8V3H7v1H6v1H2V4H1V3H0V2h1V1h1z"/><path fill="#1e1c26" d="M2 1h1v1H2z"/></svg><span id="shopWallet">0</span></span>
+      <button class="btn btn2" type="button" data-close>Zurück</button>
+    </div>
+    <div class="tabs" role="tablist">
+      <button class="tab" id="tabUp" type="button" role="tab" aria-selected="true">Upgrades</button>
+      <button class="tab" id="tabSkins" type="button" role="tab" aria-selected="false">Skins</button>
+    </div>
+    <p class="msg" id="shopMsg" hidden></p>
+    <div class="scroll"><div class="grid" id="shopList"></div></div>
+  </div>
 </div>
 
-<div id="over" class="screen" hidden>
-  <h2>Autsch!</h2>
-  <p class="t" id="quip">Adrian hat dich erwischt.</p>
-  <div class="stats t">
-    <p>Punkte: <span class="num" id="rScore">0</span></p>
-    <p>Übersprungen: <span class="num" id="rJumped">0</span> · Level: <span class="num" id="rLevel">1</span></p>
-    <p>Beste Serie: <span class="num" id="rCombo">0x</span></p>
-    <p class="new-best" id="newBest" hidden>Neuer Rekord!</p>
-    <p class="muted">Rekord: <span id="rBest">0</span></p>
+<div id="inv" class="modal" hidden>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="invTitle">
+    <div class="panel-head">
+      <h2 id="invTitle">Inventar</h2>
+      <span class="wallet" aria-label="Deine Fische"><svg class="fish-ico" viewBox="0 0 9 5" shape-rendering="crispEdges" aria-hidden="true"><path fill="#ff9f43" d="M2 0h4v1h1v1h1V1h1v3H8V3H7v1H6v1H2V4H1V3H0V2h1V1h1z"/><path fill="#1e1c26" d="M2 1h1v1H2z"/></svg><span id="invWallet">0</span></span>
+      <button class="btn btn2" type="button" data-close>Zurück</button>
+    </div>
+    <div class="scroll">
+      <h3>Upgrades</h3>
+      <div class="grid" id="invUpgrades"></div>
+      <h3>Skins</h3>
+      <div class="grid" id="invSkins"></div>
+    </div>
   </div>
-  <div class="menu"><button class="mc-btn" id="againBtn" type="button">Nochmal</button></div>
+</div>
+
+<div id="pause" class="modal" hidden>
+  <div class="panel small" role="dialog" aria-modal="true" aria-labelledby="pauseTitle">
+    <div class="panel-head"><h2 id="pauseTitle">Pause</h2></div>
+    <div class="panel-body">
+      <p>Adrian und Valentina warten.</p>
+      <div class="row">
+        <button class="btn btn-start" id="resumeBtn" type="button">Weiter</button>
+        <button class="btn btn2" id="pauseLobbyBtn" type="button">Lobby</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="over" class="modal" hidden>
+  <div class="panel small" role="dialog" aria-modal="true" aria-labelledby="overTitle">
+    <div class="panel-head"><h2 id="overTitle">Autsch!</h2></div>
+    <div class="panel-body">
+      <p id="quip">Adrian hat dich erwischt.</p>
+      <div class="stats">
+        <div><span class="stat-num" id="rFish">0</span><span class="stat-lbl">Fische</span></div>
+        <div><span class="stat-num" id="rLevel">1</span><span class="stat-lbl">Level</span></div>
+        <div><span class="stat-num" id="rJumped">0</span><span class="stat-lbl">Übersprungen</span></div>
+        <div><span class="stat-num" id="rCombo">0x</span><span class="stat-lbl">Beste Serie</span></div>
+      </div>
+      <div class="row">
+        <button class="btn btn-start" id="againBtn" type="button">Nochmal</button>
+        <button class="btn btn2" id="lobbyBtn" type="button">Lobby</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div id="combo" aria-live="polite"><span id="comboWord"></span><span id="comboMult"></span></div>
@@ -331,6 +658,8 @@ h2 { margin: 0; font: 40px/1 var(--font-mc); text-shadow: 4px 4px 0 var(--shadow
 </div>
 
 <p id="hint" class="gone">Tippen = springen</p>
+
+<div id="wipe"><span id="wipeText">Los geht's!</span></div>
 
 <script>
 (() => {
@@ -346,11 +675,20 @@ const hash = (i) => { const s = Math.sin(i * 127.1 + 311.7) * 43758.5453; return
 const tri = (u) => 1 - Math.abs(2 * (u - Math.floor(u)) - 1);
 const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/* ---------- Speicher (nur Rekord + Ton, darf fehlen) ---------- */
+/* ---------- Speicher (Fische, Gekauftes, Ton; darf fehlen) ---------- */
 const store = {
   get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* egal */ } },
 };
+
+/* ---------- Oberflächen-Stil: holz (Standard), bonbon oder neon über #bonbon / #neon ---------- */
+const LOOKS = ['holz', 'bonbon', 'neon'];
+function applyLook() {
+  const h = location.hash.slice(1);
+  document.documentElement.dataset.ui = LOOKS.includes(h) ? h : 'holz';
+}
+applyLook();
+window.addEventListener('hashchange', applyLook);
 
 /* ---------- Pixel-Sprites ---------- */
 const INK = '#1e1c26';
@@ -404,11 +742,11 @@ function shrinkHitbox(spr, scale) {
 }
 const HITBOX = .8;
 
-// Die weiße Katze wird aus Formen gerastert. So bekommt sie 8 Lauf-Bilder (Galopp),
-// eigene Bilder für Absprung, Fallen, Stehen, Schwanzwedeln und Blinzeln.
+// Die Katze wird aus Formen gerastert. So bekommt sie 8 Lauf-Bilder (Galopp),
+// eigene Bilder für Absprung, Fallen, Stehen, Schwanzwedeln und Blinzeln - und jeder Skin seine Farben.
 const CAT_W = 30, CAT_H = 18, RUN_FRAMES = 8;
-const CAT_PAL = { b: '#fbfbf7', s: '#dcdfe6', d: '#c3c8d2', p: '#ffb3c1', n: '#ff8fa3', e: '#3b8fd6', x: '#d6333f' };
-function catRows(pose) {
+const CAT_BASE = { b: '#fbfbf7', s: '#dcdfe6', d: '#c3c8d2', p: '#ffb3c1', n: '#ff8fa3', e: '#3b8fd6', x: '#d6333f' };
+function catRows(pose, skin = {}) {
   const g = Array.from({ length: CAT_H }, () => Array(CAT_W).fill('.'));
   const ox = 1, bob = pose.bob || 0;
   const set = (x, y, c) => {
@@ -453,8 +791,8 @@ function catRows(pose) {
     const u = i / 24, v = 1 - u;
     const x = v * v * P0[0] + 2 * v * u * C[0] + u * u * E[0];
     const y = v * v * P0[1] + 2 * v * u * C[1] + u * u * E[1];
-    set(x, y, u > .8 ? 's' : 'b');
-    if (u < .55) set(x + .6, y + .6, 'b');
+    set(x, y, u > .8 ? 'u' : 'q');
+    if (u < .55) set(x + .6, y + .6, 'q');
   }
   // Körper mit Schatten am Bauch
   for (const [c, dy] of [['s', .5], ['b', 0]]) {
@@ -467,15 +805,22 @@ function catRows(pose) {
   ell(23.6, 5.2 + bob, 3.4, 3, 'b');
   ell(26.6, 6.3 + bob, 1.7, 1.3, 'b');
   set(25, 8 + bob, 's');
-  tri(20.8, 3.6 + bob, 21.6, .2 + bob, 23.4, 2.6 + bob, 'b');
-  tri(23.4, 2.5 + bob, 24.9, 0 + bob, 25.9, 3.4 + bob, 'b');
+  tri(20.8, 3.6 + bob, 21.6, .2 + bob, 23.4, 2.6 + bob, 'a');
+  tri(23.4, 2.5 + bob, 24.9, 0 + bob, 25.9, 3.4 + bob, 'a');
   set(21.8, 2 + bob, 'p');
   set(24.8, 1.6 + bob, 'p');
   set(25, 4.3 + bob, pose.eye || 'e');
   set(28, 5.6 + bob, 'n');
   // Beine auf dieser Seite
-  leg(19.2, j, pose.fn, 'b');
-  leg(7.8, j, pose.bn, 'b');
+  leg(19.2, j, pose.fn, 'g');
+  leg(7.8, j, pose.bn, 'g');
+  // Fellmuster: Streifen (getigert) oder Sternpunkte (Galaxie)
+  if (skin.stripes || skin.dots) {
+    for (let y = 5; y < 13; y++) for (let x = 3; x < 25; x++) {
+      if (g[y][x] !== 'b') continue;
+      if (skin.stripes ? x % 4 === 1 : hash(x * 7 + y * 13) < .14) g[y][x] = 't';
+    }
+  }
   return g;
 }
 function runPose(k) {
@@ -488,15 +833,39 @@ function runPose(k) {
 const POSE_STAND = { fn: [0, 0], ff: [.12, .05], bn: [0, 0], bf: [-.12, -.05], tail: 0, bob: 0 };
 const POSE_UP = { fn: [1.05, 1.35], ff: [.9, 1.2], bn: [-.95, -1.25], bf: [-.8, -1.1], tail: -1.2, bob: 0 };
 const POSE_DOWN = { fn: [.45, .2], ff: [.3, .1], bn: [-.15, -.9], bf: [-.3, -1], tail: .8, bob: 0 };
-const catSpr = (pose) => shrinkHitbox(sprite(catRows(pose), CAT_PAL), HITBOX);
-const cat = {
-  run: Array.from({ length: RUN_FRAMES }, (_, k) => catSpr(runPose(k))),
-  up: catSpr(POSE_UP),
-  down: catSpr(POSE_DOWN),
-  idle: [-1, -.4, .3, .9, .3, -.4].map((t) => catSpr({ ...POSE_STAND, tail: t })),
-  blink: catSpr({ ...POSE_STAND, eye: 's' }),
-  dead: catSpr({ ...POSE_DOWN, eye: 'x' }),
-};
+const SKINS = [
+  { id: 'weiss', name: 'Schneeweiß', price: 0, desc: 'Die klassische weiße Katze.', pal: {} },
+  { id: 'grau', name: 'Silbergrau', price: 30, desc: 'Grau getigert und leise wie ein Schatten.', pal: { b: '#b8bcc6', s: '#979ca8', d: '#80858f', u: '#80858f', e: '#4caf50' }, stripes: '#9a9fab' },
+  { id: 'schwarz', name: 'Mitternacht', price: 40, desc: 'Schwarz mit gelben Augen, wie Kirby.', pal: { b: '#3a3644', s: '#2a2733', d: '#1f1d27', u: '#2a2733', p: '#b07a88', e: '#e6d23a' } },
+  { id: 'tiger', name: 'Rotes Tigerle', price: 60, desc: 'Orange mit Streifen.', pal: { b: '#f2a14a', s: '#d27a2a', d: '#b8661f', u: '#c8641c', p: '#ffc1a8', e: '#4caf50' }, stripes: '#c8641c' },
+  { id: 'siam', name: 'Siam', price: 80, desc: 'Hell, mit dunklen Ohren, Pfoten und Schwanz.', pal: { b: '#f1e6d2', s: '#d9c6a6', d: '#4a3128', g: '#5b3d30', q: '#5b3d30', u: '#3f2a22', a: '#5b3d30', e: '#3b8fd6' } },
+  { id: 'gold', name: 'Goldkatze', price: 150, desc: 'Glänzt und glitzert beim Laufen.', pal: { b: '#ffd54a', s: '#e0a920', d: '#c48d12', u: '#e0a920', e: '#c0392b' }, sparkle: '#fff6b0' },
+  { id: 'galaxie', name: 'Galaxie', price: 200, desc: 'Voller Sterne, glitzert beim Laufen.', pal: { b: '#3a2f7a', s: '#2a2160', d: '#201a4d', u: '#ff7ad9', p: '#ff7ad9', n: '#ff7ad9', e: '#7cf7ff' }, dots: '#fff6a0', sparkle: '#b9a7ff' },
+];
+const catCache = {};
+function catSet(id) {
+  if (!catCache[id]) {
+    const skin = SKINS.find((s) => s.id === id) || SKINS[0];
+    const pal = { ...CAT_BASE, ...skin.pal };
+    pal.g = skin.pal.g || pal.b;
+    pal.q = skin.pal.q || pal.b;
+    pal.a = skin.pal.a || pal.b;
+    pal.u = skin.pal.u || pal.s;
+    pal.t = skin.stripes || skin.dots || pal.s;
+    const mk = (pose) => shrinkHitbox(sprite(catRows(pose, skin), pal), HITBOX);
+    catCache[id] = {
+      skin,
+      run: Array.from({ length: RUN_FRAMES }, (_, k) => mk(runPose(k))),
+      up: mk(POSE_UP),
+      down: mk(POSE_DOWN),
+      idle: [-1, -.4, .3, .9, .3, -.4].map((t) => mk({ ...POSE_STAND, tail: t })),
+      blink: mk({ ...POSE_STAND, eye: 's' }),
+      dead: mk({ ...POSE_DOWN, eye: 'x' }),
+    };
+  }
+  return catCache[id];
+}
+let cat = null;
 
 const ADRIAN_PAL = { h: '#5a3a22', f: '#f2c29b', k: INK, m: '#b0443c', s: '#4f7fd6', p: '#2f3b5c', o: '#1c1c24', r: '#d6333f', y: '#ffd43b', x: '#e03a3e', w: '#d8dee8' };
 const ADRIAN_LEGS = [
@@ -639,6 +1008,37 @@ const cloudSpr = sprite([
   'cccccccccccccc',
 ], { c: '#ffffff' }, false);
 
+const starSpr = sprite([
+  '...y...',
+  '...y...',
+  'yyyyyyy',
+  '.yyoyy.',
+  '..yyy..',
+  '.yy.yy.',
+  'yy...yy',
+], { y: '#ffe14d', o: '#fff7b0' });
+// Schneebälle für die Lawine (Radius 4 bis 6)
+const snowSpr = {};
+for (const r of [4, 5, 6]) {
+  const n = r * 2 + 1, rows = [];
+  for (let y = 0; y < n; y++) {
+    let row = '';
+    for (let x = 0; x < n; x++) {
+      const dx = x - r, dy = y - r, d = dx * dx + dy * dy;
+      row += d > r * r + r * .6 ? '.' : (dx + dy > r * .6 ? 'm' : (d < 2 && dx < 0 ? 'h' : 'n'));
+    }
+    rows.push(row);
+  }
+  snowSpr[r] = sprite(rows, { n: '#f4f8ff', m: '#c3d3ea', h: '#ffffff' });
+}
+// Symbole für die Upgrades im Shop
+const ICON_SPR = {
+  star: starSpr,
+  magnet: sprite(['gg....gg', 'gg....gg', 'rr....rr', 'rr....rr', 'rr....rr', 'rrr..rrr', '.rrrrrr.', '..rrrr..'], { r: '#e03a3e', g: '#d6dbe4' }),
+  triple: sprite(['....a....', '...aaa...', '..aa.aa..', '....a....', '...aaa...', '..aa.aa..', '....a....', '...aaa...', '..aa.aa..'], { a: '#4fd1ff' }),
+  lucky: sprite(['..p.p.p..', '..p.p.p..', 'p.......p', '...ppp...', '..ppppp..', '.ppppppp.', '.ppppppp.', '..ppppp..'], { p: '#ff8fb8' }),
+};
+
 /* ---------- Kirby (schwarz-weiße Katze, gelbe Augen, rosa Nase) ---------- */
 const VAL_W = 44, VAL_H = 37;
 function kirbyRows(blink) {
@@ -742,7 +1142,7 @@ const STARS = Array.from({ length: 70 }, () => ({ x: Math.random(), y: Math.rand
 /* ---------- Level ---------- */
 const LEVELS = [
   { name: 'Almwiese', tip: 'Tippen = springen', at: 0, speed: 140, gap: [.95, 1.7], pats: { stand: 6, cheer: 2 } },
-  { name: 'Adrian-Turm', tip: 'Neu: Doppelsprung! In der Luft nochmal tippen', at: 250, speed: 158, gap: [.9, 1.6], pats: { stand: 3, cheer: 2, duo: 3, tower: 3 } },
+  { name: 'Adrian-Turm', tip: 'Neu: Sprung in der Luft! Nochmal tippen', at: 250, speed: 158, gap: [.9, 1.6], pats: { stand: 3, cheer: 2, duo: 3, tower: 3 } },
   { name: 'Gleitschirm', tip: 'Fliegt Adrian hoch, lauf unten durch', at: 550, speed: 176, gap: [.85, 1.55], pats: { stand: 2, duo: 2, tower: 2, glideLow: 3, glideHigh: 3 } },
   { name: 'Skipiste', tip: 'Ski-Adrian ist schneller, als du denkst', at: 900, speed: 194, gap: [.8, 1.45], pats: { stand: 2, cheer: 1, duo: 2, tower: 2, glideLow: 2, glideHigh: 2, ski: 4 } },
   { name: 'Alpenglühen', tip: 'Jetzt kommen sie zu dritt', at: 1300, speed: 212, gap: [.75, 1.4], pats: { stand: 1, duo: 2, trio: 3, tower: 3, glideLow: 2, glideHigh: 2, ski: 3, combo: 2 } },
@@ -784,6 +1184,13 @@ const sfx = {
   jump() { tone(380, 760, .11); },
   jump2() { tone(620, 1240, .12, 'square', .06); },
   combo(n) { const f = 520 * Math.pow(1.06, Math.min(n, 24)); tone(f, f * 1.5, .08, 'square', .06); tone(f * 1.5, f * 2, .1, 'square', .05, .07); },
+  event() { [392, 523, 659, 784, 1047].forEach((f, i) => tone(f, f * 1.02, .09, 'triangle', .07, i * .06)); },
+  power() { [523, 659, 784, 1047, 1319].forEach((f, i) => tone(f, f, .08, 'square', .06, i * .05)); },
+  starNote() { const f = pick([523, 587, 659, 784, 880, 1047]); tone(f, f, .07, 'square', .035); },
+  knock() { tone(200, 900, .12, 'square', .07); },
+  buy() { tone(880, 1320, .08, 'triangle', .07); tone(1320, 1760, .1, 'triangle', .06, .08); },
+  no() { tone(220, 160, .18, 'square', .06); },
+  whoosh() { tone(180, 900, .35, 'triangle', .05); },
   meow() { tone(650, 1050, .07, 'triangle', .06); tone(1050, 520, .16, 'triangle', .06, .07); },
   fish() { tone(1200, 1800, .06, 'triangle', .06); tone(1800, 2400, .08, 'triangle', .05, .06); },
   point() { tone(880, 880, .07, 'square', .05); tone(1320, 1320, .1, 'square', .05, .08); },
@@ -811,28 +1218,47 @@ window.addEventListener('resize', resize);
 window.addEventListener('orientationchange', () => setTimeout(resize, 150));
 resize();
 
+/* ---------- Spielstand: Fische (Währung), Gekauftes, Skin ---------- */
+const save = {
+  fish: store.get('cj-fish', 0),
+  owned: new Set(store.get('cj-owned', ['skin:weiss'])),
+  skin: store.get('cj-skin', 'weiss'),
+};
+function persist() {
+  store.set('cj-fish', save.fish);
+  store.set('cj-owned', [...save.owned]);
+  store.set('cj-skin', save.skin);
+}
+const has = (key) => save.owned.has(key);
+const UPGRADES = [
+  { id: 'star', name: 'Regenbogen-Stern', price: 60, desc: 'Einmal pro Runde: statt zu verlieren wirst du 4 Sekunden unverwundbar.' },
+  { id: 'magnet', name: 'Fisch-Magnet', price: 40, desc: 'Fische in deiner Nähe fliegen zu dir.' },
+  { id: 'triple', name: 'Dreifachsprung', price: 90, desc: 'Ab Level 2 kannst du in der Luft zweimal nachspringen.' },
+  { id: 'lucky', name: 'Glückspfote', price: 120, desc: 'Mehr Fische auf der Strecke und bei Events.' },
+];
+cat = catSet(save.skin);
+
 /* ---------- Spielzustand ---------- */
 const V0 = 290;      // erster Sprung (Pixel/s)
-const V2 = 265;      // Doppelsprung
+const V2 = 265;      // Sprung in der Luft
 const GRAV = 1250;
 const OVER_QUIPS = ['{n} hat dich erwischt.', '{n} steht noch.', '{n} 1, Katze 0.', '{n} war im Weg.', '{n} lässt grüßen.', 'Kirby hat nichts gesehen.'];
 
-let mode = 'start';
-let best = store.get('katzosaurus-best', 0);
-const P = { x: 24, y: 0, vy: 0, grounded: true, jumps: 0, anim: 0, buffer: 0, blink: 0, airT: 0, land: 0, flip: 0, jumpPassed: false, landT: 0, checkReset: false };
-const FLIP_T = .42; // Dauer des Salto beim Doppelsprung
+let mode = 'home';
+const P = { x: 24, y: 0, vy: 0, grounded: true, jumps: 0, anim: 0, buffer: 0, blink: 0, airT: 0, land: 0, flip: 0, jumpPassed: false, landT: 0, checkReset: false, inv: 0, invTick: 0 };
+const FLIP_T = .42; // Dauer des Salto beim Sprung in der Luft
 const V = { lick: 0, blink: 0 };
 let G = null;
-let overAt = 0;
 let shake = 0;
 const particles = [];
 const floaters = [];
 
 function freshGame() {
   return {
-    speed: 140, dist: 0, bonus: 0, scroll: G ? G.scroll : 0, score: 0, jumped: 0, milestone: 0,
+    speed: 140, dist: 0, scroll: G ? G.scroll : 0, score: 0, jumped: 0,
     level: 1, objects: [], untilSpawn: 100, time: 0, combo: 0, bestCombo: 0,
-    hour: startHour(1),
+    hour: startHour(1), fish: 0, starUsed: false,
+    event: null, eventIn: rand(13, 18), turbo: 1, streaks: [], nextStar: rand(28, 40),
   };
 }
 G = freshGame();
@@ -844,16 +1270,18 @@ function makeAdrian(kind, x, y = 0, extra = {}) {
   const yy = kind === 'glideLow' ? 3 : kind === 'glideHigh' ? 25 : y;
   return Object.assign({
     type: 'adrian', kind, spr, x, y: yy, w: spr.w, h: spr.h, passed: false,
-    vx: kind === 'ski' ? 95 : kind.startsWith('glide') ? 22 : 0, bob: Math.random() * 6, tag: true,
+    vx: kind === 'ski' ? 95 : kind.startsWith('glide') ? 22 : 0, bob: Math.random() * 6,
     who, name: who === 'valentina' ? 'Valentina' : 'Adrian',
   }, extra);
 }
 function makeFish(x, y) {
-  return { type: 'fish', x, y, w: fishSpr.w, h: fishSpr.h, vx: 0, bob: Math.random() * 6, got: false };
+  return { type: 'fish', x, y, w: fishSpr.w, h: fishSpr.h, vx: 0, bob: Math.random() * 6, got: false, spr: fishSpr };
+}
+function makeSnowball(x, r) {
+  const spr = snowSpr[r];
+  return { type: 'adrian', kind: 'snow', spr, x, y: 0, w: spr.w, h: spr.h, passed: false, vx: 85, rot: 0, bob: 0, who: 'snow', name: 'Die Lawine' };
 }
 const anyone = () => (Math.random() < .5 ? 'adrian' : 'valentina');
-// Auf dem Startbildschirm stehen Adrian und Valentina schon bereit.
-G.objects.push(makeAdrian('stand', Math.max(100, viewW * .4)), makeAdrian('stand', Math.max(100, viewW * .4) + 30, 0, { who: 'valentina' }));
 
 function pattern(kind, x) {
   const list = [];
@@ -870,7 +1298,7 @@ function pattern(kind, x) {
       list.push(makeAdrian('stand', x, 0, { who: anyone() }), makeAdrian('cheer', x + 13, 0, { who: anyone() }), makeAdrian('stand', x + 26, 0, { who: anyone() })); w = 38; extraGap = 20;
       break;
     case 'tower':
-      list.push(makeAdrian('stand', x, 0, { tag: false }), makeAdrian('cheer', x, 19, { who: 'valentina' })); top = 38; extraGap = 30;
+      list.push(makeAdrian('stand', x, 0), makeAdrian('cheer', x, 19, { who: 'valentina' })); top = 38; extraGap = 30;
       break;
     case 'glideLow': case 'glideHigh':
       list.push(makeAdrian(kind, x)); w = list[0].w; top = list[0].y + list[0].h;
@@ -882,7 +1310,7 @@ function pattern(kind, x) {
   // Fische als Belohnung
   if (kind === 'glideHigh' && Math.random() < .6) {
     for (let i = 0; i < 3; i++) list.push(makeFish(x + 2 + i * 8, 3));
-  } else if (Math.random() < .35) {
+  } else if (Math.random() < (has('up:lucky') ? .6 : .38)) {
     const cx = x + w / 2 - 4;
     const base = Math.min(46, top + 8);
     list.push(makeFish(cx - 11, base), makeFish(cx, base + 4), makeFish(cx + 11, base));
@@ -902,7 +1330,62 @@ function spawn() {
   G.untilSpawn = w + G.speed * rand(L.gap[0], L.gap[1]) + 50 + extraGap;
 }
 
+/* ---------- Zufalls-Events ---------- */
+const EVENTS = {
+  stars: { name: 'Sternschauer!', sub: 'Fang die Sterne, jeder bringt einen Fisch', dur: 7 },
+  fishrain: { name: 'Fischregen!', sub: 'Schnell einsammeln', dur: 6 },
+  avalanche: { name: 'Lawine!', sub: 'Kirby hat zu fest geschleckt. Spring über die Schneebälle', dur: 7, minLevel: 2 },
+  turbo: { name: 'Turbo-Rausch!', sub: 'Keine Hindernisse, doppelte Fische', dur: 5 },
+};
+const noObstacles = () => G.event && (G.event.type === 'turbo' || G.event.type === 'avalanche');
+function startEvent() {
+  const pool = Object.keys(EVENTS).filter((k) => (EVENTS[k].minLevel || 1) <= G.level && (!G.lastEvent || k !== G.lastEvent));
+  const type = pick(pool);
+  G.event = { type, t: 0, dur: EVENTS[type].dur, acc: 0 };
+  G.lastEvent = type;
+  showBanner(EVENTS[type].name, EVENTS[type].sub, '', 2400);
+  sfx.event();
+}
+function endEvent() {
+  if (noObstacles()) G.untilSpawn = G.speed * .9;
+  G.event = null;
+  G.turbo = 1;
+  G.eventIn = rand(18, 28);
+}
+function tickEvent(dt) {
+  const e = G.event;
+  e.t += dt;
+  e.acc += dt;
+  const luck = has('up:lucky') ? 1.4 : 1;
+  switch (e.type) {
+    case 'stars':
+      if (Math.random() < dt * 4) G.streaks.push({ x: rand(viewW * .3, viewW + 40), y: rand(skyH * .5, skyH * .95), life: .7 });
+      if (e.acc > .34 / luck) {
+        e.acc = 0;
+        G.objects.push({ type: 'fstar', spr: starSpr, x: rand(viewW * .35, viewW + 30), y: rand(42, 62), w: starSpr.w, h: starSpr.h, vx: 30, vy: -55, bob: 0, got: false });
+      }
+      break;
+    case 'fishrain':
+      if (e.acc > .2 / luck) { e.acc = 0; G.objects.push(Object.assign(makeFish(rand(30, viewW + 40), rand(48, 72)), { fall: -60 })); }
+      break;
+    case 'avalanche':
+      V.lick += dt * 3; // Kirby schleckt wie verrückt
+      if (e.acc > 1.25 && e.t < e.dur - 1.2) {
+        e.acc = rand(-.35, .2);
+        G.objects.push(makeSnowball(viewW + 10, pick([4, 5, 6])));
+        shake = reduceMotion ? 0 : .15;
+      }
+      break;
+    case 'turbo':
+      G.turbo = 1.5;
+      if (e.acc > .22) { e.acc = 0; G.objects.push(makeFish(viewW + 10, Math.round(14 + Math.sin(e.t * 3) * 10))); }
+      break;
+  }
+  if (e.t >= e.dur) endEvent();
+}
+
 /* ---------- Steuerung: nur Tippen / Klicken ---------- */
+const maxJumps = () => (G.level < 2 ? 1 : has('up:triple') ? 3 : 2);
 function jump(v) {
   if (P.checkReset) settleCombo();
   if (P.jumps === 1) P.jumpPassed = false;
@@ -910,28 +1393,28 @@ function jump(v) {
   P.grounded = false;
   P.buffer = 0;
   P.airT = 0;
-  if (P.jumps === 2) {
+  if (P.jumps >= 2) {
     P.flip = reduceMotion ? 0 : FLIP_T;
     sfx.jump2();
     for (let i = 0; i < 8; i++) particles.push({ x: P.x + 12, y: P.y + 2, vx: rand(-60, 20), vy: rand(-40, 10), life: rand(.2, .4), c: '#ffffff' });
   } else sfx.jump();
 }
 function press() {
-  if (mode === 'start') { startGame(); return; }
-  if (mode === 'over') { if (performance.now() - overAt > 650) startGame(); return; }
   if (mode === 'paused') { resume(); return; }
+  if (mode !== 'play') return;
   if (P.grounded) { P.jumps = 1; jump(V0); }
-  else if (P.jumps < 2 && G.level >= 2) { P.jumps = 2; jump(Math.max(V2, P.vy)); } // Doppelsprung ab Level 2
+  else if (P.jumps < maxJumps()) { P.jumps++; jump(Math.max(V2, P.vy)); } // Sprung in der Luft ab Level 2
   else P.buffer = .14; // kurz vor der Landung getippt: Sprung merken
 }
 
 window.addEventListener('pointerdown', (e) => {
-  if (e.target.closest && e.target.closest('button')) return;
+  if (mode !== 'play' && mode !== 'paused') return;
+  if (e.target.closest && e.target.closest('button, .modal')) return;
   e.preventDefault();
   audioOn();
   press();
 }, { passive: false });
-document.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
+document.addEventListener('touchmove', (e) => { if (!(e.target.closest && e.target.closest('.scroll'))) e.preventDefault(); }, { passive: false });
 document.addEventListener('gesturestart', (e) => e.preventDefault());
 document.addEventListener('contextmenu', (e) => e.preventDefault());
 document.addEventListener('dblclick', (e) => e.preventDefault());
@@ -944,9 +1427,6 @@ $('reload').addEventListener('click', async () => {
   } catch (e) { /* egal, trotzdem neu laden */ }
   location.reload();
 });
-$('playBtn').addEventListener('click', () => { audioOn(); if (mode === 'start') startGame(); });
-$('resumeBtn').addEventListener('click', () => { if (mode === 'paused') resume(); });
-$('againBtn').addEventListener('click', () => { audioOn(); if (mode === 'over') startGame(); });
 const muteBtn = $('mute');
 function syncMute() {
   muteBtn.setAttribute('aria-pressed', String(muted));
@@ -1009,20 +1489,25 @@ async function keepAwake() {
   } catch (e) { wakeLock = null; }
 }
 
+
 /* ---------- Ablauf ---------- */
-const screens = { start: $('start'), pause: $('pause'), over: $('over') };
+const screens = { home: $('home'), shop: $('shop'), inv: $('inv'), pause: $('pause'), over: $('over') };
 function show(name) { for (const k in screens) screens[k].hidden = k !== name; }
 let hintTimer = 0, bannerTimer = 0;
 
-function showBanner(n) {
-  const L = levelInfo(n);
-  $('bLevel').textContent = 'Level ' + n;
-  $('bName').textContent = L.name + ' · ' + fmtClock(startHour(n)) + ' Uhr';
-  $('bTip').textContent = L.tip;
+function showBanner(title, name, tip, ms = 2600) {
+  $('bLevel').textContent = title;
+  $('bName').textContent = name;
+  $('bTip').textContent = tip;
+  $('bTip').hidden = !tip;
   const b = $('banner');
   b.classList.add('show');
   clearTimeout(bannerTimer);
-  bannerTimer = setTimeout(() => b.classList.remove('show'), 2600);
+  bannerTimer = setTimeout(() => b.classList.remove('show'), ms);
+}
+function showLevelBanner(n) {
+  const L = levelInfo(n);
+  showBanner('Level ' + n, L.name + ' · ' + fmtClock(startHour(n)) + ' Uhr', L.tip);
 }
 function showHint(ms, text) {
   $('hint').textContent = text;
@@ -1031,14 +1516,46 @@ function showHint(ms, text) {
   hintTimer = setTimeout(() => $('hint').classList.add('gone'), ms);
 }
 
+// Kreis-Übergang: zu, umschalten, wieder auf
+let wiping = false;
+function transition(text, cb) {
+  if (wiping) return;
+  wiping = true;
+  const w = $('wipe');
+  $('wipeText').textContent = text;
+  w.classList.remove('opening');
+  w.classList.add('closing');
+  sfx.whoosh();
+  setTimeout(() => {
+    cb();
+    w.classList.remove('closing');
+    w.classList.add('opening');
+    setTimeout(() => { w.classList.remove('opening'); wiping = false; }, 470);
+  }, 440);
+}
+
+function goHome() {
+  mode = 'home';
+  G = freshGame();
+  Object.assign(P, { x: Math.round(viewW * .3), y: 0, vy: 0, grounded: true, jumps: 0, buffer: 0, airT: 0, land: 0, flip: 0, inv: 0, jumpPassed: false, checkReset: false });
+  G.objects.push(makeAdrian('stand', Math.round(viewW * .52)), makeAdrian('stand', Math.round(viewW * .52) + 16, 0, { who: 'valentina' }));
+  particles.length = 0;
+  floaters.length = 0;
+  document.body.classList.add('at-home');
+  $('banner').classList.remove('show');
+  $('hint').classList.add('gone');
+  show('home');
+  updateHud(true);
+}
 function startGame() {
   G = freshGame();
-  Object.assign(P, { y: 0, vy: 0, grounded: true, jumps: 0, buffer: 0, airT: 0, land: 0, flip: 0, jumpPassed: false, checkReset: false });
+  Object.assign(P, { x: 24, y: 0, vy: 0, grounded: true, jumps: 0, buffer: 0, airT: 0, land: 0, flip: 0, inv: 0, jumpPassed: false, checkReset: false });
   particles.length = 0;
   floaters.length = 0;
   mode = 'play';
+  document.body.classList.remove('at-home');
   show(null);
-  showBanner(1);
+  showLevelBanner(1);
   showHint(5000, 'Tippen = springen');
   keepAwake();
   updateHud(true);
@@ -1046,33 +1563,64 @@ function startGame() {
 function pause() { mode = 'paused'; show('pause'); }
 function resume() { mode = 'play'; show(null); last = performance.now(); }
 
+$('startBtn').addEventListener('click', () => { audioOn(); if (mode === 'home') transition("Los geht's!", startGame); });
+$('againBtn').addEventListener('click', () => { audioOn(); if (mode === 'over') transition("Los geht's!", startGame); });
+$('lobbyBtn').addEventListener('click', () => { if (mode === 'over') transition('Lobby', goHome); });
+$('pauseLobbyBtn').addEventListener('click', () => { if (mode === 'paused') transition('Lobby', goHome); });
+$('resumeBtn').addEventListener('click', () => { if (mode === 'paused') resume(); });
+$('shopBtn').addEventListener('click', () => { audioOn(); renderShop(); show('shop'); });
+$('invBtn').addEventListener('click', () => { audioOn(); renderInv(); show('inv'); });
+document.querySelectorAll('[data-close]').forEach((b) => b.addEventListener('click', () => { if (mode === 'home') show('home'); }));
+
 function levelUp() {
   G.level++;
   G.untilSpawn = Math.max(G.untilSpawn, G.speed * 1.1); // kurze Verschnaufpause
   sfx.level();
-  showBanner(G.level);
-  if (G.level === 2) showHint(5000, 'Nochmal tippen in der Luft = Doppelsprung');
+  showLevelBanner(G.level);
+  if (G.level === 2) showHint(5000, has('up:triple') ? 'In der Luft bis zu zweimal nachtippen' : 'Nochmal tippen in der Luft = Doppelsprung');
+}
+
+function startInvincible(sec, title) {
+  P.inv = sec;
+  showBanner(title, 'Unverwundbar! Renn einfach durch', '', 1800);
+  sfx.power();
+}
+// Mit Regenbogen-Kraft wird Adrian (oder Valentina, oder ein Schneeball) einfach weggeschleudert
+function knock(o) {
+  o.knocked = true;
+  o.passed = true;
+  o.kvx = rand(110, 170);
+  o.kvy = rand(150, 210);
+  o.krot = 0;
+  shake = reduceMotion ? 0 : .12;
+  sfx.knock();
+  addFish(1, o.x + o.w / 2, o.y + o.h);
 }
 
 function gameOver(o) {
   mode = 'over';
-  overAt = performance.now();
   shake = reduceMotion ? 0 : .35;
   sfx.hit();
   vibrate([60, 40, 120]);
-  const isBest = G.score > best;
-  if (isBest) { best = G.score; store.set('katzosaurus-best', best); }
   $('quip').textContent = pick(OVER_QUIPS).replace('{n}', o.name);
-  $('rScore').textContent = G.score;
-  $('rJumped').textContent = G.jumped;
+  $('rFish').textContent = G.fish;
   $('rLevel').textContent = G.level;
+  $('rJumped').textContent = G.jumped;
   $('rCombo').textContent = G.bestCombo + 'x';
-  $('rBest').textContent = best;
-  $('newBest').hidden = !isBest || best === 0;
   $('hint').classList.add('gone');
   $('banner').classList.remove('show');
   updateHud(true);
   setTimeout(() => { if (mode === 'over') show('over'); }, 420);
+}
+
+function addFish(n, x, y) {
+  G.fish += n;
+  save.fish += n;
+  persist();
+  sfx.fish();
+  floaters.push({ text: '+' + n, x, y, t: .8 });
+  const box = $('fishBox');
+  box.classList.remove('bump'); void box.offsetWidth; box.classList.add('bump');
 }
 
 // Bewertung nach dem knappsten Abstand: je knapper, desto besser
@@ -1083,16 +1631,17 @@ function cheer(gap) {
   G.bestCombo = Math.max(G.bestCombo, G.combo);
   let [, word, color] = CHEERS.find(([g]) => gap < g);
   if (G.combo % 10 === 0) { word = 'Legendär!'; color = '#ff55ff'; }
-  G.bonus += Math.min(50, 5 * G.combo);
   sfx.combo(G.combo);
   for (let i = 0; i < 14; i++) {
     const a = rand(0, Math.PI * 2), v = rand(40, 110);
     particles.push({ x: P.x + 14, y: P.y + 10, vx: Math.cos(a) * v, vy: Math.sin(a) * v + 30, life: rand(.3, .6), c: color });
   }
+  let mult = G.combo + 'x';
+  if (G.combo % 5 === 0) { addFish(2, P.x + 14, P.y + 22); mult += '  +2 Fische'; } // alle 5 in Serie gibt es Fische
   const el = $('combo');
   $('comboWord').textContent = word;
   $('comboWord').style.color = color;
-  $('comboMult').textContent = G.combo + 'x';
+  $('comboMult').textContent = mult;
   el.classList.remove('pop', 'hot');
   void el.offsetWidth;
   el.classList.add('pop');
@@ -1106,20 +1655,116 @@ function settleCombo() {
   if (!P.jumpPassed) G.combo = 0;
 }
 
-const pad5 = (n) => String(Math.min(99999, n)).padStart(5, '0');
 let hudCache = '';
 function updateHud(force) {
   const clock = fmtClock(G.hour);
-  const key = G.score + '|' + G.jumped + '|' + best + '|' + G.level + '|' + clock;
+  const key = save.fish + '|' + G.jumped + '|' + G.level + '|' + clock;
   if (!force && key === hudCache) return;
   hudCache = key;
-  $('score').textContent = pad5(G.score);
+  $('fish').textContent = save.fish;
   $('jumped').textContent = G.jumped;
-  $('best').textContent = pad5(best);
   $('level').textContent = G.level;
   $('clock').textContent = clock + ' Uhr';
 }
 
+/* ---------- Shop und Inventar ---------- */
+const FISH_HTML = '<svg class="fish-ico" viewBox="0 0 9 5" shape-rendering="crispEdges" aria-hidden="true"><path fill="#ff9f43" d="M2 0h4v1h1v1h1V1h1v3H8V3H7v1H6v1H2V4H1V3H0V2h1V1h1z"/><path fill="#1e1c26" d="M2 1h1v1H2z"/></svg>';
+const ICONS = ICON_SPR;
+function iconCanvas(spr, scale = 4) {
+  const c = document.createElement('canvas');
+  c.width = spr.c.width;
+  c.height = spr.c.height;
+  c.getContext('2d').drawImage(spr.c, 0, 0);
+  c.style.width = spr.c.width * scale + 'px';
+  c.style.height = spr.c.height * scale + 'px';
+  return c;
+}
+function skinCanvas(id) { return iconCanvas(catSet(id).idle[0], 3); }
+function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
+let shopTab = 'up', msgTimer = 0;
+function shopMsg(text) {
+  const m = $('shopMsg');
+  m.textContent = text;
+  m.hidden = false;
+  clearTimeout(msgTimer);
+  msgTimer = setTimeout(() => { m.hidden = true; }, 2600);
+}
+function renderShop() {
+  $('shopWallet').textContent = save.fish;
+  $('tabUp').setAttribute('aria-selected', String(shopTab === 'up'));
+  $('tabSkins').setAttribute('aria-selected', String(shopTab === 'skins'));
+  const list = $('shopList');
+  list.textContent = '';
+  const items = shopTab === 'up'
+    ? UPGRADES.map((u) => ({ ...u, key: 'up:' + u.id, prev: () => iconCanvas(ICONS[u.id]) }))
+    : SKINS.filter((s) => s.price > 0).map((s) => ({ ...s, key: 'skin:' + s.id, prev: () => skinCanvas(s.id) }));
+  for (const it of items) {
+    const card = el('div', 'card');
+    const prev = el('div', 'prev');
+    prev.appendChild(it.prev());
+    const btn = el('button', 'btn');
+    btn.type = 'button';
+    if (has(it.key)) {
+      btn.textContent = 'Gekauft';
+      btn.disabled = true;
+    } else {
+      btn.innerHTML = FISH_HTML + ' ' + it.price;
+      btn.setAttribute('aria-label', it.name + ' kaufen für ' + it.price + ' Fische');
+      if (save.fish < it.price) btn.classList.add('poor');
+      btn.addEventListener('click', () => buy(it));
+    }
+    card.append(prev, el('p', 'name', it.name), el('p', 'desc', it.desc), btn);
+    list.appendChild(card);
+  }
+}
+function buy(it) {
+  if (has(it.key)) return;
+  if (save.fish < it.price) {
+    shopMsg('Dir fehlen noch ' + (it.price - save.fish) + ' Fische. Sammle welche im Spiel!');
+    sfx.no();
+    return;
+  }
+  save.fish -= it.price;
+  save.owned.add(it.key);
+  if (it.key.startsWith('skin:')) { save.skin = it.id; cat = catSet(it.id); shopMsg(it.name + ' gekauft und angezogen!'); }
+  else shopMsg(it.name + ' gekauft! Es ist ab jetzt immer aktiv.');
+  persist();
+  sfx.buy();
+  renderShop();
+  updateHud(true);
+}
+$('tabUp').addEventListener('click', () => { shopTab = 'up'; renderShop(); });
+$('tabSkins').addEventListener('click', () => { shopTab = 'skins'; renderShop(); });
+function renderInv() {
+  $('invWallet').textContent = save.fish;
+  const up = $('invUpgrades');
+  up.textContent = '';
+  const owned = UPGRADES.filter((u) => has('up:' + u.id));
+  if (!owned.length) up.appendChild(el('p', 'empty', 'Noch keine Upgrades. Im Shop gibt es welche für Fische.'));
+  for (const u of owned) {
+    const card = el('div', 'card');
+    const prev = el('div', 'prev');
+    prev.appendChild(iconCanvas(ICONS[u.id]));
+    card.append(prev, el('p', 'name', u.name), el('p', 'desc', u.desc), el('span', 'badge', 'Aktiv'));
+    up.appendChild(card);
+  }
+  const sk = $('invSkins');
+  sk.textContent = '';
+  for (const s of SKINS.filter((x) => x.price === 0 || has('skin:' + x.id))) {
+    const card = el('div', 'card');
+    const prev = el('div', 'prev');
+    prev.appendChild(skinCanvas(s.id));
+    const btn = el('button', 'btn' + (s.id === save.skin ? '' : ' btn2'));
+    btn.type = 'button';
+    if (s.id === save.skin) { btn.textContent = 'Angezogen'; btn.disabled = true; }
+    else {
+      btn.textContent = 'Anziehen';
+      btn.addEventListener('click', () => { save.skin = s.id; cat = catSet(s.id); persist(); sfx.buy(); renderInv(); });
+    }
+    card.append(prev, el('p', 'name', s.name), el('p', 'desc', s.desc), btn);
+    sk.appendChild(card);
+  }
+}
 
 /* ---------- Kollision (pixelgenau) ---------- */
 function overlaps(a, ax, ay, b, bx, by) {
@@ -1140,7 +1785,8 @@ function catSprite() {
   if (mode !== 'play') return P.blink > 0 ? cat.blink : cat.idle[Math.floor(G.time * 4) % cat.idle.length];
   return cat.run[Math.floor(P.anim) % RUN_FRAMES];
 }
-const objY = (o) => (o.type === 'fish' ? o.y + Math.round(Math.sin(G.time * 5 + o.bob)) : o.kind.startsWith('glide') ? o.y + Math.round(Math.sin(G.time * 3 + o.bob) * 1.5) : o.y);
+const objY = (o) => (o.type === 'fish' || o.type === 'star' ? o.y + Math.round(Math.sin(G.time * 5 + o.bob)) : o.kind && o.kind.startsWith('glide') ? o.y + Math.round(Math.sin(G.time * 3 + o.bob) * 1.5) : o.y);
+const RAINBOW = ['#ff5555', '#ffaa00', '#ffff55', '#55ff55', '#55ffff', '#5599ff', '#ff55ff'];
 
 /* ---------- Update ---------- */
 function update(dt) {
@@ -1164,24 +1810,39 @@ function update(dt) {
     floaters[i].y += 14 * dt;
     if (floaters[i].t <= 0) floaters.splice(i, 1);
   }
-
-  if (mode !== 'play') {
-    G.time += dt;
-    if (mode === 'start') G.scroll += 10 * dt; // Wolken ziehen langsam
-    return;
+  for (let i = G.streaks.length - 1; i >= 0; i--) {
+    const s = G.streaks[i];
+    s.life -= dt; s.x -= 170 * dt; s.y -= 70 * dt;
+    if (s.life <= 0) G.streaks.splice(i, 1);
   }
 
   G.time += dt;
+  if (mode !== 'play') {
+    if (mode === 'home') G.scroll += 10 * dt; // Wolken ziehen langsam
+    return;
+  }
+
   const L = levelInfo(G.level);
-  const inLevel = G.score - L.at;
-  G.speed = Math.min(340, L.speed + Math.min(20, inLevel * .04));
+  G.speed = Math.min(340, L.speed + Math.min(20, (G.score - L.at) * .04)) * G.turbo;
   const step = G.speed * dt;
   G.dist += step;
   G.scroll += step;
-  G.score = Math.floor(G.dist / 8) + G.bonus;
+  G.score = Math.floor(G.dist / 8);
   if (G.score >= levelInfo(G.level + 1).at) levelUp();
   const Lc = levelInfo(G.level), Ln = levelInfo(G.level + 1);
   G.hour = startHour(G.level) + HOURS_PER_LEVEL * clamp((G.score - Lc.at) / (Ln.at - Lc.at), 0, 1);
+
+  // Events und Regenbogen-Sterne auf der Strecke
+  if (G.event) tickEvent(dt);
+  else {
+    G.eventIn -= dt;
+    if (G.eventIn <= 0) startEvent();
+  }
+  G.nextStar -= dt;
+  if (G.nextStar <= 0 && !G.event) {
+    G.nextStar = rand(35, 55);
+    G.objects.push({ type: 'star', spr: starSpr, x: viewW + 10, y: rand(12, 26), w: starSpr.w, h: starSpr.h, vx: 0, bob: 0, got: false });
+  }
 
   // Katze
   P.anim += dt * G.speed / 9;
@@ -1203,29 +1864,74 @@ function update(dt) {
   } else if (Math.random() < dt * 6) {
     particles.push({ x: P.x + 6, y: 0, vx: rand(-40, -10), vy: rand(10, 40), life: rand(.2, .4) });
   }
+  if (cat.skin.sparkle && Math.random() < dt * 14) {
+    particles.push({ x: P.x + rand(4, 26), y: P.y + rand(3, 16), vx: rand(-50, -20), vy: rand(-10, 20), life: rand(.3, .5), c: cat.skin.sparkle });
+  }
+  if (P.inv > 0) {
+    P.inv -= dt;
+    P.invTick -= dt;
+    if (P.invTick <= 0) { P.invTick = .11; sfx.starNote(); }
+    particles.push({ x: P.x + rand(2, 12), y: P.y + rand(2, 16), vx: rand(-90, -40), vy: rand(-10, 20), life: rand(.25, .45), c: pick(RAINBOW) });
+  }
 
-  G.untilSpawn -= step;
-  if (G.untilSpawn <= 0) spawn();
+  if (!noObstacles()) {
+    G.untilSpawn -= step;
+    if (G.untilSpawn <= 0) spawn();
+  }
 
   const cs = catSprite();
   const cx = Math.round(P.x), cy = Math.round(-(P.y + cs.h));
+  const magnet = has('up:magnet');
   for (const o of G.objects) {
-    o.x -= step + o.vx * dt;
-    const oy = objY(o);
-    if (o.type === 'fish') {
+    if (o.knocked) {
+      o.x += o.kvx * dt - step;
+      o.y += o.kvy * dt;
+      o.kvy -= 520 * dt;
+      o.krot += dt * 12;
+      continue;
+    }
+    o.x -= step + (o.vx || 0) * dt;
+    if (o.fall !== undefined) {
+      o.y += o.fall * dt;
+      if (o.y <= 2) { o.y = 2; delete o.fall; }
+    }
+    if (o.type === 'fstar') {
+      o.y += o.vy * dt;
+      if (o.y < -4) o.got = true;
+    }
+    if (o.type !== 'adrian') {
+      if (magnet && !o.got) {
+        const dx = P.x + 14 - (o.x + o.w / 2), dy = P.y + 9 - (o.y + o.h / 2);
+        if (dx * dx + dy * dy < 48 * 48) { o.x += dx * dt * 6; o.y += dy * dt * 6; }
+      }
+      const oy = objY(o);
       if (!o.got && o.x < P.x + 27 && o.x + o.w > P.x + 4 && oy < P.y + 17 && oy + o.h > P.y + 1) {
         o.got = true;
-        G.bonus += 20;
-        sfx.fish();
-        floaters.push({ text: '+20', x: o.x + 4, y: oy + 6, t: .8 });
-        for (let i = 0; i < 5; i++) particles.push({ x: o.x + 4, y: oy + 2, vx: rand(-50, 50), vy: rand(10, 60), life: rand(.2, .45), c: '#ffd43b' });
+        if (o.type === 'star') startInvincible(5, 'Regenbogen-Stern!');
+        else addFish(o.type === 'fish' && G.turbo > 1 ? 2 : 1, o.x + 4, oy + 6);
+        for (let i = 0; i < 6; i++) particles.push({ x: o.x + 4, y: oy + 2, vx: rand(-50, 50), vy: rand(10, 60), life: rand(.2, .45), c: o.type === 'fish' ? '#ffd43b' : pick(RAINBOW) });
       }
       continue;
     }
+    const oy = objY(o);
     if (o.kind === 'ski' && Math.random() < dt * 30) {
       particles.push({ x: o.x + o.w - 2, y: 1, vx: rand(20, 70), vy: rand(20, 60), life: rand(.2, .4), c: '#ffffff' });
     }
-    if (overlaps(cs, cx, cy, o.spr, Math.round(o.x), Math.round(-(oy + o.h)))) { gameOver(o); return; }
+    if (o.kind === 'snow') {
+      o.rot += dt * 10;
+      if (Math.random() < dt * 20) particles.push({ x: o.x + o.w, y: rand(0, 3), vx: rand(20, 60), vy: rand(10, 40), life: rand(.2, .4), c: '#ffffff' });
+    }
+    if (!o.passed && overlaps(cs, cx, cy, o.spr, Math.round(o.x), Math.round(-(oy + o.h)))) {
+      if (P.inv > 0) { knock(o); continue; }
+      if (has('up:star') && !G.starUsed) {
+        G.starUsed = true;
+        startInvincible(4, 'Regenbogen-Stern!');
+        knock(o);
+        continue;
+      }
+      gameOver(o);
+      return;
+    }
     // knappster Abstand, solange die Katze über (oder unter) der Person ist
     if (!o.passed && o.x < P.x + 27 && o.x + o.w > P.x + 4) {
       const gap = o.kind === 'glideHigh' ? oy - (P.y + 17) : P.y - (oy + o.h);
@@ -1238,18 +1944,9 @@ function update(dt) {
       cheer(o.minGap === undefined ? 99 : o.minGap);
     }
   }
-  G.objects = G.objects.filter((o) => o.x > -70 && !(o.type === 'fish' && o.got));
-
-  const m = Math.floor(G.score / 100);
-  if (m > G.milestone) {
-    G.milestone = m;
-    sfx.point();
-    const pill = $('scorePill');
-    pill.classList.remove('flash'); void pill.offsetWidth; pill.classList.add('flash');
-  }
+  G.objects = G.objects.filter((o) => o.x > -70 && !o.got && !(o.knocked && o.y < -60));
   updateHud(false);
 }
-
 /* ---------- Zeichnen ---------- */
 const snap = (v) => Math.round(v * px * dpr) / (px * dpr);
 function pixelDisc(cx, cy, r, color) {
@@ -1438,11 +2135,30 @@ function draw() {
     }
   }
 
-  // Fische, Adrian und Valentina
+  // Sternschnuppen beim Sternschauer
+  for (const s of G.streaks) {
+    ctx.globalAlpha = Math.min(1, s.life * 2);
+    ctx.fillStyle = '#fff6b0';
+    for (let i = 0; i < 9; i++) ctx.fillRect(Math.round(s.x + i * 2), Math.round(-s.y - i), i < 2 ? 2 : 1, 1);
+  }
+  ctx.globalAlpha = 1;
+
+  // Fische, Sterne, Adrian, Valentina, Schneebälle
   for (const o of G.objects) {
     const oy = objY(o);
-    if (o.type === 'fish') ctx.drawImage(fishSpr.c, snap(o.x) - 1, snap(-(oy + o.h)) - 1);
-    else ctx.drawImage(o.spr.c, snap(o.x) - o.spr.pad, snap(-(oy + o.h)) - o.spr.pad);
+    const spr = o.spr;
+    const x0 = snap(o.x) - spr.pad, y0 = snap(-(oy + o.h)) - spr.pad;
+    if (o.type === 'star') {
+      ctx.drawImage(tinted(spr.c, RAINBOW[Math.floor(G.time * 12) % RAINBOW.length], .55), x0, y0);
+    } else if (o.knocked || o.kind === 'snow') {
+      ctx.save();
+      ctx.translate(x0 + spr.c.width / 2, y0 + spr.c.height / 2);
+      ctx.rotate(o.knocked ? o.krot : o.rot);
+      ctx.drawImage(spr.c, -spr.c.width / 2, -spr.c.height / 2);
+      ctx.restore();
+    } else {
+      ctx.drawImage(spr.c, x0, y0);
+    }
   }
 
   // Partikel
@@ -1451,16 +2167,18 @@ function draw() {
     ctx.fillRect(Math.round(q.x), -Math.round(q.y) - 1, 1, 1);
   }
 
-  // Katze
+  // Katze (im Regenbogen-Modus bunt eingefärbt, kurz vor Ende blinkend)
   const cs = catSprite();
-  const cw = cs.c.width, chh = cs.c.height;
+  let img = cs.c;
+  if (P.inv > 0 && (P.inv > 1 || Math.floor(G.time * 10) % 2)) img = tinted(cs.c, RAINBOW[Math.floor(G.time * 14) % RAINBOW.length], .6);
+  const cw = img.width, chh = img.height;
   const bx = snap(P.x) - cs.pad, by = snap(-(P.y + cs.h)) - cs.pad;
   ctx.save();
   if (P.flip > 0) {
-    // Salto beim Doppelsprung
+    // Salto beim Sprung in der Luft
     ctx.translate(bx + cw / 2, by + chh / 2);
     ctx.rotate((1 - P.flip / FLIP_T) * Math.PI * 2);
-    ctx.drawImage(cs.c, -cw / 2, -chh / 2);
+    ctx.drawImage(img, -cw / 2, -chh / 2);
   } else {
     // beim Absprung strecken, beim Landen stauchen (Füße bleiben am Boden)
     let kx = 1, ky = 1;
@@ -1468,22 +2186,48 @@ function draw() {
     else if (!P.grounded && P.airT < .12 && mode === 'play') { const q = 1 - P.airT / .12; kx = 1 - .08 * q; ky = 1 + .12 * q; }
     ctx.translate(bx + cw / 2, by + chh);
     ctx.scale(kx, ky);
-    ctx.drawImage(cs.c, -cw / 2, -chh);
+    ctx.drawImage(img, -cw / 2, -chh);
   }
   ctx.restore();
 
-  // +20
+  // Turbo: Geschwindigkeits-Streifen
+  if (G.turbo > 1) {
+    ctx.fillStyle = 'rgba(255, 255, 255, .55)';
+    const span2 = viewW + 60;
+    for (let i = 0; i < 14; i++) {
+      const lx = ((hash(i + 3) * span2 - G.scroll * 2.2) % span2 + span2) % span2 - 30;
+      ctx.fillRect(Math.round(lx), -Math.round(4 + hash(i) * skyH * .85), 14 + Math.round(hash(i + 7) * 14), 1);
+    }
+  }
+
+  // +1 Fisch
   ctx.font = '8px "CatJumperMC", monospace';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   for (const f of floaters) {
     ctx.globalAlpha = Math.min(1, f.t * 2);
-    ctx.fillStyle = '#3f3f15';
+    ctx.fillStyle = '#3f2a00';
     ctx.fillText(f.text, f.x + 1, -f.y + 1);
-    ctx.fillStyle = '#ffff55';
+    ctx.fillStyle = '#ffd43b';
     ctx.fillText(f.text, f.x, -f.y);
   }
   ctx.globalAlpha = 1;
+}
+
+// Färbt ein Sprite für den Regenbogen-Effekt ein (Zwischenleinwand wird wiederverwendet)
+const tintC = document.createElement('canvas');
+const tintG = tintC.getContext('2d');
+function tinted(img, color, alpha) {
+  tintC.width = img.width;
+  tintC.height = img.height;
+  tintG.globalCompositeOperation = 'source-over';
+  tintG.globalAlpha = 1;
+  tintG.drawImage(img, 0, 0);
+  tintG.globalCompositeOperation = 'source-atop';
+  tintG.globalAlpha = alpha;
+  tintG.fillStyle = color;
+  tintG.fillRect(0, 0, img.width, img.height);
+  return tintC;
 }
 
 /* ---------- Schleife ---------- */
@@ -1495,7 +2239,7 @@ function frame(now) {
   draw();
   requestAnimationFrame(frame);
 }
-updateHud(true);
+goHome();
 requestAnimationFrame(frame);
 if (document.fonts && document.fonts.load) {
   document.fonts.load('8px "CatJumperMC"').catch(() => {});
