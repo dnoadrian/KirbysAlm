@@ -6,7 +6,7 @@ Ein kleines Pixel-Spiel fürs Handy: Deine Katze läuft über eine Bergwiese und
 
 ## Lobby
 
-In der Lobby spielt deine Katze mit einem Wollknäuel. Links oben stehen untereinander **Bestenliste**, **Shop** und **Inventar**, rechts unten der große **Start**-Knopf. Bei Start läuft die Katze einfach los: Die Menüs gleiten weg und die Landschaft zieht vorbei. Nach dem Verlieren geht es mit **Nochmal** genauso sofort weiter oder mit **Lobby** zurück.
+In der Lobby spielt deine Katze mit einem Wollknäuel. Links oben stehen untereinander **Shop** und **Inventar**, rechts unten der große **Start**-Knopf. Bei Start läuft die Katze einfach los: Die Menüs gleiten weg und die Landschaft zieht vorbei. Nach dem Verlieren geht es mit **Nochmal** genauso sofort weiter oder mit **Lobby** zurück.
 
 ## Steuerung
 
@@ -32,10 +32,6 @@ Beim ersten Start legst du den Namen deiner Katze fest, bevor es in die Lobby ge
 | Galaxie (glitzert) | Langhaar | 200 |
 
 Im Inventar wählst du, mit welcher deiner Katzen du spielst, und kannst den Namen ändern.
-
-## Bestenliste
-
-Die Bestenliste zeigt deine 10 besten Runden auf diesem Gerät: wie viele Hindernisse du übersprungen hast, mit Level und Datum.
 
 ## Fische, Shop und Inventar
 

@@ -116,7 +116,7 @@ p, h1, h2, h3 { margin: 0; }
 #home.leaving .home-title { transform: translateY(-60px); opacity: 0; }
 #home.leaving .home-menu .btn:not(.btn-start) { transform: translateX(-140%); opacity: 0; }
 #home.leaving .home-menu .btn-start { transform: translateX(140%); opacity: 0; }
-/* Lobby: Titel mittig oben, links oben Bestenliste, Shop, Inventar untereinander, großer Start-Knopf rechts unten */
+/* Lobby: Titel mittig oben, links oben Shop und Inventar untereinander, großer Start-Knopf rechts unten */
 .home-title { top: calc(env(safe-area-inset-top, 0px) + 14px); left: 0; right: 0; text-align: center; }
 .home-menu {
   position: fixed;
@@ -182,7 +182,6 @@ p, h1, h2, h3 { margin: 0; }
 .stat-lbl { display: block; margin-top: 6px; font-size: 8px; }
 .row { display: flex; gap: 12px; }
 .row .btn { flex: 1; }
-.new-best { text-shadow: var(--stroke-sm); }
 
 .setup-cat { display: flex; justify-content: center; padding: 4px 0 12px; }
 .field-lbl { color: #ffffff; }
@@ -206,11 +205,6 @@ p, h1, h2, h3 { margin: 0; }
 .me .who { flex: 1; min-width: 140px; display: flex; flex-direction: column; gap: 6px; }
 .me .who .desc { opacity: .85; }
 
-.lb { display: flex; flex-direction: column; gap: 8px; }
-.lb-row { display: grid; grid-template-columns: 44px 1fr auto; align-items: center; gap: 10px; padding: 8px 12px 9px; }
-.lb-rank { font-size: 24px; text-shadow: var(--stroke); }
-.lb-best { font-size: 24px; text-align: right; text-shadow: var(--stroke); }
-.lb-sub { display: block; font-size: 8px; margin-top: 4px; opacity: .85; }
 
 #banner {
   position: fixed; left: 16px; right: 16px; top: 22%; z-index: 5;
@@ -277,8 +271,7 @@ p, h1, h2, h3 { margin: 0; }
 }
 [data-ui="gitterholz"] .panel-head { margin: 6px 6px 0; background: var(--diamond-soft), linear-gradient(var(--red-hi), var(--red-lo)); border: 3px solid var(--wood-deep); border-radius: 6px; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .3); }
 [data-ui="gitterholz"] .panel-head .close-x { --c: var(--wood); --c-hi: var(--wood-hi); --c-lo: var(--wood-lo); }
-[data-ui="gitterholz"] .card, [data-ui="gitterholz"] .me, [data-ui="gitterholz"] .lb-row { background: var(--diamond-soft), var(--grain), var(--wood-dk); border: 3px solid var(--wood-deep); border-radius: 6px; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .14); }
-[data-ui="gitterholz"] .lb-row:first-child { background: var(--diamond-soft), var(--green-lo); }
+[data-ui="gitterholz"] .card, [data-ui="gitterholz"] .me { background: var(--diamond-soft), var(--grain), var(--wood-dk); border: 3px solid var(--wood-deep); border-radius: 6px; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .14); }
 [data-ui="gitterholz"] .badge, [data-ui="gitterholz"] .msg { border: 2px solid var(--wood-deep); border-radius: 4px; }
 [data-ui="gitterholz"] .name-input { border-radius: 6px; }
 [data-ui="gitterholz"] #wipe { background: var(--diamond), var(--grain), var(--wood); }
@@ -344,7 +337,6 @@ p, h1, h2, h3 { margin: 0; }
     <p class="subtitle" id="subtitle">Spring über alles!</p>
   </div>
   <nav class="home-menu" aria-label="Hauptmenü">
-    <button class="btn btn2" id="boardBtn" type="button">Bestenliste</button>
     <button class="btn btn2" id="shopBtn" type="button">Shop</button>
     <button class="btn btn2" id="invBtn" type="button">Inventar</button>
     <button class="btn btn-start" id="startBtn" type="button">Start</button>
@@ -364,19 +356,6 @@ p, h1, h2, h3 { margin: 0; }
       <label class="field-lbl" for="catName">Wie heißt deine Katze?</label>
       <input class="name-input" id="catName" type="text" maxlength="12" autocomplete="off" autocapitalize="words" spellcheck="false" placeholder="z. B. Mimi">
       <p class="field-lbl small-note">Weitere Katzen-Farben gibt es im Shop.</p>
-    </div>
-  </div>
-</div>
-
-<div id="board" class="modal" hidden>
-  <div class="panel small" role="dialog" aria-modal="true" aria-labelledby="boardTitle">
-    <div class="panel-head">
-      <h2 id="boardTitle">Bestenliste</h2>
-      <button class="btn close-x" type="button" data-close aria-label="Schließen"><svg viewBox="0 0 7 7" shape-rendering="crispEdges" aria-hidden="true"><path fill="#fff" d="M0 0h2v1h1v1h1V1h1V0h2v2H6v1H5v1h1v1h1v2H5V6H4V5H3v1H2v1H0V5h1V4h1V3H1V2H0z"/></svg></button>
-    </div>
-    <div class="scroll">
-      <p class="msg" id="boardMsg" hidden></p>
-      <div class="lb" id="boardList"></div>
     </div>
   </div>
 </div>
@@ -442,7 +421,6 @@ p, h1, h2, h3 { margin: 0; }
         <div><span class="stat-num" id="rJumped">0</span><span class="stat-lbl">Übersprungen</span></div>
         <div><span class="stat-num" id="rCombo">0x</span><span class="stat-lbl">Beste Serie</span></div>
       </div>
-      <p class="new-best" id="newBest" hidden>Neuer Eintrag in deiner Bestenliste!</p>
       <div class="row">
         <button class="btn btn-start" id="againBtn" type="button">Nochmal</button>
         <button class="btn btn-red" id="lobbyBtn" type="button">Lobby</button>
@@ -490,6 +468,7 @@ if (store.get('cj-save-version', 0) !== SAVE_VERSION) {
   try { Object.keys(localStorage).filter((k) => k.startsWith('cj-')).forEach((k) => localStorage.removeItem(k)); } catch (e) { /* egal */ }
   store.set('cj-save-version', SAVE_VERSION);
 }
+try { localStorage.removeItem('cj-runs'); } catch (e) { /* die Bestenliste gibt es nicht mehr */ }
 
 /* ---------- Pixel-Sprites ---------- */
 const INK = '#1e1c26';
@@ -1165,7 +1144,6 @@ const save = {
   name: store.get('cj-name', ''),
   breed: store.get('cj-breed', 'weiss'),
   wear: store.get('cj-wear', {}),
-  nameKey: store.get('cj-namekey', ''),
 };
 // Die weiße Katze hat jeder. Wer früher schon eine andere Farbe gewählt hatte, behält sie.
 if (save.breed === 'rot') save.breed = 'orange';
@@ -1182,7 +1160,6 @@ function persist() {
   store.set('cj-name', save.name);
   store.set('cj-breed', save.breed);
   store.set('cj-wear', save.wear);
-  store.set('cj-namekey', save.nameKey);
 }
 persist();
 const has = (key) => save.owned.has(key);
@@ -1441,7 +1418,7 @@ async function keepAwake() {
 
 
 /* ---------- Ablauf ---------- */
-const screens = { home: $('home'), setup: $('setup'), board: $('board'), shop: $('shop'), inv: $('inv'), pause: $('pause'), over: $('over') };
+const screens = { home: $('home'), setup: $('setup'), shop: $('shop'), inv: $('inv'), pause: $('pause'), over: $('over') };
 function show(name) { for (const k in screens) screens[k].hidden = k !== name; }
 let hintTimer = 0, bannerTimer = 0;
 
@@ -1531,7 +1508,6 @@ $('pauseLobbyBtn').addEventListener('click', () => { if (mode === 'paused') tran
 $('resumeBtn').addEventListener('click', () => { if (mode === 'paused') resume(); });
 $('shopBtn').addEventListener('click', () => { audioOn(); renderShop(); show('shop'); });
 $('invBtn').addEventListener('click', () => { audioOn(); renderInv(); show('inv'); });
-$('boardBtn').addEventListener('click', () => { audioOn(); show('board'); renderBoard(); });
 document.querySelectorAll('[data-close]').forEach((b) => b.addEventListener('click', () => { if (mode === 'home') show('home'); }));
 
 function levelUp() {
@@ -1568,8 +1544,6 @@ function gameOver(o) {
   $('rLevel').textContent = G.level;
   $('rJumped').textContent = G.jumped;
   $('rCombo').textContent = G.bestCombo + 'x';
-  $('newBest').hidden = true;
-  syncPlayer({ jumped: G.jumped, level: G.level }).then((b) => { $('newBest').hidden = !b || !G.jumped; }).catch(() => {});
   $('hint').classList.add('gone');
   $('banner').classList.remove('show');
   updateHud(true);
@@ -1819,37 +1793,6 @@ $('setupBack').addEventListener('click', () => { renderInv(); show('inv'); });
 $('catName').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('setupNext').click(); });
 function updateNames() {
   $('subtitle').textContent = catName() + ' springt über alles!';
-}
-
-/* ---------- Bestenliste: deine 10 besten Runden auf diesem Gerät ---------- */
-const nameKey = (n) => n.trim().toLowerCase();
-// Runde eintragen; true, wenn sie in die Top 10 kommt
-async function syncPlayer(run) {
-  if (!run || !run.jumped) return false;
-  const runs = store.get('cj-runs', []);
-  const entry = { name: save.name || 'Katze', jumped: run.jumped, level: run.level, t: Date.now() };
-  runs.push(entry);
-  runs.sort((x, y) => y.jumped - x.jumped || y.level - x.level || x.t - y.t);
-  const top = runs.slice(0, 10);
-  store.set('cj-runs', top);
-  return top.includes(entry);
-}
-async function renderBoard() {
-  const list = $('boardList');
-  list.textContent = '';
-  $('boardMsg').hidden = true;
-  const rows = store.get('cj-runs', []);
-  if (!rows.length) list.appendChild(el('p', 'empty', 'Noch keine Einträge. Spiel eine Runde!'));
-  rows.forEach((r, i) => {
-    const row = el('div', 'lb-row');
-    const who = el('div');
-    const day = new Date(r.t);
-    who.append(el('span', '', String(r.name || 'Katze').slice(0, 12)), el('span', 'lb-sub', 'Level ' + (r.level || 1) + ' · ' + day.getDate() + '.' + (day.getMonth() + 1) + '.'));
-    const best = el('div', 'lb-best');
-    best.append(document.createTextNode(String(r.jumped || 0)), el('span', 'lb-sub', 'Sprünge'));
-    row.append(el('span', 'lb-rank', String(i + 1)), who, best);
-    list.appendChild(row);
-  });
 }
 
 /* ---------- Kollision (pixelgenau) ---------- */
