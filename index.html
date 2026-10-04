@@ -8,7 +8,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Cat Jumper">
-<meta name="description" content="Cat Jumper: Ein weißer Katzosaurus springt auf der Alm über Adrian, während Valentina den Schnee von den Gipfeln schleckt.">
+<meta name="description" content="Cat Jumper: Eine weiße Katze springt auf der Alm über Adrian und Valentina, während Kirby den Schnee von den Gipfeln schleckt.">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -19,13 +19,13 @@
 <style>
 /* Layout: full-bleed pixel alm on canvas; HUD pinned top, menus as snow-white badges (two columns in landscape). */
 :root {
-  --ink: #1e1c26;          /* Valentinas Fell */
+  --ink: #1e1c26;          /* Kirbys Fell */
   --snow: #f7fbff;
   --meadow: #6cc04a;
   --meadow-light: #a6e27c;
   --meadow-deep: #2f7a3a;
-  --nose: #ff8fa3;         /* Valentinas Nase */
-  --eye: #d9d23a;          /* Valentinas Augen */
+  --nose: #ff8fa3;         /* Kirbys Nase */
+  --eye: #d9d23a;          /* Kirbys Augen */
   --shirt: #4f7fd6;        /* Adrians T-Shirt */
   --font-display: "Silkscreen", "Courier New", monospace;
   --font-body: "Pixelify Sans", "Trebuchet MS", system-ui, sans-serif;
@@ -287,15 +287,16 @@ h1 em { font-style: normal; color: var(--shirt); }
 </style>
 </head>
 <body>
-<canvas id="game" aria-label="Spielfeld: ein weißer Katzosaurus springt auf der Alm über Adrian, im Hintergrund schleckt Valentina Schnee"></canvas>
+<canvas id="game" aria-label="Spielfeld: eine weiße Katze springt auf der Alm über Adrian und Valentina, im Hintergrund schleckt Kirby Schnee"></canvas>
 
 <div class="hud">
   <div class="pill">
     <span class="lbl">Level</span>
     <span class="val" id="level">1</span>
+    <span class="sub" id="clock">08:00 Uhr</span>
   </div>
   <div class="pill">
-    <span class="lbl">Adrians</span>
+    <span class="lbl">Übersprungen</span>
     <span class="val" id="jumped">0</span>
   </div>
   <div class="pill score" id="scorePill">
@@ -309,12 +310,12 @@ h1 em { font-style: normal; color: var(--shirt); }
 <div id="start" class="screen">
   <div class="card">
     <div>
-      <p class="eyebrow">Spring über Adrian</p>
+      <p class="eyebrow">Spring über Adrian &amp; Valentina</p>
       <h1>Cat <em>Jumper</em></h1>
     </div>
     <div>
       <p class="lead"><b>Tippen</b> springen. In der Luft <b>nochmal tippen</b> für den Doppelsprung.</p>
-      <p class="fine extra">Valentina schleckt derweil den Schnee von den Gipfeln. Jedes Level bringt neue Adrians.</p>
+      <p class="fine extra">Kirby schleckt derweil den Schnee von den Gipfeln. Mit jedem Level wird es später am Tag.</p>
       <p class="fine portrait-only">Am schönsten im Querformat.</p>
       <p class="cta">Tippen zum Starten</p>
       <button class="install" id="installBtn" type="button" hidden>Als App installieren</button>
@@ -345,7 +346,7 @@ h1 em { font-style: normal; color: var(--shirt); }
     <div>
       <dl class="results">
         <div><dt>Punkte</dt><dd id="rScore">0</dd></div>
-        <div><dt>Adrians</dt><dd id="rJumped">0</dd></div>
+        <div><dt>Übersprungen</dt><dd id="rJumped">0</dd></div>
         <div><dt>Level</dt><dd id="rLevel">1</dd></div>
       </dl>
       <p class="fine">Rekord: <span id="rBest">0</span> Punkte</p>
@@ -434,28 +435,27 @@ function shrinkHitbox(spr, scale) {
 }
 const HITBOX = .8;
 
-// Der Katzosaurus: weißer Katzenkopf mit Ohren und Schnurrhaaren, Dino-Körper mit Rückenzacken und Schwanz.
+// Die weiße Katze: Kopf mit Ohren und Schnurrhaaren, schlanker Körper, Schwanz nach oben.
 const CAT_TOP = [
   '...............b.....b..',
-  '..............bbb...bbb.',
-  '..............bpbbbbbpb.',
-  '..............bbkbbbkbb.',
-  '.............wbbbbnbbbbw',
-  '.......g..g...bbbbbbbbb.',
-  '......ggggggggbbbbbbbbb.',
-  'b....bbbbssbbbsbbbbbbb..',
-  'bb..bbbbbsbbbbsbbbbbbb..',
-  '.bbbbbbbbbbbllllllbb....',
-  '..bbbbbbbbbbllllllbbbb..',
-  '......bbbbbbllllllb.....',
-  '.......bbbbbbbbbbbb.....',
+  '.bb...........bbb...bbb.',
+  '.bb...........bpbbbbbpb.',
+  '..bb..........bbkbbbkbb.',
+  '..bb.........wbbbbnbbbbw',
+  '...bb.........bbbbbbbbb.',
+  '...bb.........bbbbbbbbb.',
+  '....bbbbbsbbbsbbbbbbbb..',
+  '....bbbbbbsbbbsbbbbbbb..',
+  '....bbbbbbbbbbllllbbb...',
+  '.....bbbbbbbbbllllbb....',
+  '......bbbbbbbbbbbbb.....',
 ];
 const LEGS = {
-  run1: ['........bb.....bb.......', '........bb.....bb.......', '.......bbb....bbb.......'],
-  run2: ['........bb.....bb.......', '.......bb.......bb......', '.......b.........bbb....'],
-  jump: ['.......bb.....bb........', '......bb.....bb.........', '........................'],
+  run1: ['......bb.......bb.......', '......bb.......bb.......', '......bb.......bb.......', '......bbb......bbb......'],
+  run2: ['......bb.......bb.......', '.....bb.........bb......', '....bb...........bb.....', '....b.............bb....'],
+  jump: ['.....bb........bb.......', '....bb........bb........', '...bb........bb.........', '........................'],
 };
-const CAT_PAL = { b: '#fbfbf7', s: '#d9dde4', l: '#ffffff', g: '#3cc0a0', k: '#3a6fd8', p: '#ffb3c1', n: '#ff8fa3', w: '#aab3c2' };
+const CAT_PAL = { b: '#fbfbf7', s: '#e3e6ec', l: '#ffffff', k: '#3a6fd8', p: '#ffb3c1', n: '#ff8fa3', w: '#aab3c2' };
 const cat = {
   run1: shrinkHitbox(sprite([...CAT_TOP, ...LEGS.run1], CAT_PAL), HITBOX),
   run2: shrinkHitbox(sprite([...CAT_TOP, ...LEGS.run2], CAT_PAL), HITBOX),
@@ -544,6 +544,52 @@ const adrian = {
   ], ADRIAN_PAL),
 };
 
+const GIRL_PAL = { ...ADRIAN_PAL, h: '#8b5a2b', d: '#c45fa0', y: '#ffd43b' };
+const girl = {
+  stand: sprite([
+    '...hhhhhh...',
+    '..hhhhhhyh..',
+    '.hhffffffhh.',
+    '.hfkffffkfh.',
+    '.hffffffffh.',
+    '.hfffmmfffh.',
+    '.hhffffffhh.',
+    '.hhhffffhhh.',
+    '.hhddddddhh.',
+    '.hddddddddh.',
+    'dddddddddddd',
+    'f.dddddddd.f',
+    'f.dddddddd.f',
+    '..dddddddd..',
+    '.dddddddddd.',
+    '.dddddddddd.',
+    '...ff..ff...',
+    '...ff..ff...',
+    '..ooo..ooo..',
+  ], GIRL_PAL),
+  cheer: sprite([
+    'f..hhhhhh..f',
+    'f.hhhhhhyh.f',
+    'dhhffffffhhd',
+    'dhfkffffkfhd',
+    'dhffffffffhd',
+    'dhffmmmmffhd',
+    '.hhffmmffhh.',
+    '.hhhffffhhh.',
+    '.hhddddddhh.',
+    '.hddddddddh.',
+    '..dddddddd..',
+    '..dddddddd..',
+    '..dddddddd..',
+    '..dddddddd..',
+    '.dddddddddd.',
+    '.dddddddddd.',
+    '...ff..ff...',
+    '...ff..ff...',
+    '..ooo..ooo..',
+  ], GIRL_PAL),
+};
+
 const fishSpr = sprite([
   '..bbbb..b',
   '.bkbbbbbb',
@@ -559,9 +605,9 @@ const cloudSpr = sprite([
   'cccccccccccccc',
 ], { c: '#ffffff' }, false);
 
-/* ---------- Valentina (schwarz-weiße Katze, gelbe Augen, rosa Nase) ---------- */
+/* ---------- Kirby (schwarz-weiße Katze, gelbe Augen, rosa Nase) ---------- */
 const VAL_W = 44, VAL_H = 37;
-function valentinaRows(blink) {
+function kirbyRows(blink) {
   const g = Array.from({ length: VAL_H }, () => Array(VAL_W).fill('.'));
   const set = (x, y, c) => { if (x >= 0 && x < VAL_W && y >= 0 && y < VAL_H) g[y][x] = c; };
   const ell = (cx, cy, rx, ry, c) => {
@@ -611,9 +657,9 @@ function valentinaRows(blink) {
   return g;
 }
 const VAL_PAL = { k: '#2a2733', W: '#f4f4f0', e: '#5b3f4c', y: '#d9d23a', p: INK, n: '#f7a1ad', m: '#5a4250', v: '#f4f4f0' };
-const valentina = {
-  open: sprite(valentinaRows(false), VAL_PAL, true, 'v'),
-  blink: sprite(valentinaRows(true), VAL_PAL, true, 'v'),
+const kirby = {
+  open: sprite(kirbyRows(false), VAL_PAL, true, 'v'),
+  blink: sprite(kirbyRows(true), VAL_PAL, true, 'v'),
 };
 
 /* ---------- Tageszeiten pro Level ---------- */
@@ -626,6 +672,10 @@ const PALETTES = [
   { top: '#24306a', bot: '#8a6aa6', sun: '#ff9a6a', rock: '#5b5f86', rockSh: '#454868', snow: '#cdd1f2', snowSh: '#9fa5d3', hill: '#3f6658', pine: '#22413d', grass: '#5d8f5a', meadow: '#44704a', meadowDk: '#38603f', soil: '#4e3c3e', stone: '#5c5b72', stoneDk: '#47465c', stars: .55, sunY: .03, sunR: 10 },
   { top: '#0b1230', bot: '#22325e', sun: '#ffd9a0', rock: '#3a466c', rockSh: '#2b3555', snow: '#b8c6ec', snowSh: '#8a99c6', hill: '#1f3d45', pine: '#122a30', grass: '#3d7650', meadow: '#2c5a3e', meadowDk: '#244c34', soil: '#3a2f38', stone: '#3f4258', stoneDk: '#30324a', stars: 1, sunY: -.3, sunR: 8 },
 ];
+const DAWN = { top: '#5d6aa8', bot: '#f7c08a', sun: '#ffb36b', rock: '#8a7f9c', rockSh: '#6a6280', snow: '#ffe3d6', snowSh: '#f0b9b4', hill: '#6f9a68', pine: '#355f48', grass: '#8fbf66', meadow: '#649f52', meadowDk: '#538a45', soil: '#6b4c43', stone: '#7d7486', stoneDk: '#625a6d', stars: .2, sunY: .05, sunR: 10 };
+const [MORNING, MIDDAY, AFTERNOON, GLOW, DUSK, NIGHT] = PALETTES;
+// Uhrzeit (Stunden) -> Farben des Himmels und der Berge
+const DAY_CYCLE = [[0, NIGHT], [4.5, NIGHT], [6, DAWN], [7.5, MORNING], [11.5, MIDDAY], [15, AFTERNOON], [16.5, AFTERNOON], [18.5, GLOW], [20, DUSK], [21.5, NIGHT], [24, NIGHT]];
 const hexToRgb = (h) => (h[0] === '#' ? [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)) : h.slice(4, -1).split(',').map(Number));
 function lerpPal(a, b, t) {
   const out = {};
@@ -638,6 +688,21 @@ function lerpPal(a, b, t) {
   }
   return out;
 }
+function paletteAt(hour) {
+  const h = ((hour % 24) + 24) % 24;
+  for (let i = 0; i < DAY_CYCLE.length - 1; i++) {
+    const [h0, a] = DAY_CYCLE[i], [h1, b] = DAY_CYCLE[i + 1];
+    if (h >= h0 && h <= h1) return lerpPal(a, b, (h - h0) / (h1 - h0));
+  }
+  return NIGHT;
+}
+// Jedes Level beginnt 2,5 Stunden später: Level 1 um 08:00, Level 2 um 10:30 ...
+const HOURS_PER_LEVEL = 2.5;
+const startHour = (n) => 8 + (n - 1) * HOURS_PER_LEVEL;
+function fmtClock(hour) {
+  const mins = Math.round(hour * 6) * 10;
+  return String(Math.floor(mins / 60) % 24).padStart(2, '0') + ':' + String(mins % 60).padStart(2, '0');
+}
 const STARS = Array.from({ length: 70 }, () => ({ x: Math.random(), y: Math.random() * .85, p: Math.random() * 6 }));
 
 /* ---------- Level ---------- */
@@ -645,19 +710,18 @@ const LEVELS = [
   { name: 'Almwiese', tip: 'Tippen = springen', at: 0, speed: 140, gap: [.95, 1.7], pats: { stand: 6, cheer: 2 } },
   { name: 'Adrian-Turm', tip: 'In der Luft nochmal tippen = Doppelsprung', at: 250, speed: 158, gap: [.9, 1.6], pats: { stand: 3, cheer: 2, duo: 3, tower: 3 } },
   { name: 'Gleitschirm', tip: 'Fliegt Adrian hoch, lauf unten durch', at: 550, speed: 176, gap: [.85, 1.55], pats: { stand: 2, duo: 2, tower: 2, glideLow: 3, glideHigh: 3 } },
-  { name: 'Alpenglühen', tip: 'Ski-Adrian ist schneller, als du denkst', at: 900, speed: 194, gap: [.8, 1.45], pats: { stand: 2, cheer: 1, duo: 2, tower: 2, glideLow: 2, glideHigh: 2, ski: 4 } },
-  { name: 'Gipfelsturm', tip: 'Jetzt kommen sie zu dritt', at: 1300, speed: 212, gap: [.75, 1.4], pats: { stand: 1, duo: 2, trio: 3, tower: 3, glideLow: 2, glideHigh: 2, ski: 3, combo: 2 } },
-  { name: 'Sternennacht', tip: 'Valentina schaut zu', at: 1750, speed: 230, gap: [.7, 1.3], pats: { stand: 1, cheer: 1, duo: 2, trio: 3, tower: 3, glideLow: 2, glideHigh: 2, ski: 3, combo: 3 } },
+  { name: 'Skipiste', tip: 'Ski-Adrian ist schneller, als du denkst', at: 900, speed: 194, gap: [.8, 1.45], pats: { stand: 2, cheer: 1, duo: 2, tower: 2, glideLow: 2, glideHigh: 2, ski: 4 } },
+  { name: 'Alpenglühen', tip: 'Jetzt kommen sie zu dritt', at: 1300, speed: 212, gap: [.75, 1.4], pats: { stand: 1, duo: 2, trio: 3, tower: 3, glideLow: 2, glideHigh: 2, ski: 3, combo: 2 } },
+  { name: 'Sternennacht', tip: 'Kirby schaut zu', at: 1750, speed: 230, gap: [.7, 1.3], pats: { stand: 1, cheer: 1, duo: 2, trio: 3, tower: 3, glideLow: 2, glideHigh: 2, ski: 3, combo: 3 } },
 ];
 function levelInfo(n) {
   if (n <= LEVELS.length) return LEVELS[n - 1];
   const extra = n - LEVELS.length;
   return {
-    name: 'Endlos-Alm', tip: 'Wie weit kommst du?', at: 1750 + extra * 500,
+    name: 'Endlos-Alm', tip: 'Es wird immer später', at: 1750 + extra * 500,
     speed: Math.min(330, 230 + extra * 12), gap: [.66, 1.25], pats: LEVELS[LEVELS.length - 1].pats,
   };
 }
-const paletteFor = (n) => PALETTES[(n - 1) % PALETTES.length];
 
 /* ---------- Ton ---------- */
 let actx = null;
@@ -717,7 +781,7 @@ const V0 = 290;      // erster Sprung (Pixel/s)
 const V2 = 265;      // Doppelsprung
 const GRAV = 1250;
 const PASS_QUIPS = ['Hey!', 'Ey!', 'Frechheit!', 'Na warte!', 'Hallo?!', 'Nicht schon wieder!', 'Mein Haar!', 'Wie bitte?!', 'Miau?!', 'Unglaublich!', 'Das zählt nicht!', 'Servus!'];
-const OVER_QUIPS = ['Adrian hat dich erwischt.', 'Adrian steht noch.', 'Adrian 1, Katzosaurus 0.', 'Adrian war im Weg.', 'Adrian lässt grüßen.', 'Valentina hat nichts gesehen.'];
+const OVER_QUIPS = ['{n} hat dich erwischt.', '{n} steht noch.', '{n} 1, Katze 0.', '{n} war im Weg.', '{n} lässt grüßen.', 'Kirby hat nichts gesehen.'];
 
 let mode = 'start';
 let best = store.get('katzosaurus-best', 0);
@@ -733,47 +797,51 @@ function freshGame() {
   return {
     speed: 140, dist: 0, bonus: 0, scroll: G ? G.scroll : 0, score: 0, jumped: 0, milestone: 0,
     level: 1, objects: [], untilSpawn: 100, time: 0,
-    palFrom: PALETTES[0], palTo: PALETTES[0], palT: 1,
+    hour: startHour(1),
   };
 }
 G = freshGame();
 
+// Hindernis-Personen: Adrian oder Valentina (sie gibt es stehend und jubelnd)
 function makeAdrian(kind, x, y = 0, extra = {}) {
-  const spr = kind === 'glideLow' || kind === 'glideHigh' ? adrian.glide : adrian[kind];
+  const who = extra.who || 'adrian';
+  const spr = kind === 'glideLow' || kind === 'glideHigh' ? adrian.glide : (who === 'valentina' ? girl : adrian)[kind];
   const yy = kind === 'glideLow' ? 3 : kind === 'glideHigh' ? 25 : y;
   return Object.assign({
     type: 'adrian', kind, spr, x, y: yy, w: spr.w, h: spr.h, passed: false, quip: '', quipT: 0,
     vx: kind === 'ski' ? 95 : kind.startsWith('glide') ? 22 : 0, bob: Math.random() * 6, tag: true,
+    who, name: who === 'valentina' ? 'Valentina' : 'Adrian',
   }, extra);
 }
 function makeFish(x, y) {
   return { type: 'fish', x, y, w: fishSpr.w, h: fishSpr.h, vx: 0, bob: Math.random() * 6, got: false };
 }
-// Auf dem Startbildschirm steht schon ein Adrian bereit.
-G.objects.push(makeAdrian('stand', Math.max(110, viewW * .45)));
+const anyone = () => (Math.random() < .5 ? 'adrian' : 'valentina');
+// Auf dem Startbildschirm stehen Adrian und Valentina schon bereit.
+G.objects.push(makeAdrian('stand', Math.max(100, viewW * .4)), makeAdrian('stand', Math.max(100, viewW * .4) + 30, 0, { who: 'valentina' }));
 
 function pattern(kind, x) {
   const list = [];
   let w = 12, top = 19, extraGap = 0;
   switch (kind) {
     case 'stand': case 'cheer': case 'ski':
-      list.push(makeAdrian(kind, x)); w = list[0].w; top = list[0].h;
+      list.push(makeAdrian(kind, x, 0, { who: kind === 'ski' ? 'adrian' : anyone() })); w = list[0].w; top = list[0].h;
       if (kind === 'ski') extraGap = 45;
       break;
     case 'duo':
-      list.push(makeAdrian('stand', x), makeAdrian('cheer', x + 13)); w = 25;
+      list.push(makeAdrian('stand', x, 0, { who: 'adrian' }), makeAdrian('cheer', x + 13, 0, { who: 'valentina', tagUp: 9 })); w = 25;
       break;
     case 'trio':
-      list.push(makeAdrian('stand', x), makeAdrian('cheer', x + 13), makeAdrian('stand', x + 26)); w = 38; extraGap = 20;
+      list.push(makeAdrian('stand', x, 0, { who: anyone() }), makeAdrian('cheer', x + 13, 0, { who: anyone(), tagUp: 9 }), makeAdrian('stand', x + 26, 0, { who: anyone(), tagUp: 18 })); w = 38; extraGap = 20;
       break;
     case 'tower':
-      list.push(makeAdrian('stand', x, 0, { tag: false }), makeAdrian('cheer', x, 19)); top = 38; extraGap = 30;
+      list.push(makeAdrian('stand', x, 0, { tag: false }), makeAdrian('cheer', x, 19, { who: 'valentina' })); top = 38; extraGap = 30;
       break;
     case 'glideLow': case 'glideHigh':
       list.push(makeAdrian(kind, x)); w = list[0].w; top = list[0].y + list[0].h;
       break;
     case 'combo':
-      list.push(makeAdrian('glideHigh', x), makeAdrian('stand', x + 78)); w = 90; extraGap = 20;
+      list.push(makeAdrian('glideHigh', x), makeAdrian('stand', x + 78, 0, { who: anyone() })); w = 90; extraGap = 20;
       break;
   }
   // Fische als Belohnung
@@ -899,7 +967,7 @@ let hintTimer = 0, bannerTimer = 0;
 function showBanner(n) {
   const L = levelInfo(n);
   $('bLevel').textContent = 'Level ' + n;
-  $('bName').textContent = L.name;
+  $('bName').textContent = L.name + ' · ' + fmtClock(startHour(n)) + ' Uhr';
   $('bTip').textContent = L.tip;
   const b = $('banner');
   b.classList.add('show');
@@ -930,9 +998,6 @@ function resume() { mode = 'play'; show(null); last = performance.now(); }
 
 function levelUp() {
   G.level++;
-  G.palFrom = currentPalette();
-  G.palTo = paletteFor(G.level);
-  G.palT = 0;
   G.untilSpawn = Math.max(G.untilSpawn, G.speed * 1.1); // kurze Verschnaufpause
   sfx.level();
   showBanner(G.level);
@@ -953,7 +1018,7 @@ function gameOver(o) {
   V.sayT = 99;
   const isBest = G.score > best;
   if (isBest) { best = G.score; store.set('katzosaurus-best', best); }
-  $('quip').textContent = pick(OVER_QUIPS);
+  $('quip').textContent = pick(OVER_QUIPS).replace('{n}', o.name);
   $('rScore').textContent = G.score;
   $('rJumped').textContent = G.jumped;
   $('rLevel').textContent = G.level;
@@ -968,18 +1033,17 @@ function gameOver(o) {
 const pad5 = (n) => String(Math.min(99999, n)).padStart(5, '0');
 let hudCache = '';
 function updateHud(force) {
-  const key = G.score + '|' + G.jumped + '|' + best + '|' + G.level;
+  const clock = fmtClock(G.hour);
+  const key = G.score + '|' + G.jumped + '|' + best + '|' + G.level + '|' + clock;
   if (!force && key === hudCache) return;
   hudCache = key;
   $('score').textContent = pad5(G.score);
   $('jumped').textContent = G.jumped;
   $('best').textContent = pad5(best);
   $('level').textContent = G.level;
+  $('clock').textContent = clock + ' Uhr';
 }
 
-function currentPalette() {
-  return G.palT >= 1 ? G.palTo : lerpPal(G.palFrom, G.palTo, G.palT);
-}
 
 /* ---------- Kollision (pixelgenau) ---------- */
 function overlaps(a, ax, ay, b, bx, by) {
@@ -1007,9 +1071,8 @@ function update(dt) {
   P.blink -= dt;
   if (P.blink < -rand(2, 4)) P.blink = .14;
   if (shake > 0) shake -= dt;
-  if (G.palT < 1) G.palT = Math.min(1, G.palT + dt / 2.5);
 
-  // Valentina schleckt alle paar Sekunden am Gipfel
+  // Kirby schleckt alle paar Sekunden am Gipfel
   V.lick += dt;
   V.blink -= dt;
   if (V.blink < -rand(3, 6)) V.blink = .18;
@@ -1043,8 +1106,10 @@ function update(dt) {
   G.scroll += step;
   G.score = Math.floor(G.dist / 8) + G.bonus;
   if (G.score >= levelInfo(G.level + 1).at) levelUp();
+  const Lc = levelInfo(G.level), Ln = levelInfo(G.level + 1);
+  G.hour = startHour(G.level) + HOURS_PER_LEVEL * clamp((G.score - Lc.at) / (Ln.at - Lc.at), 0, 1);
 
-  // Katzosaurus
+  // Katze
   P.anim += dt * G.speed / 22;
   P.buffer -= dt;
   if (!P.grounded) {
@@ -1142,8 +1207,8 @@ function nameTag(text, x, y, accent) {
   ctx.fillText(text, bx + w / 2 + 1, by + h / 2 + .5);
 }
 
-// Valentina sitzt weit weg hinter den Bergen und schleckt Schnee von ihrem Gipfel.
-function drawValentina(pal) {
+// Kirby sitzt weit weg hinter den Bergen und schleckt Schnee von seinem Gipfel.
+function drawKirby(pal) {
   const vs = skyH > 170 ? 2 : 1;
   const vx = Math.round(viewW * (H > W * 1.1 ? .58 : .8));
   const apexH = Math.round(clamp(skyH * .32, 26, 100));
@@ -1151,9 +1216,9 @@ function drawValentina(pal) {
   ctx.translate(vx, -apexH);
   ctx.scale(vs, vs);
   ctx.translate(-22, -32);
-  const spr = V.blink > 0 ? valentina.blink : valentina.open;
+  const spr = V.blink > 0 ? kirby.blink : kirby.open;
   ctx.drawImage(spr.c, -1, -1);
-  // ihr Gipfel
+  // sein Gipfel
   const rows = Math.ceil(apexH / vs) + 2;
   const snowRows = Math.round(rows * .3);
   for (let r = 0; r < rows; r++) {
@@ -1187,12 +1252,12 @@ function drawValentina(pal) {
     }
   }
   ctx.restore();
-  if (mode === 'start' || V.sayT > 0) nameTag('VALENTINA', vx, -(apexH - 4 * vs), '#ff8fa3');
+  if (mode === 'start' || V.sayT > 0) nameTag('KIRBY', vx, -(apexH - 4 * vs), '#d9d23a');
   if (V.sayT > 0) bubble(V.say, vx + 26 * vs + 6, -(apexH + 18 * vs));
 }
 
 function draw() {
-  const pal = currentPalette();
+  const pal = paletteAt(G.hour);
   const sx = shake > 0 ? Math.round(rand(-2, 2)) : 0;
   const sy = shake > 0 ? Math.round(rand(-1, 1)) : 0;
   const now = performance.now();
@@ -1220,9 +1285,12 @@ function draw() {
   ctx.imageSmoothingEnabled = false;
 
   // Sonne / Mond
-  if (pal.stars < .98) {
+  // Die Sonne wandert von 06:00 (links) bis 20:00 (rechts) über den Himmel
+  const hDay = ((G.hour % 24) + 24) % 24;
+  const f = (hDay - 6) / 14;
+  if (f > 0 && f < 1 && pal.stars < .98) {
     ctx.globalAlpha = 1 - pal.stars;
-    pixelDisc(viewW * .17, -skyH * pal.sunY - 10, Math.round(pal.sunR), pal.sun);
+    pixelDisc(viewW * (.06 + .88 * f), -skyH * (.08 + .7 * Math.sin(Math.PI * f)), Math.round(pal.sunR), pal.sun);
   }
   if (pal.stars > .3) {
     ctx.globalAlpha = pal.stars;
@@ -1231,7 +1299,7 @@ function draw() {
   }
   ctx.globalAlpha = 1;
 
-  drawValentina(pal);
+  drawKirby(pal);
 
   // Wolken
   const span = viewW + 60;
@@ -1320,7 +1388,7 @@ function draw() {
     }
   }
 
-  // Fische und Adrians
+  // Fische, Adrian und Valentina
   for (const o of G.objects) {
     const oy = objY(o);
     if (o.type === 'fish') ctx.drawImage(fishSpr.c, snap(o.x) - 1, snap(-(oy + o.h)) - 1);
@@ -1328,9 +1396,9 @@ function draw() {
   }
   for (const o of G.objects) {
     if (o.type !== 'adrian' || !o.tag) continue;
-    const top = -(objY(o) + o.h);
+    const top = -(objY(o) + o.h) - (o.tagUp || 0); // gestaffelt, damit sich Namensschilder nicht überdecken
     const midX = snap(o.x) + o.w / 2 + (o.kind === 'ski' ? -3 : 0);
-    nameTag('ADRIAN', midX, top - 2, '#4f7fd6');
+    nameTag(o.name.toUpperCase(), midX, top - 2, o.who === 'valentina' ? '#ff8fa3' : '#4f7fd6');
     if (o.quipT > 0) bubble(o.quip, midX, top - 11);
   }
 
@@ -1340,7 +1408,7 @@ function draw() {
     ctx.fillRect(Math.round(q.x), -Math.round(q.y) - 1, 1, 1);
   }
 
-  // Katzosaurus
+  // Katze
   const cs = catSprite();
   ctx.drawImage(cs.c, snap(P.x) - cs.pad, snap(-(P.y + cs.h)) - cs.pad);
 
