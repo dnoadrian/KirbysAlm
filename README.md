@@ -11,6 +11,8 @@ Nur Tippen (bzw. Klicken):
 - **Tippen:** springen
 - **In der Luft nochmal tippen:** Doppelsprung
 
+Oben rechts lädt der kleine Pfeil-Knopf die Seite bzw. App neu und holt dabei die neueste Version. Daneben schaltet der Lautsprecher den Ton an und aus.
+
 ## Level
 
 | Level | Name | Neu |
@@ -39,3 +41,7 @@ Das funktioniert nur über `https://` (also über GitHub Pages), nicht beim dire
 In den Repository-Einstellungen unter *Settings → Pages* bei *Source* „Deploy from a branch“ wählen, dann den Branch mit `index.html` und den Ordner `/ (root)`.
 
 Wenn du das Spiel änderst, erhöhe die Versionsnummer `CACHE` in `sw.js`, damit installierte Apps die neue Version laden.
+
+## Schrift
+
+Die Oberfläche nutzt die Schrift [„Minecraft“ von Pwnage_Block](http://fontstruct.com/fontstructions/show/432966) unter [CC BY-SA 3.0](http://creativecommons.org/licenses/by-sa/3.0/), um die Zeichen Ä Ö Ü ä ö ü ß · ergänzt. Die ergänzte Schrift ist direkt in `index.html` eingebettet und steht unter derselben Lizenz.
