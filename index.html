@@ -70,8 +70,9 @@ p, h1, h2, h3 { margin: 0; }
   z-index: 10;
 }
 .box { display: flex; flex-direction: column; gap: 4px; padding: 7px 11px 8px; color: #ffffff; text-shadow: var(--stroke-sm); white-space: nowrap; }
-.fishbox { flex-direction: row; align-items: center; gap: 8px; margin-left: auto; min-height: 44px; font-size: 24px; }
-.fish-ico { width: 27px; height: 15px; display: inline-block; flex: none; }
+.fishbox { flex-direction: row; align-items: center; gap: 6px; margin-left: auto; min-height: 30px; font-size: 16px; padding: 4px 9px 5px !important; }
+.fishbox .fish-ico { width: 22px; height: 12px; }
+.fish-ico { width: 27.5px; height: 15px; display: inline-block; flex: none; }
 .box.bump { animation: bump .3s ease-out; }
 @keyframes bump { 40% { transform: scale(1.12); } }
 
@@ -102,6 +103,7 @@ p, h1, h2, h3 { margin: 0; }
 .icon-btn svg { width: 20px; height: 20px; display: block; filter: drop-shadow(1px 1px 0 var(--outline)) drop-shadow(-1px -1px 0 var(--outline)); }
 .close-x { width: 42px; height: 42px; padding: 0; }
 .close-x svg { width: 20px; height: 20px; filter: drop-shadow(1px 1px 0 var(--outline)) drop-shadow(-1px -1px 0 var(--outline)); }
+.first-run .hud { display: none; }
 #mute .off { display: none; }
 #mute[aria-pressed="true"] .on { display: none; }
 #mute[aria-pressed="true"] .off { display: block; }
@@ -482,6 +484,12 @@ const store = {
   get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* egal */ } },
 };
+// Neustart für alle: Spielstände aus älteren Versionen werden einmal gelöscht (Name, Fische, Gekauftes, Bestenliste)
+const SAVE_VERSION = 2;
+if (store.get('cj-save-version', 0) !== SAVE_VERSION) {
+  try { Object.keys(localStorage).filter((k) => k.startsWith('cj-')).forEach((k) => localStorage.removeItem(k)); } catch (e) { /* egal */ }
+  store.set('cj-save-version', SAVE_VERSION);
+}
 
 /* ---------- Pixel-Sprites ---------- */
 const INK = '#1e1c26';
@@ -638,14 +646,6 @@ function catRows(pose, look) {
       if ((yy < B.cy - .3 + bob && xx <= 15.5) || (yy <= hy - 1.6 && xx >= 14) || (xx >= 20.4 && xx <= 23.4 && yy >= hy - 1.6 && yy <= hy + .6)) g[y][x] = 'o';
     }
   }
-  if (look.breed.saddle) { // ganzer Körper braun, Kopf, Brust und Beine weiß
-    for (let y = 0; y < CAT_H; y++) for (let x = 0; x < CAT_W; x++) {
-      const xx = x - ox;
-      if (xx > 14.2) continue;
-      if (g[y][x] === 'b') g[y][x] = 'o';
-      else if (g[y][x] === 's') g[y][x] = 'u';
-    }
-  }
   if (look.breed.dots) {
     for (let y = 0; y < CAT_H; y++) for (let x = 0; x < CAT_W; x++) if (g[y][x] === 'b' && hash(x * 7 + y * 13) < .13) g[y][x] = 't';
   }
@@ -720,15 +720,12 @@ const POSE_UP = { fn: [1.1, 1.4], ff: [.95, 1.25], bn: [-1, -1.3], bf: [-.85, -1
 const POSE_DOWN = { fn: [.5, .25], ff: [.35, .15], bn: [-.2, -.9], bf: [-.35, -1], tail: .8, bob: 0 };
 
 // Katzenfarben: am Anfang gibt es nur die weiße Katze, alle anderen gibt es im Shop.
-// Jede Farbe hat ihre eigene Felllänge, "Moppel" ist ein dicker Kater.
+// Jede Farbe hat ihre eigene Felllänge.
 const BREEDS = [
   { id: 'weiss', name: 'Schneeweiß', hair: 'Kurzhaar', fur: 0, price: 0, desc: 'Deine erste Katze.', pal: {} },
   { id: 'grau', name: 'Grau getigert', hair: 'Halblanghaar', fur: 1, price: 30, desc: 'Grau mit dunklen Streifen.', pal: { b: '#b8bcc6', s: '#979ca8', d: '#80858f', u: '#80858f', e: '#2f5d34', c: '#e6a9b8' }, stripes: '#9a9fab' },
   { id: 'schwarz', name: 'Mitternacht', hair: 'Kurzhaar', fur: 0, price: 40, desc: 'Schwarz mit gelben Augen, wie Kirby.', pal: { b: '#3a3644', s: '#2a2733', d: '#1f1d27', u: '#2a2733', p: '#b07a88', e: '#e6d23a', c: '#7a5363', h: '#3a3644' } },
-  { id: 'weissbraun', name: 'Weiß-Braun', hair: 'Langhaar', fur: 2, price: 50, desc: 'Brauner Körper und Schwanz, weißer Kopf und Pfoten.', pal: { a: '#8a5a3a', q: '#8a5a3a', u: '#6e4429', e: '#2f5d34' }, saddle: ['#8a5a3a', '#6e4429'] },
   { id: 'orange', name: 'Orange', hair: 'Halblanghaar', fur: 1, price: 60, desc: 'Rot getigert.', pal: { b: '#f2a14a', s: '#d27a2a', d: '#b8661f', u: '#c8641c', p: '#ffc1a8', e: '#2f5d34', c: '#ffb08a' }, stripes: '#e48c35' },
-  { id: 'braun', name: 'Schoko', hair: 'Kurzhaar', fur: 0, price: 60, desc: 'Schokobraun mit Streifen.', pal: { b: '#8f5e3c', s: '#734a2d', d: '#5e3b22', u: '#4e2f1b', p: '#d9a08f', e: '#8fd16a', c: '#c98a7a' }, stripes: '#7a4e30' },
-  { id: 'moppel', name: 'Moppel', hair: 'Kurzhaar', fur: 0, price: 80, body: 'dick', desc: 'Ein dicker grau-weißer Kater.', pal: { a: '#8f95a1', q: '#8f95a1', u: '#6f7580', e: '#2f5d34' }, patches: '#9aa0ab' },
   { id: 'siam', name: 'Siam', hair: 'Kurzhaar', fur: 0, price: 90, desc: 'Hell, mit dunklen Ohren, Pfoten und Schwanz.', pal: { b: '#f1e6d2', s: '#d9c6a6', d: '#4a3128', g: '#5b3d30', q: '#5b3d30', u: '#3f2a22', a: '#5b3d30', e: '#1f4f8f' } },
   { id: 'gold', name: 'Goldkatze', hair: 'Halblanghaar', fur: 1, price: 150, desc: 'Glänzt und glitzert beim Laufen.', pal: { b: '#ffd54a', s: '#e0a920', d: '#c48d12', u: '#e0a920', e: '#6b2a12', c: '#ffab7a' }, sparkle: '#fff6b0' },
   { id: 'galaxie', name: 'Galaxie', hair: 'Langhaar', fur: 2, price: 200, desc: 'Voller Sterne, glitzert beim Laufen.', pal: { b: '#3a2f7a', s: '#2a2160', d: '#201a4d', u: '#ff7ad9', p: '#ff7ad9', n: '#ff7ad9', e: '#7cf7ff', c: '#8a5fd0', h: '#ffffff' }, dots: '#fff6a0', sparkle: '#b9a7ff' },
@@ -756,7 +753,7 @@ function catSet(breedId, cosIds = []) {
     pal.a = breed.pal.a || pal.b;
     pal.u = breed.pal.u || pal.s;
     pal.t = breed.stripes || breed.dots || pal.s;
-    pal.o = breed.patches || (breed.saddle && breed.saddle[0]) || pal.o;
+    pal.o = breed.patches || pal.o;
     const look = { breed, cos, body: breed.body || 'duenn' };
     const mk = (pose) => shrinkHitbox(sprite(catRows(pose, look), pal, true, 'w', COS_CHARS), HITBOX);
     catCache[key] = {
@@ -899,13 +896,16 @@ const girl = {
   ], GIRL_PAL),
 };
 
-const fishSpr = sprite([
-  '..bbbb..b',
-  '.bkbbbbbb',
-  'bbbbbbbb.',
-  '.bbbbbbbb',
-  '..bbbb..b',
-], { b: '#ff9f43', k: INK });
+const FISH_ROWS = [
+  '...ddd.....',
+  '.oobhhbo..t',
+  'obkbbbbbott',
+  'obbbbbbbbt.',
+  '.ollllbbott',
+  '..oolloo..t',
+];
+const FISH_PAL = { o: '#d9661c', b: '#ff9f43', h: '#ffc27a', l: '#ffe2b8', k: '#3a2213', d: '#f07f2a', t: '#f07f2a' };
+const fishSpr = sprite(FISH_ROWS, FISH_PAL);
 
 const cloudSpr = sprite([
   '.....cccc.....',
@@ -1595,7 +1595,12 @@ function updateHud(force) {
 }
 
 /* ---------- Shop und Inventar ---------- */
-const FISH_HTML = '<svg class="fish-ico" viewBox="0 0 9 5" shape-rendering="crispEdges" aria-hidden="true"><path fill="#ff9f43" d="M2 0h4v1h1v1h1V1h1v3H8V3H7v1H6v1H2V4H1V3H0V2h1V1h1z"/><path fill="#1e1c26" d="M2 1h1v1H2z"/></svg>';
+const FISH_HTML = (() => {
+  let rects = '';
+  FISH_ROWS.forEach((row, y) => [...row].forEach((ch, x) => { if (ch !== '.') rects += '<rect x="' + x + '" y="' + y + '" width="1" height="1" fill="' + FISH_PAL[ch] + '"/>'; }));
+  return '<svg class="fish-ico" viewBox="0 0 11 6" shape-rendering="crispEdges" aria-hidden="true">' + rects + '</svg>';
+})();
+document.querySelectorAll('svg.fish-ico').forEach((el) => { el.outerHTML = FISH_HTML; });
 const ICONS = ICON_SPR;
 // Vorschaubilder in voller Bildschirmauflösung zeichnen, damit nichts verschwimmt
 function iconCanvas(spr, scale = 4) {
@@ -1753,6 +1758,8 @@ function renderInv() {
 let setupFromInv = false;
 function openSetup(fromInv) {
   setupFromInv = fromInv;
+  document.body.classList.toggle('first-run', !fromInv);
+  $('setupTitle').textContent = fromInv ? 'Deine Katze' : 'Willkommen!';
   $('catName').value = save.name;
   $('setupMsg').hidden = true;
   $('setupBack').hidden = !fromInv;
@@ -1774,6 +1781,7 @@ $('setupNext').addEventListener('click', () => {
   $('catName').blur();
   updateNames();
   sfx.buy();
+  document.body.classList.remove('first-run');
   if (setupFromInv) { renderInv(); show('inv'); } else show('home');
 });
 $('setupBack').addEventListener('click', () => { renderInv(); show('inv'); });
@@ -2323,7 +2331,7 @@ function frame(now) {
   requestAnimationFrame(frame);
 }
 goHome();
-if (!save.name) openSetup(false); // beim ersten Start: Katze benennen und auswählen
+if (!save.name) openSetup(false); // beim ersten Start: erst die Katze benennen, dann geht es in die Lobby
 requestAnimationFrame(frame);
 if (document.fonts && document.fonts.load) {
   document.fonts.load('8px "CatJumperMC"').catch(() => {});

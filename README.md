@@ -19,17 +19,14 @@ Oben rechts installiert der kleine Download-Knopf die App (nur im Browser sichtb
 
 ## Deine Katze
 
-Beim ersten Start gibst du deiner Katze nur einen Namen. Alle starten mit der weißen Katze. Weitere Katzen gibt es im Shop unter **Katzen**, jede mit eigener Felllänge:
+Beim ersten Start legst du den Namen deiner Katze fest, bevor es in die Lobby geht. Alle starten mit der weißen Standard-Katze. Sechs weitere gibt es im Shop unter **Katzen**, jede mit eigener Felllänge:
 
 | Katze | Fell | Fische |
 | --- | --- | --- |
 | Schneeweiß | Kurzhaar | gratis |
 | Grau getigert | Halblanghaar | 30 |
 | Mitternacht (schwarz) | Kurzhaar | 40 |
-| Weiß-Braun (brauner Körper und Schwanz) | Langhaar | 50 |
 | Orange | Halblanghaar | 60 |
-| Schoko (braun) | Kurzhaar | 60 |
-| Moppel (dicker grau-weißer Kater) | Kurzhaar | 80 |
 | Siam | Kurzhaar | 90 |
 | Goldkatze (glitzert) | Halblanghaar | 150 |
 | Galaxie (glitzert) | Langhaar | 200 |
