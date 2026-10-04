@@ -23,69 +23,34 @@
   font-display: block;
 }
 
-/* ---- Look: Almhütte (Holz, rot-weiß) ---- */
+/* ---- Look: Almhütte (Holz, Moos, rot-weiß). Alle Schrift weiß. ---- */
 :root {
   --font: "CatJumperMC", "Courier New", monospace;
   --ink: #1e1c26;
-  --hud-bg: #6b4424;
+  --text: #ffffff;
+  --text-soft: rgba(255, 255, 255, .78);
+  --text-shadow: 2px 2px 0 rgba(40, 22, 8, .7);
+  --wood-dark: #3b2412;
+  --hud-bg: linear-gradient(#7a4d28, #643d1e);
   --hud-border: 3px solid #3b2412;
-  --hud-radius: 8px;
+  --hud-radius: 5px;
   --hud-shadow: 0 3px 0 #3b2412;
-  --hud-text: #fff4dc;
-  --hud-text-shadow: 2px 2px 0 #3b2412;
-  --hud-muted: #e8c99a;
-  --hud-accent: #ffd27a;
-  --panel-bg: repeating-linear-gradient(0deg, #a26f40 0 22px, #8f5f34 22px 24px);
-  --panel-border: 4px solid #4a2c15;
-  --panel-radius: 12px;
+  --panel-bg: repeating-linear-gradient(0deg, rgba(60, 30, 10, .16) 0 2px, transparent 2px 24px), linear-gradient(#8f5f34, #7a4f2a);
+  --panel-border: 4px solid #3b2412;
+  --panel-radius: 7px;
   --panel-shadow: 0 6px 0 #3b2412, 0 14px 30px rgba(0, 0, 0, .35);
-  --panel-blur: none;
-  --panel-text: #fff4dc;
-  --panel-text-shadow: 2px 2px 0 #3b2412;
-  --panel-muted: #f3d9b0;
   --head-bg: #c8382f;
-  --head-text: #ffffff;
-  --head-shadow: 2px 2px 0 #6e1712;
   --head-trim: repeating-linear-gradient(90deg, #c8382f 0 12px, #ffffff 12px 24px);
-  --card-bg: #f6e7c8;
-  --card-border: 3px solid #4a2c15;
-  --card-radius: 10px;
-  --card-text: #4a2c15;
-  --card-muted: #7a5634;
-  --btn-radius: 10px;
-  --btn-border-w: 3px;
-  --btn-bg: #d0453b;
-  --btn-border: #5a1d18;
-  --btn-text: #ffffff;
-  --btn-text-shadow: 2px 2px 0 #7a241e;
-  --btn-depth: #5a1d18;
-  --btn-glow: 0 0 0 transparent;
-  --btn2-bg: #c48a52;
-  --btn2-border: #5a3818;
-  --btn2-text: #fff4dc;
-  --btn2-text-shadow: 2px 2px 0 #5a3818;
-  --btn2-depth: #5a3818;
-  --btn2-glow: 0 0 0 transparent;
-  --start-bg: #3fa34d;
-  --start-border: #1f5a27;
-  --start-text: #ffffff;
-  --start-text-shadow: 2px 2px 0 #1f5a27;
-  --start-depth: #1f5a27;
-  --start-glow: 0 0 0 transparent;
-  --tab-bg: #8f5f34;
-  --tab-border: #4a2c15;
-  --tab-text: #f3d9b0;
-  --tab-active-bg: #f6e7c8;
-  --tab-active-text: #4a2c15;
-  --title: #fff4dc;
-  --title-shadow: 3px 3px 0 #4a2c15, -2px -2px 0 #4a2c15, 2px -2px 0 #4a2c15, -2px 2px 0 #4a2c15, 0 7px 0 #4a2c15;
-  --subtitle: #ffd27a;
-  --subtitle-shadow: 2px 2px 0 #4a2c15;
-  --scene-shadow: 2px 2px 0 rgba(30, 20, 10, .75);
-  --good: #7ed37a;
-  --focus: #ffd27a;
+  --card-bg: repeating-linear-gradient(90deg, rgba(255, 255, 255, .04) 0 2px, transparent 2px 19px), linear-gradient(#6e4524, #5e3a1d);
+  --card-border: 3px solid #3b2412;
+  --card-radius: 5px;
+  --btn-radius: 5px;
+  --good: #5fae3e;
+  --focus: #ffffff;
   --wipe: #6b4424;
   --modal-dim: rgba(30, 18, 8, .45);
+  /* Holz-Töne der Knöpfe (oben hell, unten dunkel) */
+  --wood-hi: #b07a45; --wood-lo: #8a5a2f; --wood-edge: #3b2412;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -130,54 +95,84 @@ p, h1, h2, h3 { margin: 0; }
   border: var(--hud-border);
   border-radius: var(--hud-radius);
   box-shadow: var(--hud-shadow);
-  color: var(--hud-text);
-  text-shadow: var(--hud-text-shadow);
-  backdrop-filter: var(--panel-blur);
+  color: var(--text);
+  text-shadow: var(--text-shadow);
   white-space: nowrap;
 }
-.box .lbl { color: var(--hud-muted); }
-.box .clock { color: var(--hud-accent); }
+.box .lbl { color: var(--text-soft); }
 .fishbox { flex-direction: row; align-items: center; gap: 8px; margin-left: auto; min-height: 44px; font-size: 24px; }
 .fish-ico { width: 27px; height: 15px; display: inline-block; flex: none; }
 .at-home .play-only { display: none; }
 .box.bump { animation: bump .3s ease-out; }
 @keyframes bump { 40% { transform: scale(1.12); } }
 
-/* Knöpfe */
+/* Knöpfe: Holzbretter mit Maserung, Nägeln in den Ecken und Moos obendrauf */
 .btn {
+  --nail: radial-gradient(circle, #2a180a 0 1.4px, rgba(255, 255, 255, .35) 1.5px 2.2px, transparent 2.4px);
+  position: relative;
   pointer-events: auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 12px 16px 13px;
-  border: var(--btn-border-w) solid var(--btn-border);
+  padding: 13px 16px 13px;
+  border: 3px solid var(--wood-edge);
   border-radius: var(--btn-radius);
-  background: var(--btn-bg);
-  color: var(--btn-text);
-  text-shadow: var(--btn-text-shadow);
-  box-shadow: 0 5px 0 var(--btn-depth), var(--btn-glow);
+  background:
+    var(--nail) left 4px top 7px / 6px 6px no-repeat,
+    var(--nail) right 4px top 7px / 6px 6px no-repeat,
+    var(--nail) left 4px bottom 4px / 6px 6px no-repeat,
+    var(--nail) right 4px bottom 4px / 6px 6px no-repeat,
+    repeating-linear-gradient(0deg, rgba(50, 25, 8, .2) 0 1px, transparent 1px 5px, rgba(255, 255, 255, .06) 5px 6px, transparent 6px 9px),
+    repeating-linear-gradient(90deg, transparent 0 37px, rgba(50, 25, 8, .25) 37px 39px),
+    linear-gradient(var(--wood-hi), var(--wood-lo));
+  color: var(--text);
+  text-shadow: var(--text-shadow);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .22), inset 0 -3px 0 rgba(0, 0, 0, .18), 0 5px 0 var(--wood-edge);
   font: 16px/1 var(--font);
   cursor: pointer;
   touch-action: manipulation;
   transition: transform .08s, box-shadow .08s;
 }
-.btn:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--btn-depth), var(--btn-glow); }
-.btn:focus-visible, .tab:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
-.btn[disabled] { opacity: .65; cursor: default; transform: none; }
-.btn.poor { opacity: .7; }
-.btn2 {
-  --btn-bg: var(--btn2-bg); --btn-border: var(--btn2-border); --btn-text: var(--btn2-text);
-  --btn-text-shadow: var(--btn2-text-shadow); --btn-depth: var(--btn2-depth); --btn-glow: var(--btn2-glow);
+/* Moos-Kante */
+.btn::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  top: -6px;
+  height: 9px;
+  background: linear-gradient(#7fc85a, #4f9a3c);
+  clip-path: polygon(0 100%, 0% 15%, 3% 55%, 6% 15%, 9% 80%, 12% 0%, 15% 55%, 18% 30%, 21% 55%, 24% 15%, 27% 80%, 30% 0%, 33% 80%, 36% 0%, 39% 55%, 42% 0%, 45% 70%, 48% 15%, 51% 55%, 54% 0%, 57% 55%, 60% 30%, 63% 70%, 66% 0%, 69% 80%, 72% 0%, 75% 55%, 78% 30%, 81% 80%, 84% 30%, 87% 55%, 90% 30%, 93% 80%, 96% 15%, 99% 55%, 100% 100%);
+  pointer-events: none;
 }
+.btn:active { transform: translateY(4px); box-shadow: inset 0 2px 0 rgba(255, 255, 255, .22), 0 1px 0 var(--wood-edge); }
+.btn:focus-visible, .tab:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+.btn[disabled] { opacity: .7; cursor: default; transform: none; }
+.btn.poor { opacity: .72; }
+/* helles Birkenholz */
+.btn2 { --wood-hi: #c9955c; --wood-lo: #a8743f; }
+/* Kirschholz für Kaufen */
+.btn-buy { --wood-hi: #b5523f; --wood-lo: #8e3a2b; }
+/* Start: grünes, bemoostes Brett mit Blümchen */
 .btn-start {
-  --btn-bg: var(--start-bg); --btn-border: var(--start-border); --btn-text: var(--start-text);
-  --btn-text-shadow: var(--start-text-shadow); --btn-depth: var(--start-depth); --btn-glow: var(--start-glow);
+  --wood-hi: #5fae3e; --wood-lo: #3f8a2c; --wood-edge: #234f19;
   font-size: 24px;
-  padding: 16px 20px 18px;
+  padding: 17px 20px 17px;
 }
+.btn-start::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle, #ffffff 0 1.5px, #ffd43b 1.6px 2.2px, transparent 2.4px) 12% 30% / 12px 12px no-repeat,
+    radial-gradient(circle, #ffffff 0 1.5px, #ff8fb8 1.6px 2.2px, transparent 2.4px) 88% 70% / 12px 12px no-repeat,
+    radial-gradient(circle, #ffffff 0 1.5px, #ffd43b 1.6px 2.2px, transparent 2.4px) 76% 22% / 12px 12px no-repeat;
+}
+.btn-start::before { height: 11px; top: -8px; background: linear-gradient(#9be07a, #5fae3e); }
 .icon-btn { width: 44px; height: 44px; padding: 0; }
-.icon-btn svg { width: 20px; height: 20px; display: block; }
+.icon-btn svg { width: 20px; height: 20px; display: block; filter: drop-shadow(2px 2px 0 rgba(40, 22, 8, .7)); }
 #mute .off { display: none; }
 #mute[aria-pressed="true"] .on { display: none; }
 #mute[aria-pressed="true"] .off { display: block; }
@@ -189,8 +184,8 @@ p, h1, h2, h3 { margin: 0; }
   left: calc(env(safe-area-inset-left, 0px) + 16px);
   pointer-events: none;
 }
-.title { font: 48px/1 var(--font); color: var(--title); text-shadow: var(--title-shadow); }
-.subtitle { margin-top: 14px; color: var(--subtitle); text-shadow: var(--subtitle-shadow); }
+.title { font: 48px/1 var(--font); color: #ffffff; text-shadow: 0 3px 0 rgba(40, 22, 8, .35), 0 6px 14px rgba(0, 0, 0, .18); }
+.subtitle { margin-top: 14px; color: #ffffff; text-shadow: var(--text-shadow); }
 .home-menu {
   position: fixed;
   left: calc(env(safe-area-inset-left, 0px) + 16px);
@@ -211,7 +206,7 @@ p, h1, h2, h3 { margin: 0; }
   max-width: 44%;
   text-align: right;
 }
-.tipline { color: #ffffff; text-shadow: var(--scene-shadow); }
+.tipline { color: #ffffff; text-shadow: var(--text-shadow); }
 .credit {
   position: fixed;
   right: calc(env(safe-area-inset-right, 0px) + 8px);
@@ -243,9 +238,8 @@ p, h1, h2, h3 { margin: 0; }
   border: var(--panel-border);
   border-radius: var(--panel-radius);
   box-shadow: var(--panel-shadow);
-  color: var(--panel-text);
-  text-shadow: var(--panel-text-shadow);
-  backdrop-filter: var(--panel-blur);
+  color: var(--text);
+  text-shadow: var(--text-shadow);
   overflow: hidden;
   animation: panelIn .28s cubic-bezier(.2, .9, .3, 1.2) both;
 }
@@ -258,8 +252,8 @@ p, h1, h2, h3 { margin: 0; }
   gap: 12px;
   padding: 12px 16px 14px;
   background: var(--head-bg);
-  color: var(--head-text);
-  text-shadow: var(--head-shadow);
+  color: #ffffff;
+  text-shadow: 2px 2px 0 #6e1712;
 }
 .panel-head::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--head-trim); }
 .panel-head h2 { flex: 1; font: 24px/1 var(--font); }
@@ -269,13 +263,14 @@ p, h1, h2, h3 { margin: 0; }
   font: 16px/1 var(--font);
   padding: 9px 14px 10px;
   border-radius: var(--btn-radius);
-  border: 2px solid var(--tab-border);
-  background: var(--tab-bg);
-  color: var(--tab-text);
+  border: 3px solid var(--wood-edge);
+  background: #6e4524;
+  color: var(--text-soft);
+  text-shadow: var(--text-shadow);
   cursor: pointer;
   touch-action: manipulation;
 }
-.tab[aria-selected="true"] { background: var(--tab-active-bg); color: var(--tab-active-text); }
+.tab[aria-selected="true"] { background: #4f9a3c; color: #ffffff; }
 .scroll {
   flex: 1;
   min-height: 0;
@@ -284,7 +279,7 @@ p, h1, h2, h3 { margin: 0; }
   -webkit-overflow-scrolling: touch;
   padding: 12px 16px 18px;
 }
-.scroll h3 { margin: 6px 0 10px; color: var(--panel-muted); font: 16px var(--font); }
+.scroll h3 { margin: 6px 0 10px; color: var(--text-soft); font: 16px var(--font); }
 .scroll h3:not(:first-child) { margin-top: 18px; }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
 .card {
@@ -295,22 +290,65 @@ p, h1, h2, h3 { margin: 0; }
   background: var(--card-bg);
   border: var(--card-border);
   border-radius: var(--card-radius);
-  color: var(--card-text);
-  text-shadow: none;
+  color: var(--text);
+  text-shadow: var(--text-shadow);
 }
 .card .prev { height: 66px; display: flex; align-items: center; justify-content: center; }
 .card canvas { image-rendering: pixelated; }
-.card .desc { color: var(--card-muted); line-height: 1.3; flex: 1; }
+.card .desc { color: var(--text-soft); line-height: 1.3; flex: 1; }
 .card .btn { width: 100%; padding: 9px 10px 10px; }
-.badge { align-self: flex-start; padding: 4px 10px 5px; border-radius: 999px; background: var(--good); color: #10301a; }
-.empty { color: var(--panel-muted); }
-.msg { margin: 10px 16px 0; padding: 8px 10px; border-radius: 8px; background: rgba(0, 0, 0, .35); color: #ffffff; text-shadow: none; }
+.badge { align-self: flex-start; padding: 4px 10px 5px; border-radius: 4px; background: var(--good); color: #ffffff; text-shadow: 1px 1px 0 #234f19; }
+.empty { color: var(--text-soft); }
+.msg { margin: 10px 16px 0; padding: 8px 10px; border-radius: 4px; background: rgba(0, 0, 0, .35); color: #ffffff; text-shadow: none; }
 .panel-body { display: flex; flex-direction: column; gap: 14px; padding: 16px; }
 .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; text-align: center; }
-.stat-num { display: block; font-size: 24px; color: var(--subtitle); text-shadow: var(--subtitle-shadow); }
-.stat-lbl { display: block; margin-top: 4px; color: var(--panel-muted); font-size: 8px; }
+.stat-num { display: block; font-size: 24px; color: #ffffff; }
+.stat-lbl { display: block; margin-top: 4px; color: var(--text-soft); font-size: 8px; }
 .row { display: flex; gap: 12px; }
 .row .btn { flex: 1; }
+
+/* Katze einrichten */
+.field-lbl { color: var(--text-soft); }
+.name-input {
+  width: 100%;
+  margin: 8px 0 14px;
+  padding: 12px 12px 13px;
+  border: 3px solid var(--wood-edge);
+  border-radius: 4px;
+  background: #5e3a1d;
+  color: #ffffff;
+  font: 16px/1 var(--font);
+  text-shadow: var(--text-shadow);
+  user-select: text;
+  -webkit-user-select: text;
+  touch-action: manipulation;
+}
+.name-input::placeholder { color: rgba(255, 255, 255, .45); }
+.name-input:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.breeds { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 8px 0 18px; }
+.breed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 6px;
+  border: 3px solid var(--wood-edge);
+  border-radius: 5px;
+  background: var(--card-bg);
+  color: #ffffff;
+  text-shadow: var(--text-shadow);
+  font: 16px/1.2 var(--font);
+  text-align: center;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.breed .hair { color: var(--text-soft); font-size: 8px; }
+.breed[aria-checked="true"] { border-color: #ffffff; box-shadow: 0 0 0 3px #5fae3e; }
+.breed:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.panel-head .setup-ok { font-size: 16px; padding: 12px 16px 12px; }
+#setupMsg { margin: 0 0 8px; }
+.me { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.me .who { flex: 1; min-width: 140px; display: flex; flex-direction: column; gap: 6px; }
 
 /* Level-/Event-Titel */
 #banner {
@@ -330,9 +368,9 @@ p, h1, h2, h3 { margin: 0; }
   transition: opacity .3s, transform .3s cubic-bezier(.2, .9, .3, 1.4);
 }
 #banner.show { opacity: 1; transform: none; }
-#banner .lvl { font-size: 48px; line-height: 1; color: var(--title); text-shadow: var(--title-shadow); }
-#banner .name { color: var(--subtitle); text-shadow: var(--subtitle-shadow); }
-#banner .tip { color: #ffffff; text-shadow: var(--scene-shadow); }
+#banner .lvl { font-size: 48px; line-height: 1; color: #ffffff; text-shadow: 0 3px 0 rgba(40, 22, 8, .45); }
+#banner .name { color: #ffffff; text-shadow: var(--text-shadow); }
+#banner .tip { color: #ffffff; text-shadow: var(--text-shadow); }
 
 /* Sprung-Bewertung */
 #combo {
@@ -368,7 +406,7 @@ p, h1, h2, h3 { margin: 0; }
   right: 16px;
   text-align: center;
   color: #ffffff;
-  text-shadow: var(--scene-shadow);
+  text-shadow: var(--text-shadow);
   pointer-events: none;
   transition: opacity .6s;
 }
@@ -383,8 +421,8 @@ p, h1, h2, h3 { margin: 0; }
   align-items: center;
   justify-content: center;
   background: var(--wipe);
-  color: var(--title);
-  text-shadow: var(--title-shadow);
+  color: #ffffff;
+  text-shadow: var(--text-shadow);
   font-size: 32px;
   pointer-events: none;
   clip-path: circle(0% at 12% 88%);
@@ -396,6 +434,9 @@ p, h1, h2, h3 { margin: 0; }
 
 @media (orientation: portrait) {
   .hud { flex-wrap: wrap; }
+  .breeds { grid-template-columns: 1fr; }
+  .breed { display: grid; grid-template-columns: auto 1fr; align-items: center; justify-items: start; column-gap: 14px; row-gap: 4px; padding: 8px 12px; text-align: left; }
+  .breed canvas { grid-row: 1 / 3; }
   .home-title { top: calc(env(safe-area-inset-top, 0px) + 74px); }
   .title { font-size: 40px; }
   .stats { grid-template-columns: repeat(2, 1fr); }
@@ -446,7 +487,7 @@ p, h1, h2, h3 { margin: 0; }
 <div id="home">
   <div class="home-title">
     <h1 class="title">Cat Jumper</h1>
-    <p class="subtitle">Spring über Adrian &amp; Valentina!</p>
+    <p class="subtitle" id="subtitle">Spring über Adrian &amp; Valentina!</p>
   </div>
   <nav class="home-menu" aria-label="Hauptmenü">
     <button class="btn btn2" id="shopBtn" type="button">Shop</button>
@@ -461,6 +502,19 @@ p, h1, h2, h3 { margin: 0; }
   <p class="credit">Schrift: Minecraft von Pwnage_Block (CC BY-SA 3.0)</p>
 </div>
 
+<div id="setup" class="modal" hidden>
+  <div class="panel small" role="dialog" aria-modal="true" aria-labelledby="setupTitle">
+    <div class="panel-head"><h2 id="setupTitle">Deine Katze</h2><button class="btn btn2" id="setupBack" type="button" hidden>Zurück</button><button class="btn btn-start setup-ok" id="setupOk" type="button">Fertig</button></div>
+    <div class="scroll">
+      <label class="field-lbl" for="catName">Wie heißt deine Katze?</label>
+      <input class="name-input" id="catName" type="text" maxlength="12" autocomplete="off" autocapitalize="words" spellcheck="false" placeholder="z. B. Mimi">
+      <p class="field-lbl">Wähle deine Katze</p>
+      <div class="breeds" id="breedList" role="radiogroup" aria-label="Katze"></div>
+      <p class="msg" id="setupMsg" hidden></p>
+    </div>
+  </div>
+</div>
+
 <div id="shop" class="modal" hidden>
   <div class="panel" role="dialog" aria-modal="true" aria-labelledby="shopTitle">
     <div class="panel-head">
@@ -470,7 +524,7 @@ p, h1, h2, h3 { margin: 0; }
     </div>
     <div class="tabs" role="tablist">
       <button class="tab" id="tabUp" type="button" role="tab" aria-selected="true">Upgrades</button>
-      <button class="tab" id="tabSkins" type="button" role="tab" aria-selected="false">Skins</button>
+      <button class="tab" id="tabCos" type="button" role="tab" aria-selected="false">Cosmetics</button>
     </div>
     <p class="msg" id="shopMsg" hidden></p>
     <div class="scroll"><div class="grid" id="shopList"></div></div>
@@ -485,10 +539,12 @@ p, h1, h2, h3 { margin: 0; }
       <button class="btn btn2" type="button" data-close>Zurück</button>
     </div>
     <div class="scroll">
+      <h3>Deine Katze</h3>
+      <div class="me" id="invMe"></div>
       <h3>Upgrades</h3>
       <div class="grid" id="invUpgrades"></div>
-      <h3>Skins</h3>
-      <div class="grid" id="invSkins"></div>
+      <h3>Cosmetics</h3>
+      <div class="grid" id="invCos"></div>
     </div>
   </div>
 </div>
@@ -561,8 +617,8 @@ const store = {
 const INK = '#1e1c26';
 
 // rows: Strings oder Zeichen-Arrays, '.' = leer. Das "ghost"-Zeichen (Schnurrhaare, Leinen)
-// bekommt keine Kontur und zählt nicht zur Kollision.
-function sprite(rows, pal, outline = true, ghost = 'w') {
+// bekommt keine Kontur und zählt nicht zur Kollision; Zeichen in noMask (Cosmetics) zählen nur nicht zur Kollision.
+function sprite(rows, pal, outline = true, ghost = 'w', noMask = '') {
   const h = rows.length;
   const w = Math.max(...rows.map((r) => r.length));
   const pad = outline ? 1 : 0;
@@ -588,7 +644,7 @@ function sprite(rows, pal, outline = true, ghost = 'w') {
       if (ch === '.') continue;
       g.fillStyle = pal[ch] || '#f0f';
       g.fillRect(x + pad, y + pad, 1, 1);
-      if (ch !== ghost) mask[y * w + x] = 1;
+      if (ch !== ghost && !noMask.includes(ch)) mask[y * w + x] = 1;
     }
   }
   return { c, w, h, pad, mask };
@@ -610,29 +666,36 @@ function shrinkHitbox(spr, scale) {
 const HITBOX = .8;
 
 // Die Katze wird aus Formen gerastert: süß und rund (großer Kopf, große Augen, kleiner Körper, kurze Beine).
-// 8 Lauf-Bilder (Hoppel-Galopp), eigene Bilder für Absprung, Fallen, Stehen, Schwanzwedeln und Blinzeln - und jeder Skin seine Farben.
-const CAT_W = 26, CAT_H = 18, RUN_FRAMES = 8;
+// 8 Lauf-Bilder (Hoppel-Galopp), Bilder für Absprung, Fallen, Stehen, Schwanzwedeln und Blinzeln.
+// Drei Katzen mit unterschiedlich langem Fell, dazu Cosmetics (Hut, Kette, Pulli ...), die nicht zur Kollision zählen.
+const CAT_W = 26, CAT_H = 22, CAT_TOP = 4, RUN_FRAMES = 8;
 const CAT_BASE = { b: '#fbfbf7', s: '#dfe2e9', d: '#c9ced8', p: '#ffb3c1', n: '#ff7f9e', c: '#ffc7d4', e: '#2b3a6b', h: '#ffffff', x: '#d6333f' };
-function catRows(pose, skin = {}) {
+const COS_PAL = { H: '#3f6b3a', J: '#d23b34', K: '#f4f4f0', L: '#ffffff', G: '#ffcc33', Y: '#d99a1e', Q: '#1b1b22', R: '#3c6fd6', M: '#e8edf5' };
+const COS_CHARS = Object.keys(COS_PAL).join('');
+function catRows(pose, look) {
+  const fur = look.breed.fur; // 0 kurz, 1 halblang, 2 lang
+  const cos = look.cos;
   const g = Array.from({ length: CAT_H }, () => Array(CAT_W).fill('.'));
-  const ox = 1, bob = pose.bob || 0;
+  const ox = 1, oy = CAT_TOP, bob = pose.bob || 0;
   const set = (x, y, c) => {
-    x = Math.round(x + ox); y = Math.round(y);
+    x = Math.round(x + ox); y = Math.round(y + oy);
     if (x >= 0 && x < CAT_W && y >= 0 && y < CAT_H) g[y][x] = c;
   };
+  const get = (x, y) => { x = Math.round(x + ox); y = Math.round(y + oy); return x >= 0 && x < CAT_W && y >= 0 && y < CAT_H ? g[y][x] : '.'; };
   const ell = (cx, cy, rx, ry, c) => {
     for (let y = 0; y < CAT_H; y++) for (let x = 0; x < CAT_W; x++) {
-      if (((x - ox + .5 - cx) / rx) ** 2 + ((y + .5 - cy) / ry) ** 2 <= 1) g[y][x] = c;
+      if (((x - ox + .5 - cx) / rx) ** 2 + ((y - oy + .5 - cy) / ry) ** 2 <= 1) g[y][x] = c;
     }
   };
   const tri = (ax, ay, bx, by, cx, cy, c) => {
     const sd = (px, py, qx, qy, rx, ry) => (px - rx) * (qy - ry) - (qx - rx) * (py - ry);
     for (let y = 0; y < CAT_H; y++) for (let x = 0; x < CAT_W; x++) {
-      const px = x - ox + .5, py = y + .5;
+      const px = x - ox + .5, py = y - oy + .5;
       const d1 = sd(px, py, ax, ay, bx, by), d2 = sd(px, py, bx, by, cx, cy), d3 = sd(px, py, cx, cy, ax, ay);
       if (!((d1 < 0 || d2 < 0 || d3 < 0) && (d1 > 0 || d2 > 0 || d3 > 0))) g[y][x] = c;
     }
   };
+  const rect = (x0, y0, x1, y1, c) => { for (let y = Math.round(y0); y <= Math.round(y1); y++) for (let x = Math.round(x0); x <= Math.round(x1); x++) set(x, y, c); };
   const line = (x0, y0, x1, y1, c, th = 2) => {
     const n = Math.ceil(Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0)) * 2) || 1;
     for (let i = 0; i <= n; i++) {
@@ -652,7 +715,7 @@ function catRows(pose, skin = {}) {
   // Beine auf der anderen Seite (etwas dunkler, hinter dem Körper)
   leg(14, j, pose.ff, 'd');
   leg(7.4, j, pose.bf, 'd');
-  // Schwanz: steht nach oben, die Spitze ringelt sich
+  // Schwanz: steht nach oben, die Spitze ringelt sich. Je länger das Fell, desto buschiger.
   const t = pose.tail || 0;
   const P0 = [5, 11 + bob], C = [.4, 11 + bob], E = [1.6 + t * .9, 4.2 + bob - t * .4];
   for (let i = 0; i <= 24; i++) {
@@ -660,18 +723,37 @@ function catRows(pose, skin = {}) {
     const x = v * v * P0[0] + 2 * v * u * C[0] + u * u * E[0];
     const y = v * v * P0[1] + 2 * v * u * C[1] + u * u * E[1];
     set(x, y, u > .82 ? 'u' : 'q');
-    if (u < .6) set(x + .6, y + .6, 'q');
+    if (u < .6 + fur * .2) set(x + .6, y + .6, 'q');
+    if (fur >= 1 && u > .25) set(x - .7, y + (i % 2 ? .3 : -.3), u > .82 ? 'u' : 'q');
+    if (fur === 2 && u > .15 && i % 2) set(x + 1.4, y + .2, 'q');
   }
   set(E[0] + 1, E[1] - .6, 'u'); // Ringel an der Spitze
   // kleiner, runder Körper mit Schatten am Bauch
   ell(10.2, 11.7 + bob, 5.6, 3.3, 's');
   ell(10.2, 11.2 + bob, 5.5, 3, 'b');
+  // Fell: Fransen am Bauch und flauschiger Rücken (Halblang- und Langhaar)
+  if (fur) {
+    for (let x = 5; x <= 15; x++) {
+      const k = 1 - ((x + .5 - 10.2) / 5.5) ** 2;
+      if (k <= 0) continue;
+      const half = 3 * Math.sqrt(k);
+      if (fur === 2 || x % 2 === 0) set(x, 11.2 + bob + half + .8 + (fur === 2 && x % 2 ? .9 : 0), 's');
+      if ((fur === 2 && x % 2 === 0) || x % 3 === 0) set(x, 11.2 + bob - half - .6, 'b');
+    }
+  }
   // großer, runder Kopf mit Ohren
   const hy = 6.3 + bob;
+  if (fur) { // Halskrause
+    ell(15.4, hy + 3.8, 1.8 + fur * .6, 1.9 + fur * .4, 'b');
+    set(14.2 - fur * .6, hy + 4.6, 'b'); set(14.8 - fur * .6, hy + 5.6, 'b');
+  }
   ell(18.6, hy, 5.1, 4.5, 'b');
   ell(18.6, hy + .5, 4.9, 4.3, 'b');
+  if (fur) { set(13.3, hy + 2, 'b'); set(24, hy + 2, 'b'); }
+  if (fur === 2) { set(13.1, hy + 3, 'b'); set(24.2, hy + 3, 'b'); set(12.8, hy + 1, 'b'); }
   tri(13.9, hy - 2.2, 14.6, hy - 6.4, 17.6, hy - 3.9, 'a');
   tri(19.6, hy - 3.9, 22.6, hy - 6.4, 23.3, hy - 2.2, 'a');
+  if (fur === 2) { set(14.6, hy - 7.2, 'u'); set(22.6, hy - 7.2, 'u'); } // Ohrpinsel
   set(15, hy - 4, 'p'); set(15.4, hy - 3.2, 'p');
   set(22, hy - 4, 'p'); set(21.6, hy - 3.2, 'p');
   // große Augen mit Glanzpunkt, rosa Bäckchen, kleine Nase
@@ -686,14 +768,63 @@ function catRows(pose, skin = {}) {
   // Beine auf dieser Seite
   leg(14.6, j, pose.fn, 'g');
   leg(8, j, pose.bn, 'g');
-  // Fellmuster: Streifen (getigert) oder Sternpunkte (Galaxie)
-  if (skin.stripes || skin.dots) {
+  // Fellmuster: Streifen (getigert)
+  if (look.breed.stripes) {
     for (let y = 0; y < CAT_H; y++) for (let x = 0; x < CAT_W; x++) {
       if (g[y][x] !== 'b') continue;
-      const onBody = y >= 9 && x <= 15, onHead = y <= 4 + bob && x >= 16;
-      if (skin.stripes ? (onBody || onHead) && x % 3 === 1 : hash(x * 7 + y * 13) < .14) g[y][x] = 't';
+      const yy = y - oy;
+      if (((yy >= 9 && x <= 15) || (yy <= 4 + bob && x >= 16)) && x % 3 === 1) g[y][x] = 't';
     }
   }
+
+  // ---- Cosmetics ----
+  if (cos.has('pulli')) { // Strickpulli über dem Körper, mit weißem Zickzack
+    for (let y = 0; y < CAT_H; y++) for (let x = 0; x < CAT_W; x++) {
+      const yy = y - oy, xx = x - ox;
+      if (!'bst'.includes(g[y][x]) || yy < 7.6 + bob || yy > 13.6 + bob || xx > 16.4 || xx < 4.5) continue;
+      g[y][x] = (Math.round(yy - bob) === 11 && (xx % 2 === 0)) || (Math.round(yy - bob) === 12 && (xx % 2 === 1)) ? 'M' : 'R';
+    }
+  }
+  if (cos.has('socken')) { // Ringelsocken an allen vier Pfoten
+    for (let y = 0; y < CAT_H; y++) for (let x = 0; x < CAT_W; x++) {
+      const yy = y - oy;
+      if ((g[y][x] === 'g' || g[y][x] === 'd') && yy >= 15) g[y][x] = yy % 2 ? 'J' : 'L';
+    }
+  }
+  if (cos.has('schal')) {
+    for (let x = 14.4; x <= 21.6; x++) for (let y = hy + 3.6; y <= hy + 4.8; y++) set(x, y, Math.round(x) % 3 === 0 ? 'L' : 'J');
+    line(14.6, hy + 4.4, 11.8 - t * .6, hy + 7 + t * .3, 'J', 2);
+    set(11.6 - t * .6, hy + 7.6 + t * .3, 'L'); set(12.6 - t * .6, hy + 7.6 + t * .3, 'L');
+  }
+  if (cos.has('kette')) {
+    for (let x = 15; x <= 21.2; x++) set(x, hy + 4.3 + (x > 17 && x < 20 ? .6 : 0), Math.round(x) % 2 ? 'G' : 'Y');
+    set(18.4, hy + 5.6, 'G'); set(18.4, hy + 6.5, 'J');
+  }
+  if (cos.has('brille')) {
+    for (const ex of [18, 21.4]) { set(ex, hy - .4, 'Q'); set(ex + 1, hy - .4, 'Q'); set(ex, hy + .6, 'Q'); set(ex + 1, hy + .6, 'Q'); }
+    set(20.2, hy - .4, 'Q');                 // Steg
+    set(17, hy - .4, 'Q'); set(16, hy - .9, 'Q'); // Bügel
+    set(19, hy - .4, 'L');                   // Glanz
+  }
+  if (cos.has('tirol')) { // grüner Tirolerhut mit roter Schnur und Feder
+    ell(18.7, hy - 4.4, 4.7, .9, 'H');
+    rect(16.2, hy - 7.6, 21.2, hy - 4.6, 'H');
+    rect(16.2, hy - 5.4, 21.2, hy - 5.4, 'J');
+    line(21.2, hy - 6, 23.4, hy - 9.4, 'K', 1);
+    set(23.6, hy - 9.9, 'K');
+  }
+  if (cos.has('santa')) { // Weihnachtsmütze, Zipfel hängt nach hinten
+    tri(14.2, hy - 4.2, 22.8, hy - 4.2, 12.2, hy - 8.8, 'J');
+    tri(15.5, hy - 4.2, 21.5, hy - 4.2, 18.5, hy - 8.4, 'J');
+    ell(11.9, hy - 8.8, 1.3, 1.3, 'L');
+    rect(14.2, hy - 4.6, 23, hy - 3.6, 'L');
+  }
+  if (cos.has('krone')) {
+    rect(15.6, hy - 5.4, 21.8, hy - 4.2, 'G');
+    for (const cx of [15.8, 18.7, 21.6]) { set(cx, hy - 6.4, 'G'); set(cx, hy - 7.4, 'Y'); }
+    set(18.7, hy - 4.9, 'J'); set(16.8, hy - 4.9, 'R'); set(20.6, hy - 4.9, 'R');
+  }
+  void get;
   return g;
 }
 function runPose(k) {
@@ -706,28 +837,40 @@ function runPose(k) {
 const POSE_STAND = { fn: [0, 0], ff: [.15, .05], bn: [0, 0], bf: [-.15, -.05], tail: 0, bob: 0 };
 const POSE_UP = { fn: [1.1, 1.4], ff: [.95, 1.25], bn: [-1, -1.3], bf: [-.85, -1.15], tail: -1.2, bob: 0 };
 const POSE_DOWN = { fn: [.5, .25], ff: [.35, .15], bn: [-.2, -.9], bf: [-.35, -1], tail: .8, bob: 0 };
-const SKINS = [
-  { id: 'weiss', name: 'Schneeweiß', price: 0, desc: 'Die klassische weiße Katze.', pal: {} },
-  { id: 'grau', name: 'Silbergrau', price: 30, desc: 'Grau getigert und leise wie ein Schatten.', pal: { b: '#b8bcc6', s: '#979ca8', d: '#80858f', u: '#80858f', e: '#2f5d34', c: '#e6a9b8' }, stripes: '#9a9fab' },
-  { id: 'schwarz', name: 'Mitternacht', price: 40, desc: 'Schwarz mit gelben Augen, wie Kirby.', pal: { b: '#3a3644', s: '#2a2733', d: '#1f1d27', u: '#2a2733', p: '#b07a88', e: '#e6d23a', c: '#7a5363', h: '#3a3644' } },
-  { id: 'tiger', name: 'Rotes Tigerle', price: 60, desc: 'Orange mit Streifen.', pal: { b: '#f2a14a', s: '#d27a2a', d: '#b8661f', u: '#c8641c', p: '#ffc1a8', e: '#2f5d34', c: '#ffb08a' }, stripes: '#c8641c' },
-  { id: 'siam', name: 'Siam', price: 80, desc: 'Hell, mit dunklen Ohren, Pfoten und Schwanz.', pal: { b: '#f1e6d2', s: '#d9c6a6', d: '#4a3128', g: '#5b3d30', q: '#5b3d30', u: '#3f2a22', a: '#5b3d30', e: '#1f4f8f' } },
-  { id: 'gold', name: 'Goldkatze', price: 150, desc: 'Glänzt und glitzert beim Laufen.', pal: { b: '#ffd54a', s: '#e0a920', d: '#c48d12', u: '#e0a920', e: '#6b2a12', c: '#ffab7a' }, sparkle: '#fff6b0' },
-  { id: 'galaxie', name: 'Galaxie', price: 200, desc: 'Voller Sterne, glitzert beim Laufen.', pal: { b: '#3a2f7a', s: '#2a2160', d: '#201a4d', u: '#ff7ad9', p: '#ff7ad9', n: '#ff7ad9', e: '#7cf7ff', c: '#8a5fd0', h: '#ffffff' }, dots: '#fff6a0', sparkle: '#b9a7ff' },
+
+// Die drei Katzen zur Auswahl: Farbe und Felllänge
+const BREEDS = [
+  { id: 'weiss', name: 'Schneeweiß', hair: 'Kurzhaar', fur: 0, pal: {} },
+  { id: 'grau', name: 'Grau getigert', hair: 'Halblanghaar', fur: 1, pal: { b: '#b8bcc6', s: '#979ca8', d: '#80858f', u: '#80858f', e: '#2f5d34', c: '#e6a9b8' }, stripes: '#9a9fab' },
+  { id: 'rot', name: 'Rotes Fellknäuel', hair: 'Langhaar', fur: 2, pal: { b: '#f2a14a', s: '#d27a2a', d: '#b8661f', u: '#c8641c', p: '#ffc1a8', e: '#2f5d34', c: '#ffb08a' }, stripes: '#e48c35' },
+];
+// Cosmetics: pro Körperstelle ist eines gleichzeitig angezogen
+const COSMETICS = [
+  { id: 'tirol', slot: 'head', name: 'Tirolerhut', price: 40, desc: 'Grüner Filzhut mit Feder.' },
+  { id: 'santa', slot: 'head', name: 'Weihnachtsmütze', price: 50, desc: 'Rot mit weißem Bommel.' },
+  { id: 'krone', slot: 'head', name: 'Krone', price: 120, desc: 'Für echte Almköniginnen. Glitzert beim Laufen.' },
+  { id: 'brille', slot: 'eyes', name: 'Sonnenbrille', price: 45, desc: 'Cool bleiben auf der Alm.' },
+  { id: 'kette', slot: 'neck', name: 'Goldkette', price: 60, desc: 'Mit kleinem roten Anhänger.' },
+  { id: 'schal', slot: 'neck', name: 'Schal', price: 35, desc: 'Rot-weiß gestreift, weht im Wind.' },
+  { id: 'pulli', slot: 'body', name: 'Strickpulli', price: 70, desc: 'Blau mit weißem Zickzack.' },
+  { id: 'socken', slot: 'feet', name: 'Ringelsocken', price: 30, desc: 'Rot-weiß geringelt, an allen vier Pfoten.' },
 ];
 const catCache = {};
-function catSet(id) {
-  if (!catCache[id]) {
-    const skin = SKINS.find((s) => s.id === id) || SKINS[0];
-    const pal = { ...CAT_BASE, ...skin.pal };
-    pal.g = skin.pal.g || pal.b;
-    pal.q = skin.pal.q || pal.b;
-    pal.a = skin.pal.a || pal.b;
-    pal.u = skin.pal.u || pal.s;
-    pal.t = skin.stripes || skin.dots || pal.s;
-    const mk = (pose) => shrinkHitbox(sprite(catRows(pose, skin), pal), HITBOX);
-    catCache[id] = {
-      skin,
+function catSet(breedId, cosIds = []) {
+  const key = breedId + '|' + [...cosIds].sort().join(',');
+  if (!catCache[key]) {
+    const breed = BREEDS.find((b) => b.id === breedId) || BREEDS[0];
+    const cos = new Set(cosIds);
+    const pal = { ...CAT_BASE, ...breed.pal, ...COS_PAL };
+    pal.g = breed.pal.g || pal.b;
+    pal.q = breed.pal.q || pal.b;
+    pal.a = breed.pal.a || pal.b;
+    pal.u = breed.pal.u || pal.s;
+    pal.t = breed.stripes || pal.s;
+    const look = { breed, cos };
+    const mk = (pose) => shrinkHitbox(sprite(catRows(pose, look), pal, true, 'w', COS_CHARS), HITBOX);
+    catCache[key] = {
+      sparkle: cos.has('krone') ? '#fff6b0' : null,
       run: Array.from({ length: RUN_FRAMES }, (_, k) => mk(runPose(k))),
       up: mk(POSE_UP),
       down: mk(POSE_DOWN),
@@ -736,7 +879,7 @@ function catSet(id) {
       dead: mk({ ...POSE_DOWN, eye: 'x' }),
     };
   }
-  return catCache[id];
+  return catCache[key];
 }
 let cat = null;
 
@@ -1091,17 +1234,27 @@ window.addEventListener('resize', resize);
 window.addEventListener('orientationchange', () => setTimeout(resize, 150));
 resize();
 
-/* ---------- Spielstand: Fische (Währung), Gekauftes, Skin ---------- */
+/* ---------- Spielstand: Katze (Name, Farbe), Fische (Währung), Gekauftes, Angezogenes ---------- */
 const save = {
   fish: store.get('cj-fish', 0),
-  owned: new Set(store.get('cj-owned', ['skin:weiss'])),
-  skin: store.get('cj-skin', 'weiss'),
+  owned: new Set(store.get('cj-owned', [])),
+  name: store.get('cj-name', ''),
+  breed: store.get('cj-breed', 'weiss'),
+  wear: store.get('cj-wear', {}),
 };
+// Früher gekaufte Farb-Skins gibt es nicht mehr: die Fische dafür gibt es zurück
+const OLD_SKIN_PRICES = { grau: 30, schwarz: 40, tiger: 60, siam: 80, gold: 150, galaxie: 200 };
+for (const k of [...save.owned]) {
+  if (k.startsWith('skin:')) { save.fish += OLD_SKIN_PRICES[k.slice(5)] || 0; save.owned.delete(k); }
+}
 function persist() {
   store.set('cj-fish', save.fish);
   store.set('cj-owned', [...save.owned]);
-  store.set('cj-skin', save.skin);
+  store.set('cj-name', save.name);
+  store.set('cj-breed', save.breed);
+  store.set('cj-wear', save.wear);
 }
+persist();
 const has = (key) => save.owned.has(key);
 const UPGRADES = [
   { id: 'star', name: 'Regenbogen-Stern', price: 60, desc: 'Einmal pro Runde: statt zu verlieren wirst du 4 Sekunden unverwundbar.' },
@@ -1109,13 +1262,16 @@ const UPGRADES = [
   { id: 'triple', name: 'Dreifachsprung', price: 90, desc: 'Ab Level 2 kannst du in der Luft zweimal nachspringen.' },
   { id: 'lucky', name: 'Glückspfote', price: 120, desc: 'Mehr Fische auf der Strecke und bei Events.' },
 ];
-cat = catSet(save.skin);
+const wearing = () => Object.values(save.wear).filter(Boolean);
+const myCat = () => catSet(save.breed, wearing());
+const catName = () => save.name || 'Deine Katze';
+cat = myCat();
 
 /* ---------- Spielzustand ---------- */
 const V0 = 290;      // erster Sprung (Pixel/s)
 const V2 = 265;      // Sprung in der Luft
 const GRAV = 1250;
-const OVER_QUIPS = ['{n} hat dich erwischt.', '{n} steht noch.', '{n} 1, Katze 0.', '{n} war im Weg.', '{n} lässt grüßen.', 'Kirby hat nichts gesehen.'];
+const OVER_QUIPS = ['{n} hat {k} erwischt.', '{n} steht noch.', '{n} 1, {k} 0.', '{n} war im Weg.', '{n} lässt grüßen.', 'Kirby hat nichts gesehen.'];
 
 let mode = 'home';
 const P = { x: 24, y: 0, vy: 0, grounded: true, jumps: 0, anim: 0, buffer: 0, blink: 0, airT: 0, land: 0, flip: 0, jumpPassed: false, landT: 0, checkReset: false, inv: 0, invTick: 0 };
@@ -1364,7 +1520,7 @@ async function keepAwake() {
 
 
 /* ---------- Ablauf ---------- */
-const screens = { home: $('home'), shop: $('shop'), inv: $('inv'), pause: $('pause'), over: $('over') };
+const screens = { home: $('home'), setup: $('setup'), shop: $('shop'), inv: $('inv'), pause: $('pause'), over: $('over') };
 function show(name) { for (const k in screens) screens[k].hidden = k !== name; }
 let hintTimer = 0, bannerTimer = 0;
 
@@ -1418,6 +1574,7 @@ function goHome() {
   $('banner').classList.remove('show');
   $('hint').classList.add('gone');
   show('home');
+  updateNames();
   updateHud(true);
 }
 function startGame() {
@@ -1475,7 +1632,7 @@ function gameOver(o) {
   shake = reduceMotion ? 0 : .35;
   sfx.hit();
   vibrate([60, 40, 120]);
-  $('quip').textContent = pick(OVER_QUIPS).replace('{n}', o.name);
+  $('quip').textContent = pick(OVER_QUIPS).replace('{n}', o.name).replace('{k}', catName());
   $('rFish').textContent = G.fish;
   $('rLevel').textContent = G.level;
   $('rJumped').textContent = G.jumped;
@@ -1550,7 +1707,7 @@ function iconCanvas(spr, scale = 4) {
   c.style.height = spr.c.height * scale + 'px';
   return c;
 }
-function skinCanvas(id) { return iconCanvas(catSet(id).idle[0], 3); }
+const catPreview = (cosIds, breed = save.breed, scale = 3) => iconCanvas(catSet(breed, cosIds).idle[0], scale);
 function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
 let shopTab = 'up', msgTimer = 0;
 function shopMsg(text) {
@@ -1563,17 +1720,17 @@ function shopMsg(text) {
 function renderShop() {
   $('shopWallet').textContent = save.fish;
   $('tabUp').setAttribute('aria-selected', String(shopTab === 'up'));
-  $('tabSkins').setAttribute('aria-selected', String(shopTab === 'skins'));
+  $('tabCos').setAttribute('aria-selected', String(shopTab === 'cos'));
   const list = $('shopList');
   list.textContent = '';
   const items = shopTab === 'up'
     ? UPGRADES.map((u) => ({ ...u, key: 'up:' + u.id, prev: () => iconCanvas(ICONS[u.id]) }))
-    : SKINS.filter((s) => s.price > 0).map((s) => ({ ...s, key: 'skin:' + s.id, prev: () => skinCanvas(s.id) }));
+    : COSMETICS.map((c) => ({ ...c, key: 'cos:' + c.id, prev: () => catPreview([c.id]) }));
   for (const it of items) {
     const card = el('div', 'card');
     const prev = el('div', 'prev');
     prev.appendChild(it.prev());
-    const btn = el('button', 'btn');
+    const btn = el('button', 'btn btn-buy');
     btn.type = 'button';
     if (has(it.key)) {
       btn.textContent = 'Gekauft';
@@ -1588,6 +1745,12 @@ function renderShop() {
     list.appendChild(card);
   }
 }
+function wear(c, on) {
+  if (on) save.wear[c.slot] = c.id;
+  else if (save.wear[c.slot] === c.id) delete save.wear[c.slot];
+  cat = myCat();
+  persist();
+}
 function buy(it) {
   if (has(it.key)) return;
   if (save.fish < it.price) {
@@ -1597,7 +1760,7 @@ function buy(it) {
   }
   save.fish -= it.price;
   save.owned.add(it.key);
-  if (it.key.startsWith('skin:')) { save.skin = it.id; cat = catSet(it.id); shopMsg(it.name + ' gekauft und angezogen!'); }
+  if (it.slot) { wear(it, true); shopMsg(it.name + ' gekauft und angezogen!'); }
   else shopMsg(it.name + ' gekauft! Es ist ab jetzt immer aktiv.');
   persist();
   sfx.buy();
@@ -1605,9 +1768,21 @@ function buy(it) {
   updateHud(true);
 }
 $('tabUp').addEventListener('click', () => { shopTab = 'up'; renderShop(); });
-$('tabSkins').addEventListener('click', () => { shopTab = 'skins'; renderShop(); });
+$('tabCos').addEventListener('click', () => { shopTab = 'cos'; renderShop(); });
 function renderInv() {
   $('invWallet').textContent = save.fish;
+  // deine Katze
+  const me = $('invMe');
+  me.textContent = '';
+  const who = el('div', 'who');
+  const breed = BREEDS.find((b) => b.id === save.breed) || BREEDS[0];
+  who.append(el('p', 'name', catName()), el('p', 'desc', breed.name + ' · ' + breed.hair));
+  const change = el('button', 'btn btn2', 'Katze ändern');
+  change.type = 'button';
+  change.addEventListener('click', () => openSetup(true));
+  who.appendChild(change);
+  me.append(catPreview(wearing(), save.breed, 4), who);
+  // Upgrades
   const up = $('invUpgrades');
   up.textContent = '';
   const owned = UPGRADES.filter((u) => has('up:' + u.id));
@@ -1619,22 +1794,70 @@ function renderInv() {
     card.append(prev, el('p', 'name', u.name), el('p', 'desc', u.desc), el('span', 'badge', 'Aktiv'));
     up.appendChild(card);
   }
-  const sk = $('invSkins');
-  sk.textContent = '';
-  for (const s of SKINS.filter((x) => x.price === 0 || has('skin:' + x.id))) {
+  // Cosmetics
+  const cl = $('invCos');
+  cl.textContent = '';
+  const mine = COSMETICS.filter((c) => has('cos:' + c.id));
+  if (!mine.length) cl.appendChild(el('p', 'empty', 'Noch keine Cosmetics. Hüte, Ketten, Pullis und mehr gibt es im Shop.'));
+  for (const c of mine) {
+    const on = save.wear[c.slot] === c.id;
     const card = el('div', 'card');
     const prev = el('div', 'prev');
-    prev.appendChild(skinCanvas(s.id));
-    const btn = el('button', 'btn' + (s.id === save.skin ? '' : ' btn2'));
+    prev.appendChild(catPreview([c.id]));
+    const btn = el('button', 'btn' + (on ? '' : ' btn2'), on ? 'Ausziehen' : 'Anziehen');
     btn.type = 'button';
-    if (s.id === save.skin) { btn.textContent = 'Angezogen'; btn.disabled = true; }
-    else {
-      btn.textContent = 'Anziehen';
-      btn.addEventListener('click', () => { save.skin = s.id; cat = catSet(s.id); persist(); sfx.buy(); renderInv(); });
-    }
-    card.append(prev, el('p', 'name', s.name), el('p', 'desc', s.desc), btn);
-    sk.appendChild(card);
+    btn.addEventListener('click', () => { wear(c, !on); sfx.buy(); renderInv(); });
+    card.append(prev, el('p', 'name', c.name), el('p', 'desc', on ? 'Angezogen' : c.desc), btn);
+    cl.appendChild(card);
   }
+}
+
+/* ---------- Katze einrichten: Name und eine von drei Katzen ---------- */
+let pickBreed = save.breed;
+function openSetup(fromInv) {
+  pickBreed = save.breed;
+  $('catName').value = save.name;
+  $('setupMsg').hidden = true;
+  $('setupBack').hidden = !fromInv;
+  renderBreeds();
+  show('setup');
+}
+function renderBreeds() {
+  const list = $('breedList');
+  list.textContent = '';
+  for (const b of BREEDS) {
+    const card = el('button', 'breed');
+    card.type = 'button';
+    card.setAttribute('role', 'radio');
+    card.setAttribute('aria-checked', String(b.id === pickBreed));
+    card.append(catPreview([], b.id, 3), el('span', '', b.name), el('span', 'hair', b.hair));
+    card.addEventListener('click', () => { pickBreed = b.id; sfx.meow(); renderBreeds(); });
+    list.appendChild(card);
+  }
+}
+$('setupOk').addEventListener('click', () => {
+  audioOn();
+  const name = $('catName').value.trim().slice(0, 12);
+  if (!name) {
+    $('setupMsg').textContent = 'Gib deiner Katze bitte einen Namen.';
+    $('setupMsg').hidden = false;
+    $('catName').focus();
+    sfx.no();
+    return;
+  }
+  save.name = name;
+  save.breed = pickBreed;
+  persist();
+  cat = myCat();
+  updateNames();
+  sfx.buy();
+  $('catName').blur();
+  show('home');
+});
+$('setupBack').addEventListener('click', () => { renderInv(); show('inv'); });
+$('catName').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('setupOk').click(); });
+function updateNames() {
+  $('subtitle').textContent = catName() + ' springt über Adrian & Valentina!';
 }
 
 /* ---------- Kollision (pixelgenau) ---------- */
@@ -1735,8 +1958,8 @@ function update(dt) {
   } else if (Math.random() < dt * 6) {
     particles.push({ x: P.x + 6, y: 0, vx: rand(-40, -10), vy: rand(10, 40), life: rand(.2, .4) });
   }
-  if (cat.skin.sparkle && Math.random() < dt * 14) {
-    particles.push({ x: P.x + rand(4, 26), y: P.y + rand(3, 16), vx: rand(-50, -20), vy: rand(-10, 20), life: rand(.3, .5), c: cat.skin.sparkle });
+  if (cat.sparkle && Math.random() < dt * 14) {
+    particles.push({ x: P.x + rand(4, 26), y: P.y + rand(3, 16), vx: rand(-50, -20), vy: rand(-10, 20), life: rand(.3, .5), c: cat.sparkle });
   }
   if (P.inv > 0) {
     P.inv -= dt;
@@ -2111,6 +2334,7 @@ function frame(now) {
   requestAnimationFrame(frame);
 }
 goHome();
+if (!save.name) openSetup(false); // beim ersten Start: Katze benennen und auswählen
 requestAnimationFrame(frame);
 if (document.fonts && document.fonts.load) {
   document.fonts.load('8px "CatJumperMC"').catch(() => {});

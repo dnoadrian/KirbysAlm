@@ -17,11 +17,15 @@ Nur Tippen (bzw. Klicken):
 
 Oben rechts lädt der Pfeil-Knopf die Seite bzw. App neu und holt die neueste Version, der Lautsprecher schaltet den Ton.
 
+## Deine Katze
+
+Beim ersten Start gibst du deiner Katze einen Namen und wählst eine von drei Katzen: Schneeweiß (Kurzhaar), Grau getigert (Halblanghaar) oder Rotes Fellknäuel (Langhaar, mit buschigem Schwanz, Halskrause und Ohrpinseln). Im Inventar kannst du das später unter "Katze ändern" anpassen.
+
 ## Fische, Shop und Inventar
 
-Es gibt keine Punkte mehr, nur Fische. Sie sind die Währung und werden im Browser gespeichert. Fische gibt es auf der Strecke, bei Events, für jede 5er-Serie (+2) und für jeden Gegner, den du mit Regenbogen-Kraft wegschleuderst.
+Es gibt keine Punkte, nur Fische. Sie sind die Währung und werden im Browser gespeichert. Fische gibt es auf der Strecke, bei Events, für jede 5er-Serie (+2) und für jeden Gegner, den du mit Regenbogen-Kraft wegschleuderst.
 
-Im **Shop** gibt es Upgrades (Regenbogen-Stern, Fisch-Magnet, Dreifachsprung, Glückspfote) und Katzen-Skins (Silbergrau, Mitternacht, Rotes Tigerle, Siam, Goldkatze, Galaxie). Im **Inventar** siehst du deine Upgrades und ziehst Skins an.
+Im **Shop** gibt es Upgrades (Regenbogen-Stern, Fisch-Magnet, Dreifachsprung, Glückspfote) und 8 Cosmetics: Tirolerhut, Weihnachtsmütze, Krone, Sonnenbrille, Goldkette, Schal, Strickpulli und Ringelsocken. Pro Körperstelle (Kopf, Augen, Hals, Körper, Pfoten) ist eines angezogen. Im **Inventar** siehst du deine Katze, deine Upgrades und ziehst Cosmetics an oder aus. Cosmetics zählen nicht zur Hitbox.
 
 ## Spannung
 
@@ -31,7 +35,7 @@ Im **Shop** gibt es Upgrades (Regenbogen-Stern, Fisch-Magnet, Dreifachsprung, Gl
 
 ## Oberfläche
 
-Almhütte: Holzbretter, rot-weiße Kopfleiste, grüner Start-Knopf, dazu die Minecraft-Schrift.
+Almhütte: Holzbretter mit Maserung, Nägeln und Moos, rot-weiße Kopfleiste, grüner Start-Knopf mit Blümchen. Alle Schrift ist weiß, in der Minecraft-Schrift.
 
 ## Level
 
