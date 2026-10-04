@@ -9,7 +9,9 @@ Spring über Adrian und Valentina! Ein kleines Pixel-Spiel fürs Handy: Eine wei
 Nur Tippen (bzw. Klicken):
 
 - **Tippen:** springen
-- **In der Luft nochmal tippen:** Doppelsprung
+- **In der Luft nochmal tippen:** Doppelsprung (ab Level 2, mit Salto)
+
+Jeder geschaffte Sprung wird bewertet: je knapper, desto besser ("Super!", "Perfekt!", "Unglaublich!"), dazu die Serie (1x, 2x, 3x ...). Ab 5x leuchtet die Anzeige in Regenbogenfarben, jede zehnte Serie ist "Legendär!". Ein Sprung ohne Übersprungenen beendet die Serie. Je länger die Serie, desto mehr Bonuspunkte.
 
 Oben rechts lädt der kleine Pfeil-Knopf die Seite bzw. App neu und holt dabei die neueste Version. Daneben schaltet der Lautsprecher den Ton an und aus.
 

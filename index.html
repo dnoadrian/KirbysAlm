@@ -201,6 +201,37 @@ h2 { margin: 0; font: 40px/1 var(--font-mc); text-shadow: 4px 4px 0 var(--shadow
 #banner .name { color: var(--gold); text-shadow: 2px 2px 0 #3f2a00; }
 #banner .tip { text-shadow: 2px 2px 0 var(--shadow); }
 
+/* Sprung-Bewertung: springt rein, wackelt, schwebt nach oben weg */
+#combo {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  top: 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  pointer-events: none;
+  opacity: 0;
+}
+#combo.pop { animation: combo 1.15s cubic-bezier(.2, .9, .3, 1) both; }
+#comboWord { font-size: 32px; line-height: 1; text-shadow: 3px 3px 0 rgba(0, 0, 0, .55); }
+#comboMult { font-size: 24px; line-height: 1; color: var(--yellow); text-shadow: 3px 3px 0 var(--yellow-shadow); }
+#combo.hot #comboWord { animation: rainbow .6s steps(6) infinite; }
+@keyframes combo {
+  0% { opacity: 0; transform: scale(2.4) rotate(-10deg); }
+  12% { opacity: 1; transform: scale(.85) rotate(5deg); }
+  22% { transform: scale(1.12) rotate(-3deg); }
+  32% { transform: scale(1) rotate(0); }
+  70% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-36px) scale(.9); }
+}
+@keyframes rainbow {
+  0% { color: #ff5555; } 17% { color: #ffaa00; } 33% { color: #ffff55; }
+  50% { color: #55ff55; } 67% { color: #55ffff; } 83% { color: #ff55ff; }
+}
+@keyframes fadeout { 0%, 70% { opacity: 1; } 100% { opacity: 0; } }
+
 #hint {
   position: fixed;
   left: 16px;
@@ -217,7 +248,8 @@ h2 { margin: 0; font: 40px/1 var(--font-mc); text-shadow: 4px 4px 0 var(--shadow
   .screen { padding-top: calc(env(safe-area-inset-top, 0px) + 58px); gap: 8px; }
   .logo h1 { font-size: 40px; }
   h2 { font-size: 32px; }
-  #banner { top: 20%; }
+  #banner { top: 14%; }
+  #combo { top: 46%; }
   #banner .lvl { font-size: 40px; }
 }
 @media (orientation: landscape) and (max-height: 400px) {
@@ -225,7 +257,8 @@ h2 { margin: 0; font: 40px/1 var(--font-mc); text-shadow: 4px 4px 0 var(--shadow
   .logo { margin: 0 0 6px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .splash, .box.flash .num, .new-best { animation: none; }
+  .splash, .box.flash .num, .new-best, #combo.hot #comboWord { animation: none; }
+  #combo.pop { animation: fadeout 1.15s both; }
   #banner { transition: none; }
 }
 </style>
@@ -265,7 +298,7 @@ h2 { margin: 0; font: 40px/1 var(--font-mc); text-shadow: 4px 4px 0 var(--shadow
     <button class="mc-btn" id="installBtn" type="button" hidden>Als App installieren</button>
   </div>
   <p class="help t" id="installHelp" hidden></p>
-  <p class="help t"><span class="key">Tippen</span> = springen, in der Luft <span class="key">nochmal tippen</span> = Doppelsprung</p>
+  <p class="help t"><span class="key">Tippen</span> = springen. Ab Level 2: in der Luft <span class="key">nochmal tippen</span> = Doppelsprung</p>
   <p class="help t muted extra">Kirby schleckt derweil Schnee von den Gipfeln. Mit jedem Level wird es später.</p>
   <p class="help t muted portrait-only">Am schönsten im Querformat.</p>
   <div class="credit"><span>Cat Jumper 1.0</span><span>Schrift: Minecraft von Pwnage_Block (CC BY-SA 3.0)</span></div>
@@ -282,11 +315,14 @@ h2 { margin: 0; font: 40px/1 var(--font-mc); text-shadow: 4px 4px 0 var(--shadow
   <div class="stats t">
     <p>Punkte: <span class="num" id="rScore">0</span></p>
     <p>Übersprungen: <span class="num" id="rJumped">0</span> · Level: <span class="num" id="rLevel">1</span></p>
+    <p>Beste Serie: <span class="num" id="rCombo">0x</span></p>
     <p class="new-best" id="newBest" hidden>Neuer Rekord!</p>
     <p class="muted">Rekord: <span id="rBest">0</span></p>
   </div>
   <div class="menu"><button class="mc-btn" id="againBtn" type="button">Nochmal</button></div>
 </div>
+
+<div id="combo" aria-live="polite"><span id="comboWord"></span><span id="comboMult"></span></div>
 
 <div id="banner" aria-live="polite">
   <span class="lvl" id="bLevel">Level 1</span>
@@ -294,7 +330,7 @@ h2 { margin: 0; font: 40px/1 var(--font-mc); text-shadow: 4px 4px 0 var(--shadow
   <span class="tip" id="bTip">Tippen = springen</span>
 </div>
 
-<p id="hint" class="gone">Tippen = springen · nochmal tippen = Doppelsprung</p>
+<p id="hint" class="gone">Tippen = springen</p>
 
 <script>
 (() => {
@@ -368,33 +404,98 @@ function shrinkHitbox(spr, scale) {
 }
 const HITBOX = .8;
 
-// Die weiße Katze: Kopf mit Ohren und Schnurrhaaren, schlanker Körper, Schwanz nach oben.
-const CAT_TOP = [
-  '...............b.....b..',
-  '.bb...........bbb...bbb.',
-  '.bb...........bpbbbbbpb.',
-  '..bb..........bbkbbbkbb.',
-  '..bb.........wbbbbnbbbbw',
-  '...bb.........bbbbbbbbb.',
-  '...bb.........bbbbbbbbb.',
-  '....bbbbbsbbbsbbbbbbbb..',
-  '....bbbbbbsbbbsbbbbbbb..',
-  '....bbbbbbbbbbllllbbb...',
-  '.....bbbbbbbbbllllbb....',
-  '......bbbbbbbbbbbbb.....',
-];
-const LEGS = {
-  run1: ['......bb.......bb.......', '......bb.......bb.......', '......bb.......bb.......', '......bbb......bbb......'],
-  run2: ['......bb.......bb.......', '.....bb.........bb......', '....bb...........bb.....', '....b.............bb....'],
-  jump: ['.....bb........bb.......', '....bb........bb........', '...bb........bb.........', '........................'],
-};
-const CAT_PAL = { b: '#fbfbf7', s: '#e3e6ec', l: '#ffffff', k: '#3a6fd8', p: '#ffb3c1', n: '#ff8fa3', w: '#aab3c2' };
+// Die weiße Katze wird aus Formen gerastert. So bekommt sie 8 Lauf-Bilder (Galopp),
+// eigene Bilder für Absprung, Fallen, Stehen, Schwanzwedeln und Blinzeln.
+const CAT_W = 30, CAT_H = 18, RUN_FRAMES = 8;
+const CAT_PAL = { b: '#fbfbf7', s: '#dcdfe6', d: '#c3c8d2', p: '#ffb3c1', n: '#ff8fa3', e: '#3b8fd6', x: '#d6333f' };
+function catRows(pose) {
+  const g = Array.from({ length: CAT_H }, () => Array(CAT_W).fill('.'));
+  const ox = 1, bob = pose.bob || 0;
+  const set = (x, y, c) => {
+    x = Math.round(x + ox); y = Math.round(y);
+    if (x >= 0 && x < CAT_W && y >= 0 && y < CAT_H) g[y][x] = c;
+  };
+  const ell = (cx, cy, rx, ry, c) => {
+    for (let y = 0; y < CAT_H; y++) for (let x = 0; x < CAT_W; x++) {
+      if (((x - ox + .5 - cx) / rx) ** 2 + ((y + .5 - cy) / ry) ** 2 <= 1) g[y][x] = c;
+    }
+  };
+  const tri = (ax, ay, bx, by, cx, cy, c) => {
+    const sd = (px, py, qx, qy, rx, ry) => (px - rx) * (qy - ry) - (qx - rx) * (py - ry);
+    for (let y = 0; y < CAT_H; y++) for (let x = 0; x < CAT_W; x++) {
+      const px = x - ox + .5, py = y + .5;
+      const d1 = sd(px, py, ax, ay, bx, by), d2 = sd(px, py, bx, by, cx, cy), d3 = sd(px, py, cx, cy, ax, ay);
+      if (!((d1 < 0 || d2 < 0 || d3 < 0) && (d1 > 0 || d2 > 0 || d3 > 0))) g[y][x] = c;
+    }
+  };
+  const line = (x0, y0, x1, y1, c, th = 2) => {
+    const n = Math.ceil(Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0)) * 2) || 1;
+    for (let i = 0; i <= n; i++) {
+      const x = x0 + (x1 - x0) * i / n, y = y0 + (y1 - y0) * i / n;
+      for (let t = 0; t < th; t++) set(x - (th - 1) / 2 + t, y, c);
+    }
+  };
+  const leg = (jx, jy, [a1, a2], c) => {
+    const kx = jx + Math.sin(a1) * 3.3, ky = jy + Math.cos(a1) * 3.3;
+    const fx = kx + Math.sin(a2) * 3.2, fy = ky + Math.cos(a2) * 3.2;
+    line(jx, jy, kx, ky, c);
+    line(kx, ky, fx, fy, c);
+    set(fx + 1, fy, c); // Pfote
+  };
+  const j = 10.4 + bob;
+  // Beine auf der anderen Seite (etwas dunkler, hinter dem Körper)
+  leg(18.6, j, pose.ff, 'd');
+  leg(7.2, j, pose.bf, 'd');
+  // Schwanz
+  const t = pose.tail || 0;
+  const P0 = [4.6, 8.2 + bob], C = [0.2, 9 + bob], E = [0.6 + t * .8, 2.4 + bob - t * .5];
+  for (let i = 0; i <= 24; i++) {
+    const u = i / 24, v = 1 - u;
+    const x = v * v * P0[0] + 2 * v * u * C[0] + u * u * E[0];
+    const y = v * v * P0[1] + 2 * v * u * C[1] + u * u * E[1];
+    set(x, y, u > .8 ? 's' : 'b');
+    if (u < .55) set(x + .6, y + .6, 'b');
+  }
+  // Körper mit Schatten am Bauch
+  for (const [c, dy] of [['s', .5], ['b', 0]]) {
+    ell(13, 9.3 + bob + dy, 8.4, 3.2, c);
+    ell(7, 9.3 + bob + dy, 3.5, 3.5, c);   // Hinterteil
+    ell(19, 9.2 + bob + dy, 3, 3.3, c);    // Brust
+  }
+  // Hals, Kopf, Schnauze, Ohren
+  ell(21.4, 6.9 + bob, 2.4, 2.6, 'b');
+  ell(23.6, 5.2 + bob, 3.4, 3, 'b');
+  ell(26.6, 6.3 + bob, 1.7, 1.3, 'b');
+  set(25, 8 + bob, 's');
+  tri(20.8, 3.6 + bob, 21.6, .2 + bob, 23.4, 2.6 + bob, 'b');
+  tri(23.4, 2.5 + bob, 24.9, 0 + bob, 25.9, 3.4 + bob, 'b');
+  set(21.8, 2 + bob, 'p');
+  set(24.8, 1.6 + bob, 'p');
+  set(25, 4.3 + bob, pose.eye || 'e');
+  set(28, 5.6 + bob, 'n');
+  // Beine auf dieser Seite
+  leg(19.2, j, pose.fn, 'b');
+  leg(7.8, j, pose.bn, 'b');
+  return g;
+}
+function runPose(k) {
+  const ph = k / RUN_FRAMES * Math.PI * 2;
+  // Vorderbeine: beim Vorschwingen knickt die Pfote nach hinten; Hinterbeine: Sprunggelenk knickt ein
+  const front = (q) => { const sw = Math.sin(q), lift = Math.max(0, Math.cos(q)); return [.6 * sw, .6 * sw - 1.2 * lift]; };
+  const back = (q) => { const sw = Math.sin(q), lift = Math.max(0, Math.cos(q)); return [.55 * sw + .3 * lift, .55 * sw - 1 * lift]; };
+  return { fn: front(ph), ff: front(ph + .7), bn: back(ph + Math.PI), bf: back(ph + Math.PI + .7), tail: Math.sin(ph) * .8, bob: Math.round(Math.sin(ph * 2) * .6) };
+}
+const POSE_STAND = { fn: [0, 0], ff: [.12, .05], bn: [0, 0], bf: [-.12, -.05], tail: 0, bob: 0 };
+const POSE_UP = { fn: [1.05, 1.35], ff: [.9, 1.2], bn: [-.95, -1.25], bf: [-.8, -1.1], tail: -1.2, bob: 0 };
+const POSE_DOWN = { fn: [.45, .2], ff: [.3, .1], bn: [-.15, -.9], bf: [-.3, -1], tail: .8, bob: 0 };
+const catSpr = (pose) => shrinkHitbox(sprite(catRows(pose), CAT_PAL), HITBOX);
 const cat = {
-  run1: shrinkHitbox(sprite([...CAT_TOP, ...LEGS.run1], CAT_PAL), HITBOX),
-  run2: shrinkHitbox(sprite([...CAT_TOP, ...LEGS.run2], CAT_PAL), HITBOX),
-  jump: shrinkHitbox(sprite([...CAT_TOP, ...LEGS.jump], CAT_PAL), HITBOX),
-  blink: shrinkHitbox(sprite([...CAT_TOP, ...LEGS.run1], { ...CAT_PAL, k: '#d9dde4' }), HITBOX),
-  dead: shrinkHitbox(sprite([...CAT_TOP, ...LEGS.jump], { ...CAT_PAL, k: '#d6333f' }), HITBOX),
+  run: Array.from({ length: RUN_FRAMES }, (_, k) => catSpr(runPose(k))),
+  up: catSpr(POSE_UP),
+  down: catSpr(POSE_DOWN),
+  idle: [-1, -.4, .3, .9, .3, -.4].map((t) => catSpr({ ...POSE_STAND, tail: t })),
+  blink: catSpr({ ...POSE_STAND, eye: 's' }),
+  dead: catSpr({ ...POSE_DOWN, eye: 'x' }),
 };
 
 const ADRIAN_PAL = { h: '#5a3a22', f: '#f2c29b', k: INK, m: '#b0443c', s: '#4f7fd6', p: '#2f3b5c', o: '#1c1c24', r: '#d6333f', y: '#ffd43b', x: '#e03a3e', w: '#d8dee8' };
@@ -641,7 +742,7 @@ const STARS = Array.from({ length: 70 }, () => ({ x: Math.random(), y: Math.rand
 /* ---------- Level ---------- */
 const LEVELS = [
   { name: 'Almwiese', tip: 'Tippen = springen', at: 0, speed: 140, gap: [.95, 1.7], pats: { stand: 6, cheer: 2 } },
-  { name: 'Adrian-Turm', tip: 'In der Luft nochmal tippen = Doppelsprung', at: 250, speed: 158, gap: [.9, 1.6], pats: { stand: 3, cheer: 2, duo: 3, tower: 3 } },
+  { name: 'Adrian-Turm', tip: 'Neu: Doppelsprung! In der Luft nochmal tippen', at: 250, speed: 158, gap: [.9, 1.6], pats: { stand: 3, cheer: 2, duo: 3, tower: 3 } },
   { name: 'Gleitschirm', tip: 'Fliegt Adrian hoch, lauf unten durch', at: 550, speed: 176, gap: [.85, 1.55], pats: { stand: 2, duo: 2, tower: 2, glideLow: 3, glideHigh: 3 } },
   { name: 'Skipiste', tip: 'Ski-Adrian ist schneller, als du denkst', at: 900, speed: 194, gap: [.8, 1.45], pats: { stand: 2, cheer: 1, duo: 2, tower: 2, glideLow: 2, glideHigh: 2, ski: 4 } },
   { name: 'Alpenglühen', tip: 'Jetzt kommen sie zu dritt', at: 1300, speed: 212, gap: [.75, 1.4], pats: { stand: 1, duo: 2, trio: 3, tower: 3, glideLow: 2, glideHigh: 2, ski: 3, combo: 2 } },
@@ -682,6 +783,7 @@ function tone(f0, f1, dur, type = 'square', vol = .07, delay = 0) {
 const sfx = {
   jump() { tone(380, 760, .11); },
   jump2() { tone(620, 1240, .12, 'square', .06); },
+  combo(n) { const f = 520 * Math.pow(1.06, Math.min(n, 24)); tone(f, f * 1.5, .08, 'square', .06); tone(f * 1.5, f * 2, .1, 'square', .05, .07); },
   meow() { tone(650, 1050, .07, 'triangle', .06); tone(1050, 520, .16, 'triangle', .06, .07); },
   fish() { tone(1200, 1800, .06, 'triangle', .06); tone(1800, 2400, .08, 'triangle', .05, .06); },
   point() { tone(880, 880, .07, 'square', .05); tone(1320, 1320, .1, 'square', .05, .08); },
@@ -713,13 +815,13 @@ resize();
 const V0 = 290;      // erster Sprung (Pixel/s)
 const V2 = 265;      // Doppelsprung
 const GRAV = 1250;
-const PASS_QUIPS = ['Hey!', 'Ey!', 'Frechheit!', 'Na warte!', 'Hallo?!', 'Nicht schon wieder!', 'Mein Haar!', 'Wie bitte?!', 'Miau?!', 'Unglaublich!', 'Das zählt nicht!', 'Servus!'];
 const OVER_QUIPS = ['{n} hat dich erwischt.', '{n} steht noch.', '{n} 1, Katze 0.', '{n} war im Weg.', '{n} lässt grüßen.', 'Kirby hat nichts gesehen.'];
 
 let mode = 'start';
 let best = store.get('katzosaurus-best', 0);
-const P = { x: 24, y: 0, vy: 0, grounded: true, jumps: 0, anim: 0, buffer: 0, blink: 0 };
-const V = { lick: 0, blink: 0, say: '', sayT: 0 };
+const P = { x: 24, y: 0, vy: 0, grounded: true, jumps: 0, anim: 0, buffer: 0, blink: 0, airT: 0, land: 0, flip: 0, jumpPassed: false, landT: 0, checkReset: false };
+const FLIP_T = .42; // Dauer des Salto beim Doppelsprung
+const V = { lick: 0, blink: 0 };
 let G = null;
 let overAt = 0;
 let shake = 0;
@@ -729,7 +831,7 @@ const floaters = [];
 function freshGame() {
   return {
     speed: 140, dist: 0, bonus: 0, scroll: G ? G.scroll : 0, score: 0, jumped: 0, milestone: 0,
-    level: 1, objects: [], untilSpawn: 100, time: 0,
+    level: 1, objects: [], untilSpawn: 100, time: 0, combo: 0, bestCombo: 0,
     hour: startHour(1),
   };
 }
@@ -741,7 +843,7 @@ function makeAdrian(kind, x, y = 0, extra = {}) {
   const spr = kind === 'glideLow' || kind === 'glideHigh' ? adrian.glide : (who === 'valentina' ? girl : adrian)[kind];
   const yy = kind === 'glideLow' ? 3 : kind === 'glideHigh' ? 25 : y;
   return Object.assign({
-    type: 'adrian', kind, spr, x, y: yy, w: spr.w, h: spr.h, passed: false, quip: '', quipT: 0,
+    type: 'adrian', kind, spr, x, y: yy, w: spr.w, h: spr.h, passed: false,
     vx: kind === 'ski' ? 95 : kind.startsWith('glide') ? 22 : 0, bob: Math.random() * 6, tag: true,
     who, name: who === 'valentina' ? 'Valentina' : 'Adrian',
   }, extra);
@@ -802,12 +904,16 @@ function spawn() {
 
 /* ---------- Steuerung: nur Tippen / Klicken ---------- */
 function jump(v) {
+  if (P.checkReset) settleCombo();
+  if (P.jumps === 1) P.jumpPassed = false;
   P.vy = v;
   P.grounded = false;
   P.buffer = 0;
+  P.airT = 0;
   if (P.jumps === 2) {
+    P.flip = reduceMotion ? 0 : FLIP_T;
     sfx.jump2();
-    for (let i = 0; i < 6; i++) particles.push({ x: P.x + 10, y: P.y + 2, vx: rand(-60, 20), vy: rand(-40, 10), life: rand(.2, .4), c: '#ffffff' });
+    for (let i = 0; i < 8; i++) particles.push({ x: P.x + 12, y: P.y + 2, vx: rand(-60, 20), vy: rand(-40, 10), life: rand(.2, .4), c: '#ffffff' });
   } else sfx.jump();
 }
 function press() {
@@ -815,7 +921,7 @@ function press() {
   if (mode === 'over') { if (performance.now() - overAt > 650) startGame(); return; }
   if (mode === 'paused') { resume(); return; }
   if (P.grounded) { P.jumps = 1; jump(V0); }
-  else if (P.jumps < 2) { P.jumps = 2; jump(Math.max(V2, P.vy)); }
+  else if (P.jumps < 2 && G.level >= 2) { P.jumps = 2; jump(Math.max(V2, P.vy)); } // Doppelsprung ab Level 2
   else P.buffer = .14; // kurz vor der Landung getippt: Sprung merken
 }
 
@@ -918,7 +1024,8 @@ function showBanner(n) {
   clearTimeout(bannerTimer);
   bannerTimer = setTimeout(() => b.classList.remove('show'), 2600);
 }
-function showHint(ms) {
+function showHint(ms, text) {
+  $('hint').textContent = text;
   $('hint').classList.remove('gone');
   clearTimeout(hintTimer);
   hintTimer = setTimeout(() => $('hint').classList.add('gone'), ms);
@@ -926,14 +1033,13 @@ function showHint(ms) {
 
 function startGame() {
   G = freshGame();
-  Object.assign(P, { y: 0, vy: 0, grounded: true, jumps: 0, buffer: 0 });
+  Object.assign(P, { y: 0, vy: 0, grounded: true, jumps: 0, buffer: 0, airT: 0, land: 0, flip: 0, jumpPassed: false, checkReset: false });
   particles.length = 0;
   floaters.length = 0;
-  V.sayT = 0;
   mode = 'play';
   show(null);
   showBanner(1);
-  showHint(5000);
+  showHint(5000, 'Tippen = springen');
   keepAwake();
   updateHud(true);
 }
@@ -945,33 +1051,59 @@ function levelUp() {
   G.untilSpawn = Math.max(G.untilSpawn, G.speed * 1.1); // kurze Verschnaufpause
   sfx.level();
   showBanner(G.level);
-  if (G.level === 2) showHint(4000);
-  V.say = pick(['Miau!', 'Mrrp!', 'Schleck!', 'Weiter so!']);
-  V.sayT = 2.2;
+  if (G.level === 2) showHint(5000, 'Nochmal tippen in der Luft = Doppelsprung');
 }
 
 function gameOver(o) {
   mode = 'over';
   overAt = performance.now();
-  o.quip = 'Hab dich!';
-  o.quipT = 99;
   shake = reduceMotion ? 0 : .35;
   sfx.hit();
   vibrate([60, 40, 120]);
-  V.say = 'Mrrr...';
-  V.sayT = 99;
   const isBest = G.score > best;
   if (isBest) { best = G.score; store.set('katzosaurus-best', best); }
   $('quip').textContent = pick(OVER_QUIPS).replace('{n}', o.name);
   $('rScore').textContent = G.score;
   $('rJumped').textContent = G.jumped;
   $('rLevel').textContent = G.level;
+  $('rCombo').textContent = G.bestCombo + 'x';
   $('rBest').textContent = best;
   $('newBest').hidden = !isBest || best === 0;
   $('hint').classList.add('gone');
   $('banner').classList.remove('show');
   updateHud(true);
   setTimeout(() => { if (mode === 'over') show('over'); }, 420);
+}
+
+// Bewertung nach dem knappsten Abstand: je knapper, desto besser
+const CHEERS = [[4, 'Unglaublich!', '#ffaa00'], [9, 'Perfekt!', '#55ff55'], [Infinity, 'Super!', '#55ffff']];
+let comboTimer = 0;
+function cheer(gap) {
+  G.combo++;
+  G.bestCombo = Math.max(G.bestCombo, G.combo);
+  let [, word, color] = CHEERS.find(([g]) => gap < g);
+  if (G.combo % 10 === 0) { word = 'Legendär!'; color = '#ff55ff'; }
+  G.bonus += Math.min(50, 5 * G.combo);
+  sfx.combo(G.combo);
+  for (let i = 0; i < 14; i++) {
+    const a = rand(0, Math.PI * 2), v = rand(40, 110);
+    particles.push({ x: P.x + 14, y: P.y + 10, vx: Math.cos(a) * v, vy: Math.sin(a) * v + 30, life: rand(.3, .6), c: color });
+  }
+  const el = $('combo');
+  $('comboWord').textContent = word;
+  $('comboWord').style.color = color;
+  $('comboMult').textContent = G.combo + 'x';
+  el.classList.remove('pop', 'hot');
+  void el.offsetWidth;
+  el.classList.add('pop');
+  if (G.combo >= 5) el.classList.add('hot');
+  clearTimeout(comboTimer);
+  comboTimer = setTimeout(() => el.classList.remove('pop', 'hot'), 1200);
+}
+// Ein Sprung, bei dem niemand übersprungen wurde, beendet die Serie
+function settleCombo() {
+  P.checkReset = false;
+  if (!P.jumpPassed) G.combo = 0;
 }
 
 const pad5 = (n) => String(Math.min(99999, n)).padStart(5, '0');
@@ -1004,9 +1136,9 @@ function overlaps(a, ax, ay, b, bx, by) {
 
 function catSprite() {
   if (mode === 'over') return cat.dead;
-  if (!P.grounded) return cat.jump;
-  if (mode !== 'play') return P.blink > 0 ? cat.blink : cat.run1;
-  return Math.floor(P.anim) % 2 ? cat.run2 : cat.run1;
+  if (!P.grounded) return P.vy > 0 ? cat.up : cat.down;
+  if (mode !== 'play') return P.blink > 0 ? cat.blink : cat.idle[Math.floor(G.time * 4) % cat.idle.length];
+  return cat.run[Math.floor(P.anim) % RUN_FRAMES];
 }
 const objY = (o) => (o.type === 'fish' ? o.y + Math.round(Math.sin(G.time * 5 + o.bob)) : o.kind.startsWith('glide') ? o.y + Math.round(Math.sin(G.time * 3 + o.bob) * 1.5) : o.y);
 
@@ -1020,7 +1152,6 @@ function update(dt) {
   V.lick += dt;
   V.blink -= dt;
   if (V.blink < -rand(3, 6)) V.blink = .18;
-  if (V.sayT > 0 && V.sayT < 50) V.sayT -= dt;
 
   for (let i = particles.length - 1; i >= 0; i--) {
     const q = particles[i];
@@ -1033,7 +1164,6 @@ function update(dt) {
     floaters[i].y += 14 * dt;
     if (floaters[i].t <= 0) floaters.splice(i, 1);
   }
-  for (const o of G.objects) if (o.quipT > 0 && o.quipT < 50) o.quipT -= dt;
 
   if (mode !== 'play') {
     G.time += dt;
@@ -1054,13 +1184,19 @@ function update(dt) {
   G.hour = startHour(G.level) + HOURS_PER_LEVEL * clamp((G.score - Lc.at) / (Ln.at - Lc.at), 0, 1);
 
   // Katze
-  P.anim += dt * G.speed / 22;
+  P.anim += dt * G.speed / 9;
+  if (P.land > 0) P.land -= dt;
+  if (P.flip > 0) P.flip = Math.max(0, P.flip - dt);
+  if (P.checkReset && G.time - P.landT > .3) settleCombo();
   P.buffer -= dt;
   if (!P.grounded) {
+    P.airT += dt;
     P.vy -= GRAV * dt;
     P.y += P.vy * dt;
     if (P.y <= 0) {
       P.y = 0; P.vy = 0; P.grounded = true; P.jumps = 0;
+      P.land = .14; P.flip = 0;
+      P.landT = G.time; P.checkReset = true;
       for (let i = 0; i < 4; i++) particles.push({ x: P.x + 8 + rand(-2, 4), y: rand(0, 2), vx: rand(-40, -10), vy: rand(10, 45), life: rand(.25, .5) });
       if (P.buffer > 0) { P.jumps = 1; jump(V0); }
     }
@@ -1077,7 +1213,7 @@ function update(dt) {
     o.x -= step + o.vx * dt;
     const oy = objY(o);
     if (o.type === 'fish') {
-      if (!o.got && o.x < P.x + 22 && o.x + o.w > P.x + 3 && oy < P.y + 15 && oy + o.h > P.y + 1) {
+      if (!o.got && o.x < P.x + 27 && o.x + o.w > P.x + 4 && oy < P.y + 17 && oy + o.h > P.y + 1) {
         o.got = true;
         G.bonus += 20;
         sfx.fish();
@@ -1090,14 +1226,16 @@ function update(dt) {
       particles.push({ x: o.x + o.w - 2, y: 1, vx: rand(20, 70), vy: rand(20, 60), life: rand(.2, .4), c: '#ffffff' });
     }
     if (overlaps(cs, cx, cy, o.spr, Math.round(o.x), Math.round(-(oy + o.h)))) { gameOver(o); return; }
-    if (!o.passed && o.x + o.w < P.x) {
+    // knappster Abstand, solange die Katze über (oder unter) der Person ist
+    if (!o.passed && o.x < P.x + 27 && o.x + o.w > P.x + 4) {
+      const gap = o.kind === 'glideHigh' ? oy - (P.y + 17) : P.y - (oy + o.h);
+      o.minGap = Math.min(o.minGap === undefined ? 99 : o.minGap, gap);
+    }
+    if (!o.passed && o.x + o.w < P.x + 4) {
       o.passed = true;
       G.jumped++;
-      if (o.tag) {
-        o.quip = pick(PASS_QUIPS);
-        o.quipT = 1.2;
-        sfx.meow();
-      }
+      if (!P.grounded || G.time - P.landT < .3) P.jumpPassed = true;
+      cheer(o.minGap === undefined ? 99 : o.minGap);
     }
   }
   G.objects = G.objects.filter((o) => o.x > -70 && !(o.type === 'fish' && o.got));
@@ -1120,20 +1258,6 @@ function pixelDisc(cx, cy, r, color) {
     const half = Math.round(Math.sqrt(r * r - dy * dy));
     ctx.fillRect(Math.round(cx - half), Math.round(cy + dy), half * 2, 1);
   }
-}
-function bubble(text, x, y) {
-  ctx.font = '8px "CatJumperMC", monospace';
-  const tw = Math.ceil(ctx.measureText(text).width);
-  const w = tw + 4, h = 11;
-  const bx = Math.round(clamp(x - w / 2, 2, viewW - w - 2)), by = Math.round(y - h);
-  ctx.fillStyle = 'rgba(0, 0, 0, .55)';
-  ctx.fillRect(bx, by, w, h);
-  ctx.textBaseline = 'alphabetic';
-  ctx.textAlign = 'left';
-  ctx.fillStyle = '#3f3f3f';
-  ctx.fillText(text, bx + 3, by + 9);
-  ctx.fillStyle = '#ffffff';
-  ctx.fillText(text, bx + 2, by + 8);
 }
 // Kirby sitzt weit weg hinter den Bergen und schleckt Schnee von seinem Gipfel.
 function drawKirby(pal) {
@@ -1180,7 +1304,6 @@ function drawKirby(pal) {
     }
   }
   ctx.restore();
-  if (V.sayT > 0) bubble(V.say, vx + 26 * vs + 6, -(apexH + 18 * vs));
 }
 
 function draw() {
@@ -1321,12 +1444,6 @@ function draw() {
     if (o.type === 'fish') ctx.drawImage(fishSpr.c, snap(o.x) - 1, snap(-(oy + o.h)) - 1);
     else ctx.drawImage(o.spr.c, snap(o.x) - o.spr.pad, snap(-(oy + o.h)) - o.spr.pad);
   }
-  for (const o of G.objects) {
-    if (o.type !== 'adrian') continue;
-    if (o.quipT <= 0) continue;
-    const top = -(objY(o) + o.h);
-    bubble(o.quip, snap(o.x) + o.w / 2 + (o.kind === 'ski' ? -3 : 0), top - 3);
-  }
 
   // Partikel
   for (const q of particles) {
@@ -1336,7 +1453,24 @@ function draw() {
 
   // Katze
   const cs = catSprite();
-  ctx.drawImage(cs.c, snap(P.x) - cs.pad, snap(-(P.y + cs.h)) - cs.pad);
+  const cw = cs.c.width, chh = cs.c.height;
+  const bx = snap(P.x) - cs.pad, by = snap(-(P.y + cs.h)) - cs.pad;
+  ctx.save();
+  if (P.flip > 0) {
+    // Salto beim Doppelsprung
+    ctx.translate(bx + cw / 2, by + chh / 2);
+    ctx.rotate((1 - P.flip / FLIP_T) * Math.PI * 2);
+    ctx.drawImage(cs.c, -cw / 2, -chh / 2);
+  } else {
+    // beim Absprung strecken, beim Landen stauchen (Füße bleiben am Boden)
+    let kx = 1, ky = 1;
+    if (P.land > 0 && mode === 'play') { const q = P.land / .14; kx = 1 + .14 * q; ky = 1 - .16 * q; }
+    else if (!P.grounded && P.airT < .12 && mode === 'play') { const q = 1 - P.airT / .12; kx = 1 - .08 * q; ky = 1 + .12 * q; }
+    ctx.translate(bx + cw / 2, by + chh);
+    ctx.scale(kx, ky);
+    ctx.drawImage(cs.c, -cw / 2, -chh);
+  }
+  ctx.restore();
 
   // +20
   ctx.font = '8px "CatJumperMC", monospace';
