@@ -15,10 +15,10 @@
 <title>Cat Jumper</title>
 <script>
 (function () {
-  var looks = ['v1', 'v2', 'v3'];
+  var looks = ['stein', 'v1', 'v2', 'v3'];
   function apply() {
     var h = location.hash.replace('#', '');
-    var ui = looks.indexOf(h) >= 0 ? h : 'v1';
+    var ui = looks.indexOf(h) >= 0 ? h : 'stein';
     document.documentElement.setAttribute('data-ui', ui);
   }
   apply();
@@ -27,7 +27,7 @@
 </script>
 <style>
 /* Cat Jumper GUI: nur Braun (Holz), Grün und Rot, Schrift weiß.
-   Drei Looks zum Ausprobieren, umschalten mit #v1, #v2 oder #v3 hinten an der Adresse. */
+   Standard ist Stein & Holz, die früheren Varianten gibt es noch mit #v1, #v2 oder #v3 hinten an der Adresse. */
 /* Schrift: "Minecraft" von Pwnage_Block (fontstruct.com), CC BY-SA 3.0, um Ä Ö Ü ä ö ü ß · ergänzt. */
 @font-face {
   font-family: "CatJumperMC";
@@ -413,6 +413,69 @@ p, h1, h2, h3 { margin: 0; }
   [data-ui="v3"] .home-menu .btn-start { font-size: 20px; padding: 6px 10px 8px; }
   [data-ui="v3"] .home-side { bottom: calc(env(safe-area-inset-bottom, 0px) + 84px); }
   [data-ui="v2"] .home-menu { gap: 12px; width: 200px; }
+}
+/* ================= Stein & Holz (Standard) =================
+   Alle Knöpfe, Kästchen und Fenster aus Stein mit Rautengitter, eingefasst in Holz mit Nägeln.
+   Grün und Rot bleiben für Los/Kaufen und Zurück/Schließen. Menü unten links. */
+:root {
+  --stone: #8b8e94; --stone-hi: #a7aab0; --stone-lo: #6b6e74; --stone-dk: #4d4f54;
+  --speckle: radial-gradient(circle, rgba(255, 255, 255, .16) 0 1px, transparent 1.5px) 0 0 / 9px 11px, radial-gradient(circle, rgba(0, 0, 0, .16) 0 1.2px, transparent 1.7px) 4px 5px / 13px 9px;
+  --blocks: linear-gradient(rgba(0, 0, 0, .22) 2px, transparent 2px) 0 0 / 100% 26px, linear-gradient(90deg, rgba(0, 0, 0, .18) 2px, transparent 2px) 0 0 / 52px 100%;
+  --frame: inset 0 0 0 4px var(--wood), inset 0 0 0 6px var(--wood-deep);
+}
+[data-ui="stein"] .btn {
+  border: 3px solid var(--wood-deep);
+  border-radius: 4px;
+  padding-inline: 20px;
+  background: var(--nails), var(--diamond), var(--speckle), linear-gradient(var(--c-hi), var(--c-lo));
+  box-shadow: var(--frame), inset 0 9px 0 rgba(255, 255, 255, .14), 0 4px 0 var(--wood-deep);
+}
+[data-ui="stein"] .btn:active { transform: translateY(3px); box-shadow: var(--frame), 0 1px 0 var(--wood-deep); }
+[data-ui="stein"] .btn2, [data-ui="stein"] .icon-btn { --c: var(--stone); --c-hi: var(--stone-hi); --c-lo: var(--stone-lo); }
+[data-ui="stein"] .icon-btn, [data-ui="stein"] .close-x { padding: 0; background: var(--diamond), var(--speckle), linear-gradient(var(--c-hi), var(--c-lo)); }
+[data-ui="stein"] .tab {
+  border: 3px solid var(--wood-deep);
+  border-radius: 4px;
+  background: var(--diamond), var(--speckle), linear-gradient(var(--stone-lo), var(--stone-dk));
+  box-shadow: inset 0 0 0 3px var(--wood), 0 3px 0 var(--wood-deep);
+  padding: 10px 16px 12px;
+}
+[data-ui="stein"] .tab[aria-selected="true"] { background: var(--diamond), var(--speckle), linear-gradient(var(--green-hi), var(--green-lo)); }
+[data-ui="stein"] .box { background: var(--diamond), var(--speckle), linear-gradient(var(--stone), var(--stone-lo)); border: 3px solid var(--wood-deep); border-radius: 4px; box-shadow: inset 0 0 0 3px var(--wood), 0 3px 0 var(--wood-deep); padding: 8px 13px 9px; }
+[data-ui="stein"] .fishbox { padding-block: 4px; }
+[data-ui="stein"] .home-title { top: calc(env(safe-area-inset-top, 0px) + 14px); left: calc(env(safe-area-inset-left, 0px) + 16px); }
+[data-ui="stein"] .title { text-shadow: 0 4px 0 var(--stone-dk), 0 8px 14px rgba(0, 0, 0, .2); }
+[data-ui="stein"] .home-menu { left: calc(env(safe-area-inset-left, 0px) + 16px); bottom: calc(env(safe-area-inset-bottom, 0px) + 18px); grid-template-columns: 1fr 1fr; width: 280px; }
+[data-ui="stein"] .home-menu #boardBtn, [data-ui="stein"] .home-menu .btn-start { grid-column: 1 / -1; }
+[data-ui="stein"] .panel {
+  padding: 12px;
+  background: var(--speckle), var(--blocks), linear-gradient(var(--stone), var(--stone-lo));
+  border: 3px solid var(--wood-deep);
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 9px var(--wood), inset 0 0 0 12px var(--wood-deep), 0 6px 0 var(--wood-deep), 0 16px 30px rgba(0, 0, 0, .35);
+}
+[data-ui="stein"] .panel-head {
+  margin: 2px 2px 0;
+  background: var(--nails), var(--grain), var(--planks), linear-gradient(var(--wood-hi), var(--wood-lo));
+  border: 3px solid var(--wood-deep);
+  border-radius: 4px;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .2);
+}
+[data-ui="stein"] .panel-head.red { background: var(--nails), var(--diamond), var(--speckle), linear-gradient(var(--red-hi), var(--red-lo)); }
+[data-ui="stein"] .card, [data-ui="stein"] .me, [data-ui="stein"] .lb-row {
+  background: var(--diamond), var(--speckle), linear-gradient(var(--stone-lo), var(--stone-dk));
+  border: 3px solid var(--wood-deep);
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 3px var(--wood), inset 0 5px 0 rgba(255, 255, 255, .08);
+  padding: 12px;
+}
+[data-ui="stein"] .lb-row:first-child { background: var(--diamond), var(--speckle), linear-gradient(var(--green), var(--green-lo)); }
+[data-ui="stein"] .badge { border: 2px solid var(--wood-deep); border-radius: 3px; }
+[data-ui="stein"] .msg { border: 3px solid var(--wood-deep); border-radius: 4px; background: var(--grain), var(--wood-lo); }
+[data-ui="stein"] .name-input { border-radius: 4px; background: var(--speckle), var(--stone-dk); box-shadow: inset 0 0 0 3px var(--wood); padding-inline: 14px; }
+[data-ui="stein"] #wipe { background: var(--diamond), var(--speckle), var(--blocks), var(--stone); }
+@media (orientation: portrait) {
+  [data-ui="stein"] .home-title { top: calc(env(safe-area-inset-top, 0px) + 74px); }
 }
 @media (orientation: portrait) {
   .hud { flex-wrap: wrap; }

@@ -54,13 +54,11 @@ Im **Shop** gibt es Upgrades (Regenbogen-Stern, Fisch-Magnet, Dreifachsprung, Gl
 
 ## Oberfläche
 
-Nur drei Farben: Braun (Holz), Grün und Rot. Die Schrift ist immer weiß (Minecraft-Schrift). Grün heißt los oder kaufen, Rot heißt zurück oder schließen, Braun ist alles andere.
+Farben: Stein und Holz, dazu Grün und Rot. Die Schrift ist immer weiß (Minecraft-Schrift). Grün heißt los oder kaufen, Rot heißt zurück oder schließen, Braun ist alles andere.
 
-Zur Auswahl stehen drei Varianten, die das Rautengitter und die dicken Ränder des vorigen Designs mit den Holzbrettern, Nägeln und dem Moos der Almhütte verbinden. Umschalten mit einem Zusatz hinten an der Adresse:
+**Stein & Holz:** Alle Knöpfe, Anzeigen und Fenster sind aus Stein mit Rautengitter und in Holz mit Nägeln eingefasst. Fensterköpfe sind Holzbretter, die Kärtchen dunkler Stein. Das Menü steht unten links.
 
-- `#v1` **Gitterholz** (Standard): Holzknöpfe mit Rautengitter, roter Fensterkopf mit gestreifter Borte, Menü unten links.
-- `#v2` **Moosbretter**: Bretter mit Nägeln und Moos obendrauf, grüner Fensterkopf, Menü als Bretterstapel links.
-- `#v3` **Block-Leiste**: kräftige Blöcke mit großem Gitter in einem Holzrahmen, Titel mittig, Menü als Leiste unten.
+Die drei Vorschläge davor gibt es zum Vergleich noch mit einem Zusatz hinten an der Adresse: `#v1` Gitterholz, `#v2` Moosbretter, `#v3` Block-Leiste.
 
 ## Level
 
