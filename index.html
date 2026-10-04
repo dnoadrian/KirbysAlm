@@ -111,7 +111,13 @@ p, h1, h2, h3 { margin: 0; }
 .home-title { position: fixed; pointer-events: none; }
 .title { font: 48px/1 var(--font); color: #ffffff; text-shadow: 0 4px 0 rgba(74, 41, 19, .45), 0 8px 16px rgba(74, 41, 19, .2); }
 .subtitle { margin-top: 12px; color: #ffffff; text-shadow: var(--stroke-sm); }
-#home.leaving { pointer-events: none; }
+#home.leaving, #home.entering { pointer-events: none; }
+#home.entering .home-title { animation: homeInTop .55s cubic-bezier(.25, 1, .5, 1) .15s both; }
+#home.entering .home-menu .btn:not(.btn-start) { animation: homeInLeft .55s cubic-bezier(.25, 1, .5, 1) .15s both; }
+#home.entering .home-menu .btn-start { animation: homeInRight .55s cubic-bezier(.25, 1, .5, 1) .15s both; }
+@keyframes homeInTop { from { transform: translateY(-60px); opacity: 0; } }
+@keyframes homeInLeft { from { transform: translateX(-140%); opacity: 0; } }
+@keyframes homeInRight { from { transform: translateX(140%); opacity: 0; } }
 #home .home-title, #home .home-menu .btn { transition: transform .45s cubic-bezier(.5, 0, .75, 0), opacity .45s; }
 #home.leaving .home-title { transform: translateY(-60px); opacity: 0; }
 #home.leaving .home-menu .btn:not(.btn-start) { transform: translateX(-140%); opacity: 0; }
@@ -232,19 +238,6 @@ p, h1, h2, h3 { margin: 0; }
 #hint { position: fixed; left: 16px; right: 16px; text-align: center; color: #ffffff; text-shadow: var(--stroke-sm); pointer-events: none; transition: opacity .6s; }
 #hint.gone { opacity: 0; }
 
-#wipe {
-  position: fixed; inset: 0; z-index: 60;
-  display: flex; align-items: center; justify-content: center;
-  background: var(--grain), var(--wood);
-  color: #ffffff; text-shadow: var(--stroke); font-size: 32px;
-  pointer-events: none; clip-path: circle(0% at 12% 88%);
-}
-#wipe.closing { pointer-events: auto; animation: wipeClose .42s ease-in forwards; }
-#wipe.opening { animation: wipeOpen .45s ease-out forwards; }
-#wipe.fast.closing { animation-duration: .18s; }
-#wipe.fast.opening { animation-duration: .2s; }
-@keyframes wipeClose { from { clip-path: circle(0% at 12% 88%); } to { clip-path: circle(150% at 12% 88%); } }
-@keyframes wipeOpen { from { clip-path: circle(150% at 18% 78%); } to { clip-path: circle(0% at 18% 78%); } }
 
 /* Bausteine: Rautengitter, Holzmaserung, Bretterfugen */
 :root {
@@ -275,7 +268,6 @@ p, h1, h2, h3 { margin: 0; }
 [data-ui="gitterholz"] .card, [data-ui="gitterholz"] .me { background: var(--diamond-soft), var(--grain), var(--wood-dk); border: 3px solid var(--wood-deep); border-radius: 6px; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .14); }
 [data-ui="gitterholz"] .badge, [data-ui="gitterholz"] .msg { border: 2px solid var(--wood-deep); border-radius: 4px; }
 [data-ui="gitterholz"] .name-input { border-radius: 6px; }
-[data-ui="gitterholz"] #wipe { background: var(--diamond), var(--grain), var(--wood); }
 
 /* kleiner Installieren-Knopf oben in der Leiste */
 .install-btn svg { width: 20px; height: 20px; }
@@ -311,8 +303,7 @@ p, h1, h2, h3 { margin: 0; }
   .panel, .box.bump { animation: none; }
   #combo.pop { animation: fadeout 1.15s both; }
   #banner { transition: opacity .3s; transform: none; }
-  #wipe.closing { animation: none; clip-path: none; opacity: 1; }
-  #wipe.opening { animation: fadeout .3s forwards; clip-path: none; }
+  #home.entering *, #home.leaving * { animation: none !important; transition: none !important; }
 }
 </style>
 </head>
@@ -442,7 +433,6 @@ p, h1, h2, h3 { margin: 0; }
 
 <p id="hint" class="gone"></p>
 
-<div id="wipe"><span id="wipeText">Los geht's!</span></div>
 
 <script>
 (() => {
@@ -541,7 +531,7 @@ const HITBOX = .8;
 // 8 Lauf-Bilder (Hoppel-Galopp), Bilder für Absprung, Fallen, Stehen, Schwanzwedeln und Blinzeln.
 // Drei Katzen mit unterschiedlich langem Fell, dazu Cosmetics (Hut, Kette, Pulli ...), die nicht zur Kollision zählen.
 const CAT_W = 26, CAT_H = 22, CAT_TOP = 4, RUN_FRAMES = 8;
-const CAT_BASE = { o: '#8a5a3a', b: '#fbfbf7', s: '#dfe2e9', d: '#c9ced8', p: '#ffb3c1', n: '#ff7f9e', c: '#ffc7d4', e: '#2b3a6b', h: '#ffffff', x: '#d6333f' };
+const CAT_BASE = { o: '#8a5a3a', b: '#fbfbf7', s: '#dfe2e9', d: '#c9ced8', p: '#ffb3c1', n: '#ff7f9e', c: '#ffc7d4', e: '#2b3a6b', h: '#ffffff', x: '#4a2913' };
 const COS_PAL = { H: '#3f6b3a', J: '#d23b34', K: '#f4f4f0', L: '#ffffff', G: '#ffcc33', Y: '#d99a1e', Q: '#1b1b22', R: '#3c6fd6', M: '#e8edf5' };
 const COS_CHARS = Object.keys(COS_PAL).join('');
 function catRows(pose, look) {
@@ -634,7 +624,7 @@ function catRows(pose, look) {
   const eye = pose.eye;
   for (const ex of [18, 21.4]) {
     if (eye === 's') { set(ex, hy + .6, 's'); set(ex + 1, hy + .6, 's'); }        // blinzeln
-    else if (eye === 'x') { set(ex, hy - .4, 'x'); set(ex + 1, hy + .6, 'x'); set(ex + 1, hy - .4, 'x'); set(ex, hy + .6, 'x'); }
+    else if (eye === 'x') { const cx = ex < 20 ? 17 : 21; for (const [dx, dy] of [[-1, -1], [1, -1], [0, 0], [-1, 1], [1, 1]]) set(cx + dx, hy + .1 + dy, 'x'); } // kleines X pro Auge, mit Lücke dazwischen
     else { set(ex, hy - .4, 'e'); set(ex + 1, hy - .4, 'h'); set(ex, hy + .6, 'e'); set(ex + 1, hy + .6, 'e'); }
   }
   set(16.6, hy + 1.8, 'c'); set(23.2, hy + 1.8, 'c');
@@ -1444,31 +1434,24 @@ function showHint(ms, text) {
   hintTimer = setTimeout(() => $('hint').classList.add('gone'), ms);
 }
 
-// Kreis-Übergang: zu, umschalten, wieder auf
-let wiping = false;
-function transition(text, cb, fast = false) {
-  if (wiping) return;
-  wiping = true;
-  const w = $('wipe');
-  $('wipeText').textContent = text;
-  w.classList.toggle('fast', fast);
-  w.classList.remove('opening');
-  w.classList.add('closing');
-  sfx.whoosh();
-  setTimeout(() => {
-    cb();
-    w.classList.remove('closing');
-    w.classList.add('opening');
-    setTimeout(() => { w.classList.remove('opening', 'fast'); wiping = false; }, fast ? 200 : 470);
-  }, fast ? 180 : 440);
-}
-
-function goHome() {
+function goHome(smooth = false) {
+  const was = { x: P.x, speed: G.speed, hour: G.hour, objects: G.objects };
   mode = 'home';
   G = freshGame();
-  Object.assign(P, { x: Math.round(viewW * .42), y: 0, vy: 0, grounded: true, jumps: 0, buffer: 0, airT: 0, land: 0, flip: 0, inv: 0, jumpPassed: false, checkReset: false });
+  const homeX = Math.round(viewW * .42);
+  Object.assign(P, { x: smooth ? was.x : homeX, y: 0, vy: 0, grounded: true, jumps: 0, buffer: 0, airT: 0, land: 0, flip: 0, inv: 0, jumpPassed: false, checkReset: false });
   const toy = yarnSpr[4];
-  G.objects.push({ type: 'toy', kind: 'yarn', spr: toy, x: P.x + 30, y: 0, w: toy.w, h: toy.h, vx: 40, rot: 0, bob: 0, wait: 1.2, passed: true });
+  const T = { type: 'toy', kind: 'yarn', spr: toy, x: P.x + 30, y: 0, w: toy.w, h: toy.h, vx: 40, rot: 0, bob: 0, wait: 1.2, passed: true };
+  if (smooth) {
+    // was noch auf der Strecke war, zieht aus dem Bild; das Wollknäuel rollt von rechts herein
+    G.objects = was.objects.filter((o) => o.type !== 'toy');
+    Object.assign(T, { x: viewW + 20, vx: 0, wait: 1 });
+    G.outro = { t: 0, dur: 1.3, from: was.x, to: homeX, toyFrom: viewW + 20, v0: Math.max(80, was.speed || 140), h0: was.hour };
+    G.hour = was.hour;
+    screens.home.classList.add('entering');
+    setTimeout(() => screens.home.classList.remove('entering'), 700);
+  }
+  G.objects.push(T);
   particles.length = 0;
   floaters.length = 0;
   document.body.classList.add('at-home');
@@ -1504,8 +1487,8 @@ function resume() { mode = 'play'; show(null); last = performance.now(); }
 
 $('startBtn').addEventListener('click', () => { audioOn(); if (mode === 'home') { sfx.whoosh(); startGame(); } });
 $('againBtn').addEventListener('click', () => { audioOn(); if (mode === 'over') { sfx.whoosh(); startGame(); } });
-$('lobbyBtn').addEventListener('click', () => { if (mode === 'over') transition('Lobby', goHome); });
-$('pauseLobbyBtn').addEventListener('click', () => { if (mode === 'paused') transition('Lobby', goHome); });
+$('lobbyBtn').addEventListener('click', () => { if (mode === 'over') { sfx.whoosh(); goHome(true); } });
+$('pauseLobbyBtn').addEventListener('click', () => { if (mode === 'paused') { sfx.whoosh(); goHome(true); } });
 $('resumeBtn').addEventListener('click', () => { if (mode === 'paused') resume(); });
 $('shopBtn').addEventListener('click', () => { audioOn(); renderShop(); show('shop'); });
 $('invBtn').addEventListener('click', () => { audioOn(); renderInv(); show('inv'); });
@@ -1812,6 +1795,7 @@ function overlaps(a, ax, ay, b, bx, by) {
 function catSprite() {
   if (mode === 'over') return cat.dead;
   if (!P.grounded) return P.vy > 0 ? cat.up : cat.down;
+  if (mode === 'home' && G.outro) return cat.run[Math.floor(P.anim) % RUN_FRAMES];
   if (mode !== 'play') return P.blink > 0 ? cat.blink : cat.idle[Math.floor(G.time * 4) % cat.idle.length];
   return cat.run[Math.floor(P.anim) % RUN_FRAMES];
 }
@@ -1819,6 +1803,30 @@ const objY = (o) => (o.type === 'fish' || o.type === 'star' ? o.y + Math.round(M
 const RAINBOW = ['#ff5555', '#ffaa00', '#ffff55', '#55ff55', '#55ffff', '#5599ff', '#ff55ff'];
 
 /* ---------- Lobby: die Katze spielt mit dem Wollknäuel ---------- */
+function tickOutro(dt) {
+  const O = G.outro;
+  O.t += dt;
+  const u = Math.min(1, O.t / O.dur), e = u * u * (3 - 2 * u);
+  const v = O.v0 * (1 - e) + 10 * e;
+  const step = v * dt;
+  G.scroll += step;
+  P.anim += dt * v / 9;
+  P.x = O.from + (O.to - O.from) * e;
+  G.hour = O.h0 + (startHour(1) - O.h0) * e; // die Tageszeit läuft zurück zum Morgen
+  for (const o of G.objects) {
+    if (o.type === 'toy') { // rollt von rechts genau vor die Pfoten
+      const nx = O.to + 30 + (O.toyFrom - O.to - 30) * (1 - e);
+      o.rot -= (o.x - nx) / 4.5;
+      o.x = nx;
+    } else o.x -= step + 220 * dt;
+  }
+  G.objects = G.objects.filter((o) => o.type === 'toy' || (o.x > -70 && !o.got));
+  if (u >= 1) {
+    G.outro = null; P.x = O.to; G.hour = startHour(1);
+    G.objects = G.objects.filter((o) => o.type === 'toy');
+    for (const o of G.objects) { o.vx = 0; o.wait = .8; }
+  }
+}
 function playWithYarn(dt) {
   const T = G.objects.find((o) => o.type === 'toy');
   if (!T) return;
@@ -1872,7 +1880,7 @@ function update(dt) {
 
   G.time += dt;
   if (mode !== 'play') {
-    if (mode === 'home') { G.scroll += 10 * dt; playWithYarn(dt); } // Wolken ziehen langsam
+    if (mode === 'home') { if (G.outro) tickOutro(dt); else { G.scroll += 10 * dt; playWithYarn(dt); } } // Wolken ziehen langsam
     return;
   }
 

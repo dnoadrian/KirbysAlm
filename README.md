@@ -6,7 +6,7 @@ Ein kleines Pixel-Spiel fürs Handy: Deine Katze läuft über eine Bergwiese und
 
 ## Lobby
 
-In der Lobby spielt deine Katze mit einem Wollknäuel. Links oben stehen untereinander **Shop** und **Inventar**, rechts unten der große **Start**-Knopf. Bei Start läuft die Katze einfach los: Die Menüs gleiten weg und die Landschaft zieht vorbei. Nach dem Verlieren geht es mit **Nochmal** genauso sofort weiter oder mit **Lobby** zurück.
+In der Lobby spielt deine Katze mit einem Wollknäuel. Links oben stehen untereinander **Shop** und **Inventar**, rechts unten der große **Start**-Knopf. Bei Start läuft die Katze einfach los: Die Menüs gleiten weg und die Landschaft zieht vorbei. Nach dem Verlieren geht es mit **Nochmal** genauso sofort weiter oder mit **Lobby** zurück: Die Katze läuft aus, die Landschaft wird langsamer, das Wollknäuel rollt heran und die Menüs gleiten wieder herein. Beim Umfallen bekommt die Katze X-Augen.
 
 ## Steuerung
 
