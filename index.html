@@ -212,6 +212,9 @@ p, h1, h2, h3 { margin: 0; }
 .card .btn { width: 100%; padding: 10px 10px 12px; }
 .tag { align-self: flex-start; padding: 3px 8px 4px; font-size: var(--fs0); background: var(--green-lo); border: 2px solid var(--wood-deep); border-radius: 4px; }
 #shopNote, #missionNote { margin: 0 0 10px; }
+.login-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; color: #fff; text-shadow: var(--stroke-sm); }
+.grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (orientation: portrait) { .grid.three { grid-template-columns: 1fr; } }
 .has-dot::after { content: ''; position: absolute; top: -5px; right: -5px; width: 12px; height: 12px; border-radius: 50%; background: var(--red); border: 2px solid var(--wood-deep); }
 .badge { align-self: flex-start; padding: 5px 10px 6px; background: var(--green); color: #ffffff; }
 .msg { margin: 10px 12px 0; padding: 8px 10px; background: rgba(74, 41, 19, .6); color: #ffffff; }
@@ -220,7 +223,7 @@ p, h1, h2, h3 { margin: 0; }
 .stat-num { display: block; font-size: var(--fs2); text-shadow: var(--stroke); }
 .stat-lbl { text-transform: capitalize; display: block; margin-top: 6px; font-size: var(--fs0); }
 .row { display: flex; gap: 12px; }
-.row .btn { flex: 1; }
+.row .btn { flex: 1; font-size: var(--fs2); }
 
 .setup-cat { display: flex; justify-content: center; padding: 4px 0 12px; }
 .field-lbl { color: #ffffff; }
@@ -254,18 +257,6 @@ p, h1, h2, h3 { margin: 0; }
 #banner.show { opacity: 1; transform: none; }
 #banner .lvl { font-size: 48px; line-height: 1; color: #ffffff; text-shadow: var(--stroke); }
 #banner .name, #banner .tip { color: #ffffff; text-shadow: var(--stroke-sm); }
-#combo { position: fixed; left: 0; top: 0; z-index: 5; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; pointer-events: none; opacity: 0; white-space: nowrap; transform-origin: left bottom; }
-#combo.pop { animation: combo 1.15s cubic-bezier(.2, .9, .3, 1) both; }
-#comboWord { font-size: var(--fs); line-height: 1; color: #ffffff; text-shadow: var(--stroke-sm); }
-#comboMult { font-size: var(--fs); line-height: 1; color: #ffffff; text-shadow: var(--stroke-sm); }
-@keyframes combo {
-  0% { opacity: 0; transform: scale(2.4) rotate(-10deg); }
-  12% { opacity: 1; transform: scale(.85) rotate(5deg); }
-  22% { transform: scale(1.12) rotate(-3deg); }
-  32% { transform: scale(1) rotate(0); }
-  70% { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(-36px) scale(.9); }
-}
 @keyframes fadeout { 0%, 70% { opacity: 1; } 100% { opacity: 0; } }
 
 
@@ -374,11 +365,10 @@ p, h1, h2, h3 { margin: 0; }
 }
 /* große PC-Bildschirme: Knöpfe und Fenster mitwachsen lassen */
 @media (min-width: 1500px) and (min-height: 820px) {
-  .hud, #home, .modal, #banner, #combo { zoom: 1.45; }
+  .hud, #home, .modal, #banner { zoom: 1.45; }
 }
 @media (prefers-reduced-motion: reduce) {
   .panel, .box.bump { animation: none; }
-  #combo.pop { animation: fadeout 1.15s both; }
   #banner { transition: opacity .3s; transform: none; }
   #home.entering *, #home.leaving * { animation: none !important; transition: none !important; }
 }
@@ -515,7 +505,7 @@ p, h1, h2, h3 { margin: 0; }
       <span class="wallet" aria-label="Deine Fische"><svg class="fish-ico" viewBox="0 0 9 5"></svg><span id="missionsWallet">0</span></span>
       <button class="btn close-x" type="button" data-close aria-label="Schließen"><svg viewBox="0 0 7 7" shape-rendering="crispEdges" aria-hidden="true"><path fill="#fff" d="M0 0h2v1h1v1h1V1h1V0h2v2H6v1H5v1h1v1h1v2H5V6H4V5H3v1H2v1H0V5h1V4h1V3H1V2H0z"/></svg></button>
     </div>
-    <div class="scroll"><p class="field-lbl small-note" id="missionNote"></p><div class="grid" id="missionList"></div></div>
+    <div class="scroll"><div class="login-row" id="loginRow"></div><p class="field-lbl small-note" id="missionNote"></p><div class="grid three" id="missionList"></div></div>
   </div>
 </div>
 
@@ -528,6 +518,7 @@ p, h1, h2, h3 { margin: 0; }
     <div class="scroll">
       <div class="set-row"><label for="setVol">Lautstärke</label><span class="set-val" id="setVolVal"></span><input id="setVol" type="range" min="0" max="100" step="5"></div>
       <div class="set-row"><label for="setSfx">Spiel-Sounds</label><span class="set-val" id="setSfxVal"></span><input id="setSfx" type="range" min="0" max="100" step="5"></div>
+      <div class="set-row"><label for="setMusic">Musik</label><span class="set-val" id="setMusicVal"></span><input id="setMusic" type="range" min="0" max="100" step="5"></div>
       <div class="set-row"><label for="setUi">Knopf-Sounds</label><span class="set-val" id="setUiVal"></span><input id="setUi" type="range" min="0" max="100" step="5"></div>
       <div class="set-row"><span class="lbl">Vibration</span><div class="seg"><button class="btn" id="setVibOn" type="button">An</button><button class="btn" id="setVibOff" type="button">Aus</button></div></div>
       <div class="set-row"><span class="lbl" id="setWho"></span><button class="btn btn-red" id="setLogout" type="button">Abmelden</button></div>
@@ -568,7 +559,6 @@ p, h1, h2, h3 { margin: 0; }
   </div>
 </div>
 
-<div id="combo" aria-live="polite"><span id="comboWord"></span><span id="comboMult"></span></div>
 
 <div id="banner" aria-live="polite">
   <span class="lvl" id="bLevel">Level 1</span>
@@ -929,6 +919,10 @@ function runPose(k) {
 }
 const POSE_STAND = { fn: [0, 0], ff: [.15, .05], bn: [0, 0], bf: [-.15, -.05], tail: 0, bob: 0 };
 const POSE_UP = { fn: [1.1, 1.4], ff: [.95, 1.25], bn: [-1, -1.3], bf: [-.85, -1.15], tail: -1.2, bob: 0 };
+// Doppelsprung: Beine eng an den Körper gezogen
+const POSE_TUCK = { fn: [.9, -1.6], ff: [.8, -1.5], bn: [-.9, 1.6], bf: [-.8, 1.5], tail: -.6, bob: -1 };
+// Umgefallen: flach auf dem Bauch, Beine zur Seite gestreckt
+const POSE_LIE = { fn: [1.45, 1.55], ff: [1.35, 1.5], bn: [-1.45, -1.55], bf: [-1.35, -1.5], tail: 1.2, bob: 2 };
 const POSE_DOWN = { fn: [.5, .25], ff: [.35, .15], bn: [-.2, -.9], bf: [-.35, -1], tail: .8, bob: 0 };
 
 // Katzenfarben: am Anfang gibt es nur die weiße Katze, alle anderen gibt es im Shop.
@@ -989,9 +983,11 @@ function catSet(breedId, cosIds = []) {
       run: Array.from({ length: RUN_FRAMES }, (_, k) => mk(runPose(k))),
       up: mk(POSE_UP),
       down: mk(POSE_DOWN),
+      tuck: mk(POSE_TUCK),
       idle: [-1, -.4, .3, .9, .3, -.4].map((t) => mk({ ...POSE_STAND, tail: t })),
       blink: mk({ ...POSE_STAND, eye: 's' }),
-      dead: mk({ ...POSE_DOWN, eye: 'x' }),
+      dead: mk({ ...POSE_LIE, eye: 'x' }),
+      hurt: mk({ ...POSE_UP, eye: 'x' }),
     };
   }
   return catCache[key];
@@ -1341,10 +1337,10 @@ function setLang(l) { settings.lang = l; saveSettings(); applyLang(); if (typeof
 /* ---------- Ton ----------
    Alles läuft über einen Kompressor mit Verstärkung, damit man das Spiel auch bei leiser Handy-Lautstärke gut hört.
    Die Klänge liegen bewusst im Bereich 400 bis 3000 Hz, den Handy-Lautsprecher gut wiedergeben. */
-const settings = Object.assign({ vol: 80, sfx: 100, ui: 70, vib: true, lang: 'de' }, store.get('cj-settings', {}));
+const settings = Object.assign({ vol: 80, sfx: 100, ui: 70, music: 60, vib: true, lang: 'de' }, store.get('cj-settings', {}));
 if (store.get('katzosaurus-muted', false) === true && !store.get('cj-settings', null)) settings.vol = 0;
 const saveSettings = () => store.set('cj-settings', settings);
-let actx = null, master = null, busSfx = null, busUi = null, noiseBuf = null;
+let actx = null, master = null, busSfx = null, busUi = null, busMusic = null, noiseBuf = null;
 function audioOn() {
   if (!actx) {
     try {
@@ -1354,12 +1350,14 @@ function audioOn() {
       master = actx.createGain();
       busSfx = actx.createGain();
       busUi = actx.createGain();
-      busSfx.connect(master); busUi.connect(master);
+      busMusic = actx.createGain();
+      busSfx.connect(master); busUi.connect(master); busMusic.connect(master);
       master.connect(comp).connect(actx.destination);
       noiseBuf = actx.createBuffer(1, actx.sampleRate * .5, actx.sampleRate);
       const d = noiseBuf.getChannelData(0);
       for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
       applyVolume();
+      startMusic();
     } catch (e) { actx = null; }
   }
   if (actx && actx.state === 'suspended') actx.resume().catch(() => {});
@@ -1370,6 +1368,7 @@ function applyVolume() {
   master.gain.value = Math.pow(settings.vol / 100, 1.3) * 3.2;
   busSfx.gain.value = settings.sfx / 100;
   busUi.gain.value = settings.ui / 100;
+  busMusic.gain.value = Math.pow(settings.music / 100, 1.4) * .55;
 }
 // ein Ton mit schnellem Anschlag und weichem Ausklingen
 function tone(f0, f1, dur, type = 'sine', vol = .3, delay = 0, bus = 'sfx') {
@@ -1405,38 +1404,107 @@ function noise(dur, f0, f1, vol = .25, delay = 0, q = 1.2, bus = 'sfx') {
   s.start(t, Math.random() * .3);
   s.stop(t + dur + .03);
 }
-// "Pling" mit Obertönen, klingt wie ein kleines Glöckchen
-function bell(f, vol = .22, delay = 0, dur = .28, bus = 'sfx') {
-  tone(f, f, dur, 'sine', vol, delay, bus);
-  tone(f * 2, f * 2, dur * .6, 'sine', vol * .35, delay, bus);
-  tone(f * 3.01, f * 3.01, dur * .3, 'triangle', vol * .12, delay, bus);
-}
-const PENTA = [523, 587, 659, 784, 880, 1047, 1175, 1319, 1568, 1760, 2093];
+// Spiel-Sounds im alten Chiptune-Stil (Rechteck- und Dreieckswellen)
+const chip = (f0, f1, dur, type = 'square', vol = .07, delay = 0, bus = 'sfx') => tone(f0, f1, dur, type, vol * 1.6, delay, bus);
 const sfx = {
-  jump() { tone(330, 720, .14, 'sine', .32); tone(660, 1440, .09, 'triangle', .07); noise(.06, 900, 1800, .05); },
-  jump2() { tone(520, 1100, .14, 'sine', .28); tone(1040, 2200, .1, 'triangle', .06, .02); noise(.16, 600, 2400, .12, 0, .8); },
-  land() { noise(.05, 500, 220, .1, 0, 1.5); },
-  combo(n) { const i = Math.min(n, 8); bell(PENTA[i], .2); bell(PENTA[i + 2], .17, .07); },
-  event() { [0, 2, 4, 6, 7].forEach((k, i) => bell(PENTA[k], .16, i * .07)); },
-  power() { [2, 4, 6, 8, 10].forEach((k, i) => bell(PENTA[k], .15, i * .05, .22)); },
-  starNote() { bell(pick(PENTA.slice(3, 9)), .07, 0, .12); },
-  knock() { noise(.12, 1200, 300, .3, 0, 1); tone(500, 160, .14, 'triangle', .22); bell(1568, .1, .05); },
-  buy() { bell(1319, .2); bell(1760, .2, .08); bell(2093, .22, .16, .4); noise(.04, 4000, 3000, .08, 0, 2); },
-  no() { tone(330, 260, .12, 'triangle', .25); tone(262, 200, .16, 'triangle', .25, .1); },
-  whoosh() { noise(.38, 400, 2600, .22, 0, .7); },
-  meow() { tone(700, 1050, .1, 'sawtooth', .07); tone(700, 1050, .1, 'sine', .22); tone(1050, 560, .22, 'sine', .22, .09); tone(1050, 560, .22, 'sawtooth', .05, .09); },
+  jump() { chip(380, 760, .11); },
+  jump2() { chip(620, 1240, .12, 'square', .06); },
+  land() {},
+  event() { [392, 523, 659, 784, 1047].forEach((f, i) => chip(f, f * 1.02, .09, 'triangle', .07, i * .06)); },
+  power() { [523, 659, 784, 1047, 1319].forEach((f, i) => chip(f, f, .08, 'square', .06, i * .05)); },
+  starNote() { const f = pick([523, 587, 659, 784, 880, 1047]); chip(f, f, .07, 'square', .035); },
+  knock() { chip(200, 900, .12, 'square', .07); },
+  buy() { chip(880, 1320, .08, 'triangle', .07); chip(1320, 1760, .1, 'triangle', .06, .08); },
+  no() { chip(220, 160, .18, 'square', .06); },
+  meow() { chip(650, 1050, .07, 'triangle', .06); chip(1050, 520, .16, 'triangle', .06, .07); },
+  fish() { chip(1200, 1800, .06, 'triangle', .06); chip(1800, 2400, .08, 'triangle', .05, .06); },
+  golden() { chip(880, 880, .07, 'square', .05); chip(1320, 1320, .1, 'square', .05, .08); chip(1760, 1760, .12, 'square', .045, .16); },
+  level() { [523, 659, 784, 1047].forEach((f, i) => chip(f, f, .12, 'square', .06, i * .1)); },
+  claim() { [659, 784, 1047, 1319].forEach((f, i) => chip(f, f, .1, 'triangle', .07, i * .07)); },
+  hit() { chip(320, 55, .4, 'sawtooth', .1); chip(140, 40, .3, 'square', .08, .05); },
+  pop() { chip(500, 1100, .07, 'triangle', .06); },
   purr() { // tiefes, gemütliches Schnurren
     if (!actx || settings.vol === 0) return;
     for (let i = 0; i < 9; i++) { noise(.13, 260, 180, .2, i * .17, 3); tone(70, 64, .14, 'sawtooth', .07, i * .17); }
   },
-  fish() { bell(1568, .2, 0, .16); bell(2093, .2, .055, .22); },
-  golden() { [8, 9, 10].forEach((k, i) => bell(PENTA[k], .2, i * .06, .3)); },
-  level() { [0, 2, 4, 7].forEach((k, i) => bell(PENTA[k], .2, i * .09, .35)); },
-  hit() { noise(.3, 900, 120, .45, 0, .9); tone(220, 70, .35, 'sine', .45); tone(440, 110, .2, 'triangle', .15); },
-  claim() { [4, 6, 8, 10].forEach((k, i) => bell(PENTA[k], .2, i * .06, .35)); },
-  click() { tone(1100, 700, .045, 'sine', .22, 0, 'ui'); noise(.025, 3000, 2000, .09, 0, 2, 'ui'); },
-  pop() { tone(500, 1200, .07, 'sine', .22, 0, 'ui'); },
+  // Start: fröhliches "Mrrp!" und drei hüpfende Töne
+  start() { chip(560, 900, .06, 'triangle', .07); chip(900, 700, .08, 'triangle', .06, .06); [784, 988, 1175].forEach((f, i) => chip(f, f, .07, 'triangle', .065, .16 + i * .07)); },
+  // zurück in die Lobby: zwei sanfte Töne nach unten
+  home() { chip(784, 784, .1, 'triangle', .06); chip(587, 587, .16, 'triangle', .06, .1); },
+  // Menü: weiches Holz-Klacken, Fenster auf und zu
+  click() { tone(1800, 1100, .035, 'sine', .16, 0, 'ui'); tone(420, 300, .05, 'sine', .14, 0, 'ui'); },
+  open() { tone(520, 880, .09, 'sine', .12, .02, 'ui'); tone(1040, 1760, .06, 'sine', .04, .02, 'ui'); },
+  close() { tone(780, 460, .09, 'sine', .11, 0, 'ui'); },
 };
+
+/* ---------- Hintergrundmusik: Wind über der Alm mit leisen, luftigen Tönen ---------- */
+let musicOn = false;
+function startMusic() {
+  if (!actx || musicOn) return;
+  musicOn = true;
+  // Wind: weiches Rauschen durch einen langsam wandernden Filter
+  const len = actx.sampleRate * 4;
+  const wb = actx.createBuffer(2, len, actx.sampleRate);
+  for (let ch = 0; ch < 2; ch++) { const d = wb.getChannelData(ch); let last = 0; for (let i = 0; i < len; i++) { last = last * .985 + (Math.random() * 2 - 1) * .015; d[i] = last * 6; } }
+  const wind = actx.createBufferSource(); wind.buffer = wb; wind.loop = true;
+  const wf = actx.createBiquadFilter(); wf.type = 'bandpass'; wf.Q.value = .7; wf.frequency.value = 500;
+  const wg = actx.createGain(); wg.gain.value = .25;
+  wind.connect(wf).connect(wg).connect(busMusic);
+  wind.start();
+  const lfo = (target, rate, depth) => { const o = actx.createOscillator(); const g = actx.createGain(); o.frequency.value = rate; g.gain.value = depth; o.connect(g).connect(target); o.start(); };
+  lfo(wf.frequency, .05, 260); // Böen
+  lfo(wf.frequency, .13, 90);
+  lfo(wg.gain, .07, .12);
+  // Hall: einfache Echo-Schleife, damit die Töne weit klingen
+  const delay = actx.createDelay(2); delay.delayTime.value = .48;
+  const fb = actx.createGain(); fb.gain.value = .42;
+  const damp = actx.createBiquadFilter(); damp.type = 'lowpass'; damp.frequency.value = 2200;
+  delay.connect(damp).connect(fb).connect(delay);
+  damp.connect(busMusic);
+  const SCALE = [294, 330, 370, 440, 494, 587, 659, 740]; // D-Dur pentatonisch
+  let next = actx.currentTime + 1.5, padAt = actx.currentTime + .5;
+  const note = (f, t, vol, dur) => {
+    for (const [mul, v, type] of [[1, vol, 'sine'], [2, vol * .25, 'sine'], [3, vol * .08, 'triangle']]) {
+      const o = actx.createOscillator(), g = actx.createGain();
+      o.type = type; o.frequency.value = f * mul;
+      g.gain.setValueAtTime(.0001, t);
+      g.gain.exponentialRampToValueAtTime(v, t + .03);
+      g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+      o.connect(g); g.connect(busMusic); g.connect(delay);
+      o.start(t); o.stop(t + dur + .05);
+    }
+  };
+  const pad = (t) => { // warme Fläche, schwillt langsam an und ab
+    for (const f of [147, 220, 294]) {
+      const o = actx.createOscillator(), g = actx.createGain(), lp = actx.createBiquadFilter();
+      o.type = 'triangle'; o.frequency.value = f * (1 + (Math.random() - .5) * .004);
+      lp.type = 'lowpass'; lp.frequency.value = 700;
+      g.gain.setValueAtTime(.0001, t);
+      g.gain.linearRampToValueAtTime(.05, t + 4);
+      g.gain.linearRampToValueAtTime(.0001, t + 11);
+      o.connect(lp).connect(g).connect(busMusic);
+      o.start(t); o.stop(t + 11.2);
+    }
+  };
+  setInterval(() => {
+    if (!actx || actx.state !== 'running') return;
+    const now = actx.currentTime;
+    if (next < now) next = now + .2;
+    if (padAt < now) padAt = now + .2;
+    while (next < now + 1) {
+      // kleine Melodie-Tropfen wie ein Glockenspiel im Wind, mit Pausen
+      const k = Math.floor(Math.random() * SCALE.length);
+      note(SCALE[k], next, .06, 2.4);
+      if (Math.random() < .35) note(SCALE[Math.min(SCALE.length - 1, k + 2)], next + .25, .04, 2);
+      next += Math.random() < .3 ? rand(3, 6) : rand(.9, 1.8);
+    }
+    if (padAt < now + 1) { pad(padAt); padAt += rand(12, 18); }
+  }, 300);
+}
+document.addEventListener('visibilitychange', () => {
+  if (!actx) return;
+  if (document.hidden) actx.suspend().catch(() => {}); else actx.resume().catch(() => {});
+});
 function vibrate(ms) { if (!settings.vib) return; try { navigator.vibrate && navigator.vibrate(ms); } catch (e) { /* nicht unterstützt */ } }
 
 /* ---------- Bildschirm ---------- */
@@ -1449,7 +1517,8 @@ function resize() {
   canvas.height = Math.round(H * dpr);
   const portrait = H > W * 1.1;
   // gleiches Sichtfeld auf Handy und PC: große Bildschirme zoomen hinein, statt weiter vorauszuschauen
-  px = clamp(portrait ? W / 200 : Math.min(W / 230, H / 105), 1.5, 12);
+  // PC: hineinzoomen, aber nicht zu stark (Sichtweite liegt zwischen Handy und früherer PC-Ansicht)
+  px = clamp(portrait ? W / 200 : Math.min(W / 240, H / 108), 1.5, 6.5);
   groundY = Math.round(H * (portrait ? .66 : .8));
   viewW = W / px;
   skyH = groundY / px;
@@ -1526,7 +1595,7 @@ const GRAV = 1250;
 const OVER_QUIPS = ['Erwischt!', 'Da stand jemand im Weg.', '{k} war knapp zu langsam.', 'Ups, Zusammenstoß!', 'Das nächste Mal klappt es.', 'Kirby hat nichts gesehen.'];
 
 let mode = 'home';
-const P = { roll: 0, x: 24, y: 0, vy: 0, grounded: true, jumps: 0, anim: 0, buffer: 0, blink: 0, airT: 0, land: 0, flip: 0, jumpPassed: false, landT: 0, checkReset: false, inv: 0, invTick: 0 };
+const P = { roll: 0, x: 24, y: 0, vy: 0, grounded: true, jumps: 0, anim: 0, buffer: 0, blink: 0, airT: 0, land: 0, flip: 0, landT: 0, inv: 0, invTick: 0 };
 const FLIP_T = .38; // Dauer der Streck-Bewegung beim Sprung in der Luft
 const ROLL_T = 2.2; // Dauer des Rückenrollens in der Lobby
 const V = { lick: 0, blink: 0, purr: 0 };
@@ -1538,10 +1607,10 @@ const floaters = [];
 function freshGame() {
   return {
     speed: 140, dist: 0, scroll: G ? G.scroll : 0, drift: G ? G.drift : 0, score: 0, jumped: 0,
-    level: 1, objects: [], untilSpawn: 100, time: 0, combo: 0, bestCombo: 0,
+    level: 1, objects: [], untilSpawn: 100, time: 0,
     hour: startHour(1), fish: 0, starUsed: 0,
     event: null, eventIn: rand(13, 18), turbo: 1, streaks: [], nextStar: rand(28, 40),
-    fever: 0, eggs: G ? G.eggs : [], eggIn: rand(25, 45), bfly: null, flash: 0, slowmo: 0,
+    eggs: G ? G.eggs : [], eggIn: rand(25, 45), bfly: null, flash: 0, slowmo: 0,
   };
 }
 G = freshGame();
@@ -1677,8 +1746,6 @@ function tickEvent(dt) {
 /* ---------- Steuerung: nur Tippen / Klicken ---------- */
 const maxJumps = () => (G.level < 2 ? 1 : 2);
 function jump(v) {
-  if (P.checkReset) settleCombo();
-  if (P.jumps === 1) P.jumpPassed = false;
   P.vy = v;
   P.grounded = false;
   P.buffer = 0;
@@ -1819,7 +1886,7 @@ $('adminClose').addEventListener('click', closeAdmin);
 /* ---------- Einstellungen: Lautstärke, Vibration, Sprache ---------- */
 let settingsBack = null;
 function renderSettings() {
-  for (const [id, k] of [['setVol', 'vol'], ['setSfx', 'sfx'], ['setUi', 'ui']]) {
+  for (const [id, k] of [['setVol', 'vol'], ['setSfx', 'sfx'], ['setMusic', 'music'], ['setUi', 'ui']]) {
     $(id).value = settings[k];
     $(id + 'Val').textContent = settings[k] + ' %';
   }
@@ -1840,9 +1907,9 @@ function closeSettings() {
   if (settingsBack && settingsBack !== 'home') show(settingsBack);
   else show(mode === 'home' ? 'home' : mode === 'paused' ? 'pause' : null);
 }
-for (const [id, k] of [['setVol', 'vol'], ['setSfx', 'sfx'], ['setUi', 'ui']]) {
+for (const [id, k] of [['setVol', 'vol'], ['setSfx', 'sfx'], ['setMusic', 'music'], ['setUi', 'ui']]) {
   $(id).addEventListener('input', () => { settings[k] = Number($(id).value); applyVolume(); saveSettings(); $(id + 'Val').textContent = settings[k] + ' %'; });
-  $(id).addEventListener('change', () => { audioOn(); if (k === 'ui') sfx.click(); else sfx.fish(); });
+  $(id).addEventListener('change', () => { audioOn(); if (k === 'ui') sfx.click(); else if (k !== 'music') sfx.fish(); });
 }
 $('setVibOn').addEventListener('click', () => { settings.vib = true; saveSettings(); renderSettings(); vibrate(40); });
 $('setVibOff').addEventListener('click', () => { settings.vib = false; saveSettings(); renderSettings(); });
@@ -1911,7 +1978,14 @@ async function keepAwake() {
 
 /* ---------- Ablauf ---------- */
 const screens = { missions: $('missions'), settings: $('settings'), admin: $('admin'), home: $('home'), setup: $('setup'), shop: $('shop'), inv: $('inv'), pause: $('pause'), over: $('over') };
-function show(name) { for (const k in screens) screens[k].hidden = k !== name; }
+let shown = null;
+function show(name) {
+  const modal = name && name !== 'home';
+  if (modal && shown !== name && actx) sfx.open();
+  else if (!modal && shown && shown !== 'home' && actx && mode === 'home') sfx.close();
+  shown = name;
+  for (const k in screens) screens[k].hidden = k !== name;
+}
 let bannerTimer = 0;
 
 function showBanner(title, name, tip, ms = 2600) {
@@ -1936,7 +2010,7 @@ function goHome(smooth = false) {
   mode = 'home';
   G = freshGame();
   const homeX = Math.round(viewW * .42);
-  Object.assign(P, { death: null, roll: 0, x: smooth ? was.x : homeX, y: 0, vy: 0, grounded: true, jumps: 0, buffer: 0, airT: 0, land: 0, flip: 0, inv: 0, jumpPassed: false, checkReset: false });
+  Object.assign(P, { death: null, roll: 0, x: smooth ? was.x : homeX, y: 0, vy: 0, grounded: true, jumps: 0, buffer: 0, airT: 0, land: 0, flip: 0, inv: 0 });
   const toy = yarnSpr[4];
   const T = { type: 'toy', kind: 'yarn', spr: toy, x: P.x + 30, y: 0, w: toy.w, h: toy.h, vx: 40, rot: 0, bob: 0, wait: 1.2, passed: true };
   if (smooth) {
@@ -1965,7 +2039,7 @@ function startGame() {
   if (toy) G.objects.push(toy); // das Wollknäuel bleibt liegen und rollt aus dem Bild
   G.intro = { t: 0, dur: 1.1, from: fromX };
   G.bfly = { t: 0, x: fromX + 25, y: 15 }; // der Grund zum Loslaufen
-  Object.assign(P, { death: null, roll: 0, x: fromX, y: 0, vy: 0, grounded: true, jumps: 0, buffer: 0, airT: 0, land: 0, flip: 0, inv: 0, jumpPassed: false, checkReset: false });
+  Object.assign(P, { death: null, roll: 0, x: fromX, y: 0, vy: 0, grounded: true, jumps: 0, buffer: 0, airT: 0, land: 0, flip: 0, inv: 0 });
   particles.length = 0;
   floaters.length = 0;
   mode = 'play';
@@ -1984,10 +2058,10 @@ function startGame() {
 function pause() { mode = 'paused'; show('pause'); }
 function resume() { mode = 'play'; show(null); last = performance.now(); }
 
-$('startBtn').addEventListener('click', () => { audioOn(); if (mode === 'home') { sfx.whoosh(); startGame(); } });
-$('againBtn').addEventListener('click', () => { audioOn(); if (mode === 'over') { sfx.whoosh(); startGame(); } });
-$('lobbyBtn').addEventListener('click', () => { if (mode === 'over') { sfx.whoosh(); goHome(true); } });
-$('pauseLobbyBtn').addEventListener('click', () => { if (mode === 'paused') { sfx.whoosh(); goHome(true); } });
+$('startBtn').addEventListener('click', () => { audioOn(); if (mode === 'home') { sfx.start(); startGame(); } });
+$('againBtn').addEventListener('click', () => { audioOn(); if (mode === 'over') { sfx.start(); startGame(); } });
+$('lobbyBtn').addEventListener('click', () => { if (mode === 'over') { sfx.home(); goHome(true); } });
+$('pauseLobbyBtn').addEventListener('click', () => { if (mode === 'paused') { sfx.home(); goHome(true); } });
 $('resumeBtn').addEventListener('click', () => { if (mode === 'paused') resume(); });
 $('pauseSettingsBtn').addEventListener('click', () => openSettings());
 $('shopBtn').addEventListener('click', () => { audioOn(); renderShop(); show('shop'); });
@@ -2026,7 +2100,7 @@ function gameOver(o) {
   shake = reduceMotion ? 0 : .5;
   G.slowmo = reduceMotion ? 0 : .55;
   G.flash = reduceMotion ? 0 : 1;
-  P.death = { t: 0, vy: 260, vx: -40, spin: 0, landed: false };
+  P.death = { t: 0, vy: 170 + Math.max(0, P.vy) * .3, vx: -55, tilt: 0, landed: false, slide: 0 };
   P.grounded = false;
   sfx.hit();
   vibrate([80, 40, 160]);
@@ -2048,16 +2122,23 @@ function tickDeath(dt) {
   if (!D) return;
   D.t += dt;
   if (G.flash > 0) G.flash = Math.max(0, G.flash - dt * 2.5);
-  if (D.landed) return;
-  D.vy -= GRAV * .75 * dt;
+  if (D.landed) { // rutscht auf dem Bauch aus, Kopf richtet sich wieder gerade
+    D.vx *= Math.pow(.02, dt);
+    P.x = Math.max(4, P.x + D.vx * dt);
+    D.tilt *= Math.pow(.002, dt);
+    if (Math.abs(D.vx) > 8 && Math.random() < dt * 40) particles.push({ x: P.x + rand(14, 24), y: 0, vx: rand(-10, 25), vy: rand(10, 30), life: rand(.2, .4), c: 'rgba(240,235,225,.85)' });
+    return;
+  }
+  // nach hinten geschleudert: Körper kippt leicht nach hinten, keine Drehung
+  D.vy -= GRAV * dt;
   P.y += D.vy * dt;
   P.x = Math.max(4, P.x + D.vx * dt);
-  D.spin += dt * 11;
-  if (P.y <= 0 && D.t > .1) {
-    P.y = 0; D.landed = true; D.spin = 0;
-    shake = reduceMotion ? 0 : .25;
+  D.tilt = Math.max(-.45, D.tilt - dt * 2.2);
+  if (P.y <= 0 && D.t > .08) {
+    P.y = 0; D.landed = true; D.vx = -70; D.landT = D.t;
+    shake = reduceMotion ? 0 : .22;
     sfx.land();
-    for (let i = 0; i < 16; i++) particles.push({ x: P.x + rand(2, 26), y: 1, vx: rand(-70, 70), vy: rand(20, 70), life: rand(.3, .6), c: 'rgba(240,235,225,.9)' });
+    for (let i = 0; i < 14; i++) particles.push({ x: P.x + rand(2, 26), y: 1, vx: rand(-70, 40), vy: rand(15, 55), life: rand(.3, .6), c: 'rgba(240,235,225,.9)' });
   }
 }
 
@@ -2070,47 +2151,6 @@ function addFish(n, x, y, gold = false) {
   if (typeof missionProgress === 'function') missionProgress('fish', n);
   const box = $('fishBox');
   box.classList.remove('bump'); void box.offsetWidth; box.classList.add('bump');
-}
-
-// Bewertung nach dem knappsten Abstand: je knapper, desto besser
-const CHEERS = [[4, 'Unglaublich!', '#ffaa00'], [9, 'Perfekt!', '#55ff55'], [Infinity, 'Super!', '#55ffff']];
-let comboTimer = 0;
-function cheer(gap) {
-  G.combo++;
-  G.bestCombo = Math.max(G.bestCombo, G.combo);
-  let [, word, color] = CHEERS.find(([g]) => gap < g);
-  if (G.combo % 10 === 0) {
-    word = 'Legendär!'; color = '#ff55ff';
-    G.fever = 6; // Fisch-Fieber: 6 Sekunden doppelte Fische
-    showBanner(t('Fisch-Fieber!'), t('6 Sekunden doppelte Fische'), '', 1800);
-    sfx.power();
-  }
-  word = t(word);
-  if (typeof missionProgress === 'function') missionProgress('combo', G.combo);
-  sfx.combo(G.combo);
-  for (let i = 0; i < 14; i++) {
-    const a = rand(0, Math.PI * 2), v = rand(40, 110);
-    particles.push({ x: P.x + 14, y: P.y + 10, vx: Math.cos(a) * v, vy: Math.sin(a) * v + 30, life: rand(.3, .6), c: color });
-  }
-  let mult = G.combo + 'x';
-  if (G.combo % 5 === 0) { addFish(2, P.x + 14, P.y + 22); mult += '  +2 ' + t('Fische'); } // alle 5 in Serie gibt es Fische
-  else if (gap < 4) { addFish(1, P.x + 14, P.y + 22); mult += '  +1 ' + t('knapp!'); } // ganz knapp drüber: Bonus-Fisch
-  const el = $('combo');
-  // rechts oben neben der Katze, damit man nicht vom Spiel wegschauen muss
-  el.style.left = Math.round(Math.min(W - 150, (P.x + CAT_W + 2) * px)) + 'px';
-  el.style.top = Math.round(Math.max(60, groundY - (P.y + CAT_H + 6) * px - 34)) + 'px';
-  $('comboWord').textContent = word;
-  $('comboMult').textContent = mult;
-  el.classList.remove('pop', 'hot');
-  void el.offsetWidth;
-  el.classList.add('pop');
-  clearTimeout(comboTimer);
-  comboTimer = setTimeout(() => el.classList.remove('pop', 'hot'), 1200);
-}
-// Ein Sprung, bei dem niemand übersprungen wurde, beendet die Serie
-function settleCombo() {
-  P.checkReset = false;
-  if (!P.jumpPassed) G.combo = 0;
 }
 
 let hudCache = '';
@@ -2325,7 +2365,6 @@ const MISSION_TYPES = {
   meters: { text: 'Lauf {n} m in einer Runde', ns: [300, 600, 1000], best: true },
   fish: { text: 'Sammle heute {n} Fische', ns: [40, 90, 160] },
   hurdle: { text: 'Überspring heute {n} Hindernisse', ns: [15, 35, 60] },
-  combo: { text: 'Schaffe eine {n}er-Serie', ns: [5, 8, 12], best: true },
   runs: { text: 'Spiel heute {n} Runden', ns: [3, 5, 8] },
   egg: { text: 'Entdecke heute {n} Easter Eggs im Hintergrund', ns: [1, 2, 3] },
 };
@@ -2380,12 +2419,13 @@ function renderMissions() {
   const L = loginState();
   const day = ((L.streak - 1) % 7) + 1, reward = LOGIN_REWARD[day - 1];
   const done = L.claimed === L.last;
-  box.appendChild(shopCard({
-    name: t('Tägliche Belohnung'), tag: t('Tag') + ' ' + day + ' / 7', prev: () => iconCanvas(fishSpr, 4),
-    desc: t('Komm jeden Tag wieder, die Belohnung wird größer.') + ' +' + reward + ' ' + t('Fische'),
-    label: done ? t('Morgen wieder') : t('Abholen'), alt: done, disabled: done,
-    onClick: () => { const S = loginState(); if (S.claimed === S.last) return; S.claimed = S.last; store.set('cj-login', S); save.fish += reward; persist(); updateHud(true); sfx.claim(); renderMissions(); updateMissionDot(); },
-  }));
+  const row = $('loginRow');
+  row.textContent = '';
+  const lbtn = el('button', 'btn' + (done ? ' btn2' : ''), done ? t('Morgen wieder') : t('Abholen') + ' +' + reward);
+  lbtn.type = 'button';
+  lbtn.disabled = done;
+  lbtn.addEventListener('click', () => { const S = loginState(); if (S.claimed === S.last) return; S.claimed = S.last; store.set('cj-login', S); save.fish += reward; persist(); updateHud(true); sfx.claim(); renderMissions(); updateMissionDot(); });
+  row.append(el('span', '', t('Tägliche Belohnung') + ' · ' + t('Tag') + ' ' + day + ' / 7'), lbtn);
   const m = todayMissions();
   m.list.forEach((x, i) => {
     const ok = x.prog >= x.n;
@@ -2544,7 +2584,7 @@ Object.assign(EN, {
   'Inventar': 'Inventory', 'Jeder Goldfisch ist 10 Fische wert': 'Every goldfish is worth 10 fish', 'Jetzt kommen sie zu dritt': 'Now they come in threes', 'Jetzt stehen sie übereinander': 'Now they stand on each other',
   'Katzen': 'Cats', 'Keine Hindernisse, doppelte Fische': 'No obstacles, double fish', 'Kirby hat nichts gesehen.': 'Kirby saw nothing.', 'Kirby schaut zu': 'Kirby is watching',
   'Knallgelb für jedes Wetter.': 'Bright yellow for any weather.', 'Knopf-Sounds': 'Button sounds', 'Komm jeden Tag wieder, die Belohnung wird größer.': 'Come back every day, the reward grows.', 'Krone': 'Crown',
-  'Kurzhaar': 'Short hair', 'Langhaar': 'Long hair', 'Lauf {n} m in einer Runde': 'Run {n} m in one run', 'Lautstärke': 'Volume', 'Läuft noch': 'In progress', 'Magnet': 'magnet',
+  'Kurzhaar': 'Short hair', 'Langhaar': 'Long hair', 'Lauf {n} m in einer Runde': 'Run {n} m in one run', 'Lautstärke': 'Volume', 'Musik': 'Music', 'Läuft noch': 'In progress', 'Magnet': 'magnet',
   'Maximal': 'Maxed out', 'Menschenturm': 'Human tower', 'Menü': 'Menu', 'Meter': 'Meters', 'Mission geschafft!': 'Mission complete!', 'Missionen': 'Missions',
   'Mit goldener Kette. Sehr vornehm.': 'With a golden chain. Very posh.', 'Mit kleinem roten Anhänger.': 'With a little red pendant.', 'Mitnehmen': 'Take along', 'Mitternacht': 'Midnight', 'Monokel': 'Monocle',
   'Morgen wieder': 'Again tomorrow', 'Murmeltier': 'Marmot', 'Namen ändern': 'Change name', 'Namen ändern kostet': 'Changing the name costs', 'Neue Missionen in': 'New missions in',
@@ -2604,8 +2644,8 @@ function overlaps(a, ax, ay, b, bx, by) {
 }
 
 function catSprite() {
-  if (mode === 'over') return cat.dead;
-  if (P.flip > 0 && mode === 'play') return P.flip > FLIP_T * .65 ? cat.down : cat.up;
+  if (mode === 'over') return P.death && !P.death.landed ? cat.hurt : cat.dead;
+  if (P.flip > 0 && mode === 'play') return P.flip > FLIP_T * .6 ? cat.tuck : cat.up;
   if (!P.grounded) return P.vy > 0 ? cat.up : cat.down;
   if (mode === 'home' && G.outro) return cat.run[Math.floor(P.anim) % RUN_FRAMES];
   if (mode === 'home' && P.roll > 0) return cat.run[Math.floor(G.time * 14) % RUN_FRAMES]; // strampelt mit den Pfoten
@@ -2859,7 +2899,6 @@ function update(dt) {
   P.anim += dt * G.speed / 9;
   if (P.land > 0) P.land -= dt;
   if (P.flip > 0) P.flip = Math.max(0, P.flip - dt);
-  if (P.checkReset && G.time - P.landT > .3) settleCombo();
   P.buffer -= dt;
   if (!P.grounded) {
     P.airT += dt;
@@ -2868,7 +2907,6 @@ function update(dt) {
     if (P.y <= 0) {
       P.y = 0; P.vy = 0; P.grounded = true; P.jumps = 0;
       P.land = .14; P.flip = 0;
-      P.landT = G.time; P.checkReset = true;
       for (let i = 0; i < 4; i++) particles.push({ x: P.x + 8 + rand(-2, 4), y: rand(0, 2), vx: rand(-40, -10), vy: rand(10, 45), life: rand(.25, .5) });
       if (P.buffer > 0) { P.jumps = 1; jump(V0 * (1 + bonus('jump') / 100)); }
     }
@@ -2885,11 +2923,6 @@ function update(dt) {
     particles.push({ x: P.x + rand(2, 12), y: P.y + rand(2, 16), vx: rand(-90, -40), vy: rand(-10, 20), life: rand(.25, .45), c: pick(RAINBOW) });
   }
 
-  // Fisch-Fieber
-  if (G.fever > 0) {
-    G.fever -= dt;
-    if (Math.random() < dt * 30) particles.push({ x: P.x + rand(0, 10), y: P.y + rand(2, 16), vx: rand(-120, -60), vy: rand(-10, 10), life: rand(.2, .4), c: pick(RAINBOW) });
-  }
   // Schmetterling vom Start: sitzt kurz auf der Nase, fliegt dann voraus und schließlich davon
   if (G.bfly) {
     const B2 = G.bfly;
@@ -2956,7 +2989,7 @@ function update(dt) {
       if (!o.got && o.x < P.x + 24 && o.x + o.w > P.x + 3 && oy < P.y + 17 && oy + o.h > P.y + 1) {
         o.got = true;
         if (o.type === 'star') startInvincible(5, 'Regenbogen-Stern!');
-        else addFish((o.gold ? 10 : 1) * (o.type === 'fish' && G.turbo > 1 ? 2 : 1) * (G.fever > 0 ? 2 : 1), o.x + 4, oy + 6, o.gold);
+        else addFish((o.gold ? 10 : 1) * (o.type === 'fish' && G.turbo > 1 ? 2 : 1), o.x + 4, oy + 6, o.gold);
         for (let i = 0; i < 6; i++) particles.push({ x: o.x + 4, y: oy + 2, vx: rand(-50, 50), vy: rand(10, 60), life: rand(.2, .45), c: o.type === 'fish' ? FISH_PAL.b : pick(RAINBOW) });
       }
       continue;
@@ -2980,17 +3013,10 @@ function update(dt) {
       gameOver(o);
       return;
     }
-    // knappster Abstand, solange die Katze über (oder unter) der Person ist
-    if (!o.passed && o.x < P.x + 24 && o.x + o.w > P.x + 3) {
-      const gap = o.kind === 'glideHigh' ? oy - (P.y + 17) : P.y - (oy + o.h);
-      o.minGap = Math.min(o.minGap === undefined ? 99 : o.minGap, gap);
-    }
     if (!o.passed && o.x + o.w < P.x + 3) {
       o.passed = true;
       G.jumped++;
       missionProgress('hurdle', 1);
-      if (!P.grounded || G.time - P.landT < .3) P.jumpPassed = true;
-      cheer(o.minGap === undefined ? 99 : o.minGap);
     }
   }
   G.objects = G.objects.filter((o) => o.x > -70 && !o.got && !(o.knocked && o.y < -60));
@@ -2999,6 +3025,28 @@ function update(dt) {
 /* ---------- Zeichnen ---------- */
 const snap = (v) => Math.round(v * px * dpr) / (px * dpr);
 const UI_CANVAS_FONT = () => { const ui = document.documentElement.dataset.ui; return ui === 'p2' ? '8px silkscreen, monospace' : ui === 'p3' ? '10px jersey10, monospace' : '8px pixelify, monospace'; };
+// Sonne: weicher Lichthof, kurze Pixelstrahlen, die langsam pulsieren, und ein heller Glanz oben links
+function drawSun(cx, cy, r, color) {
+  const a0 = ctx.globalAlpha;
+  ctx.globalAlpha = a0 * .18; pixelDisc(cx, cy, r + 5, color);
+  ctx.globalAlpha = a0 * .3; pixelDisc(cx, cy, r + 3, color);
+  ctx.globalAlpha = a0;
+  ctx.fillStyle = color;
+  const pulse = Math.round(1 + (Math.sin(G.time * 1.6) + 1));
+  for (let i = 0; i < 8; i++) {
+    const ang = i * Math.PI / 4 + G.time * .08;
+    const d0 = r + 3, len = (i % 2 ? 2 : 3) + pulse;
+    for (let k = 0; k < len; k++) ctx.fillRect(Math.round(cx + Math.cos(ang) * (d0 + k)), Math.round(cy + Math.sin(ang) * (d0 + k)), 1, 1);
+  }
+  pixelDisc(cx, cy, r, mix(color, '#f2a23a', .45)); // warmer Rand
+  pixelDisc(cx - 1, cy - 1, r - 1, color);
+  pixelDisc(cx - Math.round(r * .35), cy - Math.round(r * .35), Math.max(1, Math.round(r * .35)), mix(color, '#ffffff', .55));
+}
+function mix(a, b, k) {
+  const p = (h) => { if (h.startsWith('rgb')) return h.match(/\d+/g).map(Number); const n = parseInt(h.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
+  const A = p(a), Bc = p(b);
+  return 'rgb(' + A.map((v, i) => Math.round(v + (Bc[i] - v) * k)).join(',') + ')';
+}
 function pixelDisc(cx, cy, r, color) {
   ctx.fillStyle = color;
   for (let dy = -r; dy <= r; dy++) {
@@ -3106,7 +3154,7 @@ function draw() {
   const f = (hDay - 6) / 14;
   if (f > 0 && f < 1 && pal.stars < .98) {
     ctx.globalAlpha = 1 - pal.stars;
-    pixelDisc(viewW * (.06 + .88 * f), -skyH * (.08 + .7 * Math.sin(Math.PI * f)), Math.round(pal.sunR), pal.sun);
+    drawSun(Math.round(viewW * (.06 + .88 * f)), Math.round(-skyH * (.08 + .7 * Math.sin(Math.PI * f))), Math.round(pal.sunR), pal.sun);
   }
   if (pal.stars > .3) {
     ctx.globalAlpha = pal.stars;
@@ -3274,10 +3322,12 @@ function draw() {
   const cw = img.width, chh = img.height;
   const bx = snap(P.x) - cs.pad, by = snap(-(P.y + cs.h)) - cs.pad;
   ctx.save();
-  if (mode === 'over' && P.death && !P.death.landed) {
-    ctx.translate(bx + cw / 2, by + chh / 2);
-    ctx.rotate(P.death.spin);
-    ctx.drawImage(img, -cw / 2, -chh / 2);
+  if (mode === 'over' && P.death) {
+    // Drehpunkt an den Hinterbeinen: der Oberkörper kippt nach hinten weg
+    ctx.translate(bx + cw * .35, by + chh);
+    ctx.rotate(P.death.tilt);
+    if (P.death.landed && P.death.t < 3) { const q = Math.max(0, 1 - (P.death.t - (P.death.landT || 0)) * 6); ctx.scale(1 + .1 * q, 1 - .12 * q); }
+    ctx.drawImage(img, -cw * .35, -chh);
   } else if (mode === 'home' && P.roll > 0) {
     // in der Lobby angetippt: dreht sich auf den Rücken und strampelt
     const u = 1 - P.roll / ROLL_T;
@@ -3289,11 +3339,17 @@ function draw() {
   } else if (P.flip > 0) {
     // Sprung in der Luft: kurz zusammenziehen, dann kräftig strecken (ohne Salto)
     const u = 1 - P.flip / FLIP_T;
-    const tuck = u < .35;
-    const q = tuck ? u / .35 : (u - .35) / .65;
-    const kx = tuck ? 1 + .12 * Math.sin(q * Math.PI) : 1 - .08 * Math.sin(q * Math.PI);
-    const ky = tuck ? 1 - .14 * Math.sin(q * Math.PI) : 1 + .12 * Math.sin(q * Math.PI);
-    const tilt = tuck ? .12 * Math.sin(q * Math.PI) : -.16 * Math.sin(q * Math.PI);
+    const ease = (x) => x * x * (3 - 2 * x);
+    const tuck = u < .4;
+    const q = ease(tuck ? u / .4 : (u - .4) / .6);
+    // erst klein machen und Kopf leicht senken, dann lang strecken mit erhobenem Kopf
+    const kx = tuck ? 1 + .06 * Math.sin(q * Math.PI) : 1 - .05 * Math.sin(q * Math.PI);
+    const ky = tuck ? 1 - .1 * Math.sin(q * Math.PI) : 1 + .1 * Math.sin(q * Math.PI);
+    const tilt = tuck ? .1 * Math.sin(q * Math.PI) : -.14 * Math.sin(q * Math.PI);
+    if (!tuck && !reduceMotion) { // zwei blasse Nachbilder zeigen den Schwung nach oben
+      for (const [dy, a] of [[6, .18], [11, .08]]) { ctx.globalAlpha = a * Math.sin(q * Math.PI); ctx.drawImage(img, bx - dy * .4, by + dy); }
+      ctx.globalAlpha = 1;
+    }
     ctx.translate(bx + cw / 2, by + chh / 2);
     ctx.rotate(tilt);
     ctx.scale(kx, ky);
