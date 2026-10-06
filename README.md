@@ -52,7 +52,7 @@ Jeden Tag gibt es 3 Missionen (z. B. 600 m laufen, 90 Fische sammeln, ein Easter
 
 ## Einstellungen
 
-Lautstärke, Spiel-Sounds und Knopf-Sounds einzeln, Vibration an/aus, Sprache (Deutsch/English) und Abmelden. Die Sounds laufen über einen Kompressor, damit man sie auch bei leiser Handy-Lautstärke gut hört.
+Zwei Regler: **Musik** (Standard 40 %) und **Sounds** (Spiel und Knöpfe zusammen). Dazu Vibration an/aus, Sprache (Deutsch/English) und Abmelden. Die Sounds laufen über einen Kompressor, damit man sie auch bei leiser Handy-Lautstärke gut hört.
 
 ## Admin
 
@@ -69,16 +69,12 @@ Wenn du das Spiel änderst, erhöhe die Versionsnummer `CACHE` in `sw.js`, damit
 
 ## Oberfläche
 
-Pixel-Art-Rahmen (als kleine SVG-Grafiken im Code) in drei Varianten zum Vergleichen. Umschalten mit einem Zusatz hinten an der Adresse:
-
-- `#a` **Wegweiser** (Standard): Knöpfe als Holz-Wegweiser mit rot-weiß-roter Wandermarkierung, Fenster als Anschlagtafel mit Schindeldach, Schrift Jersey 15.
-- `#b` **Trachtenstoff**: Knöpfe als Bänder mit Kreuzstich, Fenster aus rot-weißem Karostoff, Überschriften Jacquard 12, Text Tiny5.
-- `#c` **Gletschereis**: Knöpfe als Eisblöcke mit Schneekappe und Eiszapfen, Fenster aus Milchglas, Schrift Micro 5.
+Stil **Trachtenstoff**: Knöpfe sind flache Bänder mit Schwalbenschwanz-Enden (Grün, Rot, Braun), Fenster haben einen schmalen rot-weißen Karorand und innen Leinen. Alle Rahmen sind kleine Pixel-SVGs direkt im Code.
 
 ## Klang
 
-Alle Sounds und die Musik laufen durch einen weichen Tiefpass, damit nichts schrill klingt. Die Musik ist eine kleine Almmusik in D-Dur (Bass, Zither, Flöte in mittlerer Lage, warme Fläche). Standard-Lautstärke ist 80.
+Alle Sounds und die Musik laufen durch einen weichen Tiefpass, damit nichts schrill klingt. Die Musik ist eine kleine Almmusik in D-Dur (Bass, Zither, Flöte in mittlerer Lage, warme Fläche).
 
-## Schriften
+## Schrift
 
-Jersey 15, Jacquard 12, Tiny5 und Micro 5 von Google Fonts, alle unter der SIL Open Font License 1.1. Sie sind direkt in `index.html` eingebettet.
+**Almschrift** ist eine eigene, schlichte Pixelschrift für dieses Spiel: Großbuchstaben 5×7 Pixel, feine Serifen bei I, i, l und 1, mit Umlauten und ß. Sie ist als TrueType direkt in `index.html` eingebettet und sieht bei 10, 20, 30 … px am schärfsten aus.
