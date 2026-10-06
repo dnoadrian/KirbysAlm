@@ -576,24 +576,6 @@ p, h1, h2, h3 { margin: 0; }
 
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
-{
-  // Jedes gefüllte Rechteck landet auf ganzen Bildschirmpixeln. Bei krummen Zoomstufen entstehen sonst
-  // halbdurchsichtige Kanten, die als dünne helle oder graue Linien zwischen den Pixeln sichtbar werden.
-  const rawFill = ctx.fillRect.bind(ctx);
-  ctx.fillRect = (x, y, w, h) => {
-    const m = ctx.getTransform();
-    if (m.b || m.c) { rawFill(x, y, w, h); return; }
-    let x0 = Math.round(m.a * x + m.e), x1 = Math.round(m.a * (x + w) + m.e);
-    let y0 = Math.round(m.d * y + m.f), y1 = Math.round(m.d * (y + h) + m.f);
-    if (x1 < x0) [x0, x1] = [x1, x0];
-    if (y1 < y0) [y0, y1] = [y1, y0];
-    if (w > 0 && x1 === x0) x1++;
-    if (h > 0 && y1 === y0) y1++;
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    rawFill(x0, y0, x1 - x0, y1 - y0);
-    ctx.setTransform(m);
-  };
-}
 const $ = (id) => document.getElementById(id);
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const rand = (a, b) => a + Math.random() * (b - a);
@@ -778,12 +760,11 @@ function catRows(pose, look) {
   const eye = pose.eye;
   for (const ex of [18, 21.4]) {
     if (eye === 's') { set(ex, hy + .6, 's'); set(ex + 1, hy + .6, 's'); }        // blinzeln
-    else if (eye === 'x') { const cx = ex < 20 ? 17 : 21; for (const [dx, dy] of [[-1, -1], [1, -1], [0, 0], [-1, 1], [1, 1]]) set(cx + dx, hy + .1 + dy, 'x'); } // klares X pro Auge, mit Lücke dazwischen
+    else if (eye === 'x') { for (const [dx, dy] of [[-.5, -.9], [1.5, -.9], [.5, .1], [-.5, 1.1], [1.5, 1.1]]) set(ex + dx, hy + dy, 'x'); } // kleines x genau über dem Auge, in sanfter Farbe
     else { set(ex, hy - .4, 'e'); set(ex + 1, hy - .4, 'h'); set(ex, hy + .6, 'e'); set(ex + 1, hy + .6, 'e'); }
   }
   set(16.6, hy + 1.8, 'c'); set(23.2, hy + 1.8, 'c');
   set(20.4, hy + 1.8, 'n');
-  if (eye === 'x') { set(20.4, hy + 2.8, 'n'); set(20.4, hy + 3.6, 'p'); } // Zunge hängt raus
   // Beine auf dieser Seite
   leg(14.6, j, pose.fn, 'g');
   leg(8, j, pose.bn, 'g');
@@ -975,7 +956,7 @@ function catSet(breedId, cosIds = []) {
     pal.o = breed.patches || pal.o;
     // X-Augen: dunkel auf hellem Fell, hell auf dunklem Fell
     const lum = (h) => { const n = parseInt(h.slice(1), 16); return ((n >> 16) & 255) * .3 + ((n >> 8) & 255) * .59 + (n & 255) * .11; };
-    pal.x = lum(pal.b) < 110 ? '#f4efe4' : '#4a2913';
+    pal.x = lum(pal.b) < 110 ? '#d8d2e6' : mix(pal.e, pal.b, .25); // sanft, in der Augenfarbe
     const look = { breed, cos, body: breed.body || 'duenn' };
     const mk = (pose) => shrinkHitbox(sprite(catRows(pose, look), pal, true, 'w', COS_CHARS), HITBOX);
     catCache[key] = {
@@ -1337,10 +1318,10 @@ function setLang(l) { settings.lang = l; saveSettings(); applyLang(); if (typeof
 /* ---------- Ton ----------
    Alles läuft über einen Kompressor mit Verstärkung, damit man das Spiel auch bei leiser Handy-Lautstärke gut hört.
    Die Klänge liegen bewusst im Bereich 400 bis 3000 Hz, den Handy-Lautsprecher gut wiedergeben. */
-const settings = Object.assign({ vol: 80, sfx: 100, ui: 70, music: 60, vib: true, lang: 'de' }, store.get('cj-settings', {}));
+const settings = Object.assign({ vol: 50, sfx: 100, ui: 70, music: 50, vib: true, lang: 'de' }, store.get('cj-settings', {}));
 if (store.get('katzosaurus-muted', false) === true && !store.get('cj-settings', null)) settings.vol = 0;
 const saveSettings = () => store.set('cj-settings', settings);
-let actx = null, master = null, busSfx = null, busUi = null, busMusic = null, noiseBuf = null;
+let actx = null, master = null, busSfx = null, busUi = null, busMusic = null;
 function audioOn() {
   if (!actx) {
     try {
@@ -1353,9 +1334,6 @@ function audioOn() {
       busMusic = actx.createGain();
       busSfx.connect(master); busUi.connect(master); busMusic.connect(master);
       master.connect(comp).connect(actx.destination);
-      noiseBuf = actx.createBuffer(1, actx.sampleRate * .5, actx.sampleRate);
-      const d = noiseBuf.getChannelData(0);
-      for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
       applyVolume();
       startMusic();
     } catch (e) { actx = null; }
@@ -1386,24 +1364,6 @@ function tone(f0, f1, dur, type = 'sine', vol = .3, delay = 0, bus = 'sfx') {
   o.start(t);
   o.stop(t + dur + .03);
 }
-// kurzes gefiltertes Rauschen (Wusch, Plopp, Klick)
-function noise(dur, f0, f1, vol = .25, delay = 0, q = 1.2, bus = 'sfx') {
-  if (!actx || settings.vol === 0) return;
-  const t = actx.currentTime + delay;
-  const s = actx.createBufferSource();
-  s.buffer = noiseBuf;
-  const f = actx.createBiquadFilter();
-  f.type = 'bandpass'; f.Q.value = q;
-  f.frequency.setValueAtTime(f0, t);
-  f.frequency.exponentialRampToValueAtTime(f1, t + dur);
-  const g = actx.createGain();
-  g.gain.setValueAtTime(.0001, t);
-  g.gain.exponentialRampToValueAtTime(vol, t + .01);
-  g.gain.exponentialRampToValueAtTime(.0001, t + dur);
-  s.connect(f).connect(g).connect(bus === 'ui' ? busUi : busSfx);
-  s.start(t, Math.random() * .3);
-  s.stop(t + dur + .03);
-}
 // Spiel-Sounds im alten Chiptune-Stil (Rechteck- und Dreieckswellen)
 const chip = (f0, f1, dur, type = 'square', vol = .07, delay = 0, bus = 'sfx') => tone(f0, f1, dur, type, vol * 1.6, delay, bus);
 const sfx = {
@@ -1423,9 +1383,36 @@ const sfx = {
   claim() { [659, 784, 1047, 1319].forEach((f, i) => chip(f, f, .1, 'triangle', .07, i * .07)); },
   hit() { chip(320, 55, .4, 'sawtooth', .1); chip(140, 40, .3, 'square', .08, .05); },
   pop() { chip(500, 1100, .07, 'triangle', .06); },
-  purr() { // tiefes, gemütliches Schnurren
+  purr() {
     if (!actx || settings.vol === 0) return;
-    for (let i = 0; i < 9; i++) { noise(.13, 260, 180, .2, i * .17, 3); tone(70, 64, .14, 'sawtooth', .07, i * .17); }
+    const t0 = actx.currentTime + .02;
+    const out = actx.createGain(); out.gain.value = 1;
+    // Brummen: Sägezahn mit ~26 Hz ergibt das typische Knattern, der Filter macht es weich und hörbar auch am Handy
+    const src = actx.createOscillator(); src.type = 'sawtooth'; src.frequency.value = 26;
+    const bp = actx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 230; bp.Q.value = .9;
+    const lp = actx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 700;
+    // Pulsieren der Luft im selben Takt
+    const am = actx.createGain(); am.gain.value = 0;
+    const amOsc = actx.createOscillator(); amOsc.type = 'square'; amOsc.frequency.value = 26;
+    const amDepth = actx.createGain(); amDepth.gain.value = .5;
+    amOsc.connect(amDepth).connect(am.gain);
+    const env = actx.createGain(); env.gain.value = .0001;
+    src.connect(bp);
+    bp.connect(lp).connect(env).connect(out).connect(busSfx);
+    // drei Atemzüge: lang aus (lauter, tiefer), kurz ein (leiser, etwas höher)
+    let t = t0;
+    for (let k = 0; k < 3; k++) {
+      env.gain.setValueAtTime(.0001, t);
+      env.gain.exponentialRampToValueAtTime(.55, t + .15);
+      env.gain.setValueAtTime(.55, t + .55);
+      env.gain.exponentialRampToValueAtTime(.06, t + .72);
+      src.frequency.setValueAtTime(25, t); amOsc.frequency.setValueAtTime(25, t);
+      env.gain.exponentialRampToValueAtTime(.28, t + .85);
+      src.frequency.setValueAtTime(28, t + .75); amOsc.frequency.setValueAtTime(28, t + .75);
+      env.gain.exponentialRampToValueAtTime(.0001, t + 1.15);
+      t += 1.15;
+    }
+    for (const n of [src, amOsc]) { n.start(t0); n.stop(t + .1); }
   },
   // Start: fröhliches "Mrrp!" und drei hüpfende Töne
   start() { chip(560, 900, .06, 'triangle', .07); chip(900, 700, .08, 'triangle', .06, .06); [784, 988, 1175].forEach((f, i) => chip(f, f, .07, 'triangle', .065, .16 + i * .07)); },
@@ -1437,68 +1424,62 @@ const sfx = {
   close() { tone(780, 460, .09, 'sine', .11, 0, 'ui'); },
 };
 
-/* ---------- Hintergrundmusik: Wind über der Alm mit leisen, luftigen Tönen ---------- */
+/* ---------- Hintergrundmusik: ruhig und entspannend, weiche Töne über einer warmen Klangfläche ---------- */
 let musicOn = false;
 function startMusic() {
   if (!actx || musicOn) return;
   musicOn = true;
-  // Wind: weiches Rauschen durch einen langsam wandernden Filter
-  const len = actx.sampleRate * 4;
-  const wb = actx.createBuffer(2, len, actx.sampleRate);
-  for (let ch = 0; ch < 2; ch++) { const d = wb.getChannelData(ch); let last = 0; for (let i = 0; i < len; i++) { last = last * .985 + (Math.random() * 2 - 1) * .015; d[i] = last * 6; } }
-  const wind = actx.createBufferSource(); wind.buffer = wb; wind.loop = true;
-  const wf = actx.createBiquadFilter(); wf.type = 'bandpass'; wf.Q.value = .7; wf.frequency.value = 500;
-  const wg = actx.createGain(); wg.gain.value = .25;
-  wind.connect(wf).connect(wg).connect(busMusic);
-  wind.start();
-  const lfo = (target, rate, depth) => { const o = actx.createOscillator(); const g = actx.createGain(); o.frequency.value = rate; g.gain.value = depth; o.connect(g).connect(target); o.start(); };
-  lfo(wf.frequency, .05, 260); // Böen
-  lfo(wf.frequency, .13, 90);
-  lfo(wg.gain, .07, .12);
   // Hall: einfache Echo-Schleife, damit die Töne weit klingen
-  const delay = actx.createDelay(2); delay.delayTime.value = .48;
+  const delay = actx.createDelay(2); delay.delayTime.value = .62;
   const fb = actx.createGain(); fb.gain.value = .42;
   const damp = actx.createBiquadFilter(); damp.type = 'lowpass'; damp.frequency.value = 2200;
   delay.connect(damp).connect(fb).connect(delay);
   damp.connect(busMusic);
-  const SCALE = [294, 330, 370, 440, 494, 587, 659, 740]; // D-Dur pentatonisch
-  let next = actx.currentTime + 1.5, padAt = actx.currentTime + .5;
-  const note = (f, t, vol, dur) => {
-    for (const [mul, v, type] of [[1, vol, 'sine'], [2, vol * .25, 'sine'], [3, vol * .08, 'triangle']]) {
+  // ruhige Akkordfolge in D-Dur (D, h-Moll, G, A), jeder Akkord etwa 9 Sekunden
+  const CHORDS = [[147, 220, 294, 370], [123, 185, 247, 294], [98, 196, 247, 294], [110, 220, 277, 330]];
+  const MEL = [[294, 370, 440, 587], [247, 294, 370, 494], [247, 294, 392, 494], [277, 330, 440, 554]];
+  const CHORD_T = 9;
+  let chord = 0, chordAt = actx.currentTime + .3, next = actx.currentTime + 2;
+  const note = (f, t, vol, dur) => { // weicher Ton wie eine gezupfte Zither, langer Nachhall
+    for (const [mul, v] of [[1, vol], [2, vol * .18]]) {
       const o = actx.createOscillator(), g = actx.createGain();
-      o.type = type; o.frequency.value = f * mul;
+      o.type = 'sine'; o.frequency.value = f * mul;
       g.gain.setValueAtTime(.0001, t);
-      g.gain.exponentialRampToValueAtTime(v, t + .03);
+      g.gain.exponentialRampToValueAtTime(v, t + .09);
       g.gain.exponentialRampToValueAtTime(.0001, t + dur);
       o.connect(g); g.connect(busMusic); g.connect(delay);
       o.start(t); o.stop(t + dur + .05);
     }
   };
-  const pad = (t) => { // warme Fläche, schwillt langsam an und ab
-    for (const f of [147, 220, 294]) {
+  const pad = (freqs, t, dur) => { // warme Fläche, schwillt langsam an und ab
+    for (const f of freqs) {
       const o = actx.createOscillator(), g = actx.createGain(), lp = actx.createBiquadFilter();
-      o.type = 'triangle'; o.frequency.value = f * (1 + (Math.random() - .5) * .004);
-      lp.type = 'lowpass'; lp.frequency.value = 700;
+      o.type = 'triangle'; o.frequency.value = f * (1 + (Math.random() - .5) * .003);
+      lp.type = 'lowpass'; lp.frequency.value = 520;
       g.gain.setValueAtTime(.0001, t);
-      g.gain.linearRampToValueAtTime(.05, t + 4);
-      g.gain.linearRampToValueAtTime(.0001, t + 11);
+      g.gain.linearRampToValueAtTime(.035, t + 3);
+      g.gain.setValueAtTime(.035, t + dur - 2.5);
+      g.gain.linearRampToValueAtTime(.0001, t + dur + 1.5);
       o.connect(lp).connect(g).connect(busMusic);
-      o.start(t); o.stop(t + 11.2);
+      o.start(t); o.stop(t + dur + 1.6);
     }
   };
   setInterval(() => {
     if (!actx || actx.state !== 'running') return;
     const now = actx.currentTime;
-    if (next < now) next = now + .2;
-    if (padAt < now) padAt = now + .2;
-    while (next < now + 1) {
-      // kleine Melodie-Tropfen wie ein Glockenspiel im Wind, mit Pausen
-      const k = Math.floor(Math.random() * SCALE.length);
-      note(SCALE[k], next, .06, 2.4);
-      if (Math.random() < .35) note(SCALE[Math.min(SCALE.length - 1, k + 2)], next + .25, .04, 2);
-      next += Math.random() < .3 ? rand(3, 6) : rand(.9, 1.8);
+    if (chordAt < now - 1) chordAt = now + .2;
+    if (next < now) next = now + .3;
+    while (chordAt < now + 1) {
+      pad(CHORDS[chord], chordAt, CHORD_T);
+      chordAt += CHORD_T;
+      chord = (chord + 1) % CHORDS.length;
     }
-    if (padAt < now + 1) { pad(padAt); padAt += rand(12, 18); }
+    while (next < now + 1) {
+      // ein paar ruhige Töne aus dem aktuellen Akkord, mit vielen Pausen
+      const cur = MEL[(chord + CHORDS.length - 1) % CHORDS.length];
+      if (Math.random() < .75) note(pick(cur), next, .045, 3.6);
+      next += rand(1.6, 3.2);
+    }
   }, 300);
 }
 document.addEventListener('visibilitychange', () => {
@@ -1510,7 +1491,7 @@ function vibrate(ms) { if (!settings.vib) return; try { navigator.vibrate && nav
 /* ---------- Bildschirm ---------- */
 let W = 0, H = 0, dpr = 1, px = 3, groundY = 0, viewW = 0, skyH = 0;
 function resize() {
-  dpr = Math.min(window.devicePixelRatio || 1, 3);
+  dpr = Math.min(window.devicePixelRatio || 1, 2); // mehr Auflösung bringt bei Pixel-Art nichts, kostet aber Leistung
   W = window.innerWidth;
   H = window.innerHeight;
   canvas.width = Math.round(W * dpr);
@@ -1519,6 +1500,8 @@ function resize() {
   // gleiches Sichtfeld auf Handy und PC: große Bildschirme zoomen hinein, statt weiter vorauszuschauen
   // PC: hineinzoomen, aber nicht zu stark (Sichtweite liegt zwischen Handy und früherer PC-Ansicht)
   px = clamp(portrait ? W / 200 : Math.min(W / 240, H / 108), 1.5, 6.5);
+  // ein Spielpixel = ganze Zahl Bildschirmpixel, so entstehen keine dünnen Linien zwischen den Pixeln
+  px = Math.max(1, Math.round(px * dpr)) / dpr;
   groundY = Math.round(H * (portrait ? .66 : .8));
   viewW = W / px;
   skyH = groundY / px;
@@ -1595,9 +1578,8 @@ const GRAV = 1250;
 const OVER_QUIPS = ['Erwischt!', 'Da stand jemand im Weg.', '{k} war knapp zu langsam.', 'Ups, Zusammenstoß!', 'Das nächste Mal klappt es.', 'Kirby hat nichts gesehen.'];
 
 let mode = 'home';
-const P = { roll: 0, x: 24, y: 0, vy: 0, grounded: true, jumps: 0, anim: 0, buffer: 0, blink: 0, airT: 0, land: 0, flip: 0, landT: 0, inv: 0, invTick: 0 };
+const P = { x: 24, y: 0, vy: 0, grounded: true, jumps: 0, anim: 0, buffer: 0, blink: 0, airT: 0, land: 0, flip: 0, landT: 0, inv: 0, invTick: 0 };
 const FLIP_T = .38; // Dauer der Streck-Bewegung beim Sprung in der Luft
-const ROLL_T = 2.2; // Dauer des Rückenrollens in der Lobby
 const V = { lick: 0, blink: 0, purr: 0 };
 let G = null;
 let shake = 0;
@@ -1765,20 +1747,16 @@ function press() {
   else P.buffer = .14; // kurz vor der Landung getippt: Sprung merken
 }
 
-// Lobby: Katze und Kirby kann man antippen
+// Lobby: Kirby kann man antippen, dann schnurrt er
 function lobbyTap(e) {
   if (e.target.closest && e.target.closest('button, .modal, input')) return;
   const wx = e.clientX / px, wy = (groundY - e.clientY) / px;
   audioOn();
-  if (wx > P.x - 4 && wx < P.x + CAT_W + 4 && wy > P.y - 4 && wy < P.y + CAT_H + 6 && !G.outro) {
-    P.roll = ROLL_T; // dreht sich auf den Rücken
-    sfx.meow();
-    for (let i = 0; i < 6; i++) particles.push({ x: P.x + 13 + rand(-6, 6), y: P.y + 18, vx: rand(-10, 10), vy: rand(18, 30), life: rand(.8, 1.1), c: '#ff7fb0', heart: true });
-    return;
-  }
   const K = kirbyBox();
   if (wx > K.x0 && wx < K.x1 && wy > K.y0 && wy < K.y1) {
-    V.purr = 3.2; // Kirby schnurrt gemütlich
+    if (G.time < (V.purrUntil || 0)) return; // erst wieder, wenn er fertig geschnurrt und kurz verschnauft hat
+    V.purrUntil = G.time + 5.5;
+    V.purr = 3.4; // Kirby schnurrt gemütlich
     sfx.purr();
   }
 }
@@ -2010,7 +1988,7 @@ function goHome(smooth = false) {
   mode = 'home';
   G = freshGame();
   const homeX = Math.round(viewW * .42);
-  Object.assign(P, { death: null, roll: 0, x: smooth ? was.x : homeX, y: 0, vy: 0, grounded: true, jumps: 0, buffer: 0, airT: 0, land: 0, flip: 0, inv: 0 });
+  Object.assign(P, { death: null, x: smooth ? was.x : homeX, y: 0, vy: 0, grounded: true, jumps: 0, buffer: 0, airT: 0, land: 0, flip: 0, inv: 0 });
   const toy = yarnSpr[4];
   const T = { type: 'toy', kind: 'yarn', spr: toy, x: P.x + 30, y: 0, w: toy.w, h: toy.h, vx: 40, rot: 0, bob: 0, wait: 1.2, passed: true };
   if (smooth) {
@@ -2039,7 +2017,7 @@ function startGame() {
   if (toy) G.objects.push(toy); // das Wollknäuel bleibt liegen und rollt aus dem Bild
   G.intro = { t: 0, dur: 1.1, from: fromX };
   G.bfly = { t: 0, x: fromX + 25, y: 15 }; // der Grund zum Loslaufen
-  Object.assign(P, { death: null, roll: 0, x: fromX, y: 0, vy: 0, grounded: true, jumps: 0, buffer: 0, airT: 0, land: 0, flip: 0, inv: 0 });
+  Object.assign(P, { death: null, x: fromX, y: 0, vy: 0, grounded: true, jumps: 0, buffer: 0, airT: 0, land: 0, flip: 0, inv: 0 });
   particles.length = 0;
   floaters.length = 0;
   mode = 'play';
@@ -2648,7 +2626,6 @@ function catSprite() {
   if (P.flip > 0 && mode === 'play') return P.flip > FLIP_T * .6 ? cat.tuck : cat.up;
   if (!P.grounded) return P.vy > 0 ? cat.up : cat.down;
   if (mode === 'home' && G.outro) return cat.run[Math.floor(P.anim) % RUN_FRAMES];
-  if (mode === 'home' && P.roll > 0) return cat.run[Math.floor(G.time * 14) % RUN_FRAMES]; // strampelt mit den Pfoten
   if (mode !== 'play') return P.blink > 0 ? cat.blink : cat.idle[Math.floor(G.time * 4) % cat.idle.length];
   return cat.run[Math.floor(P.anim) % RUN_FRAMES];
 }
@@ -2779,7 +2756,6 @@ function tickEggs(dt, step) {
     if (e.layer === 'hill') e.x -= step * .3;
     else if (e.layer === 'far') e.x -= step * .08;
     else e.x -= step * .05 + (e.type === 'eagle' ? 18 : 5) * dt;
-    if (e.type === 'hut' && Math.random() < dt * 3) e.smoke = (e.smoke || 0) + 1;
   }
   G.eggs = G.eggs.filter((e) => e.x > -60 && e.t < 120);
 }
@@ -2861,7 +2837,7 @@ function update(dt) {
   G.drift += 4 * dt; // Wolken ziehen immer ein bisschen
   if (mode !== 'play') {
     if (mode === 'over') tickDeath(dt);
-    if (mode === 'home') { if (G.outro) tickOutro(dt); else playWithYarn(dt); tickEggs(dt, 0); if (P.roll > 0) P.roll = Math.max(0, P.roll - dt); } // in der Lobby steht der Boden still
+    if (mode === 'home') { if (G.outro) tickOutro(dt); else playWithYarn(dt); tickEggs(dt, 0); } // in der Lobby steht der Boden still
     if (V.purr > 0) { V.purr -= dt; if (Math.random() < dt * 3) particles.push({ x: kirbyBox().cx + rand(-10, 10), y: kirbyBox().top - 4, vx: rand(-6, 6), vy: rand(14, 24), life: rand(.9, 1.3), c: '#ff9fd0', heart: true }); }
     return;
   }
@@ -3072,6 +3048,34 @@ function kirbyBox() {
   const apexH = Math.round(clamp(skyH * .32, 26, 100));
   return { x0: vx - 22 * vs, x1: vx + 22 * vs, y0: apexH - 5 * vs, y1: apexH + 32 * vs, cx: vx, top: apexH + 30 * vs };
 }
+/* ---------- Hintergrund-Ebenen werden einmal vorgezeichnet und dann nur noch verschoben ----------
+   Spart pro Bild tausende kleine Zeichenbefehle, damit das Spiel auch mit 120 Bildern pro Sekunde flüssig läuft.
+   Eine Ebene ist ein Streifen in Spielpixeln; neu gezeichnet wird nur, wenn er ausgelaufen ist oder sich die Farben ändern. */
+const LPAD = 320;
+const layers = {};
+function layer(name, off, w, h, key, paint) {
+  const base = Math.floor(off);
+  let L = layers[name];
+  if (!L || L.w !== w || L.h !== h) {
+    L = layers[name] = { w, h, c: document.createElement('canvas') };
+    L.c.width = w + LPAD; L.c.height = Math.max(1, h);
+    L.g = L.c.getContext('2d');
+    L.key = null;
+  }
+  if (L.key !== key || base < L.base || base - L.base > LPAD - 2) {
+    L.key = key; L.base = base;
+    L.g.clearRect(0, 0, L.c.width, L.c.height);
+    paint(L.g, base, L.c.width);
+  }
+  return L;
+}
+// Ebene an der Spielwelt-Position zeichnen, auf ganze Bildschirmpixel gerundet
+function blitLayer(L, off, y) {
+  const kk = px * dpr;
+  const x = Math.round(-(off - L.base) * kk) / kk;
+  ctx.drawImage(L.c, x, y);
+}
+const palKey = (pal, keys) => keys.map((k) => pal[k]).join('|');
 function drawKirby(pal) {
   const vs = skyH > 170 ? 2 : 1;
   const vx = Math.round(viewW * (H > W * 1.1 ? .58 : .8));
@@ -3082,25 +3086,26 @@ function drawKirby(pal) {
   ctx.translate(-22, -32);
   const spr = V.blink > 0 || V.purr > 0 ? kirby.blink : kirby.open; // beim Schnurren entspannt mit geschlossenen Augen
   ctx.drawImage(spr.c, -1, -1);
-  // sein Gipfel
+  // sein Gipfel (vorgezeichnet)
   const rows = Math.ceil(apexH / vs) + 2;
   const snowRows = Math.round(rows * .3);
-  snapBegin();
-  for (let r = 0; r < rows; r++) {
-    const half = Math.round(1 + r * 1.7 + (r > 3 ? hash(r) * 1.5 : 0));
-    const y = 32 + r;
-    const snowy = r < snowRows;
-    ctx.fillStyle = snowy ? pal.snow : pal.rock;
-    snapFill(22 - half, y, half, 1);
-    ctx.fillStyle = snowy ? pal.snowSh : pal.rockSh;
-    snapFill(22, y, half, 1);
-    if (!snowy && r < snowRows + 5) {
-      ctx.fillStyle = pal.snow;
-      const tl = Math.max(0, 3 - (r - snowRows) * .7);
-      for (const f of [-.65, -.15, .4]) snapFill(Math.round(22 + f * half), y, Math.round(tl), 1);
+  const maxHalf = Math.round(1 + rows * 1.7 + 1.5) + 1;
+  const M = layer('kirbyPeak', 0, maxHalf * 2 - LPAD + 2, rows, palKey(pal, ['snow', 'snowSh', 'rock', 'rockSh']) + rows, (g) => {
+    for (let r = 0; r < rows; r++) {
+      const half = Math.round(1 + r * 1.7 + (r > 3 ? hash(r) * 1.5 : 0));
+      const snowy = r < snowRows;
+      g.fillStyle = snowy ? pal.snow : pal.rock;
+      g.fillRect(maxHalf - half, r, half, 1);
+      g.fillStyle = snowy ? pal.snowSh : pal.rockSh;
+      g.fillRect(maxHalf, r, half, 1);
+      if (!snowy && r < snowRows + 5) {
+        g.fillStyle = pal.snow;
+        const tl = Math.max(0, 3 - (r - snowRows) * .7);
+        for (const f of [-.65, -.15, .4]) g.fillRect(Math.round(maxHalf + f * half), r, Math.round(tl), 1);
+      }
     }
-  }
-  snapEnd();
+  });
+  ctx.drawImage(M.c, 22 - maxHalf, 32);
   // Zunge
   const cycle = V.purr > 0 ? 0 : V.lick % 3.2;
   let len = 0;
@@ -3145,7 +3150,7 @@ function draw() {
 
   // Welt (Sprite-Pixel, Boden bei y = 0)
   const k = px * dpr;
-  ctx.setTransform(k, 0, 0, k, sx * dpr, (groundY + sy) * dpr);
+  ctx.setTransform(k, 0, 0, k, Math.round(sx * k), Math.round(groundY * dpr) + Math.round(sy * k));
   ctx.imageSmoothingEnabled = false;
 
   // Sonne / Mond
@@ -3181,30 +3186,31 @@ function draw() {
   const farBase = farMax * .25, farAmp = farMax * .75;
   const farH = (x) => farBase + farAmp * (.62 * tri(x / 71) + .38 * tri(x / 29 + .37));
   const offF = G.scroll * .08;
-  const fracF = offF - Math.floor(offF);
-  snapBegin();
-  for (let s = 0; s < viewW + 2; s++) {
-    const wx = s + Math.floor(offF);
-    const h = Math.round(farH(wx));
-    const shaded = farH(wx + 1) < farH(wx);
-    ctx.fillStyle = shaded ? pal.rockSh : pal.rock;
-    snapFill(s - fracF, -h, 1, h + 1);
-    const snowline = Math.round(farBase + farAmp * .52 + hash(wx) * 2);
-    if (h > snowline) {
-      ctx.fillStyle = shaded ? pal.snowSh : pal.snow;
-      snapFill(s - fracF, -h, 1, h - snowline);
+  const farTop = Math.ceil(farMax) + 2;
+  const LF = layer('far', offF, Math.ceil(viewW) + 2, farTop + 2, palKey(pal, ['rock', 'rockSh', 'snow', 'snowSh']) + farTop, (g, base, w) => {
+    for (let s = 0; s < w; s++) {
+      const wx = s + base;
+      const h = Math.round(farH(wx));
+      const shaded = farH(wx + 1) < farH(wx);
+      g.fillStyle = shaded ? pal.rockSh : pal.rock;
+      g.fillRect(s, farTop - h, 1, h + 2);
+      const snowline = Math.round(farBase + farAmp * .52 + hash(wx) * 2);
+      if (h > snowline) {
+        g.fillStyle = shaded ? pal.snowSh : pal.snow;
+        g.fillRect(s, farTop - h, 1, h - snowline);
+      }
     }
-  }
-  snapEnd();
+  });
+  blitLayer(LF, offF, -farTop);
   drawEggs('far', (sx) => farH(Math.round(sx) + Math.floor(offF)));
 
   // Grüne Hügel mit Tannen
   const midBase = Math.min(skyH * .08, 10) + 4;
   const offM = G.scroll * .3;
-  const fracM = offM - Math.floor(offM);
-  snapBegin();
-  for (let s = 0; s < viewW + 2; s++) {
-    const wx = s + Math.floor(offM);
+  const hillTop = Math.ceil(midBase) + 20;
+  const LH = layer('hill', offM, Math.ceil(viewW) + 2, hillTop + 2, palKey(pal, ['hill', 'pine']) + hillTop, (g, base, w) => {
+  for (let s = 0; s < w; s++) {
+    const wx = s + base;
     const hill = Math.round(midBase + 3 * Math.sin(wx * .045) + 2 * Math.sin(wx * .11 + 1));
     let tree = 0;
     const i0 = Math.floor(wx / 7);
@@ -3214,50 +3220,54 @@ function draw() {
       const d = Math.abs(wx - (i * 7 + 3 + Math.floor(hash(i * 5) * 2)));
       tree = Math.max(tree, Math.round(th - d * 2.2));
     }
-    ctx.fillStyle = pal.hill;
-    snapFill(s - fracM, -hill, 1, hill + 1);
+    g.fillStyle = pal.hill;
+    g.fillRect(s, hillTop - hill, 1, hill + 2);
     if (tree > 0) {
-      ctx.fillStyle = pal.pine;
-      snapFill(s - fracM, -hill - tree + 2, 1, tree);
+      g.fillStyle = pal.pine;
+      g.fillRect(s, hillTop - hill - tree + 2, 1, tree);
     }
   }
-  snapEnd();
+  });
+  blitLayer(LH, offM, -hillTop);
   drawEggs('hill', (sx) => { const wx = Math.round(sx) + Math.floor(offM); return midBase + 3 * Math.sin(wx * .045) + 2 * Math.sin(wx * .11 + 1); });
 
   // Bergwiese mit Blumen, darunter Fels
-  const below = (H - groundY) / px + 4;
-  ctx.fillStyle = pal.meadow;
-  ctx.fillRect(-4, 0, viewW + 8, Math.min(below, 12));
-  ctx.fillStyle = pal.soil;
-  ctx.fillRect(-4, 12, viewW + 8, 3);
-  for (let y = 15, band = 0; y < below; y += 7, band++) {
-    ctx.fillStyle = band % 2 ? pal.stoneDk : pal.stone;
-    ctx.fillRect(-4, y, viewW + 8, 7);
-  }
-  ctx.fillStyle = pal.grass;
-  ctx.fillRect(-4, 0, viewW + 8, 1);
+  const below = Math.ceil((H - groundY) / px + 4);
   const tile = 5;
-  const first = Math.floor(G.scroll / tile);
   const FLOWERS = ['#ffffff', '#3b5bdb', '#ffd43b', '#ff8fa3'];
-  for (let i = first; i < first + viewW / tile + 2; i++) {
-    const xx = Math.round(i * tile - G.scroll);
-    const h0 = hash(i);
-    if (h0 > .55) { ctx.fillStyle = pal.grass; ctx.fillRect(xx, -1, 1, 1); if (h0 > .85) ctx.fillRect(xx + 2, -2, 1, 2); }
-    for (let r = 0; r < 3; r++) {
-      const hv = hash(i * 31 + r * 7);
-      if (hv < .2) {
-        ctx.fillStyle = FLOWERS[Math.floor(hash(i * 13 + r) * 4)];
-        ctx.fillRect(xx + Math.round(hv * 15), 2 + r * 3, 1, 1);
-      } else if (hv < .45) {
-        ctx.fillStyle = pal.meadowDk;
-        ctx.fillRect(xx + Math.round(hv * 8), 2 + r * 3, 2, 1);
+  // Bodenstreifen: Grashalme ab y = -2, darunter Wiese, Erde und Fels bis zum unteren Rand
+  const LG = layer('ground', G.scroll, Math.ceil(viewW) + 8, below + 2, palKey(pal, ['meadow', 'soil', 'stone', 'stoneDk', 'grass', 'meadowDk']) + below, (g, base, gw) => {
+    g.fillStyle = pal.meadow;
+    g.fillRect(0, 2, gw, Math.min(below, 12));
+    g.fillStyle = pal.soil;
+    g.fillRect(0, 14, gw, 3);
+    for (let y = 15, band = 0; y < below; y += 7, band++) {
+      g.fillStyle = band % 2 ? pal.stoneDk : pal.stone;
+      g.fillRect(0, y + 2, gw, 7);
+    }
+    g.fillStyle = pal.grass;
+    g.fillRect(0, 2, gw, 1);
+    for (let i = Math.floor(base / tile) - 1; i * tile < base + gw; i++) {
+      const xx = i * tile - base;
+      const h0 = hash(i);
+      if (h0 > .55) { g.fillStyle = pal.grass; g.fillRect(xx, 1, 1, 1); if (h0 > .85) g.fillRect(xx + 2, 0, 1, 2); }
+      for (let r = 0; r < 3; r++) {
+        const hv = hash(i * 31 + r * 7);
+        if (hv < .2) {
+          g.fillStyle = FLOWERS[Math.floor(hash(i * 13 + r) * 4)];
+          g.fillRect(xx + Math.round(hv * 15), 4 + r * 3, 1, 1);
+        } else if (hv < .45) {
+          g.fillStyle = pal.meadowDk;
+          g.fillRect(xx + Math.round(hv * 8), 4 + r * 3, 2, 1);
+        }
+      }
+      if (below > 20 && hash(i * 7 + 3) < .25) {
+        g.fillStyle = pal.stoneDk;
+        g.fillRect(xx, 19 + Math.floor(hash(i * 9) * Math.max(1, below - 22)), 2, 1);
       }
     }
-    if (below > 20 && hash(i * 7 + 3) < .25) {
-      ctx.fillStyle = pal.stoneDk;
-      ctx.fillRect(xx, 17 + Math.floor(hash(i * 9) * Math.max(1, below - 22)), 2, 1);
-    }
-  }
+  });
+  blitLayer(LG, G.scroll, -2);
 
   // Sternschnuppen beim Sternschauer
   for (const s of G.streaks) {
@@ -3328,14 +3338,6 @@ function draw() {
     ctx.rotate(P.death.tilt);
     if (P.death.landed && P.death.t < 3) { const q = Math.max(0, 1 - (P.death.t - (P.death.landT || 0)) * 6); ctx.scale(1 + .1 * q, 1 - .12 * q); }
     ctx.drawImage(img, -cw * .35, -chh);
-  } else if (mode === 'home' && P.roll > 0) {
-    // in der Lobby angetippt: dreht sich auf den Rücken und strampelt
-    const u = 1 - P.roll / ROLL_T;
-    const turn = Math.min(1, u * 5) - Math.max(0, (u - .82) * 5.5);
-    ctx.translate(bx + cw / 2, by + chh * .62);
-    ctx.rotate(Math.PI * clamp(turn, 0, 1));
-    ctx.translate(Math.sin(G.time * 18) * .4, 0);
-    ctx.drawImage(img, -cw / 2, -chh * .62);
   } else if (P.flip > 0) {
     // Sprung in der Luft: kurz zusammenziehen, dann kräftig strecken (ohne Salto)
     const u = 1 - P.flip / FLIP_T;
