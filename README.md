@@ -69,12 +69,16 @@ Wenn du das Spiel änderst, erhöhe die Versionsnummer `CACHE` in `sw.js`, damit
 
 ## Oberfläche
 
-Pixel-Art-Rahmen (9-Slice, als kleine SVG-Grafiken im Code) in drei Varianten zum Vergleichen. Umschalten mit einem Zusatz hinten an der Adresse:
+Pixel-Art-Rahmen (als kleine SVG-Grafiken im Code) in drei Varianten zum Vergleichen. Umschalten mit einem Zusatz hinten an der Adresse:
 
-- `#p1` **Almholz** (Standard): Holzknöpfe, Schrift Pixelify Sans.
-- `#p2` **Gipfelschnee**: graue Steinknöpfe mit Schneekappe, Schrift Silkscreen.
-- `#p3` **Almwiese**: Erdknöpfe mit Grasnarbe wie der Boden im Spiel, Schrift Jersey 10.
+- `#a` **Wegweiser** (Standard): Knöpfe als Holz-Wegweiser mit rot-weiß-roter Wandermarkierung, Fenster als Anschlagtafel mit Schindeldach, Schrift Jersey 15.
+- `#b` **Trachtenstoff**: Knöpfe als Bänder mit Kreuzstich, Fenster aus rot-weißem Karostoff, Überschriften Jacquard 12, Text Tiny5.
+- `#c` **Gletschereis**: Knöpfe als Eisblöcke mit Schneekappe und Eiszapfen, Fenster aus Milchglas, Schrift Micro 5.
+
+## Klang
+
+Alle Sounds und die Musik laufen durch einen weichen Tiefpass, damit nichts schrill klingt. Die Musik ist eine kleine Almmusik in D-Dur (Bass, Zither, Flöte in mittlerer Lage, warme Fläche). Standard-Lautstärke ist 80.
 
 ## Schriften
 
-Pixelify Sans, Silkscreen und Jersey 10 von Google Fonts, alle unter der SIL Open Font License 1.1. Sie sind direkt in `index.html` eingebettet.
+Jersey 15, Jacquard 12, Tiny5 und Micro 5 von Google Fonts, alle unter der SIL Open Font License 1.1. Sie sind direkt in `index.html` eingebettet.
