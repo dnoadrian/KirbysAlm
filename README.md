@@ -67,6 +67,14 @@ Die Seite ist eine Progressive Web App (`manifest.webmanifest`, `sw.js`, `icons/
 
 Wenn du das Spiel änderst, erhöhe die Versionsnummer `CACHE` in `sw.js`, damit installierte Apps die neue Version laden.
 
-## Schrift
+## Oberfläche
 
-Die Oberfläche nutzt die Schrift [„Minecraft“ von Pwnage_Block](http://fontstruct.com/fontstructions/show/432966) unter [CC BY-SA 3.0](http://creativecommons.org/licenses/by-sa/3.0/), um die Zeichen Ä Ö Ü ä ö ü ß · ergänzt. Die ergänzte Schrift ist direkt in `index.html` eingebettet und steht unter derselben Lizenz.
+Pixel-Art-Rahmen (9-Slice, als kleine SVG-Grafiken im Code) in drei Varianten zum Vergleichen. Umschalten mit einem Zusatz hinten an der Adresse:
+
+- `#p1` **Almholz** (Standard): Holzknöpfe, Schrift Pixelify Sans.
+- `#p2` **Gipfelschnee**: graue Steinknöpfe mit Schneekappe, Schrift Silkscreen.
+- `#p3` **Almwiese**: Erdknöpfe mit Grasnarbe wie der Boden im Spiel, Schrift Jersey 10.
+
+## Schriften
+
+Pixelify Sans, Silkscreen und Jersey 10 von Google Fonts, alle unter der SIL Open Font License 1.1. Sie sind direkt in `index.html` eingebettet.
