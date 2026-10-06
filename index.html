@@ -7,14 +7,14 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Cat Jumper">
-<meta name="description" content="Cat Jumper: Eine Katze springt auf der Alm über alles, was im Weg steht, während Kirby den Schnee von den Gipfeln schleckt.">
+<meta name="apple-mobile-web-app-title" content="Kirbys Alm">
+<meta name="description" content="Kirbys Alm: Eine Katze springt auf der Alm über alles, was im Weg steht, während Kirby den Schnee von den Gipfeln schleckt.">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" type="image/png" href="icons/cat-jumper-192.png">
-<link rel="apple-touch-icon" href="icons/cat-jumper-apple-180.png">
-<title>Cat Jumper</title>
+<link rel="icon" type="image/png" href="icons/kirbys-alm-192.png">
+<link rel="apple-touch-icon" href="icons/kirbys-alm-apple-180.png">
+<title>Kirbys Alm</title>
 <style>
-/* Cat Jumper GUI: Holzknöpfe mit Rautengitter (Gitterholz), Braun, Grün und Rot, Schrift weiß. */
+/* Kirbys Alm GUI: Holzknöpfe mit Rautengitter (Gitterholz), Braun, Grün und Rot, Schrift weiß. */
 /* Schrift: "Minecraft" von Pwnage_Block (fontstruct.com), CC BY-SA 3.0, um Ä Ö Ü ä ö ü ß · ergänzt. */
 @font-face {
   font-family: "CatJumperMC";
@@ -22,6 +22,7 @@
   font-display: block;
 }
 :root {
+  --menu-w: 150px;
   --font: "CatJumperMC", "Courier New", monospace;
   /* Nur drei Farben: Braun (Holz), Grün, Rot. Schrift immer weiß. */
   --wood: #9b6436; --wood-hi: #b97c47; --wood-lo: #6e4220; --wood-dk: #5c3419; --wood-deep: #4a2913;
@@ -70,7 +71,8 @@ p, h1, h2, h3 { margin: 0; }
   z-index: 10;
 }
 .box { display: flex; flex-direction: column; gap: 4px; padding: 7px 11px 8px; color: #ffffff; text-shadow: var(--stroke-sm); white-space: nowrap; }
-.fishbox { flex-direction: row; align-items: center; gap: 6px; margin-left: auto; min-height: 30px; font-size: 16px; padding: 4px 9px 5px !important; }
+.meterbox { min-height: 44px; justify-content: center; font-size: 16px; font-variant-numeric: tabular-nums; min-width: 86px; align-items: center; }
+.fishbox { flex-direction: row; align-items: center; justify-content: center; gap: 6px; margin-left: auto; width: var(--menu-w); min-height: 44px; font-size: 16px; padding: 4px 9px 5px !important; }
 .fishbox .fish-ico { width: 22px; height: 12px; }
 .fish-ico { width: 27.5px; height: 15px; display: inline-block; flex: none; }
 .box.bump { animation: bump .3s ease-out; }
@@ -104,10 +106,13 @@ p, h1, h2, h3 { margin: 0; }
 .close-x { width: 42px; height: 42px; padding: 0; }
 .close-x svg { width: 20px; height: 20px; filter: drop-shadow(1px 1px 0 var(--outline)) drop-shadow(-1px -1px 0 var(--outline)); }
 .first-run .hud { display: none; }
-#mute .off { display: none; }
-#mute[aria-pressed="true"] .on { display: none; }
-#mute[aria-pressed="true"] .off { display: block; }
-
+.at-home .play-only { display: none; }
+.set-row { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px; margin-bottom: 14px; }
+.set-row label, .set-row .lbl { color: #ffffff; text-shadow: var(--stroke-sm); }
+.set-row input[type=range] { grid-column: 1 / -1; width: 100%; accent-color: var(--green); height: 28px; touch-action: manipulation; }
+.set-val { font-variant-numeric: tabular-nums; }
+.seg { display: flex; gap: 8px; }
+.seg .btn { padding: 8px 12px 10px; }
 .home-title { position: fixed; pointer-events: none; }
 .title { font: 48px/1 var(--font); color: #ffffff; text-shadow: 0 4px 0 rgba(74, 41, 19, .45), 0 8px 16px rgba(74, 41, 19, .2); }
 #home.leaving, #home.entering { pointer-events: none; }
@@ -130,7 +135,7 @@ p, h1, h2, h3 { margin: 0; }
   display: grid;
   grid-template-columns: 1fr;
   gap: 8px;
-  width: 150px;
+  width: var(--menu-w);
 }
 .home-menu .btn:not(.btn-start) { padding: 10px 12px 12px; }
 .home-menu .btn-start {
@@ -187,12 +192,15 @@ p, h1, h2, h3 { margin: 0; }
 .card .prev { height: 66px; display: flex; align-items: center; justify-content: center; }
 .card .desc { line-height: 1.3; flex: 1; opacity: .85; }
 .card .btn { width: 100%; padding: 10px 10px 12px; }
+.tag { align-self: flex-start; padding: 3px 8px 4px; font-size: 8px; background: var(--green-lo); border: 2px solid var(--wood-deep); border-radius: 4px; }
+#shopNote, #missionNote { margin: 0 0 10px; }
+.has-dot::after { content: ''; position: absolute; top: -5px; right: -5px; width: 12px; height: 12px; border-radius: 50%; background: var(--red); border: 2px solid var(--wood-deep); }
 .badge { align-self: flex-start; padding: 5px 10px 6px; background: var(--green); color: #ffffff; }
 .msg { margin: 10px 12px 0; padding: 8px 10px; background: rgba(74, 41, 19, .6); color: #ffffff; }
 .panel-body { display: flex; flex-direction: column; gap: 14px; padding: 16px; }
-.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; text-align: center; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; }
 .stat-num { display: block; font-size: 24px; text-shadow: var(--stroke); }
-.stat-lbl { display: block; margin-top: 6px; font-size: 8px; }
+.stat-lbl { text-transform: capitalize; display: block; margin-top: 6px; font-size: 8px; }
 .row { display: flex; gap: 12px; }
 .row .btn { flex: 1; }
 
@@ -290,10 +298,9 @@ p, h1, h2, h3 { margin: 0; }
 
 @media (orientation: portrait) {
   .hud { flex-wrap: wrap; }
-  .home-menu { width: 132px; }
+  :root { --menu-w: 132px; }
   .home-title { top: auto; bottom: calc(env(safe-area-inset-bottom, 0px) + 120px); }
   .title { font-size: 40px; }
-  .stats { grid-template-columns: repeat(2, 1fr); }
 }
 @media (orientation: landscape) and (max-height: 560px) {
   #banner { top: calc(env(safe-area-inset-top, 0px) + 84px); }
@@ -301,6 +308,10 @@ p, h1, h2, h3 { margin: 0; }
   .title { font-size: 40px; }
   .grid { grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 10px; }
   .card .prev { height: 52px; }
+}
+/* große PC-Bildschirme: Knöpfe und Fenster mitwachsen lassen */
+@media (min-width: 1500px) and (min-height: 820px) {
+  .hud, #home, .modal, #banner, #combo { zoom: 1.45; }
 }
 @media (prefers-reduced-motion: reduce) {
   .panel, .box.bump { animation: none; }
@@ -314,25 +325,29 @@ p, h1, h2, h3 { margin: 0; }
 <canvas id="game" aria-label="Spielfeld: eine Katze springt auf der Alm über Hindernisse, im Hintergrund schleckt Kirby Schnee"></canvas>
 
 <div class="hud">
+  <button class="btn icon-btn play-only" id="menuBtn" type="button" aria-label="Menü" title="Menü">
+    <svg viewBox="0 0 10 10" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M1 1h8v2H1zM1 4h8v2H1zM1 7h8v2H1z"/></svg>
+  </button>
+  <div class="box meterbox play-only" id="meterBox"><span id="meters">0 m</span></div>
   <div class="box fishbox" id="fishBox" aria-label="Fische">
     <svg class="fish-ico" viewBox="0 0 9 5" shape-rendering="crispEdges" aria-hidden="true"><path fill="#ff9f43" d="M2 0h4v1h1v1h1V1h1v3H8V3H7v1H6v1H2V4H1V3H0V2h1V1h1z"/><path fill="#1e1c26" d="M2 1h1v1H2z"/></svg><span id="fish">0</span>
   </div>
   <button class="btn icon-btn install-btn" id="installBtn" type="button" aria-label="App installieren" title="App installieren" hidden>
     <svg viewBox="0 0 10 10" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M4 0h2v5h2v1H7v1H6v1H4V7H3V6H2V5h2zM0 7h1v2h8V7h1v3H0z"/></svg>
   </button>
-  <button class="btn icon-btn" id="mute" type="button" aria-pressed="false" aria-label="Ton aus" title="Ton">
-    <svg class="on" viewBox="0 0 10 10" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M1 3h2V2h1V1h1v8H4V8H3V7H1zM7 3h1v4H7zM9 2h1v6H9z"/></svg>
-    <svg class="off" viewBox="0 0 10 10" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M1 3h2V2h1V1h1v8H4V8H3V7H1z"/><path fill="#ff5555" d="M6 3h1v1h1V3h1v1H8v1h1v1H8v1H7V6H6V5h1V4H6z"/></svg>
+  <button class="btn icon-btn" id="settingsBtn" type="button" aria-label="Einstellungen" title="Einstellungen">
+    <svg viewBox="0 0 10 10" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M4 0h2v1h1v1h1V1h1v2H8v1h2v2H8v1h1v2H8V8H7v1H6v1H4V9H3V8H2v1H1V7h1V6H0V4h2V3H1V1h1v1h1V1h1zM4 4v2h2V4z"/></svg>
   </button>
 </div>
 
 <div id="home">
   <div class="home-title">
-    <h1 class="title">Cat Jumper</h1>
+    <h1 class="title">Kirbys Alm</h1>
   </div>
   <nav class="home-menu" aria-label="Hauptmenü">
     <button class="btn btn2" id="shopBtn" type="button">Shop</button>
     <button class="btn btn2" id="invBtn" type="button">Inventar</button>
+    <button class="btn btn2" id="missionsBtn" type="button">Missionen</button>
     <button class="btn btn-start" id="startBtn" type="button">Start</button>
   </nav>
 </div>
@@ -348,8 +363,12 @@ p, h1, h2, h3 { margin: 0; }
       <p class="msg" id="setupMsg" hidden></p>
       <div class="setup-cat" id="setupCat"></div>
       <label class="field-lbl" for="catName">Wie heißt deine Katze?</label>
-      <input class="name-input" id="catName" type="text" maxlength="12" autocomplete="off" autocapitalize="words" spellcheck="false" placeholder="z. B. Mimi">
-      <p class="field-lbl small-note">Weitere Katzen-Farben gibt es im Shop.</p>
+      <input class="name-input" id="catName" type="text" maxlength="12" autocomplete="username" autocapitalize="words" spellcheck="false" placeholder="z. B. Mimi">
+      <div id="passRow">
+        <label class="field-lbl" for="catPass">Passwort</label>
+        <input class="name-input" id="catPass" type="password" maxlength="64" autocomplete="current-password" placeholder="mindestens 4 Zeichen">
+      </div>
+      <p class="field-lbl small-note" id="setupNote"></p>
     </div>
   </div>
 </div>
@@ -365,9 +384,10 @@ p, h1, h2, h3 { margin: 0; }
       <button class="tab" id="tabUp" type="button" role="tab" aria-selected="true">Upgrades</button>
       <button class="tab" id="tabCats" type="button" role="tab" aria-selected="false">Katzen</button>
       <button class="tab" id="tabCos" type="button" role="tab" aria-selected="false">Cosmetics</button>
+      <button class="tab" id="tabPets" type="button" role="tab" aria-selected="false">Begleiter</button>
     </div>
     <p class="msg" id="shopMsg" hidden></p>
-    <div class="scroll"><div class="grid" id="shopList"></div></div>
+    <div class="scroll"><p class="field-lbl small-note" id="shopNote" hidden></p><div class="grid" id="shopList"></div></div>
   </div>
 </div>
 
@@ -379,12 +399,15 @@ p, h1, h2, h3 { margin: 0; }
       <button class="btn close-x" type="button" data-close aria-label="Schließen"><svg viewBox="0 0 7 7" shape-rendering="crispEdges" aria-hidden="true"><path fill="#fff" d="M0 0h2v1h1v1h1V1h1V0h2v2H6v1H5v1h1v1h1v2H5V6H4V5H3v1H2v1H0V5h1V4h1V3H1V2H0z"/></svg></button>
     </div>
     <div class="scroll">
+      <p class="msg" id="invMsg" hidden></p>
       <h3>Deine Katze</h3>
       <div class="me" id="invMe"></div>
       <h3>Katzen</h3>
       <div class="grid" id="invCats"></div>
       <h3>Upgrades</h3>
       <div class="grid" id="invUpgrades"></div>
+      <h3>Begleiter</h3>
+      <div class="grid" id="invPets"></div>
       <h3>Cosmetics</h3>
       <div class="grid" id="invCos"></div>
     </div>
@@ -422,15 +445,44 @@ p, h1, h2, h3 { margin: 0; }
   </div>
 </div>
 
+<div id="missions" class="modal" hidden>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="missionsTitle">
+    <div class="panel-head">
+      <h2 id="missionsTitle" data-t="Missionen">Missionen</h2>
+      <span class="wallet" aria-label="Deine Fische"><svg class="fish-ico" viewBox="0 0 9 5"></svg><span id="missionsWallet">0</span></span>
+      <button class="btn close-x" type="button" data-close aria-label="Schließen"><svg viewBox="0 0 7 7" shape-rendering="crispEdges" aria-hidden="true"><path fill="#fff" d="M0 0h2v1h1v1h1V1h1V0h2v2H6v1H5v1h1v1h1v2H5V6H4V5H3v1H2v1H0V5h1V4h1V3H1V2H0z"/></svg></button>
+    </div>
+    <div class="scroll"><p class="field-lbl small-note" id="missionNote"></p><div class="grid" id="missionList"></div></div>
+  </div>
+</div>
+
+<div id="settings" class="modal" hidden>
+  <div class="panel small" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <div class="panel-head">
+      <h2 id="settingsTitle">Einstellungen</h2>
+      <button class="btn close-x" type="button" data-close aria-label="Schließen"><svg viewBox="0 0 7 7" shape-rendering="crispEdges" aria-hidden="true"><path fill="#fff" d="M0 0h2v1h1v1h1V1h1V0h2v2H6v1H5v1h1v1h1v2H5V6H4V5H3v1H2v1H0V5h1V4h1V3H1V2H0z"/></svg></button>
+    </div>
+    <div class="scroll">
+      <div class="set-row"><label for="setVol">Lautstärke</label><span class="set-val" id="setVolVal"></span><input id="setVol" type="range" min="0" max="100" step="5"></div>
+      <div class="set-row"><label for="setSfx">Spiel-Sounds</label><span class="set-val" id="setSfxVal"></span><input id="setSfx" type="range" min="0" max="100" step="5"></div>
+      <div class="set-row"><label for="setUi">Knopf-Sounds</label><span class="set-val" id="setUiVal"></span><input id="setUi" type="range" min="0" max="100" step="5"></div>
+      <div class="set-row"><span class="lbl">Vibration</span><div class="seg"><button class="btn" id="setVibOn" type="button">An</button><button class="btn" id="setVibOff" type="button">Aus</button></div></div>
+      <div class="set-row"><span class="lbl" id="setWho"></span><button class="btn btn-red" id="setLogout" type="button">Abmelden</button></div>
+      <div class="set-row"><span class="lbl">Sprache</span><div class="seg"><button class="btn" id="setLangDe" type="button">Deutsch</button><button class="btn" id="setLangEn" type="button">English</button></div></div>
+    </div>
+  </div>
+</div>
+
 <div id="pause" class="modal" hidden>
   <div class="panel small" role="dialog" aria-modal="true" aria-labelledby="pauseTitle">
     <div class="panel-head"><h2 id="pauseTitle">Pause</h2></div>
     <div class="panel-body">
       <p>Alle warten auf dich.</p>
       <div class="row">
-        <button class="btn btn-start" id="resumeBtn" type="button">Weiter</button>
-        <button class="btn btn-red" id="pauseLobbyBtn" type="button">Lobby</button>
+        <button class="btn btn-start" id="resumeBtn" type="button" data-t="Fortsetzen">Fortsetzen</button>
+        <button class="btn btn-red" id="pauseLobbyBtn" type="button" data-t="Lobby">Lobby</button>
       </div>
+      <button class="btn btn2" id="pauseSettingsBtn" type="button" data-t="Einstellungen">Einstellungen</button>
     </div>
   </div>
 </div>
@@ -441,10 +493,9 @@ p, h1, h2, h3 { margin: 0; }
     <div class="panel-body">
       <p id="quip">Erwischt!</p>
       <div class="stats">
-        <div><span class="stat-num" id="rFish">0</span><span class="stat-lbl">Fische</span></div>
-        <div><span class="stat-num" id="rLevel">1</span><span class="stat-lbl">Level</span></div>
-        <div><span class="stat-num" id="rJumped">0</span><span class="stat-lbl">Übersprungen</span></div>
-        <div><span class="stat-num" id="rCombo">0x</span><span class="stat-lbl">Beste Serie</span></div>
+        <div><span class="stat-num" id="rMeters">0</span><span class="stat-lbl" data-t="Meter">Meter</span></div>
+        <div><span class="stat-num" id="rFish">0</span><span class="stat-lbl" data-t="Fische">Fische</span></div>
+        <div><span class="stat-num" id="rJumped">0</span><span class="stat-lbl" data-t="Hürden">Hürden</span></div>
       </div>
       <div class="row">
         <button class="btn btn-start" id="againBtn" type="button">Nochmal</button>
@@ -564,7 +615,7 @@ const HITBOX = .8;
 // Drei Katzen mit unterschiedlich langem Fell, dazu Cosmetics (Hut, Kette, Pulli ...), die nicht zur Kollision zählen.
 const CAT_W = 26, CAT_H = 22, CAT_TOP = 4, RUN_FRAMES = 8;
 const CAT_BASE = { o: '#8a5a3a', b: '#fbfbf7', s: '#dfe2e9', d: '#c9ced8', p: '#ffb3c1', n: '#ff7f9e', c: '#ffc7d4', e: '#2b3a6b', h: '#ffffff', x: '#4a2913' };
-const COS_PAL = { H: '#3f6b3a', J: '#d23b34', K: '#f4f4f0', L: '#ffffff', G: '#ffcc33', Y: '#d99a1e', Q: '#1b1b22', R: '#3c6fd6', M: '#e8edf5' };
+const COS_PAL = { H: '#3f6b3a', J: '#d23b34', K: '#f4f4f0', L: '#ffffff', G: '#ffcc33', Y: '#d99a1e', Q: '#1b1b22', R: '#3c6fd6', M: '#e8edf5', P: '#ff7fb0', Z: '#ffd43b', T: '#5a3218', B: '#8a5a2b', N: '#a3a8b2', V: '#c9e8ff' };
 const COS_CHARS = Object.keys(COS_PAL).join('');
 function catRows(pose, look) {
   const fur = look.breed.fur; // 0 kurz, 1 halblang, 2 lang
@@ -656,11 +707,12 @@ function catRows(pose, look) {
   const eye = pose.eye;
   for (const ex of [18, 21.4]) {
     if (eye === 's') { set(ex, hy + .6, 's'); set(ex + 1, hy + .6, 's'); }        // blinzeln
-    else if (eye === 'x') { const cx = ex < 20 ? 17 : 21; for (const [dx, dy] of [[-1, -1], [1, -1], [0, 0], [-1, 1], [1, 1]]) set(cx + dx, hy + .1 + dy, 'x'); } // kleines X pro Auge, mit Lücke dazwischen
+    else if (eye === 'x') { const cx = ex < 20 ? 17 : 21; for (const [dx, dy] of [[-1, -1], [1, -1], [0, 0], [-1, 1], [1, 1]]) set(cx + dx, hy + .1 + dy, 'x'); } // klares X pro Auge, mit Lücke dazwischen
     else { set(ex, hy - .4, 'e'); set(ex + 1, hy - .4, 'h'); set(ex, hy + .6, 'e'); set(ex + 1, hy + .6, 'e'); }
   }
   set(16.6, hy + 1.8, 'c'); set(23.2, hy + 1.8, 'c');
   set(20.4, hy + 1.8, 'n');
+  if (eye === 'x') { set(20.4, hy + 2.8, 'n'); set(20.4, hy + 3.6, 'p'); } // Zunge hängt raus
   // Beine auf dieser Seite
   leg(14.6, j, pose.fn, 'g');
   leg(8, j, pose.bn, 'g');
@@ -731,6 +783,59 @@ function catRows(pose, look) {
     for (const cx of [15.8, 18.7, 21.6]) { set(cx, hy - 6.4, 'G'); set(cx, hy - 7.4, 'Y'); }
     set(18.7, hy - 4.9, 'J'); set(16.8, hy - 4.9, 'R'); set(20.6, hy - 4.9, 'R');
   }
+  // nur auf freie Felder malen (für Dinge, die hinter der Katze wehen)
+  const setE = (x, y, c) => { if (get(x, y) === '.') set(x, y, c); };
+  const paint = (test, color) => {
+    for (let y = 0; y < CAT_H; y++) for (let x = 0; x < CAT_W; x++) { const c = color(x - ox, y - oy, g[y][x]); if (c && test(x - ox, y - oy, g[y][x])) g[y][x] = c; }
+  };
+  const onBody = (xx, yy, c) => 'bsto'.includes(c) && yy >= B.cy - B.ry - .8 + bob && yy <= B.cy + B.ry + .6 + bob && xx <= 16.4 && xx >= B.cx - B.rx - 1;
+  const onPaw = (xx, yy, c) => (c === 'g' || c === 'd') && yy >= 15;
+  if (cos.has('blumen')) { // Blumenkranz
+    const cols = ['P', 'H', 'Z', 'H', 'L', 'H', 'P', 'H', 'Z'];
+    for (let i = 0; i < 9; i++) set(14.8 + i, hy - 4.4 + (i === 0 || i === 8 ? .6 : 0), cols[i]);
+    set(15.8, hy - 5.3, 'P'); set(18.8, hy - 5.4, 'Z'); set(21.8, hy - 5.3, 'P');
+  }
+  if (cos.has('herz')) { // Herzbrille
+    for (const cx of [18, 22]) {
+      set(cx - 1, hy - 1, 'P'); set(cx + 1, hy - 1, 'P');
+      set(cx - 1, hy, 'P'); set(cx, hy, 'P'); set(cx + 1, hy, 'P');
+      set(cx, hy + 1, 'P'); set(cx, hy - .9, 'L');
+    }
+    set(20, hy - .2, 'P');
+  }
+  if (cos.has('ski')) { // Skibrille mit Band
+    rect(16.6, hy - 1, 23.4, hy + 1, 'Q');
+    rect(17.4, hy - .4, 22.6, hy + .4, 'Z');
+    set(18, hy - .4, 'L');
+    rect(13.8, hy - .6, 16.4, hy - .2, 'Q');
+  }
+  if (cos.has('monokel')) {
+    for (const [dx, dy] of [[-1, -1], [0, -1.6], [1, -1.6], [2, -1], [2, 0], [2, 1], [1, 1.6], [0, 1.6], [-1, 1], [-1, 0]]) set(21.4 + dx, hy + .1 + dy, 'G');
+    line(20.4, hy + 1.6, 19.4, hy + 4, 'Y', 1);
+  }
+  if (cos.has('fliege')) { // rote Fliege am Hals
+    rect(16.4, hy + 3.6, 17.6, hy + 5.2, 'J');
+    rect(19.6, hy + 3.6, 20.8, hy + 5.2, 'J');
+    rect(18.2, hy + 4, 19, hy + 4.8, 'T');
+  }
+  if (cos.has('glocke')) { // rotes Halsband mit Glöckchen
+    for (let x = 15; x <= 21.2; x++) set(x, hy + 4.3 + (x > 17 && x < 20 ? .6 : 0), 'J');
+    rect(18, hy + 5.4, 19, hy + 6.4, 'G'); set(18.4, hy + 6.9, 'Y');
+  }
+  if (cos.has('jacke')) { // gelbe Regenjacke mit Knöpfen
+    paint(onBody, (xx, yy) => (Math.round(xx) === 15 && Math.round(yy) % 2 ? 'L' : 'Z'));
+  }
+  if (cos.has('weste')) { // grüne Trachtenweste
+    paint(onBody, (xx, yy) => (xx > 14.2 ? 'L' : Math.round(xx) === 14 && Math.round(yy) % 2 ? 'G' : 'H'));
+  }
+  if (cos.has('umhang')) { // roter Umhang auf dem Rücken, flattert nach hinten
+    paint((xx, yy, c) => 'bsto'.includes(c) && yy < B.cy - .2 + bob && xx <= 15.5, () => 'J');
+    const flap = Math.sin((t + 1) * 2) * .8;
+    for (let i = 0; i <= 6; i++) for (let k = 0; k <= 2 + i * .45; k++) setE(B.cx - B.rx + 1 - i, B.cy - B.ry + bob + k + i * .25 + flap * i / 6, i % 3 === 2 ? 'R' : 'J');
+  }
+  if (cos.has('stiefel')) paint(onPaw, (xx, yy) => (Math.round(yy) === 15 ? 'J' : 'T'));
+  if (cos.has('sneaker')) paint(onPaw, (xx, yy) => (Math.round(yy) >= 17 ? 'J' : 'L'));
+  if (cos.has('pantoffel')) paint(onPaw, (xx, yy) => (Math.round(yy) === 16 ? 'P' : 'N'));
   void get;
   return g;
 }
@@ -749,24 +854,38 @@ const POSE_DOWN = { fn: [.5, .25], ff: [.35, .15], bn: [-.2, -.9], bf: [-.35, -1
 // Jede Farbe hat ihre eigene Felllänge.
 const BREEDS = [
   { id: 'weiss', name: 'Schneeweiß', hair: 'Kurzhaar', fur: 0, price: 0, desc: 'Deine erste Katze.', pal: {} },
-  { id: 'grau', name: 'Grau getigert', hair: 'Halblanghaar', fur: 1, price: 30, desc: 'Grau mit dunklen Streifen.', pal: { b: '#b8bcc6', s: '#979ca8', d: '#80858f', u: '#80858f', e: '#2f5d34', c: '#e6a9b8' }, stripes: '#9a9fab' },
-  { id: 'schwarz', name: 'Mitternacht', hair: 'Kurzhaar', fur: 0, price: 40, desc: 'Schwarz mit gelben Augen, wie Kirby.', pal: { b: '#3a3644', s: '#2a2733', d: '#1f1d27', u: '#2a2733', p: '#b07a88', e: '#e6d23a', c: '#7a5363', h: '#3a3644' } },
-  { id: 'orange', name: 'Orange', hair: 'Halblanghaar', fur: 1, price: 60, desc: 'Rot getigert.', pal: { b: '#f2a14a', s: '#d27a2a', d: '#b8661f', u: '#c8641c', p: '#ffc1a8', e: '#2f5d34', c: '#ffb08a' }, stripes: '#e48c35' },
-  { id: 'siam', name: 'Siam', hair: 'Kurzhaar', fur: 0, price: 90, desc: 'Hell, mit dunklen Ohren, Pfoten und Schwanz.', pal: { b: '#f1e6d2', s: '#d9c6a6', d: '#4a3128', g: '#5b3d30', q: '#5b3d30', u: '#3f2a22', a: '#5b3d30', e: '#1f4f8f' } },
-  { id: 'gold', name: 'Goldkatze', hair: 'Halblanghaar', fur: 1, price: 150, desc: 'Glänzt und glitzert beim Laufen.', pal: { b: '#ffd54a', s: '#e0a920', d: '#c48d12', u: '#e0a920', e: '#6b2a12', c: '#ffab7a' }, sparkle: '#fff6b0' },
-  { id: 'galaxie', name: 'Galaxie', hair: 'Langhaar', fur: 2, price: 200, desc: 'Voller Sterne, glitzert beim Laufen.', pal: { b: '#3a2f7a', s: '#2a2160', d: '#201a4d', u: '#ff7ad9', p: '#ff7ad9', n: '#ff7ad9', e: '#7cf7ff', c: '#8a5fd0', h: '#ffffff' }, dots: '#fff6a0', sparkle: '#b9a7ff' },
+  { id: 'grau', name: 'Grau getigert', hair: 'Halblanghaar', fur: 1, price: 400, desc: 'Grau mit dunklen Streifen.', pal: { b: '#b8bcc6', s: '#979ca8', d: '#80858f', u: '#80858f', e: '#2f5d34', c: '#e6a9b8' }, stripes: '#9a9fab' },
+  { id: 'schwarz', name: 'Mitternacht', hair: 'Kurzhaar', fur: 0, price: 650, desc: 'Schwarz mit gelben Augen, wie Kirby.', pal: { b: '#3a3644', s: '#2a2733', d: '#1f1d27', u: '#2a2733', p: '#b07a88', e: '#e6d23a', c: '#7a5363', h: '#3a3644' } },
+  { id: 'orange', name: 'Orange', hair: 'Halblanghaar', fur: 1, price: 900, desc: 'Rot getigert.', pal: { b: '#f2a14a', s: '#d27a2a', d: '#b8661f', u: '#c8641c', p: '#ffc1a8', e: '#2f5d34', c: '#ffb08a' }, stripes: '#e48c35' },
+  { id: 'siam', name: 'Siam', hair: 'Kurzhaar', fur: 0, price: 1400, desc: 'Hell, mit dunklen Ohren, Pfoten und Schwanz.', pal: { b: '#f1e6d2', s: '#d9c6a6', d: '#4a3128', g: '#5b3d30', q: '#5b3d30', u: '#3f2a22', a: '#5b3d30', e: '#1f4f8f' } },
+  { id: 'gold', name: 'Goldkatze', hair: 'Halblanghaar', fur: 1, price: 2500, desc: 'Glänzt und glitzert beim Laufen.', pal: { b: '#ffd54a', s: '#e0a920', d: '#c48d12', u: '#e0a920', e: '#6b2a12', c: '#ffab7a' }, sparkle: '#fff6b0' },
+  { id: 'mainecoon', name: 'Maine Coon', hair: 'Langhaar', fur: 2, price: 4000, body: 'dick', desc: 'Riesig, super flauschig, mit Pinselohren.', pal: { b: '#a8805a', s: '#86603e', d: '#6e4c30', u: '#5a3c24', a: '#8a6440', q: '#8a6440', e: '#9bb33a', p: '#d9a08f', c: '#d29a88' }, stripes: '#7c5838' },
 ];
 // Cosmetics: pro Körperstelle ist eines gleichzeitig angezogen
+// Cosmetics: pro Körperstelle ist eines angezogen. Jedes gibt einen kleinen Bonus.
 const COSMETICS = [
-  { id: 'tirol', slot: 'head', name: 'Tirolerhut', price: 40, desc: 'Grüner Filzhut mit Feder.' },
-  { id: 'santa', slot: 'head', name: 'Weihnachtsmütze', price: 50, desc: 'Rot mit weißem Bommel.' },
-  { id: 'krone', slot: 'head', name: 'Krone', price: 120, desc: 'Für echte Almköniginnen. Glitzert beim Laufen.' },
-  { id: 'brille', slot: 'eyes', name: 'Sonnenbrille', price: 45, desc: 'Cool bleiben auf der Alm.' },
-  { id: 'kette', slot: 'neck', name: 'Goldkette', price: 60, desc: 'Mit kleinem roten Anhänger.' },
-  { id: 'schal', slot: 'neck', name: 'Schal', price: 35, desc: 'Rot-weiß gestreift, weht im Wind.' },
-  { id: 'pulli', slot: 'body', name: 'Strickpulli', price: 70, desc: 'Blau mit weißem Zickzack.' },
-  { id: 'socken', slot: 'feet', name: 'Ringelsocken', price: 30, desc: 'Rot-weiß geringelt, an allen vier Pfoten.' },
+  { id: 'tirol', slot: 'head', name: 'Tirolerhut', price: 600, desc: 'Grüner Filzhut mit Feder.', bonus: ['fish', 3] },
+  { id: 'santa', slot: 'head', name: 'Weihnachtsmütze', price: 700, desc: 'Rot mit weißem Bommel.', bonus: ['star', .3] },
+  { id: 'blumen', slot: 'head', name: 'Blumenkranz', price: 900, desc: 'Bunte Almblumen.', bonus: ['jump', 2] },
+  { id: 'krone', slot: 'head', name: 'Krone', price: 2000, desc: 'Für echte Almköniginnen. Glitzert beim Laufen.', bonus: ['gold', 2] },
+  { id: 'brille', slot: 'eyes', name: 'Sonnenbrille', price: 650, desc: 'Cool bleiben auf der Alm.', bonus: ['magnet', 6] },
+  { id: 'herz', slot: 'eyes', name: 'Herzbrille', price: 800, desc: 'Rosa und verliebt.', bonus: ['fish', 3] },
+  { id: 'ski', slot: 'eyes', name: 'Skibrille', price: 1000, desc: 'Gelbe Gläser gegen den Schnee.', bonus: ['star', .3] },
+  { id: 'monokel', slot: 'eyes', name: 'Monokel', price: 1500, desc: 'Mit goldener Kette. Sehr vornehm.', bonus: ['gold', 2] },
+  { id: 'schal', slot: 'neck', name: 'Schal', price: 500, desc: 'Rot-weiß gestreift, weht im Wind.', bonus: ['jump', 2] },
+  { id: 'fliege', slot: 'neck', name: 'Fliege', price: 700, desc: 'Rote Fliege für feine Anlässe.', bonus: ['fish', 3] },
+  { id: 'glocke', slot: 'neck', name: 'Glöckchen', price: 900, desc: 'Rotes Halsband mit goldener Glocke.', bonus: ['magnet', 6] },
+  { id: 'kette', slot: 'neck', name: 'Goldkette', price: 1100, desc: 'Mit kleinem roten Anhänger.', bonus: ['gold', 2] },
+  { id: 'pulli', slot: 'body', name: 'Strickpulli', price: 1000, desc: 'Blau mit weißem Zickzack.', bonus: ['star', .3] },
+  { id: 'jacke', slot: 'body', name: 'Regenjacke', price: 1200, desc: 'Knallgelb für jedes Wetter.', bonus: ['fish', 4] },
+  { id: 'weste', slot: 'body', name: 'Trachtenweste', price: 1400, desc: 'Grün mit goldenen Knöpfen.', bonus: ['gold', 2] },
+  { id: 'umhang', slot: 'body', name: 'Heldenumhang', price: 1800, desc: 'Roter Umhang, flattert beim Rennen.', bonus: ['jump', 3] },
+  { id: 'socken', slot: 'feet', name: 'Ringelsocken', price: 450, desc: 'Rot-weiß geringelt, an allen vier Pfoten.', bonus: ['jump', 2] },
+  { id: 'pantoffel', slot: 'feet', name: 'Hüttenschuhe', price: 750, desc: 'Graue Filzpantoffeln, schön warm.', bonus: ['fish', 3] },
+  { id: 'stiefel', slot: 'feet', name: 'Bergstiefel', price: 900, desc: 'Fest geschnürt für die Alm.', bonus: ['star', .3] },
+  { id: 'sneaker', slot: 'feet', name: 'Turnschuhe', price: 1300, desc: 'Weiß mit roten Streifen. Sehr schnell.', bonus: ['jump', 3] },
 ];
+const BONUS_TEXT = { fish: (v) => '+' + v + ' % ' + t('Fische'), star: (v) => '+' + (settings.lang === 'en' ? v : String(v).replace('.', ',')) + ' s ' + t('Stern'), jump: (v) => '+' + v + ' % ' + t('Sprung'), gold: (v) => '+' + v + ' % ' + t('Goldfische'), magnet: (v) => '+' + v + ' ' + t('Magnet') };
 const catCache = {};
 function catSet(breedId, cosIds = []) {
   const key = breedId + '|' + [...cosIds].sort().join(',');
@@ -780,6 +899,9 @@ function catSet(breedId, cosIds = []) {
     pal.u = breed.pal.u || pal.s;
     pal.t = breed.stripes || breed.dots || pal.s;
     pal.o = breed.patches || pal.o;
+    // X-Augen: dunkel auf hellem Fell, hell auf dunklem Fell
+    const lum = (h) => { const n = parseInt(h.slice(1), 16); return ((n >> 16) & 255) * .3 + ((n >> 8) & 255) * .59 + (n & 255) * .11; };
+    pal.x = lum(pal.b) < 110 ? '#f4efe4' : '#4a2913';
     const look = { breed, cos, body: breed.body || 'duenn' };
     const mk = (pose) => shrinkHitbox(sprite(catRows(pose, look), pal, true, 'w', COS_CHARS), HITBOX);
     catCache[key] = {
@@ -940,6 +1062,9 @@ const FISH_ROWS = [
 ];
 const FISH_PAL = { o: '#d9661c', b: '#ff9f43', h: '#ffc27a', l: '#ffe2b8', k: '#3a2213', d: '#f07f2a', t: '#f07f2a' };
 const fishSpr = sprite(FISH_ROWS, FISH_PAL);
+// Goldfisch: selten, 10 Fische wert
+const GOLD_PAL = { o: '#c98a0a', b: '#ffd43b', h: '#fff1a0', l: '#fffbe0', k: '#5a3a08', d: '#f2b81e', t: '#f2b81e' };
+const goldFishSpr = sprite(FISH_ROWS, GOLD_PAL);
 
 const cloudSpr = sprite([
   '.....cccc.....',
@@ -973,11 +1098,33 @@ for (const r of [4, 5, 6]) {
   }
   yarnSpr[r] = sprite(rows, { r: '#d8322b', R: '#9e1f1a', h: '#ff7a6e' });
 }
+// Begleiter: laufen oder fliegen mit und bringen dir ab und zu einen Fisch
+const PETS = [
+  { id: 'spatz', name: 'Spatz', price: 1500, every: 6, tag: 'Bringt alle 6 s einen Fisch', desc: 'Ein kleiner Spatz flattert über dir.' },
+  { id: 'murmel', name: 'Murmeltier', price: 2500, every: 4.5, tag: 'Bringt alle 4,5 s einen Fisch', desc: 'Pfeift fröhlich und rennt hinter dir her.' },
+  { id: 'hase', name: 'Schneehase', price: 4000, every: 3, tag: 'Bringt alle 3 s einen Fisch', desc: 'Der schnellste Fischfinder der Alm.' },
+];
+const PET_PAL = { b: '#9a6a3c', d: '#6b4423', l: '#ead8b4', k: '#2a1a10', o: '#f2a23a', m: '#a0784c', n: '#3a2213', W: '#f6f6f2', s: '#d9dde6', p: '#ffb3c1' };
+const petSpr = {
+  spatz: [
+    ['...dd.....', '....dd....', '..bbbbb...', '.bbbbkbbo.', 'ddlllllb..', '..llll....', '...o.o....'],
+    ['..........', '..........', '..bbbbb...', '.bbbbkbbo.', 'ddlddllb..', '..llldd...', '...o.o....'],
+  ].map((r) => sprite(r, PET_PAL)),
+  murmel: [
+    ['........mm..', '.......mmmm.', '.......mkmmn', '..mmmmmmmmm.', '.mmmmmmmmlm.', 'mmmmmmmllll.', 'dmmmmmmllll.', '.dd....dd...'],
+    ['........mm..', '.......mmmm.', '.......mkmmn', '..mmmmmmmmm.', '.mmmmmmmmlm.', 'mmmmmmmllll.', 'dmmmmmmllll.', '..dd..dd....'],
+  ].map((r) => sprite(r, PET_PAL)),
+  hase: [
+    ['........s.s.', '........W.W.', '........W.W.', '.......WWWW.', '.......WkWWp', '..WWWWWWWWW.', '.WWWWWWWWWs.', 'sWWWWWWWss..', '.ss....ss...'],
+    ['.......s..s.', '.......W.W..', '........WW..', '.......WWWW.', '.......WkWWp', '..WWWWWWWWW.', '.WWWWWWWWWs.', 'sWWWWWWWWs..', 'ss.......ss.'],
+  ].map((r) => sprite(r, PET_PAL)),
+};
+
 // Symbole für die Upgrades im Shop
 const ICON_SPR = {
   star: starSpr,
   magnet: sprite(['gg....gg', 'gg....gg', 'rr....rr', 'rr....rr', 'rr....rr', 'rrr..rrr', '.rrrrrr.', '..rrrr..'], { r: '#e03a3e', g: '#d6dbe4' }),
-  triple: sprite(['....a....', '...aaa...', '..aa.aa..', '....a....', '...aaa...', '..aa.aa..', '....a....', '...aaa...', '..aa.aa..'], { a: '#4fd1ff' }),
+  goldnase: goldFishSpr,
   lucky: sprite(['..p.p.p..', '..p.p.p..', 'p.......p', '...ppp...', '..ppppp..', '.ppppppp.', '.ppppppp.', '..ppppp..'], { p: '#ff8fb8' }),
 };
 
@@ -1099,47 +1246,118 @@ function levelInfo(n) {
   };
 }
 
-/* ---------- Ton ---------- */
-let actx = null;
-let muted = store.get('katzosaurus-muted', false);
+/* ---------- Sprache ----------
+   Texte stehen auf Deutsch im Code; EN enthält die englische Übersetzung. t() liefert die passende Sprache. */
+const EN = {};
+function t(de) { return settings.lang === 'en' && EN[de] ? EN[de] : de; }
+function applyLang() {
+  document.documentElement.lang = settings.lang;
+  document.querySelectorAll('[data-t]').forEach((el) => { el.textContent = t(el.dataset.t); });
+  document.querySelectorAll('[data-t-label]').forEach((el) => { el.setAttribute('aria-label', t(el.dataset.tLabel)); el.title = t(el.dataset.tLabel); });
+  document.querySelectorAll('[data-t-ph]').forEach((el) => { el.placeholder = t(el.dataset.tPh); });
+}
+function setLang(l) { settings.lang = l; saveSettings(); applyLang(); if (typeof refreshOpenScreens === 'function') refreshOpenScreens(); }
+
+/* ---------- Ton ----------
+   Alles läuft über einen Kompressor mit Verstärkung, damit man das Spiel auch bei leiser Handy-Lautstärke gut hört.
+   Die Klänge liegen bewusst im Bereich 400 bis 3000 Hz, den Handy-Lautsprecher gut wiedergeben. */
+const settings = Object.assign({ vol: 80, sfx: 100, ui: 70, vib: true, lang: 'de' }, store.get('cj-settings', {}));
+if (store.get('katzosaurus-muted', false) === true && !store.get('cj-settings', null)) settings.vol = 0;
+const saveSettings = () => store.set('cj-settings', settings);
+let actx = null, master = null, busSfx = null, busUi = null, noiseBuf = null;
 function audioOn() {
   if (!actx) {
-    try { actx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { actx = null; }
+    try {
+      actx = new (window.AudioContext || window.webkitAudioContext)();
+      const comp = actx.createDynamicsCompressor();
+      comp.threshold.value = -20; comp.knee.value = 8; comp.ratio.value = 6; comp.attack.value = .002; comp.release.value = .12;
+      master = actx.createGain();
+      busSfx = actx.createGain();
+      busUi = actx.createGain();
+      busSfx.connect(master); busUi.connect(master);
+      master.connect(comp).connect(actx.destination);
+      noiseBuf = actx.createBuffer(1, actx.sampleRate * .5, actx.sampleRate);
+      const d = noiseBuf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+      applyVolume();
+    } catch (e) { actx = null; }
   }
   if (actx && actx.state === 'suspended') actx.resume().catch(() => {});
 }
-function tone(f0, f1, dur, type = 'square', vol = .07, delay = 0) {
-  if (muted || !actx) return;
+function applyVolume() {
+  if (!master) return;
+  // kräftige Grundverstärkung, der Kompressor hält die Spitzen im Zaum
+  master.gain.value = Math.pow(settings.vol / 100, 1.3) * 3.2;
+  busSfx.gain.value = settings.sfx / 100;
+  busUi.gain.value = settings.ui / 100;
+}
+// ein Ton mit schnellem Anschlag und weichem Ausklingen
+function tone(f0, f1, dur, type = 'sine', vol = .3, delay = 0, bus = 'sfx') {
+  if (!actx || settings.vol === 0) return;
   const t = actx.currentTime + delay;
   const o = actx.createOscillator();
   const g = actx.createGain();
   o.type = type;
   o.frequency.setValueAtTime(f0, t);
-  o.frequency.exponentialRampToValueAtTime(f1, t + dur);
-  g.gain.setValueAtTime(vol, t);
+  if (f1 !== f0) o.frequency.exponentialRampToValueAtTime(f1, t + dur * .8);
+  g.gain.setValueAtTime(.0001, t);
+  g.gain.exponentialRampToValueAtTime(vol, t + .006);
   g.gain.exponentialRampToValueAtTime(.0001, t + dur);
-  o.connect(g).connect(actx.destination);
+  o.connect(g).connect(bus === 'ui' ? busUi : busSfx);
   o.start(t);
-  o.stop(t + dur + .02);
+  o.stop(t + dur + .03);
 }
+// kurzes gefiltertes Rauschen (Wusch, Plopp, Klick)
+function noise(dur, f0, f1, vol = .25, delay = 0, q = 1.2, bus = 'sfx') {
+  if (!actx || settings.vol === 0) return;
+  const t = actx.currentTime + delay;
+  const s = actx.createBufferSource();
+  s.buffer = noiseBuf;
+  const f = actx.createBiquadFilter();
+  f.type = 'bandpass'; f.Q.value = q;
+  f.frequency.setValueAtTime(f0, t);
+  f.frequency.exponentialRampToValueAtTime(f1, t + dur);
+  const g = actx.createGain();
+  g.gain.setValueAtTime(.0001, t);
+  g.gain.exponentialRampToValueAtTime(vol, t + .01);
+  g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+  s.connect(f).connect(g).connect(bus === 'ui' ? busUi : busSfx);
+  s.start(t, Math.random() * .3);
+  s.stop(t + dur + .03);
+}
+// "Pling" mit Obertönen, klingt wie ein kleines Glöckchen
+function bell(f, vol = .22, delay = 0, dur = .28, bus = 'sfx') {
+  tone(f, f, dur, 'sine', vol, delay, bus);
+  tone(f * 2, f * 2, dur * .6, 'sine', vol * .35, delay, bus);
+  tone(f * 3.01, f * 3.01, dur * .3, 'triangle', vol * .12, delay, bus);
+}
+const PENTA = [523, 587, 659, 784, 880, 1047, 1175, 1319, 1568, 1760, 2093];
 const sfx = {
-  jump() { tone(380, 760, .11); },
-  jump2() { tone(620, 1240, .12, 'square', .06); },
-  combo(n) { const f = 520 * Math.pow(1.06, Math.min(n, 24)); tone(f, f * 1.5, .08, 'square', .06); tone(f * 1.5, f * 2, .1, 'square', .05, .07); },
-  event() { [392, 523, 659, 784, 1047].forEach((f, i) => tone(f, f * 1.02, .09, 'triangle', .07, i * .06)); },
-  power() { [523, 659, 784, 1047, 1319].forEach((f, i) => tone(f, f, .08, 'square', .06, i * .05)); },
-  starNote() { const f = pick([523, 587, 659, 784, 880, 1047]); tone(f, f, .07, 'square', .035); },
-  knock() { tone(200, 900, .12, 'square', .07); },
-  buy() { tone(880, 1320, .08, 'triangle', .07); tone(1320, 1760, .1, 'triangle', .06, .08); },
-  no() { tone(220, 160, .18, 'square', .06); },
-  whoosh() { tone(180, 900, .35, 'triangle', .05); },
-  meow() { tone(650, 1050, .07, 'triangle', .06); tone(1050, 520, .16, 'triangle', .06, .07); },
-  fish() { tone(1200, 1800, .06, 'triangle', .06); tone(1800, 2400, .08, 'triangle', .05, .06); },
-  point() { tone(880, 880, .07, 'square', .05); tone(1320, 1320, .1, 'square', .05, .08); },
-  level() { [523, 659, 784, 1047].forEach((f, i) => tone(f, f, .12, 'square', .06, i * .1)); },
-  hit() { tone(320, 55, .4, 'sawtooth', .1); tone(140, 40, .3, 'square', .08, .05); },
+  jump() { tone(330, 720, .14, 'sine', .32); tone(660, 1440, .09, 'triangle', .07); noise(.06, 900, 1800, .05); },
+  jump2() { tone(520, 1100, .14, 'sine', .28); tone(1040, 2200, .1, 'triangle', .06, .02); noise(.16, 600, 2400, .12, 0, .8); },
+  land() { noise(.05, 500, 220, .1, 0, 1.5); },
+  combo(n) { const i = Math.min(n, 8); bell(PENTA[i], .2); bell(PENTA[i + 2], .17, .07); },
+  event() { [0, 2, 4, 6, 7].forEach((k, i) => bell(PENTA[k], .16, i * .07)); },
+  power() { [2, 4, 6, 8, 10].forEach((k, i) => bell(PENTA[k], .15, i * .05, .22)); },
+  starNote() { bell(pick(PENTA.slice(3, 9)), .07, 0, .12); },
+  knock() { noise(.12, 1200, 300, .3, 0, 1); tone(500, 160, .14, 'triangle', .22); bell(1568, .1, .05); },
+  buy() { bell(1319, .2); bell(1760, .2, .08); bell(2093, .22, .16, .4); noise(.04, 4000, 3000, .08, 0, 2); },
+  no() { tone(330, 260, .12, 'triangle', .25); tone(262, 200, .16, 'triangle', .25, .1); },
+  whoosh() { noise(.38, 400, 2600, .22, 0, .7); },
+  meow() { tone(700, 1050, .1, 'sawtooth', .07); tone(700, 1050, .1, 'sine', .22); tone(1050, 560, .22, 'sine', .22, .09); tone(1050, 560, .22, 'sawtooth', .05, .09); },
+  purr() { // tiefes, gemütliches Schnurren
+    if (!actx || settings.vol === 0) return;
+    for (let i = 0; i < 9; i++) { noise(.13, 260, 180, .2, i * .17, 3); tone(70, 64, .14, 'sawtooth', .07, i * .17); }
+  },
+  fish() { bell(1568, .2, 0, .16); bell(2093, .2, .055, .22); },
+  golden() { [8, 9, 10].forEach((k, i) => bell(PENTA[k], .2, i * .06, .3)); },
+  level() { [0, 2, 4, 7].forEach((k, i) => bell(PENTA[k], .2, i * .09, .35)); },
+  hit() { noise(.3, 900, 120, .45, 0, .9); tone(220, 70, .35, 'sine', .45); tone(440, 110, .2, 'triangle', .15); },
+  claim() { [4, 6, 8, 10].forEach((k, i) => bell(PENTA[k], .2, i * .06, .35)); },
+  click() { tone(1100, 700, .045, 'sine', .22, 0, 'ui'); noise(.025, 3000, 2000, .09, 0, 2, 'ui'); },
+  pop() { tone(500, 1200, .07, 'sine', .22, 0, 'ui'); },
 };
-function vibrate(ms) { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) { /* nicht unterstützt */ } }
+function vibrate(ms) { if (!settings.vib) return; try { navigator.vibrate && navigator.vibrate(ms); } catch (e) { /* nicht unterstützt */ } }
 
 /* ---------- Bildschirm ---------- */
 let W = 0, H = 0, dpr = 1, px = 3, groundY = 0, viewW = 0, skyH = 0;
@@ -1150,7 +1368,8 @@ function resize() {
   canvas.width = Math.round(W * dpr);
   canvas.height = Math.round(H * dpr);
   const portrait = H > W * 1.1;
-  px = clamp(portrait ? W / 200 : Math.min(W / 230, H / 110), 1.5, 4.5);
+  // gleiches Sichtfeld auf Handy und PC: große Bildschirme zoomen hinein, statt weiter vorauszuschauen
+  px = clamp(portrait ? W / 200 : Math.min(W / 230, H / 105), 1.5, 12);
   groundY = Math.round(H * (portrait ? .66 : .8));
   viewW = W / px;
   skyH = groundY / px;
@@ -1166,6 +1385,8 @@ const save = {
   name: store.get('cj-name', ''),
   breed: store.get('cj-breed', 'weiss'),
   wear: store.get('cj-wear', {}),
+  levels: store.get('cj-levels', {}),
+  pet: store.get('cj-pet', null),
 };
 // Die weiße Katze hat jeder. Wer früher schon eine andere Farbe gewählt hatte, behält sie.
 if (save.breed === 'rot') save.breed = 'orange';
@@ -1176,21 +1397,41 @@ const OLD_SKIN_PRICES = { grau: 30, schwarz: 40, tiger: 60, siam: 80, gold: 150,
 for (const k of [...save.owned]) {
   if (k.startsWith('skin:')) { save.fish += OLD_SKIN_PRICES[k.slice(5)] || 0; save.owned.delete(k); }
 }
+for (const k of [...save.owned]) if (k.startsWith('up:')) { const id = k.slice(3); if (id !== 'triple') save.levels[id] = Math.max(save.levels[id] || 0, 1); save.owned.delete(k); }
+function reloadSave() {
+  Object.assign(save, { fish: store.get('cj-fish', 0), owned: new Set(store.get('cj-owned', [])), name: store.get('cj-name', ''), breed: store.get('cj-breed', 'weiss'), wear: store.get('cj-wear', {}), levels: store.get('cj-levels', {}), pet: store.get('cj-pet', null) });
+  cat = myCat();
+}
 function persist() {
   store.set('cj-fish', save.fish);
   store.set('cj-owned', [...save.owned]);
   store.set('cj-name', save.name);
   store.set('cj-breed', save.breed);
   store.set('cj-wear', save.wear);
+  store.set('cj-levels', save.levels);
+  store.set('cj-pet', save.pet);
+  try { syncAccount(); } catch (e) { /* beim allerersten Speichern sind die Konten noch nicht geladen */ }
 }
 persist();
 const has = (key) => save.owned.has(key);
+// Upgrades lassen sich dreimal verbessern
 const UPGRADES = [
-  { id: 'star', name: 'Regenbogen-Stern', price: 60, desc: 'Einmal pro Runde: statt zu verlieren wirst du 4 Sekunden unverwundbar.' },
-  { id: 'magnet', name: 'Fisch-Magnet', price: 40, desc: 'Fische in deiner Nähe fliegen zu dir.' },
-  { id: 'triple', name: 'Dreifachsprung', price: 90, desc: 'Ab Level 2 kannst du in der Luft zweimal nachspringen.' },
-  { id: 'lucky', name: 'Glückspfote', price: 120, desc: 'Mehr Fische auf der Strecke und bei Events.' },
+  { id: 'star', name: 'Regenbogen-Stern', prices: [600, 1800, 4500], levels: ['Rettet dich einmal pro Runde: 3 s unverwundbar.', 'Rettet dich einmal pro Runde: 5 s unverwundbar.', 'Rettet dich zweimal pro Runde: je 5 s unverwundbar.'] },
+  { id: 'magnet', name: 'Fisch-Magnet', prices: [500, 1500, 4000], levels: ['Fische in der Nähe fliegen zu dir.', 'Größere Reichweite.', 'Sehr große Reichweite.'] },
+  { id: 'lucky', name: 'Glückspfote', prices: [800, 2200, 5500], levels: ['+20 % Fische auf der Strecke und bei Events.', '+40 % Fische.', '+60 % Fische.'] },
+  { id: 'goldnase', name: 'Goldnase', prices: [700, 2000, 5000], levels: ['Goldfische (10 Fische wert) kommen öfter: 6 %.', 'Goldfische: 9 %.', 'Goldfische: 13 %.'] },
 ];
+const lvl = (id) => save.levels[id] || 0;
+// Summe der kleinen Cosmetic-Boni
+function bonus(kind) {
+  let v = 0;
+  for (const id of wearing()) { const c = COSMETICS.find((x) => x.id === id); if (c && c.bonus[0] === kind) v += c.bonus[1]; }
+  return v;
+}
+const MAGNET_R = [0, 36, 52, 70];
+const LUCK = [1, 1.2, 1.4, 1.6];
+const GOLD_CHANCE = [3, 6, 9, 13];
+const STAR_SEC = [0, 3, 5, 5];
 const wearing = () => Object.values(save.wear).filter(Boolean);
 const myCat = () => catSet(save.breed, wearing());
 const catName = () => save.name || 'Deine Katze';
@@ -1203,9 +1444,10 @@ const GRAV = 1250;
 const OVER_QUIPS = ['Erwischt!', 'Da stand jemand im Weg.', '{k} war knapp zu langsam.', 'Ups, Zusammenstoß!', 'Das nächste Mal klappt es.', 'Kirby hat nichts gesehen.'];
 
 let mode = 'home';
-const P = { x: 24, y: 0, vy: 0, grounded: true, jumps: 0, anim: 0, buffer: 0, blink: 0, airT: 0, land: 0, flip: 0, jumpPassed: false, landT: 0, checkReset: false, inv: 0, invTick: 0 };
-const FLIP_T = .42; // Dauer des Salto beim Sprung in der Luft
-const V = { lick: 0, blink: 0 };
+const P = { roll: 0, x: 24, y: 0, vy: 0, grounded: true, jumps: 0, anim: 0, buffer: 0, blink: 0, airT: 0, land: 0, flip: 0, jumpPassed: false, landT: 0, checkReset: false, inv: 0, invTick: 0 };
+const FLIP_T = .38; // Dauer der Streck-Bewegung beim Sprung in der Luft
+const ROLL_T = 2.2; // Dauer des Rückenrollens in der Lobby
+const V = { lick: 0, blink: 0, purr: 0 };
 let G = null;
 let shake = 0;
 const particles = [];
@@ -1213,10 +1455,11 @@ const floaters = [];
 
 function freshGame() {
   return {
-    speed: 140, dist: 0, scroll: G ? G.scroll : 0, score: 0, jumped: 0,
+    speed: 140, dist: 0, scroll: G ? G.scroll : 0, drift: G ? G.drift : 0, score: 0, jumped: 0,
     level: 1, objects: [], untilSpawn: 100, time: 0, combo: 0, bestCombo: 0,
-    hour: startHour(1), fish: 0, starUsed: false,
+    hour: startHour(1), fish: 0, starUsed: 0,
     event: null, eventIn: rand(13, 18), turbo: 1, streaks: [], nextStar: rand(28, 40),
+    fever: 0, eggs: G ? G.eggs : [], eggIn: rand(5, 10), bfly: null, flash: 0, slowmo: 0,
   };
 }
 G = freshGame();
@@ -1268,10 +1511,12 @@ function pattern(kind, x) {
   // Fische als Belohnung
   if (kind === 'glideHigh' && Math.random() < .6) {
     for (let i = 0; i < 3; i++) list.push(makeFish(x + 2 + i * 8, 3));
-  } else if (Math.random() < (has('up:lucky') ? .6 : .38)) {
+  } else if (Math.random() < .38 * LUCK[lvl('lucky')] * (1 + bonus('fish') / 100)) {
     const cx = x + w / 2 - 4;
     const base = Math.min(46, top + 8);
-    list.push(makeFish(cx - 11, base), makeFish(cx, base + 4), makeFish(cx + 11, base));
+    const mid = makeFish(cx, base + 4);
+    if (Math.random() * 100 < GOLD_CHANCE[lvl('goldnase')] + bonus('gold')) Object.assign(mid, { gold: true, spr: goldFishSpr });
+    list.push(makeFish(cx - 11, base), mid, makeFish(cx + 11, base));
   }
   return { list, w, extraGap };
 }
@@ -1294,14 +1539,17 @@ const EVENTS = {
   fishrain: { name: 'Fischregen!', sub: 'Schnell einsammeln', dur: 6 },
   wolle: { name: 'Wollknäuel!', sub: 'Rote Wollknäuel rollen heran. Spring drüber!', dur: 7, minLevel: 2 },
   turbo: { name: 'Turbo-Rausch!', sub: 'Keine Hindernisse, doppelte Fische', dur: 5 },
+  gold: { name: 'Goldfisch-Schwarm!', sub: 'Jeder Goldfisch ist 10 Fische wert', dur: 4, minLevel: 3 },
 };
-const noObstacles = () => G.event && (G.event.type === 'turbo' || G.event.type === 'wolle');
+const isEvening = () => { const h = ((G.hour % 24) + 24) % 24; return h >= 17.5 || h < 6; };
+const noObstacles = () => G.event && (G.event.type === 'turbo' || G.event.type === 'wolle' || G.event.type === 'gold');
 function startEvent() {
-  const pool = Object.keys(EVENTS).filter((k) => (EVENTS[k].minLevel || 1) <= G.level && (!G.lastEvent || k !== G.lastEvent));
+  // Sternschauer gibt es nur am Abend und in der Nacht
+  const pool = Object.keys(EVENTS).filter((k) => (EVENTS[k].minLevel || 1) <= G.level && (!G.lastEvent || k !== G.lastEvent) && (k !== 'stars' || isEvening()));
   const type = pick(pool);
   G.event = { type, t: 0, dur: EVENTS[type].dur, acc: 0 };
   G.lastEvent = type;
-  showBanner(EVENTS[type].name, EVENTS[type].sub, '', 2400);
+  showBanner(t(EVENTS[type].name), t(EVENTS[type].sub), '', 2400);
   sfx.event();
 }
 function endEvent() {
@@ -1314,7 +1562,7 @@ function tickEvent(dt) {
   const e = G.event;
   e.t += dt;
   e.acc += dt;
-  const luck = has('up:lucky') ? 1.4 : 1;
+  const luck = LUCK[lvl('lucky')] * (1 + bonus('fish') / 100);
   switch (e.type) {
     case 'stars':
       if (Math.random() < dt * 4) G.streaks.push({ x: rand(viewW * .3, viewW + 40), y: rand(skyH * .5, skyH * .95), life: .7 });
@@ -1333,6 +1581,9 @@ function tickEvent(dt) {
         shake = reduceMotion ? 0 : .15;
       }
       break;
+    case 'gold':
+      if (e.acc > .5) { e.acc = 0; G.objects.push(Object.assign(makeFish(viewW + 10, rand(10, 40)), { gold: true, spr: goldFishSpr })); }
+      break;
     case 'turbo':
       G.turbo = 1.5;
       if (e.acc > .22) { e.acc = 0; G.objects.push(makeFish(viewW + 10, Math.round(14 + Math.sin(e.t * 3) * 10))); }
@@ -1342,7 +1593,7 @@ function tickEvent(dt) {
 }
 
 /* ---------- Steuerung: nur Tippen / Klicken ---------- */
-const maxJumps = () => (G.level < 2 ? 1 : has('up:triple') ? 3 : 2);
+const maxJumps = () => (G.level < 2 ? 1 : 2);
 function jump(v) {
   if (P.checkReset) settleCombo();
   if (P.jumps === 1) P.jumpPassed = false;
@@ -1353,18 +1604,37 @@ function jump(v) {
   if (P.jumps >= 2) {
     P.flip = reduceMotion ? 0 : FLIP_T;
     sfx.jump2();
-    for (let i = 0; i < 8; i++) particles.push({ x: P.x + 12, y: P.y + 2, vx: rand(-60, 20), vy: rand(-40, 10), life: rand(.2, .4), c: '#ffffff' });
+    // kleiner Luftring unter den Pfoten, als würde sich die Katze von der Luft abstoßen
+    for (let i = 0; i < 12; i++) { const a = i / 12 * Math.PI * 2; particles.push({ x: P.x + 12 + Math.cos(a) * 3, y: P.y + 1, vx: Math.cos(a) * 55, vy: Math.sin(a) * 12 - 20, life: .28, c: 'rgba(255,255,255,.85)' }); }
   } else sfx.jump();
 }
 function press() {
   if (mode === 'paused') { resume(); return; }
   if (mode !== 'play') return;
-  if (P.grounded) { P.jumps = 1; jump(V0); }
+  if (P.grounded) { P.jumps = 1; jump(V0 * (1 + bonus('jump') / 100)); }
   else if (P.jumps < maxJumps()) { P.jumps++; jump(Math.max(V2, P.vy)); } // Sprung in der Luft ab Level 2
   else P.buffer = .14; // kurz vor der Landung getippt: Sprung merken
 }
 
+// Lobby: Katze und Kirby kann man antippen
+function lobbyTap(e) {
+  if (e.target.closest && e.target.closest('button, .modal, input')) return;
+  const wx = e.clientX / px, wy = (groundY - e.clientY) / px;
+  audioOn();
+  if (wx > P.x - 4 && wx < P.x + CAT_W + 4 && wy > P.y - 4 && wy < P.y + CAT_H + 6 && !G.outro) {
+    P.roll = ROLL_T; // dreht sich auf den Rücken
+    sfx.meow();
+    for (let i = 0; i < 6; i++) particles.push({ x: P.x + 13 + rand(-6, 6), y: P.y + 18, vx: rand(-10, 10), vy: rand(18, 30), life: rand(.8, 1.1), c: '#ff7fb0', heart: true });
+    return;
+  }
+  const K = kirbyBox();
+  if (wx > K.x0 && wx < K.x1 && wy > K.y0 && wy < K.y1) {
+    V.purr = 3.2; // Kirby schnurrt gemütlich
+    sfx.purr();
+  }
+}
 window.addEventListener('pointerdown', (e) => {
+  if (mode === 'home' && screens.home && !screens.home.hidden) { lobbyTap(e); return; }
   if (mode !== 'play' && mode !== 'paused') return;
   if (e.target.closest && e.target.closest('button, .modal')) return;
   e.preventDefault();
@@ -1425,7 +1695,7 @@ function closeAdmin() {
   if (mode === 'paused' && adminBack !== 'pause') show('pause');
 }
 function renderAdmin() {
-  $('adminWho').textContent = 'Dein Account: ' + (save.name || 'ohne Namen') + ' · ' + save.fish + ' Fische';
+  $('adminWho').textContent = t('Dein Account:') + ' ' + (save.name || t('ohne Namen')) + ' · ' + save.fish + ' ' + t('Fische');
 }
 $('adminLogin').addEventListener('submit', (e) => {
   e.preventDefault();
@@ -1448,7 +1718,7 @@ $('adminGive').addEventListener('click', () => {
   persist();
   updateHud(true);
   renderAdmin();
-  adminMsg(n + ' Fische vergeben.');
+  adminMsg(n + ' ' + t('Fische vergeben.'));
   sfx.fish();
 });
 $('adminWipe').addEventListener('click', () => {
@@ -1464,19 +1734,49 @@ $('adminWipe').addEventListener('click', () => {
 });
 $('adminClose').addEventListener('click', closeAdmin);
 
-const muteBtn = $('mute');
-function syncMute() {
-  muteBtn.setAttribute('aria-pressed', String(muted));
-  muteBtn.setAttribute('aria-label', muted ? 'Ton an' : 'Ton aus');
+/* ---------- Einstellungen: Lautstärke, Vibration, Sprache ---------- */
+let settingsBack = null;
+function renderSettings() {
+  for (const [id, k] of [['setVol', 'vol'], ['setSfx', 'sfx'], ['setUi', 'ui']]) {
+    $(id).value = settings[k];
+    $(id + 'Val').textContent = settings[k] + ' %';
+  }
+  $('setVibOn').classList.toggle('btn2', !settings.vib);
+  $('setVibOff').classList.toggle('btn2', settings.vib);
+  $('setLangDe').classList.toggle('btn2', settings.lang !== 'de');
+  $('setLangEn').classList.toggle('btn2', settings.lang !== 'en');
+  $('setWho').textContent = t('Angemeldet als') + ' ' + (save.name || '-');
 }
-muteBtn.addEventListener('click', () => {
-  muted = !muted;
-  store.set('katzosaurus-muted', muted);
-  syncMute();
+function openSettings() {
   audioOn();
-  if (!muted) sfx.meow();
-});
-syncMute();
+  if (mode === 'play') pause();
+  settingsBack = Object.keys(screens).find((k) => !screens[k].hidden && k !== 'settings') || null;
+  renderSettings();
+  show('settings');
+}
+function closeSettings() {
+  if (settingsBack && settingsBack !== 'home') show(settingsBack);
+  else show(mode === 'home' ? 'home' : mode === 'paused' ? 'pause' : null);
+}
+for (const [id, k] of [['setVol', 'vol'], ['setSfx', 'sfx'], ['setUi', 'ui']]) {
+  $(id).addEventListener('input', () => { settings[k] = Number($(id).value); applyVolume(); saveSettings(); $(id + 'Val').textContent = settings[k] + ' %'; });
+  $(id).addEventListener('change', () => { audioOn(); if (k === 'ui') sfx.click(); else sfx.fish(); });
+}
+$('setVibOn').addEventListener('click', () => { settings.vib = true; saveSettings(); renderSettings(); vibrate(40); });
+$('setVibOff').addEventListener('click', () => { settings.vib = false; saveSettings(); renderSettings(); });
+$('setLangDe').addEventListener('click', () => { setLang('de'); renderSettings(); });
+$('setLangEn').addEventListener('click', () => { setLang('en'); renderSettings(); });
+$('settingsBtn').addEventListener('click', openSettings);
+$('setLogout').addEventListener('click', () => { if (mode === 'home') logout(); else { show(null); goHome(); logout(); } });
+$('settings').querySelector('[data-close]').addEventListener('click', closeSettings);
+$('menuBtn').addEventListener('click', () => { if (mode === 'play') pause(); });
+// Jeder Knopf macht ein leises Klick-Geräusch
+document.addEventListener('click', (e) => {
+  const b = e.target.closest && e.target.closest('button');
+  if (!b) return;
+  audioOn();
+  sfx.click();
+}, true);
 
 document.addEventListener('visibilitychange', () => {
   if (document.hidden && mode === 'play') pause();
@@ -1495,10 +1795,10 @@ $('installBtn').addEventListener('click', async () => {
   if (!installEvent) {
     // Browser bietet keinen Installations-Dialog an: Anleitung zeigen
     $('installHelp').textContent = isIOS
-      ? 'In Safari unten auf den Teilen-Knopf tippen, dann "Zum Home-Bildschirm".'
+      ? t('In Safari unten auf den Teilen-Knopf tippen, dann "Zum Home-Bildschirm".')
       : isAndroid
-        ? 'Im Browser-Menü (die drei Punkte) auf "App installieren" oder "Zum Startbildschirm hinzufügen" tippen.'
-        : 'In der Adressleiste auf das Installieren-Symbol klicken oder im Browser-Menü "Cat Jumper installieren" wählen.';
+        ? t('Im Browser-Menü (die drei Punkte) auf "App installieren" oder "Zum Startbildschirm hinzufügen" tippen.')
+        : t('In der Adressleiste auf das Installieren-Symbol klicken oder im Browser-Menü "Kirbys Alm installieren" wählen.');
     $('installHelp').hidden = !$('installHelp').hidden;
     return;
   }
@@ -1528,7 +1828,7 @@ async function keepAwake() {
 
 
 /* ---------- Ablauf ---------- */
-const screens = { admin: $('admin'), home: $('home'), setup: $('setup'), shop: $('shop'), inv: $('inv'), pause: $('pause'), over: $('over') };
+const screens = { missions: $('missions'), settings: $('settings'), admin: $('admin'), home: $('home'), setup: $('setup'), shop: $('shop'), inv: $('inv'), pause: $('pause'), over: $('over') };
 function show(name) { for (const k in screens) screens[k].hidden = k !== name; }
 let bannerTimer = 0;
 
@@ -1542,9 +1842,11 @@ function showBanner(title, name, tip, ms = 2600) {
   clearTimeout(bannerTimer);
   bannerTimer = setTimeout(() => b.classList.remove('show'), ms);
 }
+// Statt Leveln gibt es Meter: an bestimmten Marken ändert sich die Strecke, das zeigt ein kurzes Banner
 function showLevelBanner(n) {
   const L = levelInfo(n);
-  showBanner('Level ' + n, L.name + ' · ' + fmtClock(startHour(n)) + ' Uhr', L.tip);
+  const where = t(L.name) + ' · ' + fmtClock(startHour(n)) + (settings.lang === 'en' ? '' : ' Uhr');
+  showBanner(n === 1 ? t("Los geht's!") : L.at + ' m', where, L.tip ? t(L.tip) : '');
 }
 
 function goHome(smooth = false) {
@@ -1552,7 +1854,7 @@ function goHome(smooth = false) {
   mode = 'home';
   G = freshGame();
   const homeX = Math.round(viewW * .42);
-  Object.assign(P, { x: smooth ? was.x : homeX, y: 0, vy: 0, grounded: true, jumps: 0, buffer: 0, airT: 0, land: 0, flip: 0, inv: 0, jumpPassed: false, checkReset: false });
+  Object.assign(P, { death: null, roll: 0, x: smooth ? was.x : homeX, y: 0, vy: 0, grounded: true, jumps: 0, buffer: 0, airT: 0, land: 0, flip: 0, inv: 0, jumpPassed: false, checkReset: false });
   const toy = yarnSpr[4];
   const T = { type: 'toy', kind: 'yarn', spr: toy, x: P.x + 30, y: 0, w: toy.w, h: toy.h, vx: 40, rot: 0, bob: 0, wait: 1.2, passed: true };
   if (smooth) {
@@ -1570,6 +1872,7 @@ function goHome(smooth = false) {
   document.body.classList.add('at-home');
   $('banner').classList.remove('show');
   show('home');
+  if (typeof updateMissionDot === 'function') updateMissionDot();
   updateHud(true);
 }
 function startGame() {
@@ -1579,7 +1882,8 @@ function startGame() {
   G = freshGame();
   if (toy) G.objects.push(toy); // das Wollknäuel bleibt liegen und rollt aus dem Bild
   G.intro = { t: 0, dur: 1.1, from: fromX };
-  Object.assign(P, { x: fromX, y: 0, vy: 0, grounded: true, jumps: 0, buffer: 0, airT: 0, land: 0, flip: 0, inv: 0, jumpPassed: false, checkReset: false });
+  G.bfly = { t: 0, x: fromX + 25, y: 15 }; // der Grund zum Loslaufen
+  Object.assign(P, { death: null, roll: 0, x: fromX, y: 0, vy: 0, grounded: true, jumps: 0, buffer: 0, airT: 0, land: 0, flip: 0, inv: 0, jumpPassed: false, checkReset: false });
   particles.length = 0;
   floaters.length = 0;
   mode = 'play';
@@ -1590,6 +1894,8 @@ function startGame() {
     for (const k in screens) if (k !== 'home') screens[k].hidden = true;
   } else show(null);
   showLevelBanner(1);
+  $('bTip').textContent = t('Ein Schmetterling! Hinterher!');
+  $('bTip').hidden = false;
   keepAwake();
   updateHud(true);
 }
@@ -1601,9 +1907,11 @@ $('againBtn').addEventListener('click', () => { audioOn(); if (mode === 'over') 
 $('lobbyBtn').addEventListener('click', () => { if (mode === 'over') { sfx.whoosh(); goHome(true); } });
 $('pauseLobbyBtn').addEventListener('click', () => { if (mode === 'paused') { sfx.whoosh(); goHome(true); } });
 $('resumeBtn').addEventListener('click', () => { if (mode === 'paused') resume(); });
+$('pauseSettingsBtn').addEventListener('click', () => openSettings());
 $('shopBtn').addEventListener('click', () => { audioOn(); renderShop(); show('shop'); });
 $('invBtn').addEventListener('click', () => { audioOn(); renderInv(); show('inv'); });
-document.querySelectorAll('[data-close]').forEach((b) => b.addEventListener('click', () => { if (mode === 'home') show('home'); }));
+$('missionsBtn').addEventListener('click', () => { audioOn(); renderMissions(); show('missions'); });
+document.querySelectorAll('[data-close]').forEach((b) => { if (!b.closest('#settings')) b.addEventListener('click', () => { if (mode === 'home') show('home'); }); });
 
 function levelUp() {
   G.level++;
@@ -1614,7 +1922,7 @@ function levelUp() {
 
 function startInvincible(sec, title) {
   P.inv = sec;
-  showBanner(title, 'Unverwundbar! Renn einfach durch', '', 1800);
+  showBanner(t(title), t('Unverwundbar! Renn einfach durch'), '', 1800);
   sfx.power();
 }
 // Mit Regenbogen-Kraft wird jedes Hindernis einfach weggeschleudert
@@ -1629,27 +1937,55 @@ function knock(o) {
   addFish(1, o.x + o.w / 2, o.y + o.h);
 }
 
+const meters = () => G.score; // 1 Meter = 8 Pixel Strecke
+// Sturz: Zeitlupe, Blitz, die Katze wird hochgeschleudert, dreht sich, landet mit Staubwolke und sieht Sterne
 function gameOver(o) {
   mode = 'over';
-  shake = reduceMotion ? 0 : .35;
+  shake = reduceMotion ? 0 : .5;
+  G.slowmo = reduceMotion ? 0 : .55;
+  G.flash = reduceMotion ? 0 : 1;
+  P.death = { t: 0, vy: 260, vx: -40, spin: 0, landed: false };
+  P.grounded = false;
   sfx.hit();
-  vibrate([60, 40, 120]);
-  $('quip').textContent = pick(OVER_QUIPS).replace('{k}', catName());
+  vibrate([80, 40, 160]);
+  for (let i = 0; i < 26; i++) {
+    const a = rand(0, Math.PI * 2), v = rand(50, 160);
+    particles.push({ x: P.x + 18, y: P.y + 10, vx: Math.cos(a) * v, vy: Math.sin(a) * v + 40, life: rand(.35, .8), c: pick(['#ffffff', '#fff6b0', '#ffd43b', '#ff9f43']) });
+  }
+  $('quip').textContent = t(pick(OVER_QUIPS)).replace('{k}', catName());
+  $('rMeters').textContent = meters();
   $('rFish').textContent = G.fish;
-  $('rLevel').textContent = G.level;
   $('rJumped').textContent = G.jumped;
-  $('rCombo').textContent = G.bestCombo + 'x';
   $('banner').classList.remove('show');
+  if (typeof missionRunEnd === 'function') missionRunEnd();
   updateHud(true);
-  setTimeout(() => { if (mode === 'over') show('over'); }, 420);
+  setTimeout(() => { if (mode === 'over') show('over'); }, 1600);
+}
+function tickDeath(dt) {
+  const D = P.death;
+  if (!D) return;
+  D.t += dt;
+  if (G.flash > 0) G.flash = Math.max(0, G.flash - dt * 2.5);
+  if (D.landed) return;
+  D.vy -= GRAV * .75 * dt;
+  P.y += D.vy * dt;
+  P.x = Math.max(4, P.x + D.vx * dt);
+  D.spin += dt * 11;
+  if (P.y <= 0 && D.t > .1) {
+    P.y = 0; D.landed = true; D.spin = 0;
+    shake = reduceMotion ? 0 : .25;
+    sfx.land();
+    for (let i = 0; i < 16; i++) particles.push({ x: P.x + rand(2, 26), y: 1, vx: rand(-70, 70), vy: rand(20, 70), life: rand(.3, .6), c: 'rgba(240,235,225,.9)' });
+  }
 }
 
-function addFish(n, x, y) {
+function addFish(n, x, y, gold = false) {
   G.fish += n;
   save.fish += n;
   persist();
-  sfx.fish();
-  floaters.push({ text: '+' + n, x, y, t: .8 });
+  if (gold) sfx.golden(); else sfx.fish();
+  floaters.push({ text: '+' + n, x, y, t: gold ? 1.2 : .8, gold });
+  if (typeof missionProgress === 'function') missionProgress('fish', n);
   const box = $('fishBox');
   box.classList.remove('bump'); void box.offsetWidth; box.classList.add('bump');
 }
@@ -1661,14 +1997,22 @@ function cheer(gap) {
   G.combo++;
   G.bestCombo = Math.max(G.bestCombo, G.combo);
   let [, word, color] = CHEERS.find(([g]) => gap < g);
-  if (G.combo % 10 === 0) { word = 'Legendär!'; color = '#ff55ff'; }
+  if (G.combo % 10 === 0) {
+    word = 'Legendär!'; color = '#ff55ff';
+    G.fever = 6; // Fisch-Fieber: 6 Sekunden doppelte Fische
+    showBanner(t('Fisch-Fieber!'), t('6 Sekunden doppelte Fische'), '', 1800);
+    sfx.power();
+  }
+  word = t(word);
+  if (typeof missionProgress === 'function') missionProgress('combo', G.combo);
   sfx.combo(G.combo);
   for (let i = 0; i < 14; i++) {
     const a = rand(0, Math.PI * 2), v = rand(40, 110);
     particles.push({ x: P.x + 14, y: P.y + 10, vx: Math.cos(a) * v, vy: Math.sin(a) * v + 30, life: rand(.3, .6), c: color });
   }
   let mult = G.combo + 'x';
-  if (G.combo % 5 === 0) { addFish(2, P.x + 14, P.y + 22); mult += '  +2 Fische'; } // alle 5 in Serie gibt es Fische
+  if (G.combo % 5 === 0) { addFish(2, P.x + 14, P.y + 22); mult += '  +2 ' + t('Fische'); } // alle 5 in Serie gibt es Fische
+  else if (gap < 4) { addFish(1, P.x + 14, P.y + 22); mult += '  +1 ' + t('knapp!'); } // ganz knapp drüber: Bonus-Fisch
   const el = $('combo');
   // rechts oben neben der Katze, damit man nicht vom Spiel wegschauen muss
   el.style.left = Math.round(Math.min(W - 150, (P.x + CAT_W + 2) * px)) + 'px';
@@ -1690,10 +2034,11 @@ function settleCombo() {
 let hudCache = '';
 function updateHud(force) {
   const clock = fmtClock(G.hour);
-  const key = save.fish + '|' + G.jumped + '|' + G.level + '|' + clock;
+  const key = save.fish + '|' + G.score + '|' + clock;
   if (!force && key === hudCache) return;
   hudCache = key;
   $('fish').textContent = save.fish;
+  $('meters').textContent = G.score + ' m';
 }
 
 /* ---------- Shop und Inventar ---------- */
@@ -1728,49 +2073,114 @@ function shopMsg(text) {
   clearTimeout(msgTimer);
   msgTimer = setTimeout(() => { m.hidden = true; }, 2600);
 }
+// Jeden Tag wechseln die vier Cosmetics im Shop (gleich für alle, abhängig vom Datum)
+function dayNumber() { const d = new Date(); return Math.floor((d.getTime() - d.getTimezoneOffset() * 60000) / 86400000); }
+function seeded(seed) { return () => { seed = (seed + 0x6d2b79f5) | 0; let x = Math.imul(seed ^ (seed >>> 15), 1 | seed); x = (x + Math.imul(x ^ (x >>> 7), 61 | x)) ^ x; return ((x ^ (x >>> 14)) >>> 0) / 4294967296; }; }
+function dailyCosmetics() {
+  const r = seeded(dayNumber() * 7919);
+  const pool = COSMETICS.slice();
+  const out = [];
+  while (out.length < 4 && pool.length) out.push(pool.splice(Math.floor(r() * pool.length), 1)[0]);
+  return out;
+}
+function untilMidnight() {
+  const d = new Date(), m = new Date(d); m.setHours(24, 0, 0, 0);
+  const min = Math.ceil((m - d) / 60000);
+  return Math.floor(min / 60) + ' h ' + (min % 60) + ' min';
+}
+const bonusText = (c) => BONUS_TEXT[c.bonus[0]](c.bonus[1]);
+function shopCard(o) {
+  const card = el('div', 'card');
+  const prev = el('div', 'prev');
+  prev.appendChild(o.prev());
+  card.append(prev, el('p', 'name', o.name));
+  if (o.tag) card.appendChild(el('span', 'tag', o.tag));
+  card.appendChild(el('p', 'desc', o.desc));
+  const btn = el('button', 'btn');
+  btn.type = 'button';
+  if (o.price !== undefined) {
+    btn.innerHTML = FISH_HTML + ' ' + o.price;
+    btn.setAttribute('aria-label', o.name + ' ' + t('kaufen für') + ' ' + o.price + ' ' + t('Fische'));
+    if (save.fish < o.price) btn.classList.add('poor');
+  } else {
+    btn.textContent = o.label;
+    if (o.alt) btn.classList.add('btn2');
+    btn.disabled = !!o.disabled;
+  }
+  btn.addEventListener('click', o.onClick);
+  card.appendChild(btn);
+  return card;
+}
+function pay(price, name) {
+  if (save.fish < price) {
+    shopMsg(t('Dir fehlen noch') + ' ' + (price - save.fish) + ' ' + t('Fische. Sammle welche im Spiel!'));
+    sfx.no();
+    return false;
+  }
+  save.fish -= price;
+  sfx.buy();
+  updateHud(true);
+  return true;
+}
 function renderShop() {
   $('shopWallet').textContent = save.fish;
-  $('tabUp').setAttribute('aria-selected', String(shopTab === 'up'));
-  $('tabCats').setAttribute('aria-selected', String(shopTab === 'cats'));
-  $('tabCos').setAttribute('aria-selected', String(shopTab === 'cos'));
+  for (const [id, k] of [['tabUp', 'up'], ['tabCats', 'cats'], ['tabCos', 'cos'], ['tabPets', 'pets']]) $(id).setAttribute('aria-selected', String(shopTab === k));
   const list = $('shopList');
   list.textContent = '';
-  const items = shopTab === 'up'
-    ? UPGRADES.map((u) => ({ ...u, key: 'up:' + u.id, prev: () => iconCanvas(ICONS[u.id]) }))
-    : shopTab === 'cats'
-      ? BREEDS.filter((b) => b.price > 0).map((b) => ({ ...b, key: 'cat:' + b.id, cat: true, desc: b.desc + ' ' + b.hair + '.', prev: () => catPreview([], b.id) }))
-      : COSMETICS.map((c) => ({ ...c, key: 'cos:' + c.id, prev: () => catPreview([c.id], 'weiss') }));
-  for (const it of items) {
-    const card = el('div', 'card');
-    const prev = el('div', 'prev');
-    prev.appendChild(it.prev());
-    const btn = el('button', 'btn btn-buy');
-    btn.type = 'button';
-    if (it.cat && has(it.key)) {
-      // eigene Katzen kann man direkt im Shop auswählen
-      const on = save.breed === it.id;
-      btn.textContent = on ? 'Ausgewählt' : 'Auswählen';
-      btn.classList.add('btn2');
-      btn.disabled = on;
-      btn.addEventListener('click', () => { save.breed = it.id; cat = myCat(); persist(); sfx.meow(); renderShop(); });
-    } else if (it.slot && has(it.key)) {
-      // gekaufte Cosmetics direkt im Shop an- und ausziehen
-      const on = wearing().includes(it.id);
-      btn.textContent = on ? 'Ausziehen' : 'Anziehen';
-      if (!on) btn.classList.add('btn2');
-      btn.addEventListener('click', () => { wear(it, !on); sfx.meow(); shopMsg(it.name + (on ? ' ausgezogen.' : ' angezogen!')); renderShop(); });
-    } else if (has(it.key)) {
-      btn.textContent = 'Gekauft';
-      btn.disabled = true;
-    } else {
-      btn.innerHTML = FISH_HTML + ' ' + it.price;
-      btn.setAttribute('aria-label', it.name + ' kaufen für ' + it.price + ' Fische');
-      if (save.fish < it.price) btn.classList.add('poor');
-      btn.addEventListener('click', () => buy(it));
+  $('shopNote').hidden = shopTab !== 'cos';
+  if (shopTab === 'cos') $('shopNote').textContent = t('Heute im Angebot. Neue Auswahl in') + ' ' + untilMidnight() + '.';
+  const cards = [];
+  if (shopTab === 'up') {
+    for (const u of UPGRADES) {
+      const L = lvl(u.id);
+      const max = L >= u.prices.length;
+      cards.push(shopCard({
+        name: t(u.name), tag: t('Stufe') + ' ' + L + ' / 3', prev: () => iconCanvas(ICONS[u.id]),
+        desc: max ? t(u.levels[2]) : (L ? t('Nächste Stufe:') + ' ' : '') + t(u.levels[L]),
+        price: max ? undefined : u.prices[L], label: t('Maximal'), disabled: max,
+        onClick: () => { if (max || !pay(u.prices[L])) return; save.levels[u.id] = L + 1; persist(); shopMsg(t(u.name) + ': ' + t('Stufe') + ' ' + (L + 1) + '!'); renderShop(); },
+      }));
     }
-    card.append(prev, el('p', 'name', it.name), el('p', 'desc', it.desc), btn);
-    list.appendChild(card);
+  } else if (shopTab === 'cats') {
+    for (const b of BREEDS.filter((x) => x.price > 0)) {
+      const own = has('cat:' + b.id), on = save.breed === b.id;
+      cards.push(shopCard({
+        name: t(b.name), prev: () => catPreview([], b.id), desc: t(b.desc) + ' ' + t(b.hair) + '.',
+        price: own ? undefined : b.price, label: on ? t('Ausgewählt') : t('Auswählen'), alt: !on, disabled: on,
+        onClick: () => {
+          if (!own) { if (!pay(b.price)) return; save.owned.add('cat:' + b.id); shopMsg(t(b.name) + ' ' + t('gekauft! Du spielst jetzt mit dieser Katze.')); }
+          save.breed = b.id; cat = myCat(); persist(); if (own) sfx.meow(); renderShop();
+        },
+      }));
+    }
+  } else if (shopTab === 'cos') {
+    for (const c of dailyCosmetics()) {
+      const own = has('cos:' + c.id), on = wearing().includes(c.id);
+      cards.push(shopCard({
+        name: t(c.name), tag: bonusText(c), prev: () => catPreview([c.id], 'weiss'), desc: t(c.desc),
+        price: own ? undefined : c.price, label: on ? t('Ausziehen') : t('Anziehen'), alt: !on,
+        onClick: () => {
+          if (!own) { if (!pay(c.price)) return; save.owned.add('cos:' + c.id); wear(c, true); shopMsg(t(c.name) + ' ' + t('gekauft und angezogen!')); }
+          else { wear(c, !on); sfx.meow(); }
+          persist(); renderShop();
+        },
+      }));
+    }
+  } else {
+    for (const pet of PETS) {
+      const own = has('pet:' + pet.id), on = save.pet === pet.id;
+      cards.push(shopCard({
+        name: t(pet.name), tag: t(pet.tag), prev: () => iconCanvas(petSpr[pet.id][0], 3), desc: t(pet.desc),
+        price: own ? undefined : pet.price, label: on ? t('Dabei') : t('Mitnehmen'), alt: !on,
+        onClick: () => {
+          if (!own) { if (!pay(pet.price)) return; save.owned.add('pet:' + pet.id); save.pet = pet.id; shopMsg(t(pet.name) + ' ' + t('läuft jetzt mit dir!')); }
+          else save.pet = on ? null : pet.id;
+          persist(); renderShop();
+        },
+      }));
+    }
   }
+  cards.forEach((c) => list.appendChild(c));
 }
 function wear(c, on) {
   if (on) save.wear[c.slot] = c.id;
@@ -1778,26 +2188,11 @@ function wear(c, on) {
   cat = myCat();
   persist();
 }
-function buy(it) {
-  if (has(it.key)) return;
-  if (save.fish < it.price) {
-    shopMsg('Dir fehlen noch ' + (it.price - save.fish) + ' Fische. Sammle welche im Spiel!');
-    sfx.no();
-    return;
-  }
-  save.fish -= it.price;
-  save.owned.add(it.key);
-  if (it.cat) { save.breed = it.id; cat = myCat(); shopMsg(it.name + ' gekauft! Du spielst jetzt mit dieser Katze.'); }
-  else if (it.slot) { wear(it, true); shopMsg(it.name + ' gekauft und angezogen!'); }
-  else shopMsg(it.name + ' gekauft! Es ist ab jetzt immer aktiv.');
-  persist();
-  sfx.buy();
-  renderShop();
-  updateHud(true);
-}
 $('tabUp').addEventListener('click', () => { shopTab = 'up'; renderShop(); });
 $('tabCats').addEventListener('click', () => { shopTab = 'cats'; renderShop(); });
 $('tabCos').addEventListener('click', () => { shopTab = 'cos'; renderShop(); });
+$('tabPets').addEventListener('click', () => { shopTab = 'pets'; renderShop(); });
+const RENAME_PRICE = 1000;
 function renderInv() {
   $('invWallet').textContent = save.fish;
   // deine Katze
@@ -1805,64 +2200,170 @@ function renderInv() {
   me.textContent = '';
   const who = el('div', 'who');
   const breed = BREEDS.find((b) => b.id === save.breed) || BREEDS[0];
-  who.append(el('p', 'name', catName()), el('p', 'desc', breed.name + ' · ' + breed.hair));
-  const change = el('button', 'btn btn2', 'Namen ändern');
+  who.append(el('p', 'name', catName()), el('p', 'desc', t(breed.name) + ' · ' + t(breed.hair)));
+  const change = el('button', 'btn btn2');
   change.type = 'button';
-  change.addEventListener('click', () => openSetup(true));
+  change.innerHTML = t('Namen ändern') + ' · ' + FISH_HTML + ' ' + RENAME_PRICE;
+  change.addEventListener('click', () => {
+    if (save.fish < RENAME_PRICE) { invMsg(t('Namen ändern kostet') + ' ' + RENAME_PRICE + ' ' + t('Fische. Dir fehlen noch') + ' ' + (RENAME_PRICE - save.fish) + '.'); sfx.no(); return; }
+    openSetup(true);
+  });
   who.appendChild(change);
   me.append(catPreview(wearing(), save.breed, 4), who);
-  // Katzen (Farben)
-  const kl = $('invCats');
-  kl.textContent = '';
-  for (const b of BREEDS.filter((x) => x.price === 0 || has('cat:' + x.id))) {
+  const grid = (id, items, empty) => {
+    const g = $(id);
+    g.textContent = '';
+    if (!items.length) g.appendChild(el('p', 'empty', empty));
+    items.forEach((c) => g.appendChild(c));
+  };
+  grid('invCats', BREEDS.filter((x) => x.price === 0 || has('cat:' + x.id)).map((b) => {
     const on = save.breed === b.id;
-    const card = el('div', 'card');
-    const prev = el('div', 'prev');
-    prev.appendChild(catPreview([], b.id));
-    const btn = el('button', 'btn' + (on ? '' : ' btn2'), on ? 'Ausgewählt' : 'Auswählen');
-    btn.type = 'button';
-    btn.disabled = on;
-    btn.addEventListener('click', () => { save.breed = b.id; cat = myCat(); persist(); sfx.meow(); renderInv(); });
-    card.append(prev, el('p', 'name', b.name), el('p', 'desc', b.hair), btn);
-    kl.appendChild(card);
-  }
-  // Upgrades
-  const up = $('invUpgrades');
-  up.textContent = '';
-  const owned = UPGRADES.filter((u) => has('up:' + u.id));
-  if (!owned.length) up.appendChild(el('p', 'empty', 'Noch keine Upgrades. Im Shop gibt es welche für Fische.'));
-  for (const u of owned) {
-    const card = el('div', 'card');
-    const prev = el('div', 'prev');
-    prev.appendChild(iconCanvas(ICONS[u.id]));
-    card.append(prev, el('p', 'name', u.name), el('p', 'desc', u.desc), el('span', 'badge', 'Aktiv'));
-    up.appendChild(card);
-  }
-  // Cosmetics
-  const cl = $('invCos');
-  cl.textContent = '';
-  const mine = COSMETICS.filter((c) => has('cos:' + c.id));
-  if (!mine.length) cl.appendChild(el('p', 'empty', 'Noch keine Cosmetics. Hüte, Ketten, Pullis und mehr gibt es im Shop.'));
-  for (const c of mine) {
+    return shopCard({ name: t(b.name), prev: () => catPreview([], b.id), desc: t(b.hair), label: on ? t('Ausgewählt') : t('Auswählen'), alt: !on, disabled: on,
+      onClick: () => { save.breed = b.id; cat = myCat(); persist(); sfx.meow(); renderInv(); } });
+  }), '');
+  grid('invUpgrades', UPGRADES.filter((u) => lvl(u.id)).map((u) => shopCard({
+    name: t(u.name), tag: t('Stufe') + ' ' + lvl(u.id) + ' / 3', prev: () => iconCanvas(ICONS[u.id]), desc: t(u.levels[lvl(u.id) - 1]), label: t('Aktiv'), disabled: true, onClick: () => {},
+  })), t('Noch keine Upgrades. Im Shop gibt es welche für Fische.'));
+  grid('invPets', PETS.filter((p) => has('pet:' + p.id)).map((pet) => {
+    const on = save.pet === pet.id;
+    return shopCard({ name: t(pet.name), tag: t(pet.tag), prev: () => iconCanvas(petSpr[pet.id][0], 3), desc: t(pet.desc), label: on ? t('Dabei') : t('Mitnehmen'), alt: !on,
+      onClick: () => { save.pet = on ? null : pet.id; persist(); sfx.meow(); renderInv(); } });
+  }), t('Noch kein Begleiter. Im Shop gibt es welche.'));
+  grid('invCos', COSMETICS.filter((c) => has('cos:' + c.id)).map((c) => {
     const on = save.wear[c.slot] === c.id;
-    const card = el('div', 'card');
-    const prev = el('div', 'prev');
-    prev.appendChild(catPreview([c.id], 'weiss'));
-    const btn = el('button', 'btn' + (on ? '' : ' btn2'), on ? 'Ausziehen' : 'Anziehen');
-    btn.type = 'button';
-    btn.addEventListener('click', () => { wear(c, !on); sfx.buy(); renderInv(); });
-    card.append(prev, el('p', 'name', c.name), el('p', 'desc', on ? 'Angezogen' : c.desc), btn);
-    cl.appendChild(card);
+    return shopCard({ name: t(c.name), tag: bonusText(c), prev: () => catPreview([c.id], 'weiss'), desc: on ? t('Angezogen') : t(c.desc), label: on ? t('Ausziehen') : t('Anziehen'), alt: !on,
+      onClick: () => { wear(c, !on); sfx.meow(); renderInv(); } });
+  }), t('Noch keine Cosmetics. Jeden Tag gibt es vier neue im Shop.'));
+}
+let invTimer = 0;
+function invMsg(text) { const m = $('invMsg'); m.textContent = text; m.hidden = false; clearTimeout(invTimer); invTimer = setTimeout(() => { m.hidden = true; }, 2800); }
+
+/* ---------- Tägliche Missionen und Login-Belohnung ---------- */
+const MISSION_TYPES = {
+  meters: { text: 'Lauf {n} m in einer Runde', ns: [300, 600, 1000], best: true },
+  fish: { text: 'Sammle heute {n} Fische', ns: [40, 90, 160] },
+  hurdle: { text: 'Überspring heute {n} Hindernisse', ns: [15, 35, 60] },
+  combo: { text: 'Schaffe eine {n}er-Serie', ns: [5, 8, 12], best: true },
+  runs: { text: 'Spiel heute {n} Runden', ns: [3, 5, 8] },
+  egg: { text: 'Entdecke heute {n} Easter Eggs im Hintergrund', ns: [1, 2, 3] },
+};
+const MISSION_REWARD = [150, 260, 420];
+const LOGIN_REWARD = [50, 80, 120, 160, 220, 300, 400];
+function todayMissions() {
+  const day = dayNumber();
+  let m = store.get('cj-missions', null);
+  if (!m || m.day !== day) {
+    const r = seeded(day * 104729 + 17);
+    const types = Object.keys(MISSION_TYPES);
+    const list = [];
+    while (list.length < 3) {
+      const type = types.splice(Math.floor(r() * types.length), 1)[0];
+      const k = Math.floor(r() * 3);
+      list.push({ type, n: MISSION_TYPES[type].ns[k], reward: MISSION_REWARD[k], prog: 0, claimed: false });
+    }
+    m = { day, list };
+    store.set('cj-missions', m);
   }
+  return m;
+}
+function loginState() {
+  const day = dayNumber();
+  const L = store.get('cj-login', { last: -1, streak: 0, claimed: -1 });
+  if (L.last !== day) { L.streak = L.last === day - 1 ? L.streak + 1 : 1; L.last = day; store.set('cj-login', L); }
+  return L;
+}
+function missionProgress(kind, v) {
+  const m = todayMissions();
+  let changed = false;
+  for (const x of m.list) {
+    if (x.type !== kind || x.claimed) continue;
+    const before = x.prog;
+    x.prog = MISSION_TYPES[kind].best ? Math.max(x.prog, v) : x.prog + v;
+    if (before < x.n && x.prog >= x.n) { changed = true; if (mode === 'play') showBanner(t('Mission geschafft!'), fillMission(x), '', 1800); }
+    if (x.prog !== before) changed = true;
+  }
+  if (changed) { store.set('cj-missions', m); updateMissionDot(); }
+}
+function missionRunEnd() { missionProgress('runs', 1); missionProgress('meters', meters()); }
+const fillMission = (x) => t(MISSION_TYPES[x.type].text).replace('{n}', x.n);
+function updateMissionDot() {
+  const m = todayMissions(), L = loginState();
+  const ready = L.claimed !== L.last || m.list.some((x) => !x.claimed && x.prog >= x.n);
+  $('missionsBtn').classList.toggle('has-dot', ready);
+}
+function renderMissions() {
+  $('missionsWallet').textContent = save.fish;
+  const box = $('missionList');
+  box.textContent = '';
+  const L = loginState();
+  const day = ((L.streak - 1) % 7) + 1, reward = LOGIN_REWARD[day - 1];
+  const done = L.claimed === L.last;
+  box.appendChild(shopCard({
+    name: t('Tägliche Belohnung'), tag: t('Tag') + ' ' + day + ' / 7', prev: () => iconCanvas(fishSpr, 4),
+    desc: t('Komm jeden Tag wieder, die Belohnung wird größer.') + ' +' + reward + ' ' + t('Fische'),
+    label: done ? t('Morgen wieder') : t('Abholen'), alt: done, disabled: done,
+    onClick: () => { const S = loginState(); if (S.claimed === S.last) return; S.claimed = S.last; store.set('cj-login', S); save.fish += reward; persist(); updateHud(true); sfx.claim(); renderMissions(); updateMissionDot(); },
+  }));
+  const m = todayMissions();
+  m.list.forEach((x, i) => {
+    const ok = x.prog >= x.n;
+    box.appendChild(shopCard({
+      name: fillMission(x), tag: Math.min(x.prog, x.n) + ' / ' + x.n, prev: () => iconCanvas(ok ? goldFishSpr : fishSpr, 4),
+      desc: t('Belohnung:') + ' +' + x.reward + ' ' + t('Fische'),
+      label: x.claimed ? t('Erledigt') : ok ? t('Abholen') : t('Läuft noch'), alt: !ok || x.claimed, disabled: x.claimed || !ok,
+      onClick: () => { const mm = todayMissions(), y = mm.list[i]; if (y.claimed || y.prog < y.n) return; y.claimed = true; store.set('cj-missions', mm); save.fish += y.reward; persist(); updateHud(true); sfx.claim(); renderMissions(); updateMissionDot(); },
+    }));
+  });
+  $('missionNote').textContent = t('Neue Missionen in') + ' ' + untilMidnight() + '.';
 }
 
-/* ---------- Katze einrichten: nur der Name (man startet immer mit der weißen Katze) ---------- */
-let setupFromInv = false;
+/* ---------- Konten: Name + Passwort ----------
+   Ohne Server liegen die Konten nur auf diesem Gerät. Passwörter werden nie im Klartext gespeichert,
+   sondern als PBKDF2-SHA-256-Hash (150 000 Runden) mit zufälligem Salz. */
+const ACC_KEYS = ['cj-fish', 'cj-owned', 'cj-name', 'cj-breed', 'cj-wear', 'cj-levels', 'cj-pet', 'cj-missions', 'cj-login'];
+const accounts = () => store.get('cj-accounts', {});
+const accKey = (n) => n.trim().toLowerCase();
+const toHex = (buf) => [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
+async function hashPassword(pw, saltHex) {
+  const salt = new Uint8Array(saltHex.match(/../g).map((h) => parseInt(h, 16)));
+  if (window.crypto && crypto.subtle) {
+    const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveBits']);
+    return toHex(await crypto.subtle.deriveBits({ name: 'PBKDF2', salt, iterations: 150000, hash: 'SHA-256' }, key, 256));
+  }
+  // Notlösung für sehr alte Browser ohne WebCrypto: einfacher, mehrfach gemischter Hash
+  let h = 2166136261 >>> 0;
+  const str = saltHex + pw;
+  for (let r = 0; r < 20000; r++) for (let i = 0; i < str.length; i++) h = Math.imul(h ^ str.charCodeAt(i) ^ r, 16777619) >>> 0;
+  return 'x' + h.toString(16);
+}
+function snapshot() { const d = {}; for (const k of ACC_KEYS) { const v = store.get(k, undefined); if (v !== undefined) d[k] = v; } return d; }
+function loadSnapshot(d) { for (const k of ACC_KEYS) { try { localStorage.removeItem(k); } catch (e) { /* egal */ } } for (const k in d) store.set(k, d[k]); }
+// aktuellen Spielstand ins eigene Konto zurückschreiben (bei jedem Speichern)
+function syncAccount() {
+  const key = store.get('cj-active', null);
+  if (!key) return;
+  const all = accounts();
+  if (!all[key]) return;
+  all[key].data = snapshot();
+  store.set('cj-accounts', all);
+}
+function logout() {
+  syncAccount();
+  loadSnapshot({});
+  store.set('cj-active', null);
+  location.reload();
+}
+
+/* ---------- Katze einrichten: Name + Passwort (neues Konto oder anmelden) ---------- */
+let setupFromInv = false, setupBusy = false;
 function openSetup(fromInv) {
   setupFromInv = fromInv;
   document.body.classList.toggle('first-run', !fromInv);
-  $('setupTitle').textContent = fromInv ? 'Deine Katze' : 'Willkommen!';
+  $('setupTitle').textContent = fromInv ? t('Deine Katze') : t('Willkommen!');
+  $('setupNote').textContent = fromInv ? t('Namen ändern kostet') + ' ' + RENAME_PRICE + ' ' + t('Fische.') : t('Neuer Name: es wird ein Konto erstellt. Bekannter Name: du wirst angemeldet.');
   $('catName').value = save.name;
+  $('catPass').value = '';
+  $('passRow').hidden = fromInv;
   $('setupMsg').hidden = true;
   $('setupBack').hidden = !fromInv;
   const prev = $('setupCat');
@@ -1874,19 +2375,138 @@ function setupMsg(text) {
   $('setupMsg').textContent = text;
   $('setupMsg').hidden = false;
 }
-$('setupNext').addEventListener('click', () => {
+$('setupNext').addEventListener('click', async () => {
   audioOn();
+  if (setupBusy) return;
   const name = $('catName').value.trim().slice(0, 12);
-  if (!name) { setupMsg('Gib deiner Katze bitte einen Namen.'); $('catName').focus(); sfx.no(); return; }
-  save.name = name;
-  persist();
-  $('catName').blur();
+  if (!name) { setupMsg(t('Gib deiner Katze bitte einen Namen.')); $('catName').focus(); sfx.no(); return; }
+  if (setupFromInv) { // umbenennen: kostet Fische, das Konto zieht mit um
+    if (name === save.name) { renderInv(); show('inv'); return; }
+    const all = accounts(), oldKey = store.get('cj-active', null), newKey = accKey(name);
+    if (newKey !== oldKey && all[newKey]) { setupMsg(t('Diesen Namen gibt es auf diesem Gerät schon.')); sfx.no(); return; }
+    if (save.fish < RENAME_PRICE) { setupMsg(t('Namen ändern kostet') + ' ' + RENAME_PRICE + ' ' + t('Fische.')); sfx.no(); return; }
+    save.fish -= RENAME_PRICE;
+    save.name = name;
+    if (oldKey && all[oldKey]) { all[newKey] = { ...all[oldKey], name }; if (newKey !== oldKey) delete all[oldKey]; store.set('cj-accounts', all); store.set('cj-active', newKey); }
+    persist();
+    updateHud(true);
+    sfx.buy();
+    renderInv(); show('inv');
+    return;
+  }
+  const pw = $('catPass').value;
+  if (pw.length < 4) { setupMsg(t('Das Passwort braucht mindestens 4 Zeichen.')); $('catPass').focus(); sfx.no(); return; }
+  setupBusy = true;
+  try {
+    const all = accounts(), key = accKey(name);
+    if (all[key]) { // anmelden
+      const h = await hashPassword(pw, all[key].salt);
+      if (h !== all[key].hash) { setupMsg(t('Falsches Passwort für') + ' ' + all[key].name + '.'); sfx.no(); return; }
+      const active = store.get('cj-active', null);
+      if (active !== key) {
+        syncAccount();
+        loadSnapshot(all[key].data || { 'cj-name': all[key].name });
+        store.set('cj-active', key);
+        location.reload();
+        return;
+      }
+    } else { // neues Konto
+      const salt = toHex(crypto.getRandomValues(new Uint8Array(16)));
+      const hash = await hashPassword(pw, salt);
+      const active = store.get('cj-active', null);
+      if (active && all[active]) { syncAccount(); loadSnapshot({}); reloadSave(); } // anderes Konto war aktiv: frisch anfangen
+      save.name = name;
+      persist();
+      all[key] = { name, salt, hash, data: snapshot() };
+      store.set('cj-accounts', all);
+      store.set('cj-active', key);
+    }
+  } finally { setupBusy = false; }
+  $('catName').blur(); $('catPass').blur();
   sfx.buy();
   document.body.classList.remove('first-run');
-  if (setupFromInv) { renderInv(); show('inv'); } else show('home');
+  updateHud(true);
+  show('home');
 });
 $('setupBack').addEventListener('click', () => { renderInv(); show('inv'); });
-$('catName').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('setupNext').click(); });
+$('catName').addEventListener('keydown', (e) => { if (e.key === 'Enter') { if (!$('passRow').hidden) $('catPass').focus(); else $('setupNext').click(); } });
+$('catPass').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('setupNext').click(); });
+
+Object.assign(EN, {
+  '+20 % Fische auf der Strecke und bei Events.': '+20 % fish on the track and in events.', '+40 % Fische.': '+40 % fish.', '+60 % Fische.': '+60 % fish.',
+  '6 Sekunden doppelte Fische': '6 seconds of double fish', 'Abholen': 'Claim', 'Aktiv': 'Active', 'Alle User löschen': 'Delete all users',
+  'Alle User löschen entfernt jeden Spielstand auf diesem Gerät, auch deinen eigenen. Danach startet das Spiel neu mit der Namensfrage.': 'Delete all users removes every save on this device, including your own. The game then restarts with the name screen.',
+  'Alle warten auf dich.': 'Everyone is waiting for you.', 'Almwiese': 'Alpine Meadow', 'Alpenglühen': 'Alpenglow', 'An': 'On', 'Angezogen': 'Wearing',
+  'Anmelden': 'Log in', 'Anziehen': 'Wear', 'App installieren': 'Install app', 'Aus': 'Off', 'Ausgewählt': 'Selected', 'Auswählen': 'Select', 'Ausziehen': 'Take off',
+  'Autsch!': 'Ouch!', 'Begleiter': 'Pets', 'Belohnung:': 'Reward:', 'Benutzer': 'User', 'Bergstiefel': 'Hiking boots', 'Blau mit weißem Zickzack.': 'Blue with a white zigzag.',
+  'Blumenkranz': 'Flower crown', 'Bringt alle 3 s einen Fisch': 'Fetches a fish every 3 s', 'Bringt alle 4,5 s einen Fisch': 'Fetches a fish every 4.5 s', 'Bringt alle 6 s einen Fisch': 'Fetches a fish every 6 s',
+  'Bunte Almblumen.': 'Colourful alpine flowers.', 'Cool bleiben auf der Alm.': 'Staying cool on the alp.', 'Da stand jemand im Weg.': 'Someone was in the way.', 'Dabei': 'With you',
+  'Das nächste Mal klappt es.': 'Next time you will make it.', 'Dein Account:': 'Your account:', 'Deine Fische': 'Your fish', 'Deine Katze': 'Your cat', 'Deine erste Katze.': 'Your first cat.',
+  'Der schnellste Fischfinder der Alm.': 'The fastest fish finder on the alp.', 'Dir fehlen noch': 'You still need', 'Ein Schmetterling! Hinterher!': 'A butterfly! After it!',
+  'Ein kleiner Spatz flattert über dir.': 'A little sparrow flutters above you.', 'Einstellungen': 'Settings', 'Endlos-Alm': 'Endless Alp',
+  'Entdecke heute {n} Easter Eggs im Hintergrund': 'Spot {n} easter eggs in the background today', 'Erledigt': 'Done', 'Erwischt!': 'Caught!', 'Es wird immer später': 'It keeps getting later',
+  'Fang die Sterne, jeder bringt einen Fisch': 'Catch the stars, each one gives a fish', 'Fertig': 'Done', 'Fest geschnürt für die Alm.': 'Laced up tight for the alp.', 'Fisch-Fieber!': 'Fish fever!',
+  'Fisch-Magnet': 'Fish magnet', 'Fische': 'fish', 'Fische in der Nähe fliegen zu dir.': 'Nearby fish fly to you.', 'Fische vergeben': 'Give fish', 'Fische vergeben.': 'fish given.', 'Fische.': 'fish.',
+  'Fische. Dir fehlen noch': 'fish. You still need', 'Fische. Sammle welche im Spiel!': 'fish. Collect some in the game!', 'Fischregen!': 'Fish rain!', 'Fliege': 'Bow tie',
+  'Fliegt jemand hoch, lauf unten durch': 'If someone flies high, run underneath', 'Fortsetzen': 'Continue', 'Für echte Almköniginnen. Glitzert beim Laufen.': 'For true alpine royalty. Sparkles while running.',
+  'Geben': 'Give', 'Gelbe Gläser gegen den Schnee.': 'Yellow lenses against the snow.', 'Gib deiner Katze bitte einen Namen.': 'Please give your cat a name.', 'Gleitschirm': 'Paragliders',
+  'Glänzt und glitzert beim Laufen.': 'Shines and sparkles while running.', 'Glöckchen': 'Little bell', 'Glückspfote': 'Lucky paw', 'Goldfisch-Schwarm!': 'Goldfish swarm!', 'Goldfische': 'goldfish',
+  'Goldfische (10 Fische wert) kommen öfter: 6 %.': 'Goldfish (worth 10 fish) appear more often: 6 %.', 'Goldfische: 13 %.': 'Goldfish: 13 %.', 'Goldfische: 9 %.': 'Goldfish: 9 %.',
+  'Goldkatze': 'Golden cat', 'Goldkette': 'Gold chain', 'Goldnase': 'Gold nose', 'Grau getigert': 'Grey tabby', 'Grau mit dunklen Streifen.': 'Grey with dark stripes.',
+  'Graue Filzpantoffeln, schön warm.': 'Grey felt slippers, nice and warm.', 'Größere Reichweite.': 'Bigger range.', 'Grün mit goldenen Knöpfen.': 'Green with golden buttons.', 'Grüner Filzhut mit Feder.': 'Green felt hat with a feather.',
+  'Halblanghaar': 'Medium hair', 'Hauptmenü': 'Main menu', 'Heldenumhang': 'Hero cape', 'Hell, mit dunklen Ohren, Pfoten und Schwanz.': 'Light, with dark ears, paws and tail.', 'Herzbrille': 'Heart glasses',
+  'Heute im Angebot. Neue Auswahl in': 'On offer today. New selection in', 'Hürden': 'Hurdles', 'Hüttenschuhe': 'Hut slippers',
+  'Im Browser-Menü (die drei Punkte) auf "App installieren" oder "Zum Startbildschirm hinzufügen" tippen.': 'In the browser menu (the three dots) tap "Install app" or "Add to Home screen".',
+  'In Safari unten auf den Teilen-Knopf tippen, dann "Zum Home-Bildschirm".': 'In Safari tap the Share button, then "Add to Home Screen".',
+  'In der Adressleiste auf das Installieren-Symbol klicken oder im Browser-Menü "Kirbys Alm installieren" wählen.': 'Click the install icon in the address bar or choose "Install Kirbys Alm" in the browser menu.',
+  'Inventar': 'Inventory', 'Jeder Goldfisch ist 10 Fische wert': 'Every goldfish is worth 10 fish', 'Jetzt kommen sie zu dritt': 'Now they come in threes', 'Jetzt stehen sie übereinander': 'Now they stand on each other',
+  'Katzen': 'Cats', 'Keine Hindernisse, doppelte Fische': 'No obstacles, double fish', 'Kirby hat nichts gesehen.': 'Kirby saw nothing.', 'Kirby schaut zu': 'Kirby is watching',
+  'Knallgelb für jedes Wetter.': 'Bright yellow for any weather.', 'Knopf-Sounds': 'Button sounds', 'Komm jeden Tag wieder, die Belohnung wird größer.': 'Come back every day, the reward grows.', 'Krone': 'Crown',
+  'Kurzhaar': 'Short hair', 'Langhaar': 'Long hair', 'Lauf {n} m in einer Runde': 'Run {n} m in one run', 'Lautstärke': 'Volume', 'Läuft noch': 'In progress', 'Magnet': 'magnet',
+  'Maximal': 'Maxed out', 'Menschenturm': 'Human tower', 'Menü': 'Menu', 'Meter': 'Meters', 'Mission geschafft!': 'Mission complete!', 'Missionen': 'Missions',
+  'Mit goldener Kette. Sehr vornehm.': 'With a golden chain. Very posh.', 'Mit kleinem roten Anhänger.': 'With a little red pendant.', 'Mitnehmen': 'Take along', 'Mitternacht': 'Midnight', 'Monokel': 'Monocle',
+  'Morgen wieder': 'Again tomorrow', 'Murmeltier': 'Marmot', 'Namen ändern': 'Change name', 'Namen ändern kostet': 'Changing the name costs', 'Neue Missionen in': 'New missions in',
+  'Noch kein Begleiter. Im Shop gibt es welche.': 'No pet yet. The shop has some.', 'Noch keine Cosmetics. Jeden Tag gibt es vier neue im Shop.': 'No cosmetics yet. Every day there are four new ones in the shop.',
+  'Noch keine Upgrades. Im Shop gibt es welche für Fische.': 'No upgrades yet. The shop sells them for fish.', 'Nochmal': 'Again', 'Nächste Stufe:': 'Next level:', 'Orange': 'Orange', 'Passwort': 'Password',
+  'Pause': 'Pause', 'Perfekt!': 'Perfect!', 'Pfeift fröhlich und rennt hinter dir her.': 'Whistles happily and runs after you.', 'Regenbogen-Stern': 'Rainbow star', 'Regenjacke': 'Raincoat',
+  'Rettet dich einmal pro Runde: 3 s unverwundbar.': 'Saves you once per run: 3 s invincible.', 'Rettet dich einmal pro Runde: 5 s unverwundbar.': 'Saves you once per run: 5 s invincible.', 'Rettet dich zweimal pro Runde: je 5 s unverwundbar.': 'Saves you twice per run: 5 s invincible each.',
+  'Riesig, super flauschig, mit Pinselohren.': 'Huge, super fluffy, with tufted ears.', 'Ringelsocken': 'Striped socks', 'Rosa und verliebt.': 'Pink and in love.', 'Rot getigert.': 'Ginger tabby.', 'Rot mit weißem Bommel.': 'Red with a white pompom.',
+  'Rot-weiß geringelt, an allen vier Pfoten.': 'Red and white stripes on all four paws.', 'Rot-weiß gestreift, weht im Wind.': 'Red and white stripes, flutters in the wind.', 'Rote Fliege für feine Anlässe.': 'Red bow tie for fancy occasions.',
+  'Rote Wollknäuel rollen heran. Spring drüber!': 'Red balls of yarn roll in. Jump over them!', 'Roter Umhang, flattert beim Rennen.': 'Red cape, flutters as you run.', 'Rotes Halsband mit goldener Glocke.': 'Red collar with a golden bell.',
+  'Sammle heute {n} Fische': 'Collect {n} fish today', 'Schaffe eine {n}er-Serie': 'Get a streak of {n}', 'Schal': 'Scarf', 'Schließen': 'Close', 'Schneehase': 'Snow hare', 'Schneeweiß': 'Snow white',
+  'Schnell einsammeln': 'Grab them quickly', 'Schwarz mit gelben Augen, wie Kirby.': 'Black with yellow eyes, like Kirby.', 'Sehr große Reichweite.': 'Very big range.', 'Shop': 'Shop', 'Siam': 'Siamese',
+  'Skibrille': 'Ski goggles', 'Skifahrer sind schneller, als du denkst': 'Skiers are faster than you think', 'Skipiste': 'Ski slope', 'Sonnenbrille': 'Sunglasses', 'Spatz': 'Sparrow',
+  'Spiel heute {n} Runden': 'Play {n} runs today', 'Spiel-Sounds': 'Game sounds', 'Sprache': 'Language', 'Sprung': 'jump', 'Start': 'Start', 'Stern': 'star', 'Sternennacht': 'Starry night',
+  'Sternschauer!': 'Star shower!', 'Strickpulli': 'Knitted jumper', 'Stufe': 'Level', 'Super!': 'Great!', 'Tag': 'Day', 'Tirolerhut': 'Tyrolean hat', 'Trachtenweste': 'Traditional waistcoat',
+  'Turbo-Rausch!': 'Turbo rush!', 'Turnschuhe': 'Sneakers', 'Tägliche Belohnung': 'Daily reward', 'Unglaublich!': 'Incredible!', 'Unverwundbar! Renn einfach durch': 'Invincible! Just run through',
+  'Upgrades': 'Upgrades', 'Ups, Zusammenstoß!': 'Oops, crash!', 'Vibration': 'Vibration', 'Weihnachtsmütze': 'Santa hat', 'Weitere Katzen gibt es im Shop.': 'More cats are in the shop.',
+  'Weiß mit roten Streifen. Sehr schnell.': 'White with red stripes. Very fast.', 'Wie heißt deine Katze?': 'What is your cat called?', 'Willkommen!': 'Welcome!', 'Wollknäuel!': 'Balls of yarn!',
+  'Zurück': 'Back', 'gekauft und angezogen!': 'bought and put on!', 'gekauft! Du spielst jetzt mit dieser Katze.': 'bought! You now play with this cat.', 'kaufen für': 'buy for', 'knapp!': 'close!',
+  'läuft jetzt mit dir!': 'now runs with you!', 'ohne Namen': 'no name', 'z. B. Mimi': 'e.g. Mimi', '{k} war knapp zu langsam.': '{k} was just a bit too slow.', 'Überspring heute {n} Hindernisse': 'Jump over {n} obstacles today',
+  "Los geht's!": "Let's go!", 'Falsches Passwort für': 'Wrong password for', 'Das Passwort braucht mindestens 4 Zeichen.': 'The password needs at least 4 characters.',
+  'Diesen Namen gibt es auf diesem Gerät schon.': 'This name already exists on this device.', 'Neuer Name: es wird ein Konto erstellt. Bekannter Name: du wirst angemeldet.': 'New name: an account is created. Known name: you are logged in.',
+  'Abmelden': 'Log out', 'Angemeldet als': 'Logged in as', 'mindestens 4 Zeichen': 'at least 4 characters', 'Deutsch': 'Deutsch', 'English': 'English', 'Kirbys Alm': 'Kirbys Alm',
+  'Wirklich alles löschen?': 'Really delete everything?', 'Nochmal drücken, um alle User zu löschen.': 'Press again to delete all users.', 'Angemeldet.': 'Logged in.', 'Benutzer oder Passwort falsch.': 'Wrong user or password.',
+  'Bitte eine Zahl von 1 bis 99999 eingeben.': 'Please enter a number from 1 to 99999.', 'Admin': 'Admin', 'Lobby': 'Lobby', 'Maine Coon': 'Maine Coon', 'Level': 'Level',
+  'Spielfeld: eine Katze springt auf der Alm über Hindernisse, im Hintergrund schleckt Kirby Schnee': 'Game: a cat jumps over obstacles on the alp while Kirby licks snow in the background',
+});
+// Feste Texte im HTML einmal markieren, damit applyLang sie umschalten kann
+function initI18n() {
+  document.querySelectorAll('button, h1, h2, h3, label, p, span, .tab').forEach((el) => {
+    if (el.children.length || el.dataset.t) return;
+    const txt = el.textContent.trim();
+    if (EN[txt]) el.dataset.t = txt;
+  });
+  document.querySelectorAll('[aria-label], [title]').forEach((el) => { const v = el.getAttribute('aria-label') || el.title; if (EN[v]) el.dataset.tLabel = v; });
+  document.querySelectorAll('[placeholder]').forEach((el) => { if (EN[el.placeholder]) el.dataset.tPh = el.placeholder; });
+}
+// offene Fenster nach dem Sprachwechsel neu aufbauen
+function refreshOpenScreens() {
+  if (!screens.shop.hidden) renderShop();
+  if (!screens.inv.hidden) renderInv();
+  if (!screens.missions.hidden) renderMissions();
+  if (!screens.setup.hidden) openSetup(setupFromInv);
+}
 
 /* ---------- Kollision (pixelgenau) ---------- */
 function overlaps(a, ax, ay, b, bx, by) {
@@ -1903,8 +2523,10 @@ function overlaps(a, ax, ay, b, bx, by) {
 
 function catSprite() {
   if (mode === 'over') return cat.dead;
+  if (P.flip > 0 && mode === 'play') return P.flip > FLIP_T * .65 ? cat.down : cat.up;
   if (!P.grounded) return P.vy > 0 ? cat.up : cat.down;
   if (mode === 'home' && G.outro) return cat.run[Math.floor(P.anim) % RUN_FRAMES];
+  if (mode === 'home' && P.roll > 0) return cat.run[Math.floor(G.time * 14) % RUN_FRAMES]; // strampelt mit den Pfoten
   if (mode !== 'play') return P.blink > 0 ? cat.blink : cat.idle[Math.floor(G.time * 4) % cat.idle.length];
   return cat.run[Math.floor(P.anim) % RUN_FRAMES];
 }
@@ -1959,6 +2581,134 @@ function playWithYarn(dt) {
   }
 }
 
+/* ---------- Easter Eggs im Hintergrund: Almhütte, Murmeltier, Lawine, Heißluftballon, UFO (nur nachts) ---------- */
+const EGG_PAL = { r: '#b5482f', R: '#7c2c1e', c: '#8a8f99', C: '#5f646e', v: '#a8723f', V: '#7a4e28', y: '#ffe9a0', d: '#5a3218', L: '#f4f4f0', J: '#d6453d', l: '#c8b08a', b: '#8a5a2b', g: '#9fe8ff', G: '#e2f8ff', n: '#9aa0aa', N: '#ffd43b', Y: '#7dff7a', m: '#a0784c', k: '#2a1a10', o: '#3a2213', M: '#7a5634', e: '#ead8b4' };
+const eggSpr = {
+  hut: sprite([
+    '...........cC...',
+    '......RRRRRcC...',
+    '.....RrrrrrrR...',
+    '....RrrrrrrrrR..',
+    '...RrrrrrrrrrrR.',
+    '..RrrrrrrrrrrrrR',
+    '.RRRRRRRRRRRRRRR',
+    '..vvvvvvvvvvvvv.',
+    '..vVvvyyvvvdddv.',
+    '..vVvvyyvvvdddv.',
+    '..vvvvvvvvvdddv.',
+    '..VVVVVVVVVdddV.',
+  ], EGG_PAL),
+  balloon: sprite([
+    '...JJLJJ...',
+    '..JJJLJJJ..',
+    '.JJJJLJJJJ.',
+    'JJJJJLJJJJJ',
+    'JJJJJLJJJJJ',
+    'JJJJJLJJJJJ',
+    '.JJJJLJJJJ.',
+    '..JJJLJJJ..',
+    '...JJLJJ...',
+    '....l.l....',
+    '....l.l....',
+    '....bbb....',
+    '....bbb....',
+  ], EGG_PAL),
+  ufo: sprite([
+    '.....ggg.....',
+    '....gGGGg....',
+    '..nnnnnnnnn..',
+    'nnnNnnnNnnnNn',
+    '.nnnnnnnnnnn.',
+  ], EGG_PAL),
+  marmot: sprite([
+    '..mm..',
+    '.mmkmo',
+    '.mmmm.',
+    '.meem.',
+    'mmeem.',
+    '.meem.',
+    '.mmmm.',
+    '.M..M.',
+  ], EGG_PAL),
+};
+const bflySpr = [['PP.PP', 'PPkPP', '.PkP.', '..k..'], ['.P.P.', '.PkP.', '.PkP.', '..k..']].map((r) => sprite(r, { P: '#ff9fd0', k: '#5a3218' }));
+const EGG_TYPES = ['hut', 'marmot', 'avalanche', 'balloon', 'ufo'];
+function tickEggs(dt, step) {
+  if (mode === 'play') {
+    G.eggIn -= dt;
+    if (G.eggIn <= 0) {
+      G.eggIn = rand(14, 26);
+      const pool = EGG_TYPES.filter((k) => (k !== 'ufo' || (isEvening() && G.hour % 24 > 20 || G.hour % 24 < 5)) && !G.eggs.some((e) => e.type === k));
+      if (pool.length) {
+        const type = pick(pool);
+        const layer = type === 'hut' || type === 'marmot' ? 'hill' : type === 'avalanche' ? 'far' : 'sky';
+        G.eggs.push({ type, layer, x: viewW + 30, t: 0, y: type === 'ufo' ? skyH * rand(.55, .75) : skyH * rand(.45, .7) });
+        if (typeof missionProgress === 'function') missionProgress('egg', 1);
+      }
+    }
+  }
+  for (const e of G.eggs) {
+    e.t += dt;
+    if (e.layer === 'hill') e.x -= step * .3;
+    else if (e.layer === 'far') e.x -= step * .08;
+    else e.x -= step * .05 + (e.type === 'ufo' ? 22 : 5) * dt;
+    if (e.type === 'hut' && Math.random() < dt * 3) e.smoke = (e.smoke || 0) + 1;
+  }
+  G.eggs = G.eggs.filter((e) => e.x > -60 && e.t < 120);
+}
+// layerH: Höhe der Landschaft an einer Bildschirm-Spalte dieser Ebene
+function drawEggs(layer, layerH) {
+  for (const e of G.eggs) {
+    if (e.layer !== layer) continue;
+    const x = Math.round(e.x);
+    if (e.type === 'hut') {
+      const base = -Math.round(layerH(x + 8)) + 2;
+      const sp = eggSpr.hut;
+      ctx.drawImage(sp.c, x - sp.pad, base - sp.h - sp.pad);
+      for (let i = 0; i < 4; i++) { // Rauch aus dem Kamin
+        const q = (e.t * .7 + i * .25) % 1;
+        ctx.globalAlpha = .7 * (1 - q);
+        ctx.fillStyle = '#e8ecf2';
+        const r = 1 + Math.round(q * 2);
+        ctx.fillRect(x + 12 + Math.round(q * 6 + Math.sin(e.t * 2 + i) ), base - sp.h - 2 - Math.round(q * 14), r, r);
+      }
+      ctx.globalAlpha = 1;
+    } else if (e.type === 'marmot') {
+      const base = -Math.round(layerH(x + 3)) + 1;
+      const up = clamp(Math.sin(e.t * 1.3) * 1.6, 0, 1); // schaut aus dem Bau und duckt sich wieder
+      const sp = eggSpr.marmot;
+      const vis = Math.round(sp.h * up);
+      ctx.fillStyle = '#5a3a1e';
+      ctx.fillRect(x - 1, base - 1, 8, 2);
+      if (vis > 0) ctx.drawImage(sp.c, 0, 0, sp.c.width, vis + sp.pad, x - sp.pad, base - vis - sp.pad, sp.c.width, vis + sp.pad);
+    } else if (e.type === 'avalanche') {
+      const top = Math.round(layerH(x));
+      ctx.fillStyle = '#ffffff';
+      for (let i = 0; i < 40; i++) {
+        const q = e.t * .45 - i * .02;
+        if (q < 0 || q > 1) continue;
+        const dx = -q * 26 + (hash(i) - .5) * 6, dy = -top * (1 - q) + (hash(i + 9) - .5) * 3;
+        ctx.globalAlpha = q > .85 ? (1 - q) / .15 : 1;
+        ctx.fillRect(Math.round(x + dx), Math.round(dy), 1 + (i % 3 === 0 ? 1 : 0), 1);
+      }
+      ctx.globalAlpha = 1;
+    } else if (e.type === 'balloon') {
+      const sp = eggSpr.balloon;
+      ctx.drawImage(sp.c, x - sp.pad, -Math.round(e.y + Math.sin(e.t * .8) * 3) - sp.pad);
+    } else if (e.type === 'ufo') {
+      const sp = eggSpr.ufo;
+      const y = -Math.round(e.y + Math.sin(e.t * 3) * 2);
+      if (Math.sin(e.t * 1.7) > .4) { // grüner Strahl
+        ctx.globalAlpha = .25;
+        ctx.fillStyle = '#7dff7a';
+        for (let i = 0; i < 18; i++) ctx.fillRect(x + 5 - Math.floor(i / 4), y + sp.h + i, 3 + Math.floor(i / 2), 1);
+        ctx.globalAlpha = 1;
+      }
+      ctx.drawImage(sp.c, x - sp.pad, y - sp.pad);
+    }
+  }
+}
+
 /* ---------- Update ---------- */
 function update(dt) {
   P.blink -= dt;
@@ -1973,7 +2723,7 @@ function update(dt) {
   for (let i = particles.length - 1; i >= 0; i--) {
     const q = particles[i];
     q.life -= dt;
-    q.x += q.vx * dt; q.y += q.vy * dt; q.vy -= 160 * dt;
+    q.x += q.vx * dt; q.y += q.vy * dt; if (!q.heart) q.vy -= 160 * dt;
     if (q.life <= 0) particles.splice(i, 1);
   }
   for (let i = floaters.length - 1; i >= 0; i--) {
@@ -1988,8 +2738,11 @@ function update(dt) {
   }
 
   G.time += dt;
+  G.drift += 4 * dt; // Wolken ziehen immer ein bisschen
   if (mode !== 'play') {
-    if (mode === 'home') { if (G.outro) tickOutro(dt); else { G.scroll += 10 * dt; playWithYarn(dt); } } // Wolken ziehen langsam
+    if (mode === 'over') tickDeath(dt);
+    if (mode === 'home') { if (G.outro) tickOutro(dt); else playWithYarn(dt); tickEggs(dt, 0); if (P.roll > 0) P.roll = Math.max(0, P.roll - dt); } // in der Lobby steht der Boden still
+    if (V.purr > 0) { V.purr -= dt; if (Math.random() < dt * 3) particles.push({ x: kirbyBox().cx + rand(-10, 10), y: kirbyBox().top - 4, vx: rand(-6, 6), vy: rand(14, 24), life: rand(.9, 1.3), c: '#ff9fd0', heart: true }); }
     return;
   }
 
@@ -2037,7 +2790,7 @@ function update(dt) {
       P.land = .14; P.flip = 0;
       P.landT = G.time; P.checkReset = true;
       for (let i = 0; i < 4; i++) particles.push({ x: P.x + 8 + rand(-2, 4), y: rand(0, 2), vx: rand(-40, -10), vy: rand(10, 45), life: rand(.25, .5) });
-      if (P.buffer > 0) { P.jumps = 1; jump(V0); }
+      if (P.buffer > 0) { P.jumps = 1; jump(V0 * (1 + bonus('jump') / 100)); }
     }
   } else if (Math.random() < dt * 6) {
     particles.push({ x: P.x + 6, y: 0, vx: rand(-40, -10), vy: rand(10, 40), life: rand(.2, .4) });
@@ -2052,6 +2805,33 @@ function update(dt) {
     particles.push({ x: P.x + rand(2, 12), y: P.y + rand(2, 16), vx: rand(-90, -40), vy: rand(-10, 20), life: rand(.25, .45), c: pick(RAINBOW) });
   }
 
+  // Fisch-Fieber
+  if (G.fever > 0) {
+    G.fever -= dt;
+    if (Math.random() < dt * 30) particles.push({ x: P.x + rand(0, 10), y: P.y + rand(2, 16), vx: rand(-120, -60), vy: rand(-10, 10), life: rand(.2, .4), c: pick(RAINBOW) });
+  }
+  // Schmetterling vom Start: sitzt kurz auf der Nase, fliegt dann voraus und schließlich davon
+  if (G.bfly) {
+    const B2 = G.bfly;
+    B2.t += dt;
+    if (B2.t < .45) { B2.x = P.x + 25; B2.y = P.y + 15 + Math.sin(B2.t * 20); }
+    else if (B2.t < 3.5) { B2.x += (Math.min(viewW * .55, P.x + 70) - B2.x) * dt * 2; B2.y = 18 + Math.sin(B2.t * 6) * 4; }
+    else { B2.x += 40 * dt; B2.y += 35 * dt; if (B2.y > skyH) G.bfly = null; }
+  }
+  tickEggs(dt, step);
+
+  // Begleiter: holt regelmäßig den nächsten Fisch vor dir
+  const pet = PETS.find((x) => x.id === save.pet && has('pet:' + x.id));
+  if (pet) {
+    G.petT = (G.petT === undefined ? pet.every : G.petT) - dt;
+    if (G.petT <= 0) {
+      const target = G.objects.filter((o) => o.type === 'fish' && !o.got && !o.pulled && o.x > P.x + 16 && o.x < P.x + 150).sort((a, b) => a.x - b.x)[0];
+      if (target) { target.pulled = true; G.petT = pet.every; G.petDash = .45; sfx.pop(); }
+      else G.petT = .5;
+    }
+    if (G.petDash > 0) G.petDash -= dt;
+  }
+
   if (!noObstacles()) {
     G.untilSpawn -= step;
     if (G.untilSpawn <= 0) spawn();
@@ -2059,7 +2839,7 @@ function update(dt) {
 
   const cs = catSprite();
   const cx = Math.round(P.x), cy = Math.round(-(P.y + cs.h));
-  const magnet = has('up:magnet');
+  const magnetR = lvl('magnet') ? MAGNET_R[lvl('magnet')] + bonus('magnet') : bonus('magnet');
   for (const o of G.objects) {
     if (o.knocked) {
       o.x += o.kvx * dt - step;
@@ -2079,15 +2859,24 @@ function update(dt) {
       if (o.y < -4) o.got = true;
     }
     if (o.type !== 'person') {
-      if (magnet && !o.got) {
+      if (magnetR && !o.got && !o.pulled) {
         const dx = P.x + 13 - (o.x + o.w / 2), dy = P.y + 9 - (o.y + o.h / 2);
-        if (dx * dx + dy * dy < 48 * 48) { o.x += dx * dt * 6; o.y += dy * dt * 6; }
+        if (dx * dx + dy * dy < magnetR * magnetR) o.pulled = true; // einmal erfasst, fliegt der Fisch sicher zur Katze
+      }
+      if (o.pulled && !o.got) {
+        o.x += step + (o.vx || 0) * dt; // nicht mehr mit der Strecke mitwandern
+        o.pullV = (o.pullV || 120) + 900 * dt;
+        const dx = P.x + 13 - (o.x + o.w / 2), dy = P.y + 9 - (o.y + o.h / 2), d = Math.hypot(dx, dy) || 1;
+        const mv = Math.min(d, o.pullV * dt);
+        o.x += dx / d * mv; o.y += dy / d * mv;
+        if (o.fall !== undefined) delete o.fall;
+        if (d < 8) { o.x = P.x + 10; o.y = P.y + 6; }
       }
       const oy = objY(o);
       if (!o.got && o.x < P.x + 24 && o.x + o.w > P.x + 3 && oy < P.y + 17 && oy + o.h > P.y + 1) {
         o.got = true;
         if (o.type === 'star') startInvincible(5, 'Regenbogen-Stern!');
-        else addFish(o.type === 'fish' && G.turbo > 1 ? 2 : 1, o.x + 4, oy + 6);
+        else addFish((o.gold ? 10 : 1) * (o.type === 'fish' && G.turbo > 1 ? 2 : 1) * (G.fever > 0 ? 2 : 1), o.x + 4, oy + 6, o.gold);
         for (let i = 0; i < 6; i++) particles.push({ x: o.x + 4, y: oy + 2, vx: rand(-50, 50), vy: rand(10, 60), life: rand(.2, .45), c: o.type === 'fish' ? FISH_PAL.b : pick(RAINBOW) });
       }
       continue;
@@ -2102,9 +2891,9 @@ function update(dt) {
     }
     if (!o.passed && overlaps(cs, cx, cy, o.spr, Math.round(o.x), Math.round(-(oy + o.h)))) {
       if (P.inv > 0) { knock(o); continue; }
-      if (has('up:star') && !G.starUsed) {
-        G.starUsed = true;
-        startInvincible(4, 'Regenbogen-Stern!');
+      if (lvl('star') && G.starUsed < (lvl('star') >= 3 ? 2 : 1)) {
+        G.starUsed++;
+        startInvincible(STAR_SEC[lvl('star')] + bonus('star'), 'Regenbogen-Stern!');
         knock(o);
         continue;
       }
@@ -2119,6 +2908,7 @@ function update(dt) {
     if (!o.passed && o.x + o.w < P.x + 3) {
       o.passed = true;
       G.jumped++;
+      missionProgress('hurdle', 1);
       if (!P.grounded || G.time - P.landT < .3) P.jumpPassed = true;
       cheer(o.minGap === undefined ? 99 : o.minGap);
     }
@@ -2136,6 +2926,23 @@ function pixelDisc(cx, cy, r, color) {
   }
 }
 // Kirby sitzt weit weg hinter den Bergen und schleckt Schnee von seinem Gipfel.
+// Rechtecke genau auf Bildschirmpixel legen: so entstehen zwischen Bergstreifen keine hellen Haarlinien.
+// Vorher die aktuelle Matrix in SNAP merken und die Zeichenmatrix auf 1:1 setzen.
+let SNAP = null;
+function snapBegin() { SNAP = ctx.getTransform(); ctx.setTransform(1, 0, 0, 1, 0, 0); }
+function snapEnd() { ctx.setTransform(SNAP); }
+function snapFill(x, y, w, h) {
+  const m = SNAP;
+  const x0 = Math.round(m.a * x + m.e), x1 = Math.round(m.a * (x + w) + m.e);
+  const y0 = Math.round(m.d * y + m.f), y1 = Math.round(m.d * (y + h) + m.f);
+  if (x1 > x0 && y1 > y0) ctx.fillRect(x0, y0, x1 - x0, y1 - y0);
+}
+function kirbyBox() {
+  const vs = skyH > 170 ? 2 : 1;
+  const vx = Math.round(viewW * (H > W * 1.1 ? .58 : .8));
+  const apexH = Math.round(clamp(skyH * .32, 26, 100));
+  return { x0: vx - 22 * vs, x1: vx + 22 * vs, y0: apexH - 5 * vs, y1: apexH + 32 * vs, cx: vx, top: apexH + 30 * vs };
+}
 function drawKirby(pal) {
   const vs = skyH > 170 ? 2 : 1;
   const vx = Math.round(viewW * (H > W * 1.1 ? .58 : .8));
@@ -2144,27 +2951,29 @@ function drawKirby(pal) {
   ctx.translate(vx, -apexH);
   ctx.scale(vs, vs);
   ctx.translate(-22, -32);
-  const spr = V.blink > 0 ? kirby.blink : kirby.open;
+  const spr = V.blink > 0 || V.purr > 0 ? kirby.blink : kirby.open; // beim Schnurren entspannt mit geschlossenen Augen
   ctx.drawImage(spr.c, -1, -1);
   // sein Gipfel
   const rows = Math.ceil(apexH / vs) + 2;
   const snowRows = Math.round(rows * .3);
+  snapBegin();
   for (let r = 0; r < rows; r++) {
     const half = Math.round(1 + r * 1.7 + (r > 3 ? hash(r) * 1.5 : 0));
     const y = 32 + r;
     const snowy = r < snowRows;
     ctx.fillStyle = snowy ? pal.snow : pal.rock;
-    ctx.fillRect(22 - half, y, half + .5, 1.6);
+    snapFill(22 - half, y, half, 1);
     ctx.fillStyle = snowy ? pal.snowSh : pal.rockSh;
-    ctx.fillRect(22, y, half, 1.6);
+    snapFill(22, y, half, 1);
     if (!snowy && r < snowRows + 5) {
       ctx.fillStyle = pal.snow;
       const tl = Math.max(0, 3 - (r - snowRows) * .7);
-      for (const f of [-.65, -.15, .4]) ctx.fillRect(Math.round(22 + f * half), y, Math.round(tl), 1.6);
+      for (const f of [-.65, -.15, .4]) snapFill(Math.round(22 + f * half), y, Math.round(tl), 1);
     }
   }
+  snapEnd();
   // Zunge
-  const cycle = V.lick % 3.2;
+  const cycle = V.purr > 0 ? 0 : V.lick % 3.2;
   let len = 0;
   if (cycle > 2) len = Math.min(7, (cycle - 2) * 30) - Math.max(0, (cycle - 2.9) * 30);
   if (len > 0) {
@@ -2225,12 +3034,13 @@ function draw() {
   }
   ctx.globalAlpha = 1;
 
+  drawEggs('sky'); // Ballon und UFO fliegen hinter Kirby
   drawKirby(pal);
 
   // Wolken
   const span = viewW + 60;
   for (let i = 0; i < 4; i++) {
-    const cxw = ((i * span / 4 + hash(i) * 30 - G.scroll * .2) % span + span) % span - 30;
+    const cxw = ((i * span / 4 + hash(i) * 30 - G.scroll * .2 - G.drift) % span + span) % span - 30;
     const cyw = -skyH * (.45 + hash(i + 9) * .32);
     ctx.globalAlpha = .9 - pal.stars * .65;
     ctx.drawImage(cloudSpr.c, Math.round(cxw), Math.round(cyw));
@@ -2243,23 +3053,27 @@ function draw() {
   const farH = (x) => farBase + farAmp * (.62 * tri(x / 71) + .38 * tri(x / 29 + .37));
   const offF = G.scroll * .08;
   const fracF = offF - Math.floor(offF);
+  snapBegin();
   for (let s = 0; s < viewW + 2; s++) {
     const wx = s + Math.floor(offF);
     const h = Math.round(farH(wx));
     const shaded = farH(wx + 1) < farH(wx);
     ctx.fillStyle = shaded ? pal.rockSh : pal.rock;
-    ctx.fillRect(s - fracF, -h, 1.6, h + 1);
+    snapFill(s - fracF, -h, 1, h + 1);
     const snowline = Math.round(farBase + farAmp * .52 + hash(wx) * 2);
     if (h > snowline) {
       ctx.fillStyle = shaded ? pal.snowSh : pal.snow;
-      ctx.fillRect(s - fracF, -h, 1.6, h - snowline);
+      snapFill(s - fracF, -h, 1, h - snowline);
     }
   }
+  snapEnd();
+  drawEggs('far', (sx) => farH(Math.round(sx) + Math.floor(offF)));
 
   // Grüne Hügel mit Tannen
   const midBase = Math.min(skyH * .08, 10) + 4;
   const offM = G.scroll * .3;
   const fracM = offM - Math.floor(offM);
+  snapBegin();
   for (let s = 0; s < viewW + 2; s++) {
     const wx = s + Math.floor(offM);
     const hill = Math.round(midBase + 3 * Math.sin(wx * .045) + 2 * Math.sin(wx * .11 + 1));
@@ -2272,12 +3086,14 @@ function draw() {
       tree = Math.max(tree, Math.round(th - d * 2.2));
     }
     ctx.fillStyle = pal.hill;
-    ctx.fillRect(s - fracM, -hill, 1.6, hill + 1);
+    snapFill(s - fracM, -hill, 1, hill + 1);
     if (tree > 0) {
       ctx.fillStyle = pal.pine;
-      ctx.fillRect(s - fracM, -hill - tree + 2, 1.6, tree);
+      snapFill(s - fracM, -hill - tree + 2, 1, tree);
     }
   }
+  snapEnd();
+  drawEggs('hill', (sx) => { const wx = Math.round(sx) + Math.floor(offM); return midBase + 3 * Math.sin(wx * .045) + 2 * Math.sin(wx * .11 + 1); });
 
   // Bergwiese mit Blumen, darunter Fels
   const below = (H - groundY) / px + 4;
@@ -2327,6 +3143,7 @@ function draw() {
     const oy = objY(o);
     const spr = o.spr;
     const x0 = snap(o.x) - spr.pad, y0 = snap(-(oy + o.h)) - spr.pad;
+    if (o.gold && !o.got && Math.random() < .3) particles.push({ x: o.x + rand(0, 10), y: objY(o) + rand(0, 6), vx: rand(-10, 10), vy: rand(5, 25), life: .3, c: '#fff6b0' });
     if (o.type === 'star') {
       ctx.drawImage(tinted(spr.c, RAINBOW[Math.floor(G.time * 12) % RAINBOW.length], .55), x0, y0);
     } else if (o.knocked || o.kind === 'yarn') {
@@ -2347,7 +3164,26 @@ function draw() {
   // Partikel
   for (const q of particles) {
     ctx.fillStyle = q.c || pal.meadowDk;
+    if (q.heart) { // kleines Herz aus 5 Pixeln
+      const hx = Math.round(q.x), hy2 = -Math.round(q.y) - 2;
+      ctx.globalAlpha = Math.min(1, q.life * 2);
+      ctx.fillRect(hx - 1, hy2, 1, 1); ctx.fillRect(hx + 1, hy2, 1, 1); ctx.fillRect(hx - 1, hy2 + 1, 3, 1); ctx.fillRect(hx, hy2 + 2, 1, 1);
+      ctx.globalAlpha = 1;
+      continue;
+    }
     ctx.fillRect(Math.round(q.x), -Math.round(q.y) - 1, 1, 1);
+  }
+
+  // Begleiter
+  if (save.pet && has('pet:' + save.pet) && petSpr[save.pet]) {
+    const fr = petSpr[save.pet][(mode === 'play' || (mode === 'home' && G.outro)) ? Math.floor(G.time * 10) % 2 : 0];
+    const dash = G.petDash > 0 ? Math.sin((1 - G.petDash / .45) * Math.PI) * 14 : 0;
+    let pxp, pyp;
+    if (save.pet === 'spatz') { pxp = P.x + 4 + dash; pyp = 30 + Math.sin(G.time * 5) * 2 + (mode === 'play' ? P.y * .3 : 0); }
+    else if (save.pet === 'hase') { pxp = P.x - 15 + dash; pyp = mode === 'play' ? Math.abs(Math.sin(G.time * 7)) * 5 : 0; }
+    else { pxp = P.x - 14 + dash; pyp = 0; }
+    if (mode === 'home' && !G.outro) pxp = P.x - 16;
+    ctx.drawImage(fr.c, snap(pxp) - fr.pad, snap(-(pyp + fr.h)) - fr.pad);
   }
 
   // Katze (im Regenbogen-Modus bunt eingefärbt, kurz vor Ende blinkend)
@@ -2357,10 +3193,29 @@ function draw() {
   const cw = img.width, chh = img.height;
   const bx = snap(P.x) - cs.pad, by = snap(-(P.y + cs.h)) - cs.pad;
   ctx.save();
-  if (P.flip > 0) {
-    // Salto beim Sprung in der Luft
+  if (mode === 'over' && P.death && !P.death.landed) {
     ctx.translate(bx + cw / 2, by + chh / 2);
-    ctx.rotate((1 - P.flip / FLIP_T) * Math.PI * 2);
+    ctx.rotate(P.death.spin);
+    ctx.drawImage(img, -cw / 2, -chh / 2);
+  } else if (mode === 'home' && P.roll > 0) {
+    // in der Lobby angetippt: dreht sich auf den Rücken und strampelt
+    const u = 1 - P.roll / ROLL_T;
+    const turn = Math.min(1, u * 5) - Math.max(0, (u - .82) * 5.5);
+    ctx.translate(bx + cw / 2, by + chh * .62);
+    ctx.rotate(Math.PI * clamp(turn, 0, 1));
+    ctx.translate(Math.sin(G.time * 18) * .4, 0);
+    ctx.drawImage(img, -cw / 2, -chh * .62);
+  } else if (P.flip > 0) {
+    // Sprung in der Luft: kurz zusammenziehen, dann kräftig strecken (ohne Salto)
+    const u = 1 - P.flip / FLIP_T;
+    const tuck = u < .35;
+    const q = tuck ? u / .35 : (u - .35) / .65;
+    const kx = tuck ? 1 + .12 * Math.sin(q * Math.PI) : 1 - .08 * Math.sin(q * Math.PI);
+    const ky = tuck ? 1 - .14 * Math.sin(q * Math.PI) : 1 + .12 * Math.sin(q * Math.PI);
+    const tilt = tuck ? .12 * Math.sin(q * Math.PI) : -.16 * Math.sin(q * Math.PI);
+    ctx.translate(bx + cw / 2, by + chh / 2);
+    ctx.rotate(tilt);
+    ctx.scale(kx, ky);
     ctx.drawImage(img, -cw / 2, -chh / 2);
   } else {
     // beim Absprung strecken, beim Landen stauchen (Füße bleiben am Boden)
@@ -2372,6 +3227,26 @@ function draw() {
     ctx.drawImage(img, -cw / 2, -chh);
   }
   ctx.restore();
+
+  if (G.bfly) {
+    const fr = bflySpr[Math.floor(G.time * 12) % 2];
+    ctx.drawImage(fr.c, Math.round(G.bfly.x) - fr.pad, -Math.round(G.bfly.y) - fr.pad);
+    if (G.bfly.t < .7 && G.bfly.t > .1) { // die Katze bemerkt ihn: kleines Ausrufezeichen
+      const ex = Math.round(P.x + 19), ey = -Math.round(P.y + 27);
+      ctx.fillStyle = '#4a2913'; ctx.fillRect(ex - 1, ey - 1, 3, 7);
+      ctx.fillStyle = '#ffffff'; ctx.fillRect(ex, ey, 1, 3); ctx.fillRect(ex, ey + 4, 1, 1);
+    }
+  }
+
+  // nach dem Sturz kreisen kleine Sterne über dem Kopf
+  if (mode === 'over' && P.death && P.death.landed) {
+    for (let i = 0; i < 3; i++) {
+      const a = G.time * 4 + i * Math.PI * 2 / 3;
+      const sx2 = Math.round(P.x + 18 + Math.cos(a) * 7), sy2 = -Math.round(P.y + 21 + Math.sin(a) * 2.2);
+      ctx.fillStyle = Math.sin(a) > 0 ? '#ffd43b' : '#fff6b0';
+      ctx.fillRect(sx2, sy2 - 1, 1, 3); ctx.fillRect(sx2 - 1, sy2, 3, 1);
+    }
+  }
 
   // Turbo: Geschwindigkeits-Streifen
   if (G.turbo > 1) {
@@ -2389,12 +3264,21 @@ function draw() {
   ctx.textBaseline = 'middle';
   for (const f of floaters) {
     ctx.globalAlpha = Math.min(1, f.t * 2);
-    ctx.fillStyle = darker(FISH_PAL.b);
+    const fc = f.gold ? GOLD_PAL.b : f.color || FISH_PAL.b;
+    ctx.fillStyle = darker(fc);
     ctx.fillText(f.text, f.x + 1, -f.y + 1);
-    ctx.fillStyle = FISH_PAL.b;
+    ctx.fillStyle = fc;
     ctx.fillText(f.text, f.x, -f.y);
   }
   ctx.globalAlpha = 1;
+  // weißer Blitz beim Zusammenstoß
+  if (G.flash > 0) {
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.globalAlpha = G.flash * .7;
+    ctx.fillStyle = '#fff8e8';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.globalAlpha = 1;
+  }
 }
 
 // Färbt ein Sprite für den Regenbogen-Effekt ein (Zwischenleinwand wird wiederverwendet)
@@ -2416,14 +3300,18 @@ function tinted(img, color, alpha) {
 /* ---------- Schleife ---------- */
 let last = performance.now();
 function frame(now) {
-  const dt = Math.min(1 / 30, Math.max(0, (now - last) / 1000));
+  let dt = Math.min(1 / 30, Math.max(0, (now - last) / 1000));
   last = now;
+  if (G.slowmo > 0) { G.slowmo -= dt; dt *= .3; }
   update(dt);
   draw();
   requestAnimationFrame(frame);
 }
+initI18n();
+applyLang();
 goHome();
-if (!save.name) openSetup(false); // beim ersten Start: erst die Katze benennen, dann geht es in die Lobby
+updateMissionDot();
+if (!save.name || !store.get('cj-active', null) || !accounts()[store.get('cj-active', null)]) openSetup(false); // erst Name und Passwort, dann geht es in die Lobby
 requestAnimationFrame(frame);
 if (document.fonts && document.fonts.load) {
   document.fonts.load('8px "CatJumperMC"').catch(() => {});

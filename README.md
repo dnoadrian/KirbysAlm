@@ -1,93 +1,69 @@
-# Cat Jumper
+# Kirbys Alm
 
-Ein kleines Pixel-Spiel fürs Handy: Deine Katze läuft über eine Bergwiese und springt über alles, was im Weg steht: Wanderer in Lederhose und Wanderinnen im Dirndl, Gleitschirmflieger, Skifahrer und rote Wollknäuel. Im Hintergrund sitzt Kirby, die schwarz-weiße Katze, und schleckt den Schnee von den Gipfeln.
+Ein kleines Pixel-Spiel fürs Handy und den PC: Deine Katze läuft über eine Bergwiese und springt über alles, was im Weg steht: Wanderer in Lederhose, Wanderinnen im Dirndl, Gleitschirmflieger, Skifahrer und rote Wollknäuel. Im Hintergrund sitzt Kirby, die schwarz-weiße Katze, und schleckt den Schnee von seinem Gipfel.
 
 **Spielen:** https://dnoadrian.github.io/Temp/ oder `index.html` direkt im Browser öffnen.
 
+## Konto
+
+Beim ersten Start gibst du den Namen deiner Katze und ein Passwort ein. Ist der Name auf diesem Gerät neu, wird ein Konto angelegt, sonst wirst du angemeldet. In den Einstellungen kannst du dich abmelden, so können mehrere Leute auf einem Gerät spielen.
+
+Das Spiel hat keinen Server. Konten und Spielstände liegen nur im Browser des jeweiligen Geräts. Passwörter werden nie im Klartext gespeichert, sondern als PBKDF2-SHA-256-Hash (150 000 Runden, zufälliges Salz). Eine `.env`-Datei ist auf GitHub Pages nicht möglich: Die Seite kann keine Dateien schreiben, und alles im Repository ist öffentlich.
+
 ## Lobby
 
-In der Lobby spielt deine Katze mit einem Wollknäuel. Links oben stehen untereinander **Shop** und **Inventar**, rechts unten der große **Start**-Knopf. Bei Start läuft die Katze einfach los: Die Menüs gleiten weg und die Landschaft zieht vorbei. Nach dem Verlieren geht es mit **Nochmal** genauso sofort weiter oder mit **Lobby** zurück: Die Katze läuft aus, die Landschaft wird langsamer, das Wollknäuel rollt heran und die Menüs gleiten wieder herein. Beim Umfallen bekommt die Katze X-Augen.
+Links oben stehen **Shop**, **Inventar** und **Missionen**, rechts unten der große **Start**-Knopf, oben rechts Fische und Einstellungen. Tippst du deine Katze an, rollt sie sich auf den Rücken; tippst du Kirby an, schnurrt er mit geschlossenen Augen. Der Boden steht in der Lobby still, nur die Wolken ziehen.
+
+Bei Start stupst ein Schmetterling die Katze an die Nase, sie rennt ihm hinterher, die Menüs gleiten weg. Nach dem Verlieren geht es mit **Nochmal** sofort weiter oder mit **Lobby** zurück.
 
 ## Steuerung
 
-Handy: nur Tippen (bzw. Klicken).
+- **Handy:** Tippen = springen, in der Luft nochmal tippen = Doppelsprung (ab 250 m).
+- **PC:** Leertaste, Pfeil hoch oder W springen; Enter startet; Escape pausiert. Auf großen Bildschirmen zoomt das Spiel hinein, damit man nicht weiter vorausschaut als am Handy.
+- Oben links im Spiel öffnet **≡** das Menü mit Fortsetzen, Lobby und Einstellungen.
 
-- **Tippen:** springen
-- **In der Luft nochmal tippen:** Doppelsprung (ab Level 2, mit Salto)
+## Meter statt Level
 
-PC:
-
-- **Leertaste** (oder Pfeil hoch / W): springen; in der Lobby startet sie das Spiel, nach dem Verlieren „Nochmal“
-- **Enter:** Start bzw. Nochmal
-- **Escape:** Pause und weiter, Fenster schließen
-- **Maus:** Klick springt wie Tippen
-
-Oben rechts installiert der kleine Download-Knopf die App (nur im Browser sichtbar), der Lautsprecher schaltet den Ton.
-
-## Admin-Panel
-
-Taste **0** öffnet das Admin-Panel (Benutzer `Adrian`, Passwort `1234`). Dort kann man sich Fische geben und mit **Alle User löschen** alle Spielstände löschen, den eigenen eingeschlossen; danach startet das Spiel mit der Namensfrage neu.
-
-Das Spiel hat keinen Server: Jeder Spielstand liegt nur im Browser des jeweiligen Geräts. Das Panel wirkt deshalb nur auf dem Gerät, auf dem es geöffnet wird. Benutzer und Passwort stehen im Quelltext, sind also kein echter Schutz.
-
-## Deine Katze
-
-Beim ersten Start legst du den Namen deiner Katze fest, bevor es in die Lobby geht. Alle starten mit der weißen Standard-Katze. Sechs weitere gibt es im Shop unter **Katzen**, jede mit eigener Felllänge:
-
-| Katze | Fell | Fische |
-| --- | --- | --- |
-| Schneeweiß | Kurzhaar | gratis |
-| Grau getigert | Halblanghaar | 30 |
-| Mitternacht (schwarz) | Kurzhaar | 40 |
-| Orange | Halblanghaar | 60 |
-| Siam | Kurzhaar | 90 |
-| Goldkatze (glitzert) | Halblanghaar | 150 |
-| Galaxie (glitzert) | Langhaar | 200 |
-
-Im Inventar wählst du, mit welcher deiner Katzen du spielst, und kannst den Namen ändern.
-
-## Fische, Shop und Inventar
-
-Es gibt keine Punkte, nur Fische. Sie sind die Währung und werden im Browser gespeichert. Fische gibt es auf der Strecke, bei Events, für jede 5er-Serie (+2) und für jeden Gegner, den du mit Regenbogen-Kraft wegschleuderst.
-
-Im **Shop** gibt es Upgrades (Regenbogen-Stern, Fisch-Magnet, Dreifachsprung, Glückspfote), Katzen (siehe oben) und 8 Cosmetics: Tirolerhut, Weihnachtsmütze, Krone, Sonnenbrille, Goldkette, Schal, Strickpulli und Ringelsocken. Pro Körperstelle (Kopf, Augen, Hals, Körper, Pfoten) ist eines angezogen. Im **Inventar** siehst du deine Katze, wählst eine deiner Katzen, siehst deine Upgrades und ziehst Cosmetics an oder aus. Gekaufte Katzen und Cosmetics kannst du auch direkt im Shop auswählen bzw. an- und ausziehen. Cosmetics zählen nicht zur Hitbox.
+Gezählt werden Meter. Bei 250, 550, 900, 1300 und 1750 m ändert sich die Strecke (Menschenturm, Gleitschirm, Skipiste, Alpenglühen, Sternennacht), danach geht es endlos weiter. Dabei wird es immer später am Tag. Nach dem Verlieren siehst du Meter, Fische und Hürden.
 
 ## Spannung
 
-- **Sprung-Bewertung:** Super!, Perfekt!, Unglaublich! mit Serie (1x, 2x ...), direkt neben der Katze. Gesammelte Fische zeigen ein oranges „+1“.
-- **Regenbogen-Stern:** liegt selten auf der Strecke oder rettet dich einmal pro Runde (Upgrade). 4 bis 5 Sekunden unverwundbar, Gegner fliegen weg.
-- **Zufalls-Events:** Sternschauer, Fischregen, Wollknäuel (ab Level 2: rote Wollknäuel rollen heran) und Turbo-Rausch.
+- **Sprung-Bewertung** neben der Katze: Super!, Perfekt!, Unglaublich! mit Serie. Ganz knappe Sprünge bringen einen Bonus-Fisch, jede 5er-Serie zwei Fische.
+- **Fisch-Fieber:** Bei jeder 10er-Serie gibt es 6 Sekunden doppelte Fische.
+- **Goldfische** sind 10 Fische wert.
+- **Zufalls-Events:** Sternschauer (nur abends und nachts), Fischregen, Wollknäuel, Turbo-Rausch und Goldfisch-Schwarm.
+- **Sturz:** Zeitlupe, Blitz, die Katze wirbelt durch die Luft, landet mit X-Augen und sieht Sterne.
+- **5 Easter Eggs** im Hintergrund: Almhütte mit Rauch, Murmeltier, Lawine, Heißluftballon und nachts ein UFO.
 
-## Oberfläche
+## Shop
 
-Große Holzknöpfe mit dezentem Rautengitter und Fenster aus Brettern mit rotem Kopf. Die Schrift ist weiß (Minecraft-Schrift). Grün heißt los oder kaufen, Rot heißt zurück oder schließen, Braun ist alles andere.
+Alles kostet Fische, und zwar deutlich mehr als früher, damit sich Spielen lohnt.
 
-## Level
+- **Upgrades**, jedes in 3 Stufen: Regenbogen-Stern (rettet dich), Fisch-Magnet (einmal erfasste Fische fliegen sicher zu dir), Glückspfote (mehr Fische), Goldnase (mehr Goldfische).
+- **Katzen:** Schneeweiß (Standard), Grau getigert, Mitternacht, Orange, Siam, Goldkatze, Maine Coon.
+- **Cosmetics:** 20 Stück, je 4 für Kopf, Augen, Hals, Körper und Pfoten. Jeden Tag sind 4 davon im Shop. Jedes gibt einen kleinen Bonus (z. B. +3 % Fische). Gekaufte Cosmetics zieht man im Shop oder Inventar an und aus.
+- **Begleiter:** Spatz, Murmeltier oder Schneehase laufen mit und bringen dir regelmäßig einen Fisch.
 
-| Level | Name | Neu |
-| --- | --- | --- |
-| 1 | Almwiese | Wanderer stehen im Weg |
-| 2 | Menschenturm | Zu zweit, und einer steht auf den Schultern des anderen |
-| 3 | Gleitschirm | Fliegt jemand tief: drüber springen, hoch: drunter durchlaufen |
-| 4 | Skipiste | Skifahrer kommen schneller entgegen |
-| 5 | Alpenglühen | Drei auf einmal, Kombinationen |
-| 6 | Sternennacht | Alles zusammen, bei Nacht |
-| 7+ | Endlos-Alm | Immer schneller |
+Den Namen zu ändern kostet 1000 Fische.
 
-Mit jedem Level wird es 2,5 Stunden später: Level 1 beginnt um 08:00, Level 2 um 10:30, Level 5 zum Sonnenuntergang um 18:00, Level 7 um 23:00. Level und Uhrzeit stehen kurz im Banner, wenn ein Level beginnt, die Sonne wandert mit. Oben rechts siehst du nur deine Fische.
+## Missionen
+
+Jeden Tag gibt es 3 Missionen (z. B. 600 m laufen, 90 Fische sammeln, ein Easter Egg entdecken) und eine Login-Belohnung, die 7 Tage lang wächst.
+
+## Einstellungen
+
+Lautstärke, Spiel-Sounds und Knopf-Sounds einzeln, Vibration an/aus, Sprache (Deutsch/English) und Abmelden. Die Sounds laufen über einen Kompressor, damit man sie auch bei leiser Handy-Lautstärke gut hört.
+
+## Admin
+
+Taste **0** öffnet das Admin-Panel (Benutzer `Adrian`, Passwort `1234`): Fische vergeben und alle Konten auf diesem Gerät löschen. Benutzer und Passwort stehen im Quelltext, das ist also kein echter Schutz.
 
 ## Als App installieren
 
 Die Seite ist eine Progressive Web App (`manifest.webmanifest`, `sw.js`, `icons/`) und läuft danach im Vollbild im Querformat, auch offline.
 
-- **Android (Chrome):** Auf dem Startbildschirm erscheint „Als App installieren“, oder im Browser-Menü „App installieren“.
+- **Android (Chrome):** Download-Knopf oben rechts oder im Browser-Menü „App installieren“.
 - **iPhone (Safari):** Teilen-Knopf, dann „Zum Home-Bildschirm“.
-
-Das funktioniert nur über `https://` (also über GitHub Pages), nicht beim direkten Öffnen der Datei.
-
-## Online stellen
-
-In den Repository-Einstellungen unter *Settings → Pages* bei *Source* „Deploy from a branch“ wählen, dann den Branch mit `index.html` und den Ordner `/ (root)`.
 
 Wenn du das Spiel änderst, erhöhe die Versionsnummer `CACHE` in `sw.js`, damit installierte Apps die neue Version laden.
 

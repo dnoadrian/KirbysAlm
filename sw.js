@@ -1,13 +1,13 @@
-// Offline-Cache für "Cat Jumper". Bei Änderungen die Versionsnummer erhöhen.
-const CACHE = 'cat-jumper-v32';
+// Offline-Cache für "Kirbys Alm". Bei Änderungen die Versionsnummer erhöhen.
+const CACHE = 'kirbys-alm-v1';
 const ASSETS = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './icons/cat-jumper-192.png',
-  './icons/cat-jumper-512.png',
-  './icons/cat-jumper-maskable-512.png',
-  './icons/cat-jumper-apple-180.png',
+  './icons/kirbys-alm-192.png',
+  './icons/kirbys-alm-512.png',
+  './icons/kirbys-alm-maskable-512.png',
+  './icons/kirbys-alm-apple-180.png',
 ];
 
 self.addEventListener('install', (e) => {
