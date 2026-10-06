@@ -523,6 +523,24 @@ p, h1, h2, h3 { margin: 0; }
 
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
+{
+  // Jedes gefüllte Rechteck landet auf ganzen Bildschirmpixeln. Bei krummen Zoomstufen entstehen sonst
+  // halbdurchsichtige Kanten, die als dünne helle oder graue Linien zwischen den Pixeln sichtbar werden.
+  const rawFill = ctx.fillRect.bind(ctx);
+  ctx.fillRect = (x, y, w, h) => {
+    const m = ctx.getTransform();
+    if (m.b || m.c) { rawFill(x, y, w, h); return; }
+    let x0 = Math.round(m.a * x + m.e), x1 = Math.round(m.a * (x + w) + m.e);
+    let y0 = Math.round(m.d * y + m.f), y1 = Math.round(m.d * (y + h) + m.f);
+    if (x1 < x0) [x0, x1] = [x1, x0];
+    if (y1 < y0) [y0, y1] = [y1, y0];
+    if (w > 0 && x1 === x0) x1++;
+    if (h > 0 && y1 === y0) y1++;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    rawFill(x0, y0, x1 - x0, y1 - y0);
+    ctx.setTransform(m);
+  };
+}
 const $ = (id) => document.getElementById(id);
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const rand = (a, b) => a + Math.random() * (b - a);
@@ -859,7 +877,6 @@ const BREEDS = [
   { id: 'orange', name: 'Orange', hair: 'Halblanghaar', fur: 1, price: 900, desc: 'Rot getigert.', pal: { b: '#f2a14a', s: '#d27a2a', d: '#b8661f', u: '#c8641c', p: '#ffc1a8', e: '#2f5d34', c: '#ffb08a' }, stripes: '#e48c35' },
   { id: 'siam', name: 'Siam', hair: 'Kurzhaar', fur: 0, price: 1400, desc: 'Hell, mit dunklen Ohren, Pfoten und Schwanz.', pal: { b: '#f1e6d2', s: '#d9c6a6', d: '#4a3128', g: '#5b3d30', q: '#5b3d30', u: '#3f2a22', a: '#5b3d30', e: '#1f4f8f' } },
   { id: 'gold', name: 'Goldkatze', hair: 'Halblanghaar', fur: 1, price: 2500, desc: 'Glänzt und glitzert beim Laufen.', pal: { b: '#ffd54a', s: '#e0a920', d: '#c48d12', u: '#e0a920', e: '#6b2a12', c: '#ffab7a' }, sparkle: '#fff6b0' },
-  { id: 'mainecoon', name: 'Maine Coon', hair: 'Langhaar', fur: 2, price: 4000, body: 'dick', desc: 'Riesig, super flauschig, mit Pinselohren.', pal: { b: '#a8805a', s: '#86603e', d: '#6e4c30', u: '#5a3c24', a: '#8a6440', q: '#8a6440', e: '#9bb33a', p: '#d9a08f', c: '#d29a88' }, stripes: '#7c5838' },
 ];
 // Cosmetics: pro Körperstelle ist eines gleichzeitig angezogen
 // Cosmetics: pro Körperstelle ist eines angezogen. Jedes gibt einen kleinen Bonus.
@@ -1397,6 +1414,8 @@ const OLD_SKIN_PRICES = { grau: 30, schwarz: 40, tiger: 60, siam: 80, gold: 150,
 for (const k of [...save.owned]) {
   if (k.startsWith('skin:')) { save.fish += OLD_SKIN_PRICES[k.slice(5)] || 0; save.owned.delete(k); }
 }
+if (save.owned.has('cat:mainecoon')) { save.owned.delete('cat:mainecoon'); save.fish += 4000; } // die dicke Katze gibt es nicht mehr
+if (save.breed === 'mainecoon') save.breed = 'weiss';
 for (const k of [...save.owned]) if (k.startsWith('up:')) { const id = k.slice(3); if (id !== 'triple') save.levels[id] = Math.max(save.levels[id] || 0, 1); save.owned.delete(k); }
 function reloadSave() {
   Object.assign(save, { fish: store.get('cj-fish', 0), owned: new Set(store.get('cj-owned', [])), name: store.get('cj-name', ''), breed: store.get('cj-breed', 'weiss'), wear: store.get('cj-wear', {}), levels: store.get('cj-levels', {}), pet: store.get('cj-pet', null) });
@@ -1459,7 +1478,7 @@ function freshGame() {
     level: 1, objects: [], untilSpawn: 100, time: 0, combo: 0, bestCombo: 0,
     hour: startHour(1), fish: 0, starUsed: 0,
     event: null, eventIn: rand(13, 18), turbo: 1, streaks: [], nextStar: rand(28, 40),
-    fever: 0, eggs: G ? G.eggs : [], eggIn: rand(5, 10), bfly: null, flash: 0, slowmo: 0,
+    fever: 0, eggs: G ? G.eggs : [], eggIn: rand(25, 45), bfly: null, flash: 0, slowmo: 0,
   };
 }
 G = freshGame();
@@ -2581,45 +2600,50 @@ function playWithYarn(dt) {
   }
 }
 
-/* ---------- Easter Eggs im Hintergrund: Almhütte, Murmeltier, Lawine, Heißluftballon, UFO (nur nachts) ---------- */
-const EGG_PAL = { r: '#b5482f', R: '#7c2c1e', c: '#8a8f99', C: '#5f646e', v: '#a8723f', V: '#7a4e28', y: '#ffe9a0', d: '#5a3218', L: '#f4f4f0', J: '#d6453d', l: '#c8b08a', b: '#8a5a2b', g: '#9fe8ff', G: '#e2f8ff', n: '#9aa0aa', N: '#ffd43b', Y: '#7dff7a', m: '#a0784c', k: '#2a1a10', o: '#3a2213', M: '#7a5634', e: '#ead8b4' };
+/* ---------- Easter Eggs im Hintergrund (selten): Almhütte, Murmeltier, Lawine, Heißluftballon, Adler ---------- */
+const EGG_PAL = { R: '#c4553a', r: '#9c3b27', E: '#5a3218', c: '#8a8f99', v: '#b07a45', V: '#865a30', f: '#5a3218', y: '#ffe9a0', d: '#6b4423', D: '#ffd43b', p: '#ff7aa2', g: '#4f9a3c', s: '#9aa0aa', S: '#767b85', m: '#a0784c', k: '#2a1a10', o: '#3a2213', M: '#7a5634', e: '#ead8b4', B: '#7a4e2a', W: '#f4f1e8', O: '#f2a23a' };
+// Heißluftballon: runde Hülle mit Streifen, Licht von links oben, Seile und Weidenkorb
+function balloonRows() {
+  const W = 15, rows = [];
+  for (let y = 0; y < 16; y++) {
+    let row = '';
+    const rx = y < 9 ? 7.3 * Math.sqrt(Math.max(0, 1 - ((y + .5 - 8) / 8.2) ** 2)) : 7.3 * Math.max(.12, 1 - (y - 8.5) / 8.2) * Math.sqrt(Math.max(0, 1 - ((8.5 - 8) / 8.2) ** 2));
+    for (let x = 0; x < W; x++) {
+      const u = (x + .5 - 7.5) / Math.max(rx, .1);
+      if (Math.abs(u) > 1) { row += '.'; continue; }
+      const band = Math.floor((Math.asin(u) / Math.PI + .5) * 6) % 2; // Streifen folgen der Rundung
+      const dark = u > .5 || y > 12;
+      const light = u < -.45 && u > -.8 && y > 1 && y < 4;
+      row += light ? 'h' : band ? (dark ? 'z' : 'Z') : (dark ? 'j' : 'J');
+    }
+    rows.push(row);
+  }
+  rows.push('.....l...l.....', '......l.l......', '.....bbbbb.....', '.....bBBBb.....', '......bbb......');
+  return rows;
+}
 const eggSpr = {
   hut: sprite([
-    '...........cC...',
-    '......RRRRRcC...',
-    '.....RrrrrrrR...',
-    '....RrrrrrrrrR..',
-    '...RrrrrrrrrrrR.',
-    '..RrrrrrrrrrrrrR',
-    '.RRRRRRRRRRRRRRR',
-    '..vvvvvvvvvvvvv.',
-    '..vVvvyyvvvdddv.',
-    '..vVvvyyvvvdddv.',
-    '..vvvvvvvvvdddv.',
-    '..VVVVVVVVVdddV.',
+    '............cc....',
+    '........RR..cc....',
+    '......RRrrRRcc....',
+    '....RRrrrrrrRR....',
+    '..RRrrrrrrrrrrRR..',
+    'RRrrrrrrrrrrrrrrRR',
+    'EEEEEEEEEEEEEEEEEE',
+    '.vvvvvvvvvvvvvvvv.',
+    '.vffffvvvvvvvdddv.',
+    '.vfyyfvvvvvvvdddv.',
+    '.VfyyfVVVVVVVdDdV.',
+    '.vffffvvvvvvvdddv.',
+    '.vppgpvvvvvvvdddv.',
+    '.VVVVVVVVVVVVdddV.',
+    'sSsSsSsSsSsSsSsSsS',
   ], EGG_PAL),
-  balloon: sprite([
-    '...JJLJJ...',
-    '..JJJLJJJ..',
-    '.JJJJLJJJJ.',
-    'JJJJJLJJJJJ',
-    'JJJJJLJJJJJ',
-    'JJJJJLJJJJJ',
-    '.JJJJLJJJJ.',
-    '..JJJLJJJ..',
-    '...JJLJJ...',
-    '....l.l....',
-    '....l.l....',
-    '....bbb....',
-    '....bbb....',
-  ], EGG_PAL),
-  ufo: sprite([
-    '.....ggg.....',
-    '....gGGGg....',
-    '..nnnnnnnnn..',
-    'nnnNnnnNnnnNn',
-    '.nnnnnnnnnnn.',
-  ], EGG_PAL),
+  balloon: sprite(balloonRows(), { J: '#d8452f', j: '#a8321f', Z: '#ffd43b', z: '#d9a62a', h: '#fff3c4', l: '#7a5a3a', b: '#9b6436', B: '#6e4220' }),
+  eagle: [
+    ['.............', 'BBBBB.WOBBBBB', '..BBBBBBBBB..', '.....BBB.....'],
+    ['BB.........BB', '.BBB.WO..BBB.', '..BBBBBBBBB..', '.....BBB.....'],
+  ].map((r) => sprite(r, EGG_PAL)),
   marmot: sprite([
     '..mm..',
     '.mmkmo',
@@ -2632,17 +2656,17 @@ const eggSpr = {
   ], EGG_PAL),
 };
 const bflySpr = [['PP.PP', 'PPkPP', '.PkP.', '..k..'], ['.P.P.', '.PkP.', '.PkP.', '..k..']].map((r) => sprite(r, { P: '#ff9fd0', k: '#5a3218' }));
-const EGG_TYPES = ['hut', 'marmot', 'avalanche', 'balloon', 'ufo'];
+const EGG_TYPES = ['hut', 'marmot', 'avalanche', 'balloon', 'eagle'];
 function tickEggs(dt, step) {
   if (mode === 'play') {
     G.eggIn -= dt;
     if (G.eggIn <= 0) {
-      G.eggIn = rand(14, 26);
-      const pool = EGG_TYPES.filter((k) => (k !== 'ufo' || (isEvening() && G.hour % 24 > 20 || G.hour % 24 < 5)) && !G.eggs.some((e) => e.type === k));
+      G.eggIn = rand(40, 80); // Easter Eggs sind selten
+      const pool = EGG_TYPES.filter((k) => !G.eggs.some((e) => e.type === k));
       if (pool.length) {
         const type = pick(pool);
         const layer = type === 'hut' || type === 'marmot' ? 'hill' : type === 'avalanche' ? 'far' : 'sky';
-        G.eggs.push({ type, layer, x: viewW + 30, t: 0, y: type === 'ufo' ? skyH * rand(.55, .75) : skyH * rand(.45, .7) });
+        G.eggs.push({ type, layer, x: viewW + 30, t: 0, y: skyH * rand(.45, .7) });
         if (typeof missionProgress === 'function') missionProgress('egg', 1);
       }
     }
@@ -2651,7 +2675,7 @@ function tickEggs(dt, step) {
     e.t += dt;
     if (e.layer === 'hill') e.x -= step * .3;
     else if (e.layer === 'far') e.x -= step * .08;
-    else e.x -= step * .05 + (e.type === 'ufo' ? 22 : 5) * dt;
+    else e.x -= step * .05 + (e.type === 'eagle' ? 18 : 5) * dt;
     if (e.type === 'hut' && Math.random() < dt * 3) e.smoke = (e.smoke || 0) + 1;
   }
   G.eggs = G.eggs.filter((e) => e.x > -60 && e.t < 120);
@@ -2695,16 +2719,9 @@ function drawEggs(layer, layerH) {
     } else if (e.type === 'balloon') {
       const sp = eggSpr.balloon;
       ctx.drawImage(sp.c, x - sp.pad, -Math.round(e.y + Math.sin(e.t * .8) * 3) - sp.pad);
-    } else if (e.type === 'ufo') {
-      const sp = eggSpr.ufo;
-      const y = -Math.round(e.y + Math.sin(e.t * 3) * 2);
-      if (Math.sin(e.t * 1.7) > .4) { // grüner Strahl
-        ctx.globalAlpha = .25;
-        ctx.fillStyle = '#7dff7a';
-        for (let i = 0; i < 18; i++) ctx.fillRect(x + 5 - Math.floor(i / 4), y + sp.h + i, 3 + Math.floor(i / 2), 1);
-        ctx.globalAlpha = 1;
-      }
-      ctx.drawImage(sp.c, x - sp.pad, y - sp.pad);
+    } else if (e.type === 'eagle') { // Adler kreist langsam
+      const fr = eggSpr.eagle[Math.floor(e.t * 3) % 2];
+      ctx.drawImage(fr.c, x - fr.pad, -Math.round(e.y + Math.sin(e.t * .9) * 6) - fr.pad);
     }
   }
 }
@@ -3034,7 +3051,7 @@ function draw() {
   }
   ctx.globalAlpha = 1;
 
-  drawEggs('sky'); // Ballon und UFO fliegen hinter Kirby
+  drawEggs('sky'); // Ballon und Adler fliegen hinter Kirby
   drawKirby(pal);
 
   // Wolken

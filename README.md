@@ -33,14 +33,14 @@ Gezählt werden Meter. Bei 250, 550, 900, 1300 und 1750 m ändert sich die Strec
 - **Goldfische** sind 10 Fische wert.
 - **Zufalls-Events:** Sternschauer (nur abends und nachts), Fischregen, Wollknäuel, Turbo-Rausch und Goldfisch-Schwarm.
 - **Sturz:** Zeitlupe, Blitz, die Katze wirbelt durch die Luft, landet mit X-Augen und sieht Sterne.
-- **5 Easter Eggs** im Hintergrund: Almhütte mit Rauch, Murmeltier, Lawine, Heißluftballon und nachts ein UFO.
+- **5 Easter Eggs** im Hintergrund: Almhütte mit Rauch, Murmeltier, Lawine, Heißluftballon und ein kreisender Adler. Sie sind selten.
 
 ## Shop
 
 Alles kostet Fische, und zwar deutlich mehr als früher, damit sich Spielen lohnt.
 
 - **Upgrades**, jedes in 3 Stufen: Regenbogen-Stern (rettet dich), Fisch-Magnet (einmal erfasste Fische fliegen sicher zu dir), Glückspfote (mehr Fische), Goldnase (mehr Goldfische).
-- **Katzen:** Schneeweiß (Standard), Grau getigert, Mitternacht, Orange, Siam, Goldkatze, Maine Coon.
+- **Katzen:** Schneeweiß (Standard), Grau getigert, Mitternacht, Orange, Siam, Goldkatze.
 - **Cosmetics:** 20 Stück, je 4 für Kopf, Augen, Hals, Körper und Pfoten. Jeden Tag sind 4 davon im Shop. Jedes gibt einen kleinen Bonus (z. B. +3 % Fische). Gekaufte Cosmetics zieht man im Shop oder Inventar an und aus.
 - **Begleiter:** Spatz, Murmeltier oder Schneehase laufen mit und bringen dir regelmäßig einen Fisch.
 
