@@ -41,7 +41,7 @@ Alles kostet Fische, und zwar deutlich mehr als früher, damit sich Spielen lohn
 
 - **Upgrades**, jedes in 3 Stufen: Regenbogen-Stern (rettet dich), Fisch-Magnet (einmal erfasste Fische fliegen sicher zu dir), Glückspfote (mehr Fische), Goldnase (mehr Goldfische).
 - **Katzen:** Schneeweiß (Standard), Grau getigert, Mitternacht, Orange, Siam, Goldkatze.
-- **Cosmetics:** 20 Stück, je 4 für Kopf, Augen, Hals, Körper und Pfoten. Jeden Tag sind 4 davon im Shop. Jedes gibt einen kleinen Bonus (z. B. +3 % Fische). Gekaufte Cosmetics zieht man im Shop oder Inventar an und aus.
+- **Cosmetics:** 20 Stück, je 4 für Kopf, Augen, Hals, Körper und Pfoten. Jeden Tag sind 3 davon im Shop. Jedes gibt einen kleinen Bonus (z. B. +3 % Fische). Gekaufte Cosmetics zieht man im Shop oder Inventar an und aus.
 - **Begleiter:** Spatz, Murmeltier oder Schneehase laufen mit und bringen dir regelmäßig einen Fisch.
 
 Den Namen zu ändern kostet 1000 Fische.

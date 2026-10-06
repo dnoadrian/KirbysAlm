@@ -1,5 +1,5 @@
 // Offline-Cache für "Kirbys Alm". Bei Änderungen die Versionsnummer erhöhen.
-const CACHE = 'kirbys-alm-v5';
+const CACHE = 'kirbys-alm-v6';
 const ASSETS = [
   './',
   './index.html',
