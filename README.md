@@ -20,11 +20,12 @@ Bei Start stupst ein Schmetterling die Katze an die Nase, sie rennt ihm hinterhe
 
 - **Handy:** Tippen = springen, in der Luft nochmal tippen = Doppelsprung (ab 250 m).
 - **PC:** Leertaste, Pfeil hoch oder W springen; Enter startet; Escape pausiert. Auf großen Bildschirmen zoomt das Spiel hinein, damit man nicht weiter vorausschaut als am Handy.
-- Oben links im Spiel öffnet **≡** das Menü mit Fortsetzen, Lobby und Einstellungen.
+- Oben rechts neben den Fischen öffnet **≡** das Menü mit Fortsetzen, Einstellungen und Lobby (am PC auch Escape). Escape geht immer einen Schritt zurück.
+- Wo in der Lobby der Titel steht, zeigt das Spiel klein die gelaufenen Meter.
 
 ## Meter statt Level
 
-Gezählt werden Meter. Bei 250, 550, 900, 1300 und 1750 m ändert sich die Strecke (Menschenturm, Gleitschirm, Skipiste, Alpenglühen, Sternennacht), danach geht es endlos weiter. Dabei wird es immer später am Tag. Nach dem Verlieren siehst du Meter, Fische und Hürden.
+Gezählt werden Meter. Bei 250, 550, 900, 1300 und 1750 m ändert sich die Strecke (Menschenturm, Gleitschirm, Skipiste, Alpenglühen, Sternennacht), danach geht es endlos weiter. Dabei wird es immer später am Tag (ohne eingeblendete Uhrzeit). Nach dem Verlieren siehst du Meter, Fische und Hürden.
 
 ## Spannung
 
