@@ -526,8 +526,11 @@ const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: r
 /* ---------- Speicher (Fische, Gekauftes, Ton; darf fehlen) ---------- */
 const store = {
   get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
-  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* egal */ } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* egal */ } if (store.onSet) store.onSet(k); },
+  onSet: null,
 };
+// Cloud-Spielstand (Supabase, siehe cloud/supabase.sql und README): Projekt-URL und anon-Key eintragen. Leer = Konten nur auf diesem Gerät.
+const CLOUD = Object.assign({ url: '', key: '' }, window.KA_CLOUD);
 // Neustart für alle: Spielstände aus älteren Versionen werden einmal gelöscht (Name, Fische, Gekauftes, Bestenliste)
 const SAVE_VERSION = 3;
 if (store.get('cj-save-version', 0) !== SAVE_VERSION) {
@@ -2357,8 +2360,8 @@ function renderMissions() {
 }
 
 /* ---------- Konten: Name + Passwort ----------
-   Ohne Server liegen die Konten nur auf diesem Gerät. Passwörter werden nie im Klartext gespeichert,
-   sondern als PBKDF2-SHA-256-Hash (150 000 Runden) mit zufälligem Salz. */
+   Ohne CLOUD liegen die Konten nur auf diesem Gerät, mit CLOUD zusätzlich in Supabase. Passwörter werden nie
+   im Klartext gespeichert oder verschickt, sondern als PBKDF2-SHA-256-Hash (150 000 Runden) mit zufälligem Salz. */
 const ACC_KEYS = ['cj-fish', 'cj-owned', 'cj-name', 'cj-breed', 'cj-wear', 'cj-levels', 'cj-missions', 'cj-login'];
 const accounts = () => store.get('cj-accounts', {});
 const accKey = (n) => n.trim().toLowerCase();
@@ -2388,10 +2391,182 @@ function syncAccount() {
 }
 function logout() {
   syncAccount();
+  cloudFlush();
   loadSnapshot({});
   store.set('cj-active', null);
   location.reload();
 }
+
+/* ---------- Cloud: derselbe Spielstand auf Handy und PC ----------
+   Jedes Konto merkt sich die Revision (rev) und den Stand beim letzten Abgleich (base). Hat ein anderes Gerät
+   inzwischen gespeichert, werden beide Stände zusammengeführt und dann wieder gespeichert. Ohne Netz wird
+   einfach lokal weitergespielt und später abgeglichen. */
+let cloudBusy = false, cloudAgain = false, cloudTimer = 0, cloudFails = 0, cloudQuiet = false, cloudPulled = 0;
+const inRun = () => mode === 'play' || mode === 'paused';
+const canon = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Array.isArray(x) ? Object.keys(x).sort().reduce((o, kk) => { o[kk] = x[kk]; return o; }, {}) : x));
+const newWid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
+function cleanData(d) { const o = {}; if (d && typeof d === 'object') for (const k of ACC_KEYS) if (d[k] !== undefined && d[k] !== null) o[k] = d[k]; return o; }
+async function rpc(fn, args, ms = 7000, keepalive = false) {
+  if (!CLOUD.url) return null;
+  const ctl = window.AbortController && !keepalive ? new AbortController() : null;
+  const tm = ctl ? setTimeout(() => ctl.abort(), ms) : 0;
+  const headers = { apikey: CLOUD.key, 'Content-Type': 'application/json' };
+  if (/^eyJ/.test(CLOUD.key)) headers.Authorization = 'Bearer ' + CLOUD.key; // alter anon-Key (JWT); neue Publishable-Keys nur als apikey
+  try {
+    const r = await fetch(CLOUD.url.replace(/\/+$/, '') + '/rest/v1/rpc/' + fn, { method: 'POST', headers, body: JSON.stringify(args), signal: ctl ? ctl.signal : undefined, cache: 'no-store', keepalive });
+    if (!r.ok) return null;
+    const j = await r.json();
+    return j && typeof j === 'object' ? j : null;
+  } catch (e) { return null; } finally { clearTimeout(tm); }
+}
+// undefined = keine Cloud oder keine Verbindung, null = Name in der Cloud noch frei
+async function cloudSalt(key) { const r = await rpc('ka_salt', { p_key: key }); return r ? r.salt || null : undefined; }
+function accPatch(key, patch) { const all = accounts(); if (!all[key]) return; Object.assign(all[key], patch); store.set('cj-accounts', all); }
+// die letzten Schreibversuche merken: kam die Antwort nicht an, erkennt man den eigenen Stand in der Cloud wieder
+function addPend(key, w, d) { const all = accounts(); if (!all[key]) return; all[key].pend = [...(all[key].pend || []).slice(-3), { w, d }]; store.set('cj-accounts', all); }
+const baseFor = (a, r) => { const mine = (a.pend || []).find((p) => p.w === r.wid); return mine ? mine.d : a.base; };
+// Zusammenführen: Fische = Cloud + was hier seit base dazukam, Gekauftes vereint, Stufen und Fortschritt das Maximum,
+// Angezogenes vom letzten Schreiber; zweimal abgeholte Belohnungen zählen nur einmal
+function mergeSaves(b, l, c) {
+  b = b || {};
+  const m = { ...l, ...c };
+  let fish = (+c['cj-fish'] || 0) + (+l['cj-fish'] || 0) - (+b['cj-fish'] || 0);
+  m['cj-owned'] = [...new Set([...(c['cj-owned'] || []), ...(l['cj-owned'] || [])])];
+  const lv = { ...(c['cj-levels'] || {}) }, ll = l['cj-levels'] || {};
+  for (const id in ll) lv[id] = Math.max(lv[id] || 0, ll[id] || 0);
+  m['cj-levels'] = lv;
+  if (l['cj-breed'] && l['cj-breed'] !== b['cj-breed']) m['cj-breed'] = l['cj-breed'];
+  const w = { ...(c['cj-wear'] || {}) }, lw = l['cj-wear'] || {}, bw = b['cj-wear'] || {};
+  for (const s of new Set([...Object.keys(lw), ...Object.keys(bw)])) if (lw[s] !== bw[s]) { if (lw[s]) w[s] = lw[s]; else delete w[s]; }
+  m['cj-wear'] = w;
+  const lm = l['cj-missions'], cm = c['cj-missions'], bm = b['cj-missions'];
+  if (lm && cm && lm.day === cm.day && Array.isArray(lm.list) && Array.isArray(cm.list)) {
+    m['cj-missions'] = { ...cm, list: cm.list.map((x, i) => {
+      const y = lm.list[i];
+      if (!y || y.type !== x.type) return x;
+      const was = bm && bm.day === cm.day && bm.list && bm.list[i] && bm.list[i].claimed;
+      if (x.claimed && y.claimed && !was) fish -= x.reward || 0;
+      return { ...x, prog: Math.max(x.prog || 0, y.prog || 0), claimed: !!(x.claimed || y.claimed) };
+    }) };
+  } else if (lm && (!cm || lm.day > cm.day)) m['cj-missions'] = lm;
+  const lg = l['cj-login'], cg = c['cj-login'], bg = b['cj-login'];
+  if (lg && cg && lg.last === cg.last) {
+    if (lg.claimed === lg.last && cg.claimed === cg.last && !(bg && bg.claimed === lg.last)) fish -= LOGIN_REWARD[(Math.max(1, cg.streak) - 1) % 7];
+    m['cj-login'] = { last: cg.last, streak: Math.max(lg.streak, cg.streak), claimed: Math.max(lg.claimed, cg.claimed) };
+  } else if (lg && (!cg || lg.last > cg.last)) m['cj-login'] = lg;
+  m['cj-fish'] = Math.max(0, Math.round(fish));
+  return m;
+}
+function refreshSave() {
+  reloadSave();
+  updateHud(true);
+  updateMissionDot();
+  if (shown === 'shop') renderShop(); else if (shown === 'inv') renderInv(); else if (shown === 'missions') renderMissions();
+}
+function applyCloud(key, data, rev, base) {
+  cloudQuiet = true;
+  try { loadSnapshot(data); } finally { cloudQuiet = false; }
+  accPatch(key, { data: snapshot(), rev, base });
+  refreshSave();
+}
+// ein Abgleich: anlegen, speichern oder nachsehen; true = fertig, false = Fehler (später nochmal), 'later' = nach der Runde
+async function cloudStep() {
+  for (let i = 0; i < 6; i++) {
+    const key = store.get('cj-active', null), a = key && accounts()[key];
+    if (!a || a.cloudOff) return true;
+    const local = snapshot();
+    const adopt = (r) => {
+      const cur = accounts()[key] || {};
+      if (cur.rev === r.rev) return true;
+      const c = cleanData(r.data), b = baseFor(cur, r);
+      if (canon(b) === canon(c)) { accPatch(key, { rev: r.rev, base: c }); return true; }
+      if (inRun()) return false;
+      applyCloud(key, mergeSaves(b, snapshot(), c), r.rev, c);
+      return true;
+    };
+    let r;
+    if (a.rev == null) { // noch nicht in der Cloud
+      const w = newWid();
+      addPend(key, w, local);
+      r = await rpc('ka_register', { p_key: key, p_name: a.name, p_salt: a.salt, p_hash: a.hash, p_data: local, p_wid: w });
+      if (!r) return false;
+      if (r.ok) { accPatch(key, { rev: r.rev, base: local }); if (canon(snapshot()) === canon(local)) return true; continue; }
+      if (r.error !== 'exists') return false;
+      r = await rpc('ka_load', { p_key: key, p_hash: a.hash });
+      if (!r) return false;
+      if (r.ok) { if (!adopt(r)) return 'later'; continue; }
+      if (r.error === 'auth') { accPatch(key, { cloudOff: true }); return true; } // Name in der Cloud schon vergeben: bleibt auf diesem Gerät
+    } else if (canon(local) === canon(a.base)) { // hier nichts Neues: nur nachsehen
+      r = await rpc('ka_load', { p_key: key, p_hash: a.hash });
+      if (!r) return false;
+      if (r.ok) { if (r.rev === a.rev) return true; if (!adopt(r)) return 'later'; continue; }
+    } else {
+      const w = newWid();
+      addPend(key, w, local);
+      r = await rpc('ka_save', { p_key: key, p_hash: a.hash, p_rev: a.rev, p_data: local, p_wid: w });
+      if (!r) return false;
+      if (r.ok) { accPatch(key, { rev: r.rev, base: local }); if (canon(snapshot()) === canon(local)) return true; continue; }
+      if (r.error === 'conflict') { if (!adopt(r)) return 'later'; continue; }
+    }
+    if (r.error === 'moved' && r.key) { // auf einem anderen Gerät umbenannt: Konto zieht mit um
+      const all = accounts();
+      all[r.key] = { ...all[key], name: r.name || all[key].name };
+      if (r.key !== key) delete all[key];
+      store.set('cj-accounts', all);
+      store.set('cj-active', r.key);
+      continue;
+    }
+    if (r.error === 'missing') { accPatch(key, { rev: null, base: null }); continue; } // Cloud wurde geleert: neu anlegen
+    if (r.error === 'auth') { accPatch(key, { cloudOff: true }); return true; }
+    return false;
+  }
+  return true;
+}
+async function cloudSync() {
+  if (!CLOUD.url) return;
+  if (cloudBusy) { cloudAgain = true; return; }
+  if (inRun()) { cloudSoon(3000); return; }
+  cloudBusy = true;
+  let res = false;
+  try { res = navigator.locks ? await navigator.locks.request('ka-cloud', cloudStep) : await cloudStep(); } catch (e) { res = false; }
+  cloudBusy = false;
+  if (res === false) { cloudFails++; cloudSoon(Math.min(60000, 1000 * 2 ** cloudFails)); } else { cloudFails = 0; cloudPulled = Date.now(); if (res === 'later') cloudSoon(3000); }
+  if (cloudAgain) { cloudAgain = false; cloudSoon(400, true); }
+}
+function cloudSoon(ms = 1500, now = false) {
+  if (!CLOUD.url) return;
+  if (cloudTimer) { if (!now) return; clearTimeout(cloudTimer); }
+  cloudTimer = setTimeout(() => { cloudTimer = 0; cloudSync(); }, ms);
+}
+// beim Wegklicken oder Schließen: sofort losschicken, die Anfrage läuft auch nach dem Schließen weiter
+function cloudFlush() {
+  if (!CLOUD.url) return;
+  if (cloudBusy) { cloudAgain = true; return; }
+  const key = store.get('cj-active', null), a = key && accounts()[key];
+  if (!a || a.cloudOff || a.rev == null) return;
+  const local = snapshot();
+  if (canon(local) === canon(a.base)) return;
+  const w = newWid();
+  addPend(key, w, local);
+  rpc('ka_save', { p_key: key, p_hash: a.hash, p_rev: a.rev, p_data: local, p_wid: w }, 0, true).then((r) => {
+    const b = accounts()[key];
+    if (r && r.ok && b && b.rev === a.rev) accPatch(key, { rev: r.rev, base: local });
+  });
+}
+if (CLOUD.url) {
+  store.onSet = (k) => { if (!cloudQuiet && ACC_KEYS.includes(k)) cloudSoon(); };
+  document.addEventListener('visibilitychange', () => { if (document.hidden) cloudFlush(); else cloudSoon(100, true); });
+  window.addEventListener('pagehide', cloudFlush);
+  window.addEventListener('focus', () => { if (Date.now() - cloudPulled > 4000) cloudSoon(100, true); });
+  window.addEventListener('online', () => cloudSoon(100, true));
+  setTimeout(cloudSync, 0); // beim Laden zuerst den Stand aus der Cloud holen
+}
+// mehrere Tabs auf einem Gerät: immer denselben Stand zeigen
+let storageTimer = 0;
+window.addEventListener('storage', (e) => {
+  if (e.key === 'cj-active') { location.reload(); return; }
+  if (e.key === null || ACC_KEYS.includes(e.key)) { clearTimeout(storageTimer); storageTimer = setTimeout(refreshSave, 30); }
+});
 
 /* ---------- Katze einrichten: Name + Passwort (neues Konto oder anmelden) ---------- */
 let setupFromInv = false, setupBusy = false;
@@ -2413,6 +2588,7 @@ function openSetup(fromInv) {
 function setupMsg(text) {
   $('setupMsg').textContent = text;
   $('setupMsg').hidden = false;
+  $('setupMsg').scrollIntoView({ block: 'nearest' }); // am Handy ist das Fenster oft nach unten gescrollt
 }
 $('setupNext').addEventListener('click', async () => {
   audioOn();
@@ -2424,9 +2600,18 @@ $('setupNext').addEventListener('click', async () => {
     const all = accounts(), oldKey = store.get('cj-active', null), newKey = accKey(name);
     if (newKey !== oldKey && all[newKey]) { setupMsg(t('Diesen Namen gibt es auf diesem Gerät schon.')); sfx.no(); return; }
     if (save.fish < RENAME_PRICE) { setupMsg(t('Namen ändern kostet') + ' ' + RENAME_PRICE + ' ' + t('Fische.')); sfx.no(); return; }
+    const a = oldKey && all[oldKey];
+    if (CLOUD.url && a && !a.cloudOff) { // in der Cloud mit umbenennen, damit der Name dort frei ist
+      setupBusy = true;
+      let r;
+      try { r = a.rev == null ? ((await cloudSalt(newKey)) && newKey !== oldKey ? { error: 'exists' } : { ok: true }) : await rpc('ka_rename', { p_key: oldKey, p_hash: a.hash, p_new_key: newKey, p_name: name }); } finally { setupBusy = false; }
+      if (!r) { setupMsg(t('Keine Verbindung. Bitte nochmal versuchen.')); sfx.no(); return; }
+      if (!r.ok) { setupMsg(t(r.error === 'exists' ? 'Diesen Namen gibt es schon.' : 'Keine Verbindung. Bitte nochmal versuchen.')); sfx.no(); return; }
+    }
     save.fish -= RENAME_PRICE;
     save.name = name;
-    if (oldKey && all[oldKey]) { all[newKey] = { ...all[oldKey], name }; if (newKey !== oldKey) delete all[oldKey]; store.set('cj-accounts', all); store.set('cj-active', newKey); }
+    const acc = accounts();
+    if (oldKey && acc[oldKey]) { acc[newKey] = { ...acc[oldKey], name }; if (newKey !== oldKey) delete acc[oldKey]; store.set('cj-accounts', acc); store.set('cj-active', newKey); }
     persist();
     updateHud(true);
     sfx.buy();
@@ -2437,13 +2622,27 @@ $('setupNext').addEventListener('click', async () => {
   if (pw.length < 4) { setupMsg(t('Das Passwort braucht mindestens 4 Zeichen.')); $('catPass').focus(); sfx.no(); return; }
   setupBusy = true;
   try {
-    const all = accounts(), key = accKey(name);
-    if (all[key]) { // anmelden
+    syncAccount();
+    cloudFlush();
+    const all = accounts(), key = accKey(name), active = store.get('cj-active', null);
+    const cs = await cloudSalt(key);
+    if (CLOUD.url && cs === undefined && !all[key]) { setupMsg(t('Keine Verbindung. Zum ersten Anmelden braucht es kurz Internet.')); sfx.no(); return; }
+    if (cs) { // Konto liegt in der Cloud: dort prüfen und laden, die Cloud gewinnt gegen alte Stände auf diesem Gerät
+      const h = await hashPassword(pw, cs);
+      const r = await rpc('ka_load', { p_key: key, p_hash: h });
+      if (!r) { setupMsg(t('Keine Verbindung. Bitte nochmal versuchen.')); sfx.no(); return; }
+      if (!r.ok) { setupMsg(t('Falsches Passwort für') + ' ' + (all[key] ? all[key].name : name) + '.'); sfx.no(); return; }
+      const acc = accounts(), c = cleanData(r.data), loc = acc[key] && acc[key].salt === cs && acc[key].rev != null ? acc[key] : null;
+      const data = loc ? mergeSaves(baseFor(loc, r), active === key ? snapshot() : loc.data || {}, c) : c; // was hier noch nicht hochgeladen war, bleibt erhalten
+      acc[key] = { name: r.name || name, salt: cs, hash: h, data, rev: r.rev, base: c, pend: loc ? loc.pend : [] };
+      store.set('cj-accounts', acc);
+      if (active !== key) { loadSnapshot(data); store.set('cj-active', key); location.reload(); return; }
+      applyCloud(key, data, r.rev, c);
+      cloudSoon(300, true);
+    } else if (all[key]) { // anmelden
       const h = await hashPassword(pw, all[key].salt);
       if (h !== all[key].hash) { setupMsg(t('Falsches Passwort für') + ' ' + all[key].name + '.'); sfx.no(); return; }
-      const active = store.get('cj-active', null);
       if (active !== key) {
-        syncAccount();
         loadSnapshot(all[key].data || { 'cj-name': all[key].name });
         store.set('cj-active', key);
         location.reload();
@@ -2452,13 +2651,22 @@ $('setupNext').addEventListener('click', async () => {
     } else { // neues Konto
       const salt = toHex(crypto.getRandomValues(new Uint8Array(16)));
       const hash = await hashPassword(pw, salt);
-      const active = store.get('cj-active', null);
-      if (active && all[active]) { syncAccount(); loadSnapshot({}); reloadSave(); } // anderes Konto war aktiv: frisch anfangen
+      let rev = null, base = null, pend = [];
+      if (cs === null) { // gleich in der Cloud anlegen
+        const fresh = cleanData(active && all[active] ? { 'cj-name': name } : { ...snapshot(), 'cj-name': name }), w = newWid();
+        pend = [{ w, d: fresh }];
+        const r = await rpc('ka_register', { p_key: key, p_name: name, p_salt: salt, p_hash: hash, p_data: fresh, p_wid: w });
+        if (r && r.error === 'exists') { setupMsg(t('Diesen Namen gibt es schon.')); sfx.no(); return; }
+        if (r && r.ok) { rev = r.rev; base = fresh; }
+      }
+      if (active && all[active]) { store.set('cj-active', null); loadSnapshot({}); reloadSave(); } // anderes Konto war aktiv: frisch anfangen
       save.name = name;
       persist();
-      all[key] = { name, salt, hash, data: snapshot() };
-      store.set('cj-accounts', all);
+      const acc = accounts();
+      acc[key] = { name, salt, hash, data: snapshot(), ...(CLOUD.url ? { rev, base, pend } : {}) };
+      store.set('cj-accounts', acc);
       store.set('cj-active', key);
+      cloudSoon(300, true);
     }
   } finally { setupBusy = false; }
   $('catName').blur(); $('catPass').blur();
@@ -2471,6 +2679,10 @@ $('setupBack').addEventListener('click', () => { renderInv(); show('inv'); });
 $('catName').addEventListener('keydown', (e) => { if (e.key === 'Enter') { if (!$('passRow').hidden) $('catPass').focus(); else $('setupNext').click(); } });
 $('catPass').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('setupNext').click(); });
 
+Object.assign(EN, {
+  'Keine Verbindung. Zum ersten Anmelden braucht es kurz Internet.': 'No connection. Logging in for the first time needs the internet once.',
+  'Keine Verbindung. Bitte nochmal versuchen.': 'No connection. Please try again.', 'Diesen Namen gibt es schon.': 'This name is already taken.',
+});
 Object.assign(EN, {
   '+20 % Fische auf der Strecke und bei Events.': '+20 % fish on the track and in events.', '+40 % Fische.': '+40 % fish.', '+60 % Fische.': '+60 % fish.',
   '6 Sekunden doppelte Fische': '6 seconds of double fish', 'Abholen': 'Claim', 'Aktiv': 'Active', 'Alle User löschen': 'Delete all users',
