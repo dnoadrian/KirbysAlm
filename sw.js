@@ -1,5 +1,5 @@
 // Offline-Cache für "Kirbys Alm". Bei Änderungen die Versionsnummer erhöhen.
-const CACHE = 'kirbys-alm-v10';
+const CACHE = 'kirbys-alm-v11';
 const ASSETS = [
   './',
   './index.html',
@@ -26,11 +26,17 @@ self.addEventListener('fetch', (e) => {
   const req = e.request;
   if (req.method !== 'GET') return;
 
-  // Seite selbst: zuerst Netz (damit Updates ankommen), sonst Cache
+  // Seite selbst: zuerst Netz (damit Updates ankommen), sonst Cache.
+  // Gemerkt wird nur das Spiel selbst, nie Fehlerseiten (404 usw.) oder andere Seiten im selben Ordner.
   if (req.mode === 'navigate') {
+    const path = new URL(req.url).pathname, base = new URL('./', self.location).pathname;
+    const app = path === base || path === base + 'index.html';
     e.respondWith(
       fetch(req)
-        .then((res) => { const copy = res.clone(); caches.open(CACHE).then((c) => c.put('./index.html', copy)); return res; })
+        .then((res) => {
+          if (app && res.ok && res.type === 'basic') { const copy = res.clone(); caches.open(CACHE).then((c) => c.put('./index.html', copy)); }
+          return res;
+        })
         .catch(() => caches.match('./index.html'))
     );
     return;

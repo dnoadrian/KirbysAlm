@@ -1359,21 +1359,27 @@ function audioOn() {
       // alles etwas dumpfer: weicher Tiefpass pro Spur, damit nichts schrill heraussticht
       const soft = (bus, hz) => { const f = actx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = hz; f.Q.value = .5; bus.connect(f).connect(master); };
       soft(busSfx, 2600); soft(busUi, 2300); soft(busMusic, 1700);
-      master.connect(comp).connect(actx.destination);
-      applyVolume();
+      // Handy-Lautsprecher sind leiser: dort 20 % mehr, erst nach dem Kompressor, damit er es nicht wieder wegregelt
+      const out = actx.createGain(); out.gain.value = COARSE ? 1.2 : 1;
+      master.connect(comp).connect(out).connect(actx.destination);
+      applyVolume(true);
       startMusic();
     } catch (e) { actx = null; }
   }
-  if (actx && actx.state === 'suspended') actx.resume().catch(() => {});
+  // auch "interrupted" (iPhone nach Anruf oder Siri) wieder aufwecken
+  if (actx && actx.state !== 'running' && actx.state !== 'closed') actx.resume().catch(() => {});
 }
-function applyVolume() {
+function applyVolume(instant = false) {
   if (!master) return;
   // kräftige Grundverstärkung, der Kompressor hält die Spitzen im Zaum
-  // Handy-Lautsprecher sind leiser: dort von Haus aus 20 % mehr
-  master.gain.value = Math.pow(.8, 1.3) * 3.2 * (COARSE ? 1.2 : 1);
-  busSfx.gain.value = settings.sound / 100;
-  busUi.gain.value = settings.sound / 100 * .7;
-  busMusic.gain.value = Math.pow(settings.music / 100, 1.4) * .55;
+  master.gain.value = Math.pow(.8, 1.3) * 3.2;
+  // Regler weich nachführen, sonst knistert es beim Ziehen
+  const glide = (p, v) => {
+    if (!instant && actx.state === 'running') { p.cancelScheduledValues(actx.currentTime); p.setTargetAtTime(v, actx.currentTime, .03); } else { p.cancelScheduledValues(0); p.value = v; }
+  };
+  glide(busSfx.gain, settings.sound / 100);
+  glide(busUi.gain, settings.sound / 100 * .7);
+  glide(busMusic.gain, Math.pow(settings.music / 100, 1.4) * .55);
 }
 // ein Ton mit schnellem Anschlag und weichem Ausklingen
 function tone(f0, f1, dur, type = 'sine', vol = .3, delay = 0, bus = 'sfx') {
@@ -1413,27 +1419,19 @@ const sfx = {
   purr() {
     if (!actx || settings.sound === 0 || actx.currentTime < purrEnd) return; // nie zweimal übereinander
     const t0 = actx.currentTime + .02;
-    const out = actx.createGain(); out.gain.value = 1;
-    // Brummen: Sägezahn mit ~26 Hz ergibt das typische Knattern, der Filter macht es weich und hörbar auch am Handy
-    const src = actx.createOscillator(); src.type = 'sawtooth'; src.frequency.value = 26;
+    // Brummen: Sägezahn mit 25 Hz ergibt das typische Knattern, der Filter macht es weich und hörbar auch am Handy
+    const src = actx.createOscillator(); src.type = 'sawtooth'; src.frequency.value = 25;
     const bp = actx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 230; bp.Q.value = .9;
     const lp = actx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 700;
-    // Pulsieren der Luft im selben Takt
-    const am = actx.createGain(); am.gain.value = 0;
-    const amOsc = actx.createOscillator(); amOsc.type = 'square'; amOsc.frequency.value = 26;
-    const amDepth = actx.createGain(); amDepth.gain.value = .5;
-    amOsc.connect(amDepth).connect(am.gain);
     const env = actx.createGain(); env.gain.value = .0001;
-    src.connect(bp);
-    bp.connect(lp).connect(env).connect(out).connect(busSfx);
+    src.connect(bp).connect(lp).connect(env).connect(busSfx);
     // ein einziger kurzer Atemzug: anschwellen, kurz halten, ausklingen
     env.gain.setValueAtTime(.0001, t0);
     env.gain.exponentialRampToValueAtTime(.55, t0 + .12);
     env.gain.setValueAtTime(.55, t0 + .45);
     env.gain.exponentialRampToValueAtTime(.0001, t0 + .8);
-    src.frequency.setValueAtTime(25, t0); amOsc.frequency.setValueAtTime(25, t0);
     purrEnd = t0 + .9;
-    for (const n of [src, amOsc]) { n.start(t0); n.stop(t0 + .9); }
+    src.start(t0); src.stop(t0 + .9);
   },
   // Start: fröhliches "Mrrp!" und drei hüpfende Töne
   start() { chip(560, 900, .06, 'triangle', .07); chip(900, 700, .08, 'triangle', .06, .06); [784, 988, 1175].forEach((f, i) => chip(f, f, .07, 'triangle', .065, .16 + i * .07)); },
@@ -1496,6 +1494,8 @@ function startMusic() {
     if (!actx || actx.state !== 'running') return;
     const now = actx.currentTime;
     if (at < now - .5) at = now + .1;
+    // Musik aus: nur den Takt weiterzählen, ohne Töne zu erzeugen
+    if (settings.music === 0) { while (at < now + .8) { at += STEP; step++; } return; }
     while (at < now + .8) {
       const bar = Math.floor(step / 8) % 16, s8 = step % 8;
       const ch = CHORDS[Math.floor(bar / 1) % 4];
@@ -1515,12 +1515,13 @@ function startMusic() {
 }
 document.addEventListener('visibilitychange', () => {
   if (!actx) return;
-  if (document.hidden) actx.suspend().catch(() => {}); else actx.resume().catch(() => {});
+  if (document.hidden) actx.suspend().catch(() => {}); else if (actx.state !== 'running' && actx.state !== 'closed') actx.resume().catch(() => {});
 });
 function vibrate(ms) { if (!settings.vib) return; try { navigator.vibrate && navigator.vibrate(ms); } catch (e) { /* nicht unterstützt */ } }
 
 /* ---------- Bildschirm ---------- */
 let W = 0, H = 0, dpr = 1, px = 3, groundY = 0, viewW = 0, skyH = 0, skyGrad = null;
+let booted = false; // wird am Ende des Skripts wahr, wenn alles geladen ist
 function resize() {
   const dev = window.devicePixelRatio || 1;
   W = window.innerWidth;
@@ -1533,9 +1534,18 @@ function resize() {
   // um genau n / s vergrößert: so bleibt alles scharf, ohne dünne Linien zwischen den Pixeln.
   const budget = COARSE ? 3.5e5 : 4e6;
   const area = (n, s) => (W * dev * s / n) * (H * dev * s / n);
-  const best = (n) => { for (let s = n; s >= 2; s--) if (n % s === 0 && area(n, s) <= budget) return s; return n === 1 ? 1 : 0; };
-  const n0 = Math.max(1, Math.round(want * dev));
+  const fits = (n, s) => n % s === 0 && area(n, s) <= budget;
+  // PC: möglichst viele Leinwand-Pixel (feinere Bewegung), Handy: möglichst wenige (schneller, kühler, gleich scharf)
+  const best = (n) => {
+    if (COARSE) { for (let s = 2; s <= n; s++) if (fits(n, s)) return s; } else { for (let s = n; s >= 2; s--) if (fits(n, s)) return s; }
+    return n === 1 ? 1 : 0;
+  };
+  const goal = want * dev, n0 = Math.max(1, Math.round(goal));
   let n = n0, s = best(n0);
+  if (COARSE && s !== 2) { // Handy: ein Nachbar, der sich durch 2 teilen lässt, ist viel schneller, wenn sich der Zoom kaum ändert
+    const alt = [n0 - 1, n0 + 1].filter((m) => m >= 2 && best(m) === 2 && Math.abs(m - goal) < goal * .1).sort((a, b) => Math.abs(a - goal) - Math.abs(b - goal))[0];
+    if (alt) { n = alt; s = 2; }
+  }
   if (!s) { // n ist eine Primzahl oder zu groß: ein Nachbar mit passendem Teiler ändert den Zoom kaum
     const alt = [n0 - 1, n0 + 1].filter((m) => m >= 2 && best(m)).sort((a, b) => Math.abs(a - want * dev) - Math.abs(b - want * dev))[0];
     if (alt) { n = alt; s = best(alt); } else { s = 2; while (n % s) s++; }
@@ -1551,6 +1561,13 @@ function resize() {
   viewW = W / px;
   skyH = groundY / px;
   skyGrad = null;
+  // Lobby: Katze und Wollknäuel bleiben beim Größerziehen des Fensters an ihrem Platz
+  if (booted && mode === 'home' && !G.outro) {
+    const nx = Math.round(viewW * .42), dx = nx - P.x;
+    P.x = nx;
+    const T = G.objects.find((o) => o.type === 'toy');
+    if (T) T.x += dx;
+  }
 }
 window.addEventListener('resize', resize);
 window.addEventListener('orientationchange', () => setTimeout(resize, 150));
@@ -1593,8 +1610,19 @@ function persist() {
   store.set('cj-breed', save.breed);
   store.set('cj-wear', save.wear);
   store.set('cj-levels', save.levels);
-  try { syncAccount(); } catch (e) { /* beim allerersten Speichern sind die Konten noch nicht geladen */ }
+  clearTimeout(persistTimer); persistTimer = 0;
+  if (booted) syncAccount(); // beim allerersten Speichern sind die Konten noch nicht geladen
 }
+// Fische während der Runde: sofort in den Speicher, alles andere gesammelt etwas später (spart viel Arbeit beim Fischregen)
+let persistTimer = 0;
+function persistSoon() {
+  store.set('cj-fish', save.fish);
+  if (!persistTimer) persistTimer = setTimeout(persist, 1500);
+}
+const persistNow = () => { if (persistTimer) persist(); };
+// beim Wegwechseln oder Schließen nichts verlieren (vor dem Cloud-Abgleich, der danach den Stand liest)
+document.addEventListener('visibilitychange', () => { if (document.hidden) persistNow(); });
+window.addEventListener('pagehide', persistNow);
 persist();
 const has = (key) => save.owned.has(key);
 // Upgrades lassen sich dreimal verbessern
@@ -2195,19 +2223,23 @@ function tickDeath(dt) {
 function addFish(n, x, y, gold = false) {
   G.fish += n;
   save.fish += n;
-  persist();
+  persistSoon();
   if (gold) sfx.golden(); else sfx.fish();
   floaters.push({ text: '+' + n, x, y, t: gold ? 1.2 : .8, gold });
   if (typeof missionProgress === 'function') missionProgress('fish', n);
-  const box = $('fishBox');
-  box.classList.remove('bump'); void box.offsetWidth; box.classList.add('bump');
+  // kurz größer werden, ohne das Layout neu zu berechnen
+  if (!reduceMotion && fishBox.animate) fishBox.animate([{ transform: 'scale(1.12)' }, { transform: 'none' }], { duration: 300, easing: 'ease-out' });
 }
 
-// nur ins DOM schreiben, wenn sich eine Zahl wirklich geändert hat
+// nur ins DOM schreiben, wenn sich eine Zahl wirklich geändert hat, und dann nur den Text selbst
+const fishBox = $('fishBox');
+const hudText = (id) => { const el = $(id), n = document.createTextNode(el.textContent); el.textContent = ''; el.appendChild(n); return n; };
+const hudNode = { fish: hudText('fish'), m: hudText('meters') };
 const hudCache = { fish: null, m: null };
 function updateHud(force) {
-  if (force || hudCache.fish !== save.fish) { hudCache.fish = save.fish; $('fish').textContent = save.fish; }
-  if (force || hudCache.m !== G.score) { hudCache.m = G.score; $('meters').textContent = G.score + 'm'; }
+  if (force) persistNow(); // Runde vorbei oder Lobby: gesammelte Fische gleich ganz speichern
+  if (force || hudCache.fish !== save.fish) { hudCache.fish = save.fish; hudNode.fish.nodeValue = save.fish; }
+  if (force || hudCache.m !== G.score) { hudCache.m = G.score; hudNode.m.nodeValue = G.score + 'm'; }
 }
 
 /* ---------- Shop und Inventar ---------- */
@@ -3720,15 +3752,19 @@ function tinted(img, color, alpha) {
 }
 
 /* ---------- Schleife ---------- */
-let last = performance.now();
+let last = performance.now(), still = 0;
 function frame(now) {
   let dt = Math.min(1 / 30, Math.max(0, (now - last) / 1000));
   last = now;
   if (G.slowmo > 0) { G.slowmo -= dt; dt *= .3; }
   update(dt);
-  draw();
+  // hinter Pause und Menüs bewegt sich kaum etwas: nur jedes 4. Bild zeichnen (schont Akku), unsichtbar gar nicht
+  const calm = !G.outro && (mode === 'paused' || (mode === 'home' && shown && shown !== 'home'));
+  still = calm ? still + 1 : 0;
+  if (!document.hidden && (still < 2 || still % 4 === 0)) draw();
   requestAnimationFrame(frame);
 }
+booted = true;
 initI18n();
 applyLang();
 goHome();
@@ -3739,6 +3775,52 @@ goHome();
   const work = (d) => { while (jobs.length && d.timeRemaining() > 2) { const [b, c] = jobs.shift(); catPreviewSprite(b, c); } if (jobs.length) idle(work); };
   idle(work);
 })();
+// Die Pixel-Rahmen (kleine SVG-Bilder) einmal unsichtbar vorbereiten, solange das Startbild steht:
+// sonst baut der Browser jedes erst beim ersten Öffnen eines Menüs und das Spiel stockt kurz.
+// Für jede CSS-Regel mit so einem Bild kommt ein Element, bei dem genau diese Regel greift, in einen unsichtbaren Kasten.
+setTimeout(() => {
+  const warm = document.createElement('div');
+  warm.setAttribute('aria-hidden', 'true');
+  warm.style.cssText = 'position:fixed;left:0;top:0;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;contain:strict';
+  document.body.appendChild(warm);
+  const rules = [];
+  const walk = (list) => { for (const r of list) { if (r.selectorText && r.style && r.style.cssText.includes('data:image/svg')) rules.push(r); if (r.cssRules) walk(r.cssRules); } };
+  try { for (const sh of document.styleSheets) walk(sh.cssRules); } catch (e) { /* fremde Stylesheets */ }
+  const split = (sel) => { const out = []; let d = 0, cur = ''; for (const ch of sel) { if (ch === '(' || ch === '[') d++; if (ch === ')' || ch === ']') d--; if (ch === ',' && !d) { out.push(cur); cur = ''; } else cur += ch; } return [...out, cur].map((x) => x.trim()); };
+  const show = (c) => { c.removeAttribute('hidden'); if (getComputedStyle(c).display === 'none') c.style.setProperty('display', 'block', 'important'); };
+  // vorhandenes Element samt Eltern flach kopieren (versteckte Fenster werden dabei sichtbar gemacht)
+  const copy = (el) => { const path = []; for (let e = el; e && e !== document.body; e = e.parentElement) path.unshift(e); let cur = warm; for (const e of path) { const c = e.cloneNode(false); cur.appendChild(c); show(c); cur = c; } return cur; };
+  // noch nicht vorhanden (z. B. Shop-Karten): aus dem Selektor nachbauen
+  const build = (sel) => {
+    let cur = warm;
+    for (const part of sel.replace(/:not\([^)]*\)|:[\w-]+(\([^)]*\))?/g, '').split(/\s*[>+~]\s*|\s+/)) {
+      if (!part || part.startsWith('[data-ui')) continue;
+      const c = document.createElement((part.match(/^[a-z][\w-]*/) || ['div'])[0]);
+      for (const [, k] of part.matchAll(/\.([\w-]+)/g)) c.classList.add(k);
+      for (const [, k, v] of part.matchAll(/\[([\w-]+)(?:="?([^"\]]*)"?)?\]/g)) c.setAttribute(k, v || '');
+      cur.appendChild(c); show(c); cur = c;
+    }
+    return cur;
+  };
+  const top = (c) => { while (c.parentElement !== warm) c = c.parentElement; return c; };
+  // greift die Regel wirklich (und nicht eine genauere)? Dann steht eines ihrer Bilder im berechneten Stil
+  const wins = (c, pseudo, css) => { const st = getComputedStyle(c, pseudo); return ['background-image', 'border-image-source', 'mask-image'].some((p) => (st.getPropertyValue(p).match(/url\("[^"]+"\)/g) || []).some((u) => css.includes(u))); };
+  for (const r of rules) {
+    const css = r.style.cssText;
+    find: for (const full of split(r.selectorText)) {
+      const pseudo = (full.match(/::?(before|after)\b/) || [null])[0], sel = full.replace(/::?(before|after)\b/g, '');
+      let found = [];
+      try { found = [...document.querySelectorAll(sel)].slice(0, 12); } catch (e) { continue; }
+      for (const make of [...found.map((el) => () => copy(el)), () => build(sel)]) {
+        const c = make();
+        if (c !== warm && wins(c, pseudo, css)) break find;
+        if (c !== warm) top(c).remove();
+      }
+    }
+  }
+  void warm.offsetWidth;
+  requestAnimationFrame(() => requestAnimationFrame(() => warm.remove()));
+}, 0);
 updateMissionDot();
 if (!save.name || !store.get('cj-active', null) || !accounts()[store.get('cj-active', null)]) openSetup(false); // erst Name und Passwort, dann geht es in die Lobby
 requestAnimationFrame(frame);

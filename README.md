@@ -8,11 +8,13 @@ Ein kleines Pixel-Spiel fürs Handy und den PC: Deine Katze läuft über eine Be
 
 Beim ersten Start gibst du den Namen deiner Katze und ein Passwort ein. Ist der Name auf diesem Gerät neu, wird ein Konto angelegt, sonst wirst du angemeldet. In den Einstellungen kannst du dich abmelden, so können mehrere Leute auf einem Gerät spielen.
 
-Passwörter werden nie im Klartext gespeichert oder verschickt, sondern als PBKDF2-SHA-256-Hash (150 000 Runden, zufälliges Salz). Ohne Cloud liegen Konten und Spielstände nur im Browser des jeweiligen Geräts.
+Passwörter werden nie im Klartext gespeichert oder verschickt, sondern als PBKDF2-SHA-256-Hash (150 000 Runden, zufälliges Salz).
+
+**Wichtig:** So wie das Spiel ausgeliefert wird, ist die Cloud noch nicht eingerichtet (`url` und `key` in `index.html` sind leer). Dann liegen Konten und Spielstände nur im Browser des jeweiligen Geräts: Ein Konto, das du am Handy anlegst, gibt es am PC nicht. Denselben Spielstand auf Handy und PC gibt es erst nach der einmaligen Einrichtung unten.
 
 ### Ein Konto auf Handy und PC (Cloud)
 
-Mit einem kostenlosen [Supabase](https://supabase.com)-Projekt gibt es denselben Spielstand auf allen Geräten: Konto am Handy anlegen, am PC mit Name und Passwort anmelden, fertig. Nach jedem Neuladen, beim Zurückwechseln ins Spiel und kurz nach jeder Änderung wird abgeglichen. Ohne Netz spielt man lokal weiter, später wird zusammengeführt (Fische zusammengezählt, Gekauftes vereint, höchste Upgrade-Stufe und höchster Missionsfortschritt, Angezogenes vom letzten Gerät). Lautstärke, Vibration und Sprache bleiben pro Gerät.
+Nach einer einmaligen Einrichtung mit einem kostenlosen [Supabase](https://supabase.com)-Projekt (ca. 5 Minuten) gibt es denselben Spielstand auf allen Geräten: Konto am Handy anlegen, am PC mit Name und Passwort anmelden, fertig. Nach jedem Neuladen, beim Zurückwechseln ins Spiel und kurz nach jeder Änderung wird abgeglichen. Ohne Netz spielt man lokal weiter, später wird zusammengeführt (Fische zusammengezählt, Gekauftes vereint, höchste Upgrade-Stufe und höchster Missionsfortschritt, Angezogenes vom letzten Gerät). Lautstärke, Vibration und Sprache bleiben pro Gerät.
 
 1. Auf supabase.com kostenlos registrieren und ein neues Projekt anlegen (Region z. B. Frankfurt).
 2. Im Projekt **SQL Editor** öffnen, den ganzen Inhalt von `cloud/supabase.sql` einfügen und **Run** drücken.
@@ -20,11 +22,11 @@ Mit einem kostenlosen [Supabase](https://supabase.com)-Projekt gibt es denselben
 4. In `index.html` ganz oben im Script die Zeile `const CLOUD = Object.assign({ url: '', key: '' }, …)` suchen und beide eintragen, z. B. `{ url: 'https://abcd.supabase.co', key: 'sb_publishable_…' }`.
 5. Committen, fertig. Der Key darf öffentlich sein: Die Tabelle ist von außen gesperrt, das Spiel ruft nur die Funktionen aus `cloud/supabase.sql` auf, und Spielstände gibt es nur mit dem passenden Passwort-Hash.
 
-Bleibt `url` leer, verhält sich das Spiel wie bisher (nur auf diesem Gerät). Eine `.env`-Datei ist auf GitHub Pages nicht möglich: Die Seite kann keine Dateien schreiben, und alles im Repository ist öffentlich.
+Bleibt `url` leer, gibt es keinen Abgleich: Jedes Gerät hat seine eigenen Konten. Eine `.env`-Datei ist auf GitHub Pages nicht möglich: Die Seite kann keine Dateien schreiben, und alles im Repository ist öffentlich.
 
 ## Lobby
 
-Links oben stehen **Shop**, **Inventar** und **Missionen**, rechts unten der große **Start**-Knopf, oben rechts Fische und Einstellungen. Tippst du deine Katze an, rollt sie sich auf den Rücken; tippst du Kirby an, schnurrt er mit geschlossenen Augen. Der Boden steht in der Lobby still, nur die Wolken ziehen.
+Links oben stehen **Shop**, **Inventar** und **Missionen**, rechts unten der große **Start**-Knopf, oben rechts Fische und Einstellungen (dazu, wo der Browser es anbietet, ein Knopf zum Installieren). Deine Katze spielt mit einem Wollknäuel. Tippst du Kirby an, schnurrt er einmal kurz mit geschlossenen Augen (danach braucht er ein paar Sekunden Pause). Der Boden steht in der Lobby still, nur die Wolken ziehen.
 
 Bei Start stupst ein Schmetterling die Katze an die Nase, sie rennt ihm hinterher, die Menüs gleiten weg. Nach dem Verlieren geht es mit **Nochmal** sofort weiter oder mit **Lobby** zurück.
 
@@ -37,15 +39,13 @@ Bei Start stupst ein Schmetterling die Katze an die Nase, sie rennt ihm hinterhe
 
 ## Meter statt Level
 
-Gezählt werden Meter. Bei 250, 550, 900, 1300 und 1750 m ändert sich die Strecke (Menschenturm, Gleitschirm, Skipiste, Alpenglühen, Sternennacht), danach geht es endlos weiter. Dabei wird es immer später am Tag (ohne eingeblendete Uhrzeit). Nach dem Verlieren siehst du Meter, Fische und Hürden.
+Gezählt werden Meter. Bei 250, 550, 900, 1300 und 1750 m ändert sich die Strecke (Menschenturm, Gleitschirm, Skipiste, Alpenglühen, Sternennacht), danach geht es endlos weiter und alle 500 m wird es etwas schneller. Dabei läuft die Tageszeit weiter, vom Morgen über Abend und Nacht wieder in den Morgen (ohne eingeblendete Uhrzeit). Nach dem Verlieren siehst du Meter, Fische und Hürden.
 
 ## Spannung
 
-- **Sprung-Bewertung** neben der Katze: Super!, Perfekt!, Unglaublich! mit Serie. Ganz knappe Sprünge bringen einen Bonus-Fisch, jede 5er-Serie zwei Fische.
-- **Fisch-Fieber:** Bei jeder 10er-Serie gibt es 6 Sekunden doppelte Fische.
 - **Goldfische** sind 10 Fische wert.
 - **Zufalls-Events:** Sternschauer (nur abends und nachts), Fischregen, Wollknäuel, Turbo-Rausch und Goldfisch-Schwarm.
-- **Sturz:** Zeitlupe, Blitz, die Katze wirbelt durch die Luft, landet mit X-Augen und sieht Sterne.
+- **Sturz:** Zeitlupe und Blitz, die Katze wird nach hinten geschleudert, landet mit X-Augen und sieht Sterne.
 - **5 Easter Eggs** im Hintergrund: Almhütte mit Rauch, Murmeltier, Lawine, Heißluftballon und ein kreisender Adler. Sie sind selten.
 
 ## Shop
@@ -66,7 +66,7 @@ Jeden Tag gibt es 3 Missionen (z. B. 600 m laufen, 90 Fische sammeln, ein Easter
 
 ## Einstellungen
 
-Zwei Regler: **Musik** (Standard 40 %) und **Sounds** (Spiel und Knöpfe zusammen). Dazu Vibration an/aus, Sprache (Deutsch/English) und Abmelden. Die Sounds laufen über einen Kompressor, damit man sie auch bei leiser Handy-Lautstärke gut hört.
+Zwei Regler: **Musik** (Standard 40 %) und **Sounds** (Spiel und Knöpfe zusammen). Dazu Vibration an/aus, Sprache (Deutsch/English) und Abmelden. Während einer Runde erreichst du die Einstellungen über **≡**. Die Sounds laufen über einen Kompressor, damit man sie auch bei leiser Handy-Lautstärke gut hört; am Handy ist alles etwas lauter.
 
 ## Admin
 
