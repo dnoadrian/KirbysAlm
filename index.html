@@ -615,6 +615,7 @@ const INK = '#1e1c26';
 
 // rows: Strings oder Zeichen-Arrays, '.' = leer. Das "ghost"-Zeichen (Schnurrhaare, Leinen)
 // bekommt keine Kontur und zählt nicht zur Kollision; Zeichen in noMask (Cosmetics) zählen nur nicht zur Kollision.
+// outline: true = Umriss in der dunkleren Nachbarfarbe, oder eine feste Umrissfarbe
 // dunklere Version einer Farbe für den Umriss
 const darkCache = {};
 function darker(col) {
@@ -644,7 +645,7 @@ function sprite(rows, pal, outline = true, ghost = 'w', noMask = '') {
         if (at(x, y) !== '.') continue;
         const ch = [at(x - 1, y), at(x + 1, y), at(x, y - 1), at(x, y + 1)].find((c) => c !== '.' && c !== ghost && pal[c]);
         if (!ch) continue;
-        g.fillStyle = darker(pal[ch]);
+        g.fillStyle = typeof outline === 'string' ? outline : darker(pal[ch]);
         g.fillRect(x + pad, y + pad, 1, 1);
       }
     }
@@ -687,7 +688,7 @@ const COS_PAL = {
 };
 const COS_CHARS = Object.keys(COS_PAL).join('');
 function catRows(pose, look) {
-  const fur = look.breed.fur; // 0 kurz, 1 halblang, 2 lang
+  const fur = look.breed.fur; // 0 kurz, 1 halblang
   const cos = look.cos;
   const g = Array.from({ length: CAT_H }, () => Array(CAT_W).fill('.'));
   const ox = 1, oy = CAT_TOP, bob = pose.bob || 0;
@@ -741,22 +742,21 @@ function catRows(pose, look) {
     const y = v * v * P0[1] + 2 * v * u * C[1] + u * u * E[1];
     set(x, y, u > .82 ? 'u' : 'q');
     if (u < .6 + fur * .2) set(x + .6, y + .6, 'q');
-    if (fur >= 1 && u > .25) set(x - .7, y + (i % 2 ? .3 : -.3), u > .82 ? 'u' : 'q');
-    if (fur === 2 && u > .15 && i % 2) set(x + 1.4, y + .2, 'q');
+    if (fur >= 1 && u > .25 && u < .8) set(x - .7, y + (i % 2 ? .3 : -.3), 'q');
   }
-  set(E[0] + 1, E[1] - .6, 'u'); // Ringel an der Spitze
-  // kleiner, runder Körper mit Schatten am Bauch - dünn oder dick
-  const B = look.body === 'dick' ? { cx: 10.2, cy: 11.4, rx: 6.4, ry: 3.8 } : { cx: 10.4, cy: 11.1, rx: 5.2, ry: 2.4 };
+  if (!fur || t <= .8) set(E[0] + 1, E[1] - .6, 'u'); // Ringel an der Spitze (beim buschigen, weit gestreckten Schwanz ohne, sonst gabelt er sich)
+  // kleiner, runder Körper mit Schatten am Bauch
+  const B = { cx: 10.4, cy: 11.1, rx: 5.2, ry: 2.4 };
   ell(B.cx, B.cy + .5 + bob, B.rx + .1, B.ry + .3, 's');
   ell(B.cx, B.cy + bob, B.rx, B.ry, 'b');
-  // Fell: Fransen am Bauch und flauschiger Rücken (Halblang- und Langhaar)
+  // Fell: Fransen am Bauch und flauschiger Rücken (Halblanghaar)
   if (fur) {
     for (let x = Math.ceil(B.cx - B.rx); x <= B.cx + B.rx; x++) {
       const k = 1 - ((x + .5 - B.cx) / B.rx) ** 2;
       if (k <= 0) continue;
       const half = B.ry * Math.sqrt(k);
-      if (fur === 2 || x % 2 === 0) set(x, B.cy + bob + half + .8 + (fur === 2 && x % 2 ? .9 : 0), 's');
-      if ((fur === 2 && x % 2 === 0) || x % 3 === 0) set(x, B.cy + bob - half - .6, 'b');
+      if (x % 2 === 0) set(x, B.cy + bob + half + .8, 's');
+      if (x % 3 === 0) set(x, B.cy + bob - half - .6, 'b');
     }
   }
   const isBody = g.map((r) => r.map((c) => c === 'b' || c === 's'));
@@ -768,14 +768,11 @@ function catRows(pose, look) {
   }
   ell(18.6, hy, 5.1, 4.5, '@');
   ell(18.6, hy + .5, 4.9, 4.3, '@');
-  if (look.body === 'dick') ell(18.6, hy + 1.4, 5.5, 3.4, '@'); // Pausbäckchen
   if (fur) { set(13.3, hy + 2, '@'); set(24, hy + 2, '@'); }
-  if (fur === 2) { set(13.1, hy + 3, '@'); set(24.2, hy + 3, '@'); set(12.8, hy + 1, '@'); }
   const isHead = g.map((r) => r.map((c) => c === '@'));
   for (const r of g) for (let x = 0; x < CAT_W; x++) if (r[x] === '@') r[x] = 'b';
   tri(13.9, hy - 2.2, 14.6, hy - 6.4, 17.6, hy - 3.9, 'a');
   tri(19.6, hy - 3.9, 22.6, hy - 6.4, 23.3, hy - 2.2, 'a');
-  if (fur === 2) { set(14.6, hy - 7.2, 'u'); set(22.6, hy - 7.2, 'u'); } // Ohrpinsel
   set(15, hy - 4, 'p'); set(15.4, hy - 3.2, 'p');
   set(22, hy - 4, 'p'); set(21.6, hy - 3.2, 'p');
   // Pixel-Anker am Kopf: HX/HY = linkes Auge oben. Augen, Brillen, Hüte und Halsschmuck sitzen fest daran.
@@ -821,7 +818,7 @@ function catRows(pose, look) {
     }
   };
   // Beine: u = wie weit unten (0 Hüfte, 1 Pfote), h = Pixel über der Sohle, k = Pixel entlang des Beins (für Ringel),
-  // far = Bein auf der anderen Seite, front = Vorderbein
+  // far = Bein auf der anderen Seite, front = Vorderbein, tip = vorderstes Pixel des Beins in dieser Zeile
   const sole = [0, 0, 0, 0];
   for (let i = 0; i < legU.length; i++) if (legU[i] >= 0) sole[legN[i]] = Math.max(sole[legN[i]], Math.floor(i / CAT_W));
   const legs = (color) => {
@@ -829,7 +826,8 @@ function catRows(pose, look) {
       const i = y * CAT_W + x;
       if ((g[y][x] !== 'g' && g[y][x] !== 'd') || legU[i] < 0) continue;
       const n = legN[i], flat = legFlat[n];
-      const c = color(legU[i], flat ? Math.round((1 - legU[i]) * 4) : sole[n] - y, n < 2, n % 2 === 0, flat ? x : y);
+      const tip = x + 1 >= CAT_W || legU[i + 1] < 0 || legN[i + 1] !== n;
+      const c = color(legU[i], flat ? Math.round((1 - legU[i]) * 4) : sole[n] - y, n < 2, n % 2 === 0, flat ? x : y, tip);
       if (c) g[y][x] = c;
     }
   };
@@ -857,10 +855,12 @@ function catRows(pose, look) {
     }
     put(HX - 4, top, 'G'); // Schließe am Hals
   }
-  if (cos.has('socken')) legs((u, h, far, front, k) => (u < .5 ? null : k % 2 ? (far ? 'A' : 'J') : (far ? 'N' : 'L')));
+  // Ringelsocken: rot-weiße Ringe bis über das halbe Bein, oben und unten ein roter Ring (so heben sich die weißen auch vom weißen Fell ab)
+  if (cos.has('socken')) legs((u, h, far) => (u < .15 || h > 4 ? null : h % 2 ? (far ? 'N' : 'L') : (far ? 'A' : 'J')));
   if (cos.has('pantoffel')) legs((u, h, far) => (u < .5 || h > 1 ? null : h ? (far ? 'A' : 'J') : (far ? 'D' : 'S')));
   if (cos.has('stiefel')) legs((u, h, far) => (u < .5 || h > 2 ? null : far || !h ? 'T' : 'B'));
-  if (cos.has('sneaker')) legs((u, h, far) => (u < .5 || h > 1 ? null : h ? (far ? 'A' : 'J') : (far ? 'N' : 'L')));
+  // Turnschuhe: flach, roter Schuh mit weißer Sohle und weißer Kappe vorn
+  if (cos.has('sneaker')) legs((u, h, far, front, k, tip) => (u < .4 || h > 2 ? null : h === 2 || (h === 1 && !tip) ? (far ? 'A' : 'J') : (far ? 'N' : 'L')));
 
   // Hals: Halsband unter dem Kinn, Anhänger hängt vorn an der Brust
   if (cos.has('schal')) { // roter Strickschal, ein Ende weht nach hinten
@@ -868,14 +868,16 @@ function catRows(pose, look) {
     for (let i = 1; i <= 5; i++) stamp(-4 - i, 3 + (i > 2 ? Math.round(tw * (i - 2) / 3) : 0), i === 5 ? ['A', 'A'] : i % 2 ? ['J', 'A'] : ['J', 'J']);
   }
   if (cos.has('fliege')) stamp(-4, 3, ['JJ.JJ', 'JJAJJ', 'JJ.JJ']);
-  if (cos.has('glocke')) { stamp(-4, 4, ['JJJJ']); stamp(-3, 5, ['GG', 'YY']); }
-  if (cos.has('kette')) { stamp(-4, 4, ['GYGY']); stamp(-3, 5, ['.G', 'JJ']); }
+  if (cos.has('glocke')) { stamp(-4, 4, ['JJJJ']); stamp(-4, 5, ['GGG', 'GYG', '.Y.']); } // rotes Halsband, goldene Glocke
+  if (cos.has('kette')) { stamp(-5, 4, ['G.G.G', '.G.G.']); stamp(-3, 6, ['J']); }   // Goldkette mit kleinem roten Anhänger
 
-  // Augen
-  if (cos.has('brille')) stamp(-2, 0, ['QQVQQVQ', '..QQ.QQ']);
-  if (cos.has('herz')) stamp(-1, -1, ['P.P.P.P', 'PLPPPLP', '.P...P.']);
-  if (cos.has('ski')) stamp(-4, -1, ['...QQQQQQ', 'EEEQLZZZQ', '...QZZOOQ', '....QQ.QQ']);
-  if (cos.has('monokel')) stamp(2, -1, ['.GG.', 'G..G', 'G..G', '.GG.', 'Y...', '.Y..']);
+  // Augen (beim Sturz fliegt die Brille weg, damit die X-Augen gut zu sehen sind)
+  if (eye !== 'x' && eye !== '>') {
+    if (cos.has('brille')) stamp(-2, 0, ['QQVQQVQ', '..QQ.QQ']);
+    if (cos.has('herz')) stamp(-1, -1, ['P.P.P.P', 'PLPPPLP', '.P...P.']);
+    if (cos.has('ski')) stamp(-4, -1, ['...QQQQQQ', 'EEEQLZZZQ', '...QZZOOQ', '....QQ.QQ']);
+    if (cos.has('monokel')) stamp(2, -1, ['.GG.', 'G..G', 'G..G', '.GG.', 'Y...', '.Y..']);
+  }
 
   // Kopf
   if (cos.has('tirol')) stamp(-4, -9, ['....K....', '...KHHH..', '...HHHHH.', '...JJJJJ.', '.CHHHHHHC']);
@@ -888,8 +890,9 @@ function runPose(k) {
   const ph = k / RUN_FRAMES * Math.PI * 2;
   // kleine Hoppel-Schritte: Vorderpfoten knicken beim Vorschwingen ein, Hinterbeine federn
   const front = (q) => { const sw = Math.sin(q), lift = Math.max(0, Math.cos(q)); return [.7 * sw, .7 * sw - 1.1 * lift]; };
-  const back = (q) => { const sw = Math.sin(q), lift = Math.max(0, Math.cos(q)); return [.65 * sw + .4 * lift, .65 * sw - 1 * lift]; };
-  return { fn: front(ph), ff: front(ph + .7), bn: back(ph + Math.PI), bf: back(ph + Math.PI + .7), tail: Math.sin(ph) * .8, bob: -Math.round(Math.abs(Math.sin(ph)) * .9) };
+  // Hinterbeine schwingen kürzer und etwas früher, damit unter dem Bauch immer zwei Pfotenpaare zu sehen sind
+  const back = (q) => { const sw = Math.sin(q), lift = Math.max(0, Math.cos(q)); return [.45 * sw + .4 * lift, .45 * sw - .8 * lift]; };
+  return { fn: front(ph), ff: front(ph + .7), bn: back(ph + Math.PI - 1.2), bf: back(ph + Math.PI - .5), tail: Math.sin(ph) * .8, bob: -Math.round(Math.abs(Math.sin(ph)) * .9) };
 }
 const POSE_STAND = { fn: [0, 0], ff: [.15, .05], bn: [0, 0], bf: [-.15, -.05], tail: 0, bob: 0 };
 const POSE_UP = { fn: [1.1, 1.4], ff: [.95, 1.25], bn: [-1, -1.3], bf: [-.85, -1.15], tail: -1.2, bob: 0 };
@@ -945,6 +948,7 @@ function catLook(breedId, cosIds) {
     pal.t = breed.stripes || breed.dots || pal.s;
     pal.o = breed.patches || pal.o;
     pal.x = pal.e; // X-Augen in der Augenfarbe
+    if (breed.id === 'schwarz') pal.Q = '#8a8f99'; // dunkle Brillen-Fassung wäre auf schwarzem Fell unsichtbar
     const look = { breed, cos, body: breed.body || 'duenn' };
     return { breed, cos, pal, look };
 }
@@ -1121,9 +1125,9 @@ const FISH_ROWS = [
 ];
 const FISH_PAL = { o: '#d9661c', b: '#ff9f43', h: '#ffc27a', l: '#ffe2b8', k: '#3a2213', d: '#f07f2a', t: '#f07f2a' };
 const fishSpr = sprite(FISH_ROWS, FISH_PAL);
-// Goldfisch: selten, 10 Fische wert
-const GOLD_PAL = { o: '#c98a0a', b: '#ffd43b', h: '#fff1a0', l: '#fffbe0', k: '#5a3a08', d: '#f2b81e', t: '#f2b81e' };
-const goldFishSpr = sprite(FISH_ROWS, GOLD_PAL);
+// Goldfisch: selten, 10 Fische wert. Durchgehend dunkelgoldener Umriss (der helle Bauch ergäbe sonst einen grauen Rand).
+const GOLD_PAL = { o: '#c98a0a', b: '#ffd43b', h: '#fff1a0', l: '#fff1b8', k: '#5a3a08', d: '#f2b81e', t: '#f2b81e' };
+const goldFishSpr = sprite(FISH_ROWS, GOLD_PAL, '#7a4f0a');
 
 const cloudSpr = sprite([
   '.....cccc.....',
@@ -1141,22 +1145,30 @@ const starSpr = sprite([
   '.yy.yy.',
   'yy...yy',
 ], { y: '#ffe14d', o: '#fff7b0' });
-// Rote Wollknäuel (Radius 4 bis 6) mit Fadenlinien
+// Rote Wollknäuel (Radius 4 bis 6) mit Fadenlinien. Zum Rollen gibt es YARN_FRAMES Bilder, in denen nur die Fäden
+// weiterwandern (der Glanz bleibt oben links): so bleibt jedes Pixel ein gerades Quadrat.
+const YARN_FRAMES = 8;
 const yarnSpr = {};
 for (const r of [4, 5, 6]) {
-  const n = r * 2 + 1, rows = [];
-  for (let y = 0; y < n; y++) {
-    let row = '';
-    for (let x = 0; x < n; x++) {
-      const dx = x - r, dy = y - r, d = dx * dx + dy * dy;
-      if (d > r * r + r * .6) { row += '.'; continue; }
-      if (dx + dy < -r * .7 && d < r * r * .7) row += 'h';
-      else row += ((Math.round(dx * .8 + dy * 1.3) % 3) + 3) % 3 === 0 ? 'R' : 'r';
+  const n = r * 2 + 1;
+  const frames = Array.from({ length: YARN_FRAMES }, (_, k) => {
+    const shift = k * 3 / YARN_FRAMES, rows = [];
+    for (let y = 0; y < n; y++) {
+      let row = '';
+      for (let x = 0; x < n; x++) {
+        const dx = x - r, dy = y - r, d = dx * dx + dy * dy;
+        if (d > r * r + r * .6) { row += '.'; continue; }
+        if (dx + dy < -r * .7 && d < r * r * .7) row += 'h';
+        else row += ((Math.round(dx * .8 + dy * 1.3 - shift) % 3) + 3) % 3 === 0 ? 'R' : 'r';
+      }
+      rows.push(row);
     }
-    rows.push(row);
-  }
-  yarnSpr[r] = sprite(rows, { r: '#d8322b', R: '#9e1f1a', h: '#ff7a6e' });
+    return sprite(rows, { r: '#d8322b', R: '#9e1f1a', h: '#ff7a6e' });
+  });
+  yarnSpr[r] = Object.assign(frames[0], { frames });
 }
+// Bild zum Drehwinkel (im Uhrzeigersinn) eines rollenden Knäuels
+const yarnFrame = (spr, rot) => spr.frames[((Math.round(rot / (Math.PI * 2) * YARN_FRAMES) % YARN_FRAMES) + YARN_FRAMES) % YARN_FRAMES];
 
 // Symbole für die Upgrades im Shop: flach, wenige Farben
 const ICON_SPR = {
@@ -1239,7 +1251,7 @@ function kirbyRows(blink) {
     if (blink) {
       line(cx - 2, 18, cx + 2, 18, 'y');
     } else {
-      ell(ex, 18.2, 3.2, 2.4, 'y');
+      ell(ex, 18, 3.2, 2.2, 'y');
       for (let x = cx - 3; x <= cx + 3; x++) if (g[16][x] === 'y') g[16][x] = 'k'; // müde Lider
       set(cx, 17, 'p'); set(cx, 18, 'p'); set(cx, 19, 'p');
     }
@@ -2896,6 +2908,7 @@ const RAINBOW = ['#ff5555', '#ffaa00', '#ffff55', '#55ff55', '#55ffff', '#5599ff
 /* ---------- Lobby: die Katze spielt mit dem Wollknäuel ---------- */
 function tickOutro(dt) {
   const O = G.outro;
+  if (!O.t) { const T = G.objects.find((o) => o.type === 'toy'); if (T) O.to = Math.max(4, Math.min(O.to, Math.round(yarnMaxX(T) - 52))); } // vor dem Start-Knopf anhalten
   O.t += dt;
   const u = Math.min(1, O.t / O.dur), e = u * u * (3 - 2 * u);
   const v = O.v0 * (1 - e) + 10 * e;
@@ -2918,14 +2931,29 @@ function tickOutro(dt) {
     for (const o of G.objects) { o.vx = 0; o.wait = .8; }
   }
 }
+// Start-Knopf in Weltpixeln (nur neu gemessen, wenn sich die Bildschirmbreite ändert):
+// liegt er auf Höhe der Wiese (oder knapp darunter), rollt das Knäuel höchstens bis kurz davor
+let yarnWall = { w: -1, x: Infinity, t: -1e9 };
+function yarnMaxX(T) {
+  if (yarnWall.w !== viewW && performance.now() - yarnWall.t > 500) {
+    const home = document.getElementById('home'), r = document.getElementById('startBtn').getBoundingClientRect();
+    const ok = r.width && !home.classList.contains('entering') && !home.classList.contains('leaving');
+    yarnWall = { w: ok ? viewW : -1, x: Infinity, t: performance.now() }; // Lobby verdeckt oder in Bewegung: gleich noch einmal messen
+    if (ok && r.top < groundY + 4 * px && r.bottom > groundY - (T.h + 4) * px) yarnWall.x = r.left / px;
+  }
+  return yarnWall.x - T.w - 14; // samt losem Faden
+}
 function playWithYarn(dt) {
   const T = G.objects.find((o) => o.type === 'toy');
   if (!T) return;
+  const maxX = yarnMaxX(T);
+  if (P.x + 22 + 30 > maxX) P.x = Math.max(4, Math.round(maxX - 52)); // schmaler Bildschirm: die Katze rückt nach links, damit das Knäuel Platz zum Rollen hat
   const paw = P.x + 22; // vor der Vorderpfote
   // das Knäuel rollt weg, bremst ab und kullert langsam zurück
   T.vx -= 30 * dt;
   T.vx *= Math.pow(.55, dt);
   T.x += T.vx * dt;
+  if (T.x > maxX) { T.x = maxX; T.vx = -Math.abs(T.vx) * .3; }
   if (T.x < paw) { T.x = paw; T.vx = Math.max(0, -T.vx * .3); }
   T.rot += T.vx * dt / 4.5;
   if (!P.grounded) {
@@ -2963,22 +2991,16 @@ function balloonRows() {
   return rows;
 }
 const eggSpr = {
+  // Almhütte und Murmeltier im Maßstab der Hügel (dort sind die Tannen 5 bis 13 Pixel hoch)
   hut: sprite([
-    '............nn....',
-    '........nn..cc....',
-    '......nnrrnncc....',
-    '....nnrrrrrrnn....',
-    '..nnrrrrrrrrrrnn..',
-    'nnrrrrrrrrrrrrrrnn',
-    'EEEEEEEEEEEEEEEEEE',
-    '.vvvvvvvvvvvvvvvv.',
-    '.vffffvvvvvvvdddv.',
-    '.vfyyfvvvvvvvdddv.',
-    '.VfyyfVVVVVVVdDdV.',
-    '.vffffvvvvvvvdddv.',
-    '.vppgpvvvvvvvdddv.',
-    '.VVVVVVVVVVVVdddV.',
-    'sSsSsSsSsSsSsSsSsS',
+    '......cc..',
+    '...nnncc..',
+    '.nnrrrrnn.',
+    'nrrrrrrrrn',
+    'EEEEEEEEEE',
+    '.vyyvvvdv.',
+    '.vyyvvvdv.',
+    '.VVVVVVdV.',
   ], EGG_PAL),
   balloon: sprite(balloonRows(), { J: '#d8452f', j: '#a8321f', Z: '#ffd43b', z: '#d9a62a', h: '#fff3c4', l: '#7a5a3a', b: '#9b6436', B: '#6e4220' }),
   eagle: [
@@ -2986,14 +3008,10 @@ const eggSpr = {
     ['BB.........BB', '.BBB.WO..BBB.', '..BBBBBBBBB..', '.....BBB.....'],
   ].map((r) => sprite(r, EGG_PAL)),
   marmot: sprite([
-    '..mm..',
-    '.mmkmo',
-    '.mmmm.',
-    '.meem.',
-    'mmeem.',
-    '.meem.',
-    '.mmmm.',
-    '.M..M.',
+    '.mm',
+    'mmk',
+    'mem',
+    'mem',
   ], EGG_PAL),
 };
 const bflySpr = [['PP.PP', 'PPkPP', '.PkP.', '..k..'], ['.P.P.', '.PkP.', '.PkP.', '..k..']].map((r) => sprite(r, { P: '#ff9fd0', k: '#5a3218' }));
@@ -3008,64 +3026,87 @@ function tickEggs(dt, step) {
         const type = pick(pool);
         const layer = type === 'hut' || type === 'marmot' ? 'hill' : type === 'avalanche' ? 'far' : 'sky';
         // Ballon und Adler fliegen hoch oben (unter der Anzeige), weit weg hinter allem
-        G.eggs.push({ type, layer, x: viewW + 30, t: 0, y: Math.max(30, Math.min(skyH * rand(.68, .84), skyH - 22)) });
-        if (typeof missionProgress === 'function') missionProgress('egg', 1);
+        G.eggs.push({ type, layer, x: viewW + 30, t: 0, y: Math.max(30, Math.min(skyH * rand(.68, .84), skyH - 22)), counted: false });
       }
     }
   }
   for (const e of G.eggs) {
     e.t += dt;
+    // für die Mission zählt ein Easter Egg erst, wenn es wirklich im Bild ist
+    if (!e.counted && (e.type === 'avalanche' ? e.go !== undefined : e.x < viewW * .85 && e.x + 16 > 0)) {
+      e.counted = true;
+      if (typeof missionProgress === 'function') missionProgress('egg', 1);
+    }
     if (e.layer === 'hill') e.x -= step * .3;
     else if (e.layer === 'far') e.x -= step * .08;
     else e.x -= step * .05 + (e.type === 'eagle' ? 18 : 5) * dt;
   }
   if (G.eggs.some((e) => e.x <= -60 || e.t >= 120)) G.eggs = G.eggs.filter((e) => e.x > -60 && e.t < 120);
 }
-// layerH: Höhe der Landschaft an einer Bildschirm-Spalte dieser Ebene
-function drawEggs(layer, layerH, pal) {
+// layerH: Höhe der Landschaft an einer Bildschirm-Spalte dieser Ebene, minH: so hoch muss ein Gipfel für die Lawine sein.
+// In der Dämmerung und nachts werden die Easter Eggs wie die Landschaft dunkler.
+function drawEggs(layer, layerH, pal, minH = 0) {
+  const dim = pal.stars * .45;
+  const img = (sp) => (dim > .02 ? tinted(sp.c, pal.rockSh, dim) : sp.c);
   for (const e of G.eggs) {
     if (e.layer !== layer) continue;
-    const x = Math.round(e.x);
+    let x = Math.round(e.x);
     if (e.type === 'hut') {
-      const base = -Math.round(layerH(x + 8)) + 2;
       const sp = eggSpr.hut;
-      ctx.drawImage(sp.c, x - sp.pad, base - sp.h - sp.pad);
-      for (let i = 0; i < 4; i++) { // Rauch aus dem Kamin
-        const q = (e.t * .7 + i * .25) % 1;
+      let low = Infinity; // steht auf der tiefsten Stelle unter der Hütte, damit keine Ecke schwebt
+      for (let i = 0; i < sp.w; i++) low = Math.min(low, Math.round(layerH(x + i)));
+      const base = 1 - low;
+      ctx.drawImage(img(sp), x - sp.pad, base - sp.h - sp.pad);
+      ctx.fillStyle = EGG_PAL.y; // das Fenster leuchtet auch abends
+      ctx.fillRect(x + 2, base - 3, 2, 2);
+      for (let i = 0; i < 3; i++) { // Rauch aus dem Kamin
+        const q = (e.t * .6 + i / 3) % 1;
         ctx.globalAlpha = .7 * (1 - q);
         ctx.fillStyle = '#e8ecf2';
-        const r = 1 + Math.round(q * 2);
-        ctx.fillRect(x + 12 + Math.round(q * 6 + Math.sin(e.t * 2 + i) ), base - sp.h - 2 - Math.round(q * 14), r, r);
+        ctx.fillRect(x + 6 + Math.round(q * 4 + Math.sin(e.t * 2 + i) * .6), base - sp.h - 1 - Math.round(q * 8), 1, 1);
       }
       ctx.globalAlpha = 1;
     } else if (e.type === 'marmot') {
-      const base = -Math.round(layerH(x + 3)) + 1;
-      const up = clamp(Math.sin(e.t * 1.3) * 1.6, 0, 1); // schaut aus dem Bau und duckt sich wieder
       const sp = eggSpr.marmot;
+      const base = 1 - Math.round(layerH(x + 1));
+      const up = clamp(Math.sin(e.t * 1.3) * 1.6, 0, 1); // schaut aus dem Bau und duckt sich wieder
       const vis = Math.round(sp.h * up);
       ctx.fillStyle = '#5a3a1e';
-      ctx.fillRect(x - 1, base - 1, 8, 2);
-      if (vis > 0) ctx.drawImage(sp.c, 0, 0, sp.c.width, vis + sp.pad, x - sp.pad, base - vis - sp.pad, sp.c.width, vis + sp.pad);
+      ctx.fillRect(x - 1, base - 1, sp.w + 2, 1);
+      if (vis > 0) ctx.drawImage(img(sp), 0, 0, sp.c.width, vis + sp.pad, x - sp.pad, base - 1 - vis - sp.pad, sp.c.width, vis + sp.pad);
     } else if (e.type === 'avalanche') {
-      const top = Math.round(layerH(x));
-      ctx.fillStyle = pal ? pal.snow : '#ffffff';
-      for (let i = 0; i < 40; i++) {
-        const q = e.t * .45 - i * .02;
-        if (q < 0 || q > 1) continue;
-        const dx = -q * 26 + (hash(i) - .5) * 6, dy = -top * (1 - q) + (hash(i + 9) - .5) * 3;
-        ctx.globalAlpha = q > .85 ? (1 - q) / .15 : 1;
-        ctx.fillRect(Math.round(x + dx), Math.round(dy), 1 + (i % 3 === 0 ? 1 : 0), 1);
+      // eine Schneezunge rutscht von einem hohen Gipfel weit über den Hügeln die Schattenseite hinab ins Tal
+      if (e.peak === undefined) {
+        e.peak = null; // der nächste Gipfel, der deutlich über die Hügel ragt
+        for (let i = 0; i < 240 && e.peak === null; i++) { const h = layerH(x + i); if (h > minH && h > layerH(x + i - 1) && h >= layerH(x + i + 1)) { e.x += i; x += i; e.peak = h; } }
+      }
+      if (e.peak === null) { e.t = 999; continue; } // kein passender Gipfel: diesmal keine Lawine
+      if (e.go === undefined) { if (e.x > viewW * .7) continue; e.go = e.t; }
+      const q = Math.min(1, (e.t - e.go) / 2.6), fade = clamp(1 - (e.t - e.go - 3.4) / .8, 0, 1);
+      if (fade <= 0) continue;
+      ctx.globalAlpha = fade;
+      let prev = layerH(x);
+      for (let d = 0; d <= 40 && d <= q * 40; d++) {
+        const h = layerH(x + d);
+        if (d > 0 && h >= prev) break; // unten im Tal angekommen
+        prev = h;
+        const y = -Math.round(h), head = q < 1 && d > q * 40 - 3;
+        ctx.fillStyle = pal.snow;
+        ctx.fillRect(x + d, y - (head ? 2 : 0), 1, head ? 5 : 3);
+        ctx.fillStyle = pal.snowSh;
+        ctx.fillRect(x + d, y + 3, 1, 1);
+        if (head && d % 2) { ctx.fillStyle = pal.snow; ctx.fillRect(x + d + 1, y - 4, 1, 1); } // Schneestaub
       }
       ctx.globalAlpha = 1;
     } else if (e.type === 'balloon') { // leicht im Dunst, damit er weit weg wirkt
       const sp = eggSpr.balloon;
       ctx.globalAlpha = .82;
-      ctx.drawImage(sp.c, x - sp.pad, -Math.round(e.y + Math.sin(e.t * .8) * 3) - sp.pad);
+      ctx.drawImage(img(sp), x - sp.pad, -Math.round(e.y + Math.sin(e.t * .8) * 3) - sp.pad);
       ctx.globalAlpha = 1;
     } else if (e.type === 'eagle') { // Adler kreist langsam
       const fr = eggSpr.eagle[Math.floor(e.t * 3) % 2];
       ctx.globalAlpha = .82;
-      ctx.drawImage(fr.c, x - fr.pad, -Math.round(e.y + Math.sin(e.t * .9) * 6) - fr.pad);
+      ctx.drawImage(img(fr), x - fr.pad, -Math.round(e.y + Math.sin(e.t * .9) * 6) - fr.pad);
       ctx.globalAlpha = 1;
     }
   }
@@ -3286,23 +3327,30 @@ function pixelDisc(cx, cy, r, color, g = ctx) {
     g.fillRect(Math.round(cx - half), Math.round(cy + dy), half * 2, 1);
   }
 }
-// Kirby sitzt weit weg hinter den Bergen und schleckt Schnee von seinem Gipfel.
-// Rechtecke genau auf Bildschirmpixel legen: so entstehen zwischen Bergstreifen keine hellen Haarlinien.
-// Vorher die aktuelle Matrix in SNAP merken und die Zeichenmatrix auf 1:1 setzen.
-let SNAP = null;
-function snapBegin() { SNAP = ctx.getTransform(); ctx.setTransform(1, 0, 0, 1, 0, 0); }
-function snapEnd() { ctx.setTransform(SNAP); }
-function snapFill(x, y, w, h) {
-  const m = SNAP;
-  const x0 = Math.round(m.a * x + m.e), x1 = Math.round(m.a * (x + w) + m.e);
-  const y0 = Math.round(m.d * y + m.f), y1 = Math.round(m.d * (y + h) + m.f);
-  if (x1 > x0 && y1 > y0) ctx.fillRect(x0, y0, x1 - x0, y1 - y0);
+// Lage von Menü und Anzeige (CSS-Pixel) für die Sonne: neu gemessen, wenn sich Breite oder Modus ändern,
+// und eine Sekunde später noch einmal (dann sind die Einblend-Animationen fertig)
+let uiR = { key: '', t: 0, n: 2, menuR: 0, menuB: 0, hudB: 0 };
+function uiRects() {
+  const key = viewW + '|' + mode, now = performance.now();
+  if (key !== uiR.key) uiR = { key, t: now, n: 0, menuR: 0, menuB: 0, hudB: 0 };
+  if (uiR.n < 2 && now - uiR.t >= uiR.n * 1000) {
+    uiR.n++;
+    const m = document.querySelector('.home-menu').getBoundingClientRect();
+    uiR.menuR = m.width ? m.right : 0; uiR.menuB = m.bottom;
+    uiR.hudB = 0;
+    for (const id of ['fishBox', 'meters']) {
+      const r = document.getElementById(id).getBoundingClientRect();
+      if (r.width && r.top < groundY / 2) uiR.hudB = Math.max(uiR.hudB, r.bottom);
+    }
+  }
+  return uiR;
 }
+// Kirby sitzt weit weg hinter den Bergen und schleckt Schnee von seinem Gipfel: Lage und Größe in Spielpixeln
 function kirbyBox() {
   const vs = skyH > 170 ? 2 : 1;
   const vx = Math.round(viewW * (H > W * 1.1 ? .58 : .8));
   const apexH = Math.round(clamp(skyH * .32, 26, 100));
-  return { x0: vx - 22 * vs, x1: vx + 22 * vs, y0: apexH - 5 * vs, y1: apexH + 32 * vs, cx: vx, top: apexH + 30 * vs };
+  return { x0: vx - 22 * vs, x1: vx + 22 * vs, y0: apexH - 5 * vs, y1: apexH + 32 * vs, cx: vx, top: apexH + 30 * vs, vs, apexH };
 }
 /* ---------- Hintergrund-Ebenen werden einmal vorgezeichnet und dann nur noch verschoben ----------
    Spart pro Bild tausende kleine Zeichenbefehle, damit das Spiel auch mit 120 Bildern pro Sekunde flüssig läuft.
@@ -3334,7 +3382,7 @@ function blitLayer(L, off, y) {
   ctx.drawImage(L.c, x, y);
 }
 // Farb-Schlüssel der Ebenen, einmal pro Farbstand gebildet
-const PK = { peak: ['snow', 'snowSh', 'rock', 'rockSh'], far: ['rock', 'rockSh', 'snow', 'snowSh'], hill: ['hill', 'pine', 'snow', 'snowSh'], ground: ['meadow', 'soil', 'stone', 'stoneDk', 'grass', 'meadowDk'] };
+const PK = { peak: ['snow', 'snowSh', 'rock', 'rockSh'], far: ['rock', 'rockSh', 'snow', 'snowSh'], hill: ['hill', 'pine', 'snow', 'snowSh'], ground: ['meadow', 'soil', 'stone', 'stoneDk', 'grass', 'meadowDk', 'snow'] };
 const pkCache = new WeakMap();
 function palKey(pal, keys) {
   let m = pkCache.get(pal);
@@ -3344,9 +3392,7 @@ function palKey(pal, keys) {
   return v;
 }
 function drawKirby(pal) {
-  const vs = skyH > 170 ? 2 : 1;
-  const vx = Math.round(viewW * (H > W * 1.1 ? .58 : .8));
-  const apexH = Math.round(clamp(skyH * .32, 26, 100));
+  const { vs, cx: vx, apexH } = kirbyBox();
   ctx.save();
   ctx.translate(vx, -apexH);
   ctx.scale(vs, vs);
@@ -3435,12 +3481,17 @@ function draw() {
   ctx.imageSmoothingEnabled = false;
 
   // Sonne / Mond
-  // Die Sonne wandert von 06:00 (links) bis 20:00 (rechts) über den Himmel
+  // Die Sonne wandert von 06:00 (links) bis 20:00 über den Himmel und geht links von Kirby unter.
+  // Sie bleibt unter der Anzeige oben und in der Lobby neben dem Menü.
   const hDay = ((G.hour % 24) + 24) % 24;
   const f = (hDay - 6) / 14;
   if (f > 0 && f < 1 && pal.stars < .98) {
+    const r = Math.round(pal.sunR), U = uiRects(), sx0 = viewW * .06, sx1 = kirbyBox().x0 - r - 4;
+    let sunX = sx0 + (sx1 - sx0) * f;
+    const sunY = Math.min(skyH * (.08 + .7 * Math.sin(Math.PI * f)), skyH - r - U.hudB / px - 2);
+    if (mode === 'home' && U.menuR && groundY - (sunY + r) * px < U.menuB + 2) sunX = Math.max(sunX, U.menuR / px + r + 4);
     ctx.globalAlpha = 1 - pal.stars;
-    drawSun(Math.round(viewW * (.06 + .88 * f)), Math.round(-skyH * (.08 + .7 * Math.sin(Math.PI * f))), Math.round(pal.sunR), pal.sun);
+    drawSun(Math.round(sunX), -Math.round(sunY), r, pal.sun);
   }
   if (pal.stars > .3) {
     ctx.globalAlpha = pal.stars;
@@ -3456,11 +3507,7 @@ function draw() {
   }
   ctx.globalAlpha = 1;
 
-  drawEggs('sky'); // Ballon und Adler fliegen weit weg hinter Kirby, den Bergen und der Katze
-  drawKirby(pal);
-  drawParticles(pal, true); // Schnee von Kirbys Zunge und Herzchen beim Schnurren
-
-  // Wolken
+  // Wolken: ziehen hinter Kirby vorbei
   const span = viewW + 60;
   for (let i = 0; i < 4; i++) {
     const cxw = ((i * span / 4 + hash(i) * 30 - G.scroll * .2 - G.drift) % span + span) % span - 30;
@@ -3469,6 +3516,12 @@ function draw() {
     ctx.drawImage(cloudSpr.c, Math.round(cxw), Math.round(cyw));
   }
   ctx.globalAlpha = 1;
+
+  drawEggs('sky', null, pal); // Ballon und Adler fliegen weit weg hinter Kirby, den Bergen und der Katze
+  drawKirby(pal);
+  drawParticles(pal, true); // Schnee von Kirbys Zunge und Herzchen beim Schnurren
+
+  const midBase = Math.min(skyH * .08, 10) + 4; // Grundhöhe der grünen Hügel
 
   // Schneeberge (weit weg, langsam)
   const farMax = Math.min(skyH * .27, 42);
@@ -3493,39 +3546,54 @@ function draw() {
     }
   });
   blitLayer(LF, offF, -farTop);
-  drawEggs('far', (sx) => farH(Math.round(sx) + Math.floor(offF)), pal);
+  drawEggs('far', (sx) => farH(Math.round(sx) + Math.floor(offF)), pal, midBase + 12);
 
-  // Grüne Hügel mit Tannen
-  const midBase = Math.min(skyH * .08, 10) + 4;
+  // Grüne Hügel mit Tannen, auf manchen Kuppen liegt ein kleiner Schneefleck
+  const hillH = (wx) => midBase + 3 * Math.sin(wx * .045) + 2 * Math.sin(wx * .11 + 1);
   const offM = G.scroll * .3;
   const hillTop = Math.ceil(midBase) + 20;
   const LH = layer('hill', offM, Math.ceil(viewW) + 2, hillTop + 2, palKey(pal, PK.hill) + hillTop, (g, base, w) => {
-  for (let s = 0; s < w; s++) {
-    const wx = s + base;
-    const hill = Math.round(midBase + 3 * Math.sin(wx * .045) + 2 * Math.sin(wx * .11 + 1));
-    let tree = 0, dd = 9;
-    const i0 = Math.floor(wx / 7);
-    for (let i = i0 - 1; i <= i0 + 1; i++) {
-      if (hash(i) < .35) continue;
-      const th = 5 + hash(i * 3) * 8;
-      const d = wx - (i * 7 + 3 + Math.floor(hash(i * 5) * 2));
-      const t2 = Math.round(th - Math.abs(d) * 2.2);
-      if (t2 > tree) { tree = t2; dd = d; }
+    // Kuppen (höchste Stelle einer Welle) mit Schnee suchen; dort wachsen keine Tannen
+    const crests = [];
+    for (let wx = base - 10, h0 = hillH(wx - 1), h1 = hillH(wx); wx < base + w + 10; wx++) {
+      const h2 = hillH(wx + 1);
+      if (h1 >= h0 && h1 > h2 && hash(wx * 13 + 1) < .7) crests.push(wx);
+      h0 = h1; h1 = h2;
     }
-    g.fillStyle = pal.hill;
-    g.fillRect(s, hillTop - hill, 1, hill + 2);
-    if (tree > 0) {
-      g.fillStyle = pal.pine;
-      g.fillRect(s, hillTop - hill - tree + 2, 1, tree);
-      if (Math.abs(dd) <= 1 && tree > 3) { // Schnee auf den Tannenspitzen
-        g.fillStyle = dd > 0 ? pal.snowSh : pal.snow;
-        g.fillRect(s, hillTop - hill - tree + 2, 1, 2);
+    for (let s = 0; s < w; s++) {
+      const wx = s + base;
+      const hill = Math.round(hillH(wx));
+      let tree = 0, dd = 9;
+      const i0 = Math.floor(wx / 7);
+      for (let i = i0 - 1; i <= i0 + 1; i++) {
+        if (hash(i) < .35) continue;
+        const tc = i * 7 + 3 + Math.floor(hash(i * 5) * 2);
+        if (crests.some((c) => Math.abs(c - tc) < 7)) continue;
+        const th = 5 + hash(i * 3) * 8;
+        const d = wx - tc;
+        const t2 = Math.round(th - Math.abs(d) * 2.2);
+        if (t2 > tree) { tree = t2; dd = d; }
+      }
+      g.fillStyle = pal.hill;
+      g.fillRect(s, hillTop - hill, 1, hill + 2);
+      for (const c of crests) { // flacher Schneefleck, 2 bis 4 Pixel breit
+        const wd = 2 + Math.floor(hash(c * 5) * 3), d = wx - c + (wd >> 1);
+        if (d < 0 || d >= wd) continue;
+        g.fillStyle = pal.snow;
+        g.fillRect(s, hillTop - hill, 1, wd > 2 && d === wd >> 1 ? 2 : 1);
+      }
+      if (tree > 0) {
+        g.fillStyle = pal.pine;
+        g.fillRect(s, hillTop - hill - tree + 2, 1, tree);
+        if (Math.abs(dd) <= 1 && tree > 3) { // Schnee auf den Tannenspitzen
+          g.fillStyle = dd > 0 ? pal.snowSh : pal.snow;
+          g.fillRect(s, hillTop - hill - tree + 2, 1, 2);
+        }
       }
     }
-  }
   });
   blitLayer(LH, offM, -hillTop);
-  drawEggs('hill', (sx) => { const wx = Math.round(sx) + Math.floor(offM); return midBase + 3 * Math.sin(wx * .045) + 2 * Math.sin(wx * .11 + 1); });
+  drawEggs('hill', (sx) => hillH(Math.round(sx) + Math.floor(offM)), pal);
 
   // Bergwiese mit Blumen, darunter Fels
   const below = Math.ceil((H - groundY) / px + 4);
@@ -3537,9 +3605,10 @@ function draw() {
     g.fillRect(0, 2, gw, Math.min(below, 12));
     g.fillStyle = pal.soil;
     g.fillRect(0, 14, gw, 3);
-    for (let y = 15, band = 0; y < below; y += 7, band++) {
+    // drei Felsbänder unter der Wiese, darunter schlichter Fels (hoher Handy-Bildschirm)
+    for (let band = 0; band < 3; band++) {
       g.fillStyle = band % 2 ? pal.stoneDk : pal.stone;
-      g.fillRect(0, y + 2, gw, 7);
+      g.fillRect(0, 17 + band * 7, gw, band < 2 ? 7 : Math.max(7, below - 30));
     }
     g.fillStyle = pal.grass;
     g.fillRect(0, 2, gw, 1);
@@ -3561,6 +3630,11 @@ function draw() {
         g.fillStyle = pal.stoneDk;
         g.fillRect(xx, 19 + Math.floor(hash(i * 9) * Math.max(1, below - 22)), 2, 1);
       }
+      // etwas Schnee: Flecken am Wiesenrand und schmale Kanten auf den Felsbändern
+      g.fillStyle = pal.snow;
+      if (hash(i * 17 + 5) < .1) g.fillRect(xx + 1, 3, 2, 1);
+      const sb = hash(i * 23 + 2);
+      if (sb < .12) g.fillRect(xx + Math.floor(sb * 20), 17 + 7 * Math.floor(hash(i * 29) * 3), 2 + Math.floor(hash(i * 3 + 1) * 3), 1);
     }
   });
   blitLayer(LG, G.scroll, -2);
@@ -3573,16 +3647,13 @@ function draw() {
     if (o.gold && !o.got && Math.random() < .3) particles.push({ x: o.x + rand(0, 10), y: objY(o) + rand(0, 6), vx: rand(-10, 10), vy: rand(5, 25), life: .3, c: '#fff6b0' });
     if (o.type === 'star') {
       ctx.drawImage(tinted(spr.c, RAINBOW[Math.floor(G.time * 12) % RAINBOW.length], .55), x0, y0);
-    } else if (o.knocked || o.kind === 'yarn') {
-      ctx.save();
-      ctx.translate(x0 + spr.c.width / 2, y0 + spr.c.height / 2);
-      ctx.rotate(o.knocked ? o.krot : o.rot);
-      ctx.drawImage(spr.c, -spr.c.width / 2, -spr.c.height / 2);
-      ctx.restore();
-      if (o.kind === 'yarn' && !o.knocked) { // loser Faden, der hinterherweht
-        ctx.fillStyle = '#d8322b';
-        for (let i = 0; i < 10; i++) ctx.fillRect(x0 + spr.c.width - 2 + i, y0 + spr.c.height - 2 - Math.round(Math.sin(i * .9 + G.time * 14)), 1, 1);
-      }
+    } else if (o.knocked) { // weggeschleudert: dreht sich in Vierteldrehungen, die Pixel bleiben gerade
+      const img = quarterTurn(o.kind === 'yarn' ? yarnFrame(spr, o.rot) : spr, Math.round(o.krot / (Math.PI / 2)));
+      ctx.drawImage(img, snap(o.x - spr.pad + (spr.c.width - img.width) / 2), snap(-(oy + o.h) - spr.pad + (spr.c.height - img.height) / 2));
+    } else if (o.kind === 'yarn') {
+      ctx.drawImage(yarnFrame(spr, o.rot).c, x0, y0);
+      ctx.fillStyle = '#d8322b'; // loser Faden, der hinterherweht
+      for (let i = 0; i < 10; i++) ctx.fillRect(x0 + spr.c.width - 2 + i, y0 + spr.c.height - 2 - Math.round(Math.sin(i * .9 + G.time * 14)), 1, 1);
     } else {
       ctx.drawImage(spr.c, x0, y0);
     }
@@ -3590,47 +3661,38 @@ function draw() {
 
   drawParticles(pal, false);
 
+  // Turbo: Geschwindigkeits-Streifen (hinter der Katze)
+  if (G.turbo > 1) {
+    ctx.fillStyle = 'rgba(255, 255, 255, .55)';
+    const span2 = viewW + 60;
+    for (let i = 0; i < 14; i++) {
+      const lx = ((hash(i + 3) * span2 - G.scroll * 2.2) % span2 + span2) % span2 - 30;
+      ctx.fillRect(Math.round(lx), -Math.round(4 + hash(i) * skyH * .85), 14 + Math.round(hash(i + 7) * 14), 1);
+    }
+  }
+
   // Katze (im Regenbogen-Modus bunt eingefärbt, kurz vor Ende blinkend)
   const cs = catSprite();
   let img = cs.c;
   if (P.inv > 0 && (P.inv > 1 || Math.floor(G.time * 10) % 2)) img = tinted(cs.c, RAINBOW[Math.floor(G.time * 14) % RAINBOW.length], .6);
-  const cw = img.width, chh = img.height;
   const bx = snap(P.x) - cs.pad, by = snap(-(P.y + cs.h)) - cs.pad;
-  ctx.save();
+  // Stauchen und Strecken in ganzen Pixelzeilen (kein Drehen oder Skalieren, damit die Pixel gleich groß bleiben)
+  let sq = 0;
+  const bump = (q) => Math.round(2 * q);
   if (mode === 'over' && P.death) {
-    // Drehpunkt an den Hinterbeinen: der Oberkörper kippt nach hinten weg
-    ctx.translate(bx + cw * .35, by + chh);
-    ctx.rotate(P.death.tilt);
-    if (P.death.landed && P.death.t < 3) { const q = Math.max(0, 1 - (P.death.t - (P.death.landT || 0)) * 6); ctx.scale(1 + .1 * q, 1 - .12 * q); }
-    ctx.drawImage(img, -cw * .35, -chh);
+    if (P.death.landed) sq = -bump(Math.max(0, 1 - (P.death.t - (P.death.landT || 0)) * 6)); // plumpst auf den Bauch
   } else if (P.flip > 0) {
-    // Sprung in der Luft: kurz zusammenziehen, dann kräftig strecken (ohne Salto)
-    const u = 1 - P.flip / FLIP_T;
-    const ease = (x) => x * x * (3 - 2 * x);
-    const tuck = u < .4;
-    const q = ease(tuck ? u / .4 : (u - .4) / .6);
-    // erst klein machen und Kopf leicht senken, dann lang strecken mit erhobenem Kopf
-    const kx = tuck ? 1 + .06 * Math.sin(q * Math.PI) : 1 - .05 * Math.sin(q * Math.PI);
-    const ky = tuck ? 1 - .1 * Math.sin(q * Math.PI) : 1 + .1 * Math.sin(q * Math.PI);
-    const tilt = tuck ? .1 * Math.sin(q * Math.PI) : -.14 * Math.sin(q * Math.PI);
+    // Sprung in der Luft: erst zusammenziehen (Pose "tuck"), dann kräftig strecken
+    const u = 1 - P.flip / FLIP_T, tuck = u < .4;
+    const q = Math.sin((tuck ? u / .4 : (u - .4) / .6) * Math.PI);
+    sq = tuck ? -bump(q * .6) : bump(q);
     if (!tuck && !reduceMotion) { // zwei blasse Nachbilder zeigen den Schwung nach oben
-      for (const [dy, a] of [[6, .18], [11, .08]]) { ctx.globalAlpha = a * Math.sin(q * Math.PI); ctx.drawImage(img, bx - dy * .4, by + dy); }
+      for (const [dy, a] of [[6, .18], [11, .08]]) { ctx.globalAlpha = a * q; ctx.drawImage(img, bx - Math.round(dy * .4), by + dy); }
       ctx.globalAlpha = 1;
     }
-    ctx.translate(bx + cw / 2, by + chh / 2);
-    ctx.rotate(tilt);
-    ctx.scale(kx, ky);
-    ctx.drawImage(img, -cw / 2, -chh / 2);
-  } else {
-    // beim Absprung strecken, beim Landen stauchen (Füße bleiben am Boden)
-    let kx = 1, ky = 1;
-    if (P.land > 0 && mode === 'play') { const q = P.land / .14; kx = 1 + .14 * q; ky = 1 - .16 * q; }
-    else if (!P.grounded && P.airT < .12 && mode === 'play') { const q = 1 - P.airT / .12; kx = 1 - .08 * q; ky = 1 + .12 * q; }
-    ctx.translate(bx + cw / 2, by + chh);
-    ctx.scale(kx, ky);
-    ctx.drawImage(img, -cw / 2, -chh);
-  }
-  ctx.restore();
+  } else if (P.land > 0 && mode === 'play') sq = -bump(P.land / .14); // beim Landen stauchen
+  else if (!P.grounded && P.airT < .12 && mode === 'play') sq = bump(1 - P.airT / .12); // beim Absprung strecken
+  drawCatImg(img, bx, by, sq);
 
   if (G.bfly) {
     const fr = bflySpr[Math.floor(G.time * 12) % 2];
@@ -3652,29 +3714,11 @@ function draw() {
     }
   }
 
-  // Turbo: Geschwindigkeits-Streifen
-  if (G.turbo > 1) {
-    ctx.fillStyle = 'rgba(255, 255, 255, .55)';
-    const span2 = viewW + 60;
-    for (let i = 0; i < 14; i++) {
-      const lx = ((hash(i + 3) * span2 - G.scroll * 2.2) % span2 + span2) % span2 - 30;
-      ctx.fillRect(Math.round(lx), -Math.round(4 + hash(i) * skyH * .85), 14 + Math.round(hash(i + 7) * 14), 1);
-    }
-  }
-
-  // +1 Fisch
-  if (floaters.length) {
-    ctx.font = UI_CANVAS_FONT();
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-  }
+  // +1 Fisch: einmal 1:1 vorgeschrieben und dann pixelgenau vergrößert, damit die Schriftpixel scharf bleiben
   for (const f of floaters) {
     ctx.globalAlpha = Math.min(1, f.t * 2);
-    const fc = f.gold ? GOLD_PAL.b : f.color || FISH_PAL.b;
-    ctx.fillStyle = darker(fc);
-    ctx.fillText(f.text, f.x + 1, -f.y + 1);
-    ctx.fillStyle = fc;
-    ctx.fillText(f.text, f.x, -f.y);
+    const img = floatText(f.text, f.gold ? GOLD_PAL.b : f.color || FISH_PAL.b);
+    ctx.drawImage(img, Math.round(f.x - img.width / 2), Math.round(-f.y) - 6);
   }
   ctx.globalAlpha = 1;
   // weißer Blitz beim Zusammenstoß
@@ -3685,6 +3729,52 @@ function draw() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.globalAlpha = 1;
   }
+}
+
+// Sprite um q Vierteldrehungen im Uhrzeigersinn gedreht (pixelgenau, einmal vorgezeichnet)
+function quarterTurn(spr, q) {
+  q = ((q % 4) + 4) % 4;
+  if (!q) return spr.c;
+  const t = spr.turns || (spr.turns = []);
+  if (!t[q]) {
+    const w = spr.c.width, h = spr.c.height, c = document.createElement('canvas'), g = c.getContext('2d');
+    c.width = q % 2 ? h : w; c.height = q % 2 ? w : h;
+    g.setTransform(...[[0, 1, -1, 0, h, 0], [-1, 0, 0, -1, w, h], [0, -1, 1, 0, 0, w]][q - 1]);
+    g.drawImage(spr.c, 0, 0);
+    t[q] = c;
+  }
+  return t[q];
+}
+// Katze ohne Skalieren stauchen (n < 0) oder strecken (n > 0): ganze Pixelzeilen in der Körpermitte fallen weg
+// oder werden doppelt, die Pfoten bleiben am Boden
+const CAT_SPLIT = 15;
+function drawCatImg(img, x, y, n) {
+  const w = img.width, h = img.height, sp = CAT_SPLIT;
+  if (!n) { ctx.drawImage(img, x, y); return; }
+  if (n < 0) {
+    n = -n;
+    ctx.drawImage(img, 0, 0, w, sp, x, y + n, w, sp);
+    ctx.drawImage(img, 0, sp + n, w, h - sp - n, x, y + sp + n, w, h - sp - n);
+  } else {
+    ctx.drawImage(img, 0, 0, w, sp, x, y - n, w, sp);
+    ctx.drawImage(img, 0, sp, w, 1, x, y + sp - n, w, n + 1);
+    ctx.drawImage(img, 0, sp, w, h - sp, x, y + sp, w, h - sp);
+  }
+}
+
+// "+1"-Schrift mit Schatten in Spielpixeln (vorgezeichnet, sobald die Schrift geladen ist)
+const floatCache = {};
+function floatText(text, color) {
+  const key = text + color;
+  if (floatCache[key]) return floatCache[key];
+  const c = document.createElement('canvas'), g = c.getContext('2d');
+  g.font = UI_CANVAS_FONT();
+  c.width = Math.ceil(g.measureText(text).width) + 1; c.height = 12;
+  g.font = UI_CANVAS_FONT();
+  g.fillStyle = darker(color); g.fillText(text, 1, 10);
+  g.fillStyle = color; g.fillText(text, 0, 9);
+  if (!document.fonts || document.fonts.check(UI_CANVAS_FONT())) floatCache[key] = c;
+  return c;
 }
 
 // bg: Partikel im Hintergrund (bei Kirby), sonst die auf der Strecke
