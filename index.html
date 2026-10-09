@@ -3798,7 +3798,7 @@ function draw() {
     for (let s = 0; s < w; s++) {
       const wx = s + base;
       const hill = Math.round(hillH(wx));
-      let tree = 0, dd = 9;
+      let tree = 0;
       const i0 = Math.floor(wx / 7);
       for (let i = i0 - 1; i <= i0 + 1; i++) {
         if (hash(i) < .35) continue;
@@ -3807,7 +3807,7 @@ function draw() {
         const th = 5 + hash(i * 3) * 8;
         const d = wx - tc;
         const t2 = Math.round(th - Math.abs(d) * 2.2);
-        if (t2 > tree) { tree = t2; dd = d; }
+        if (t2 > tree) tree = t2;
       }
       g.fillStyle = pal.hill;
       g.fillRect(s, hillTop - hill, 1, hill + 2);
@@ -3820,10 +3820,6 @@ function draw() {
       if (tree > 0) {
         g.fillStyle = pal.pine;
         g.fillRect(s, hillTop - hill - tree + 2, 1, tree);
-        if (Math.abs(dd) <= 1 && tree > 3) { // Schnee auf den Tannenspitzen
-          g.fillStyle = dd > 0 ? pal.snowSh : pal.snow;
-          g.fillRect(s, hillTop - hill - tree + 2, 1, 2);
-        }
       }
     }
   });
