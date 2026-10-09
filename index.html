@@ -1649,10 +1649,10 @@ function resize() {
   const want = clamp(portrait ? W / 200 : Math.min(W / 240, H / 108), 1.5, 6.5);
   // ein Spielpixel = n Geräte-Pixel (ganze Zahl), gezeichnet mit s Leinwand-Pixeln, die der Browser
   // um genau n / s vergrößert: so bleibt alles scharf, ohne dünne Linien zwischen den Pixeln.
-  const budget = COARSE ? 3.5e5 : 4e6;
+  const budget = COARSE ? 3.5e5 : 6e5; // klein genug für 60 fps auch auf schwachen PCs, Pixel bleiben gleich scharf
   const area = (n, s) => (W * dev * s / n) * (H * dev * s / n);
   const fits = (n, s) => n % s === 0 && area(n, s) <= budget;
-  // PC: möglichst viele Leinwand-Pixel (feinere Bewegung), Handy: möglichst wenige (schneller, kühler, gleich scharf)
+  // PC: so viele Leinwand-Pixel, wie das Budget erlaubt (feinere Bewegung), Handy: möglichst wenige (schneller, kühler, gleich scharf)
   const best = (n) => {
     if (COARSE) { for (let s = 2; s <= n; s++) if (fits(n, s)) return s; } else { for (let s = n; s >= 2; s--) if (fits(n, s)) return s; }
     return n === 1 ? 1 : 0;
