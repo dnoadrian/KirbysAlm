@@ -80,8 +80,6 @@ p, h1, h2, h3 { margin: 0; }
 .fishbox { flex-direction: row; align-items: center; justify-content: center; gap: 6px; margin-left: auto; width: var(--menu-w); min-height: 44px; font-size: var(--fs); padding: 4px 9px 5px !important; }
 .fish-ico { width: 22px; height: 12px; display: inline-block; flex: none; }
 .panel-head .fish-ico { width: 33px; height: 18px; }
-.box.bump { animation: bump .3s ease-out; }
-@keyframes bump { 40% { transform: scale(1.12); } }
 
 .btn {
   --c: var(--green); --c-hi: var(--green-hi); --c-lo: var(--green-lo);
@@ -430,7 +428,7 @@ body:has(.modal:not([hidden])) .hud-dist { visibility: hidden; }
 [data-size~="big"] .hud .fish-ico { width: 33px; height: 18px; }
 [data-size~="big"] .hud-dist { top: calc(env(safe-area-inset-top, 0px) + 28px); }
 @media (prefers-reduced-motion: reduce) {
-  .panel, .box.bump { animation: none; }
+  .panel { animation: none; }
   #banner { transition: opacity .3s; transform: none; }
   #home.entering *, #home.leaving * { animation: none !important; transition: none !important; }
 }
@@ -967,7 +965,11 @@ function catRows(pose, look) {
     if (cos.has('brille')) stamp(-2, 0, ['QQVQQVQ', '..QQ.QQ']);
     if (cos.has('herz')) stamp(-1, -1, ['P.P.P.P', 'PLPPPLP', '.P...P.']);
     if (cos.has('ski')) stamp(-4, -1, ['...QQQQQQ', 'EEEQLZZZQ', '...QZZOOQ', '....QQ.QQ']);
-    if (cos.has('monokel')) stamp(2, -1, ['.GG.', 'G..G', 'G..G', '.GG.', 'Y...', '.Y..']);
+    if (cos.has('monokel')) {
+      // auf der schwarzen Katze ein silberner Ring, sonst verschwimmt Gold mit den gelben Augen
+      const [r, k] = look.breed.id === 'schwarz' ? ['N', 'S'] : ['G', 'Y'];
+      stamp(2, -1, ['.GG.', 'G..G', 'G..G', '.GG.', 'Y...', '.Y..'].map((row) => row.replace(/G/g, r).replace(/Y/g, k)));
+    }
   }
 
   // Kopf
@@ -1011,7 +1013,7 @@ const COSMETICS = [
   { id: 'brille', slot: 'eyes', name: 'Sonnenbrille', price: 650, desc: 'Cool bleiben auf der Alm.', bonus: ['magnet', 6] },
   { id: 'herz', slot: 'eyes', name: 'Herzbrille', price: 800, desc: 'Rosa und verliebt.', bonus: ['fish', 3] },
   { id: 'ski', slot: 'eyes', name: 'Skibrille', price: 1000, desc: 'Gelbe Gläser gegen den Schnee.', bonus: ['star', .3] },
-  { id: 'monokel', slot: 'eyes', name: 'Monokel', price: 1500, desc: 'Mit goldener Kette. Sehr vornehm.', bonus: ['gold', 2] },
+  { id: 'monokel', slot: 'eyes', name: 'Monokel', price: 1500, desc: 'Mit feiner Kette. Sehr vornehm.', bonus: ['gold', 2] },
   { id: 'schal', slot: 'neck', name: 'Schal', price: 500, desc: 'Roter Strickschal, weht im Wind.', bonus: ['jump', 1] },
   { id: 'fliege', slot: 'neck', name: 'Fliege', price: 700, desc: 'Rote Fliege für feine Anlässe.', bonus: ['fish', 3] },
   { id: 'glocke', slot: 'neck', name: 'Glöckchen', price: 900, desc: 'Rotes Halsband mit goldener Glocke.', bonus: ['magnet', 6] },
@@ -2035,7 +2037,7 @@ function renderAdmin() {
 }
 $('adminLogin').addEventListener('submit', (e) => {
   e.preventDefault();
-  if ($('adminUser').value.trim() === ADMIN.user && $('adminPass').value === ADMIN.pass) {
+  if ($('adminUser').value.trim().toLowerCase() === ADMIN.user.toLowerCase() && $('adminPass').value === ADMIN.pass) {
     $('adminLogin').hidden = true;
     $('adminTools').hidden = false;
     adminMsg(t('Angemeldet.'));
@@ -2685,7 +2687,7 @@ function renderMissions() {
   lbtn.type = 'button';
   lbtn.disabled = done;
   lbtn.addEventListener('click', () => { const S = loginState(); if (S.claimed === S.last) return; S.claimed = S.last; store.set('cj-login', S); save.fish += reward; persist(); updateHud(true); sfx.claim(); renderMissions(); updateMissionDot(); });
-  row.append(el('span', '', t('Tägliche Belohnung') + ' · ' + t('Tag') + ' ' + day + ' / 7'), lbtn);
+  row.append(el('span', '', t('Tägliche Belohnung') + ' · ' + t('Tag') + '\u00a0' + day + '\u00a0/\u00a07'), lbtn);
   const m = todayMissions();
   m.list.forEach((x, i) => {
     const ok = x.prog >= x.n;
@@ -3061,7 +3063,7 @@ Object.assign(EN, {
   'Knallgelb für jedes Wetter.': 'Bright yellow for any weather.', 'Krone': 'Crown',
   'Kurzhaar': 'Short hair', 'Lauf {n} m in einer Runde': 'Run {n} m in one run', 'Musik': 'Music', 'Läuft noch': 'In progress',
   'Maximal': 'Maxed out', 'Menschenturm': 'Human tower', 'Menü': 'Menu', 'Meter': 'Meters', 'Mission geschafft!': 'Mission complete!', 'Missionen': 'Missions',
-  'Mit goldener Kette. Sehr vornehm.': 'With a golden chain. Very posh.', 'Mit kleinem roten Anhänger.': 'With a little red pendant.', 'Mitternacht': 'Midnight', 'Monokel': 'Monocle',
+  'Mit feiner Kette. Sehr vornehm.': 'With a fine chain. Very posh.', 'Mit kleinem roten Anhänger.': 'With a little red pendant.', 'Mitternacht': 'Midnight', 'Monokel': 'Monocle',
   'Morgen wieder': 'Again tomorrow', 'Namen ändern': 'Change name', 'Namen ändern kostet': 'Changing the name costs', 'Neue Missionen in': 'New missions in',
   'Noch keine Cosmetics. Jeden Tag gibt es drei neue im Shop.': 'No cosmetics yet. Every day there are three new ones in the shop.',
   'Noch keine Upgrades. Im Shop gibt es welche für Fische.': 'No upgrades yet. The shop sells them for fish.', 'Nochmal': 'Again', 'Nächste Stufe:': 'Next level:', 'Orange': 'Orange', 'Passwort': 'Password',

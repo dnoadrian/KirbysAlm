@@ -2,7 +2,7 @@
 
 Ein kleines Pixel-Spiel fürs Handy und den PC: Deine Katze läuft über eine Bergwiese und springt über alles, was im Weg steht: Wanderer in Lederhose, Wanderinnen im Dirndl, Gleitschirmflieger, Skifahrer und rote Wollknäuel. Im Hintergrund sitzt Kirby, die schwarz-weiße Katze, und schleckt den Schnee von seinem Gipfel.
 
-**Spielen:** https://dnoadrian.github.io/Temp/ oder `index.html` direkt im Browser öffnen.
+**Spielen:** https://dnoadrian.github.io/KirbysAlm/ oder `index.html` direkt im Browser öffnen.
 
 ## Konto
 
