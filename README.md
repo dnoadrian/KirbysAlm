@@ -54,7 +54,7 @@ Alles kostet Fische, und zwar deutlich mehr als früher, damit sich Spielen lohn
 
 - **Upgrades**, jedes in 3 Stufen: Regenbogen-Stern (rettet dich), Fisch-Magnet (einmal erfasste Fische fliegen sicher zu dir), Glückspfote (mehr Fische), Goldnase (mehr Goldfische).
 - **Katzen:** Schneeweiß (Standard), Grau getigert, Mitternacht, Orange, Siam.
-- **Cosmetics:** 20 Stück, je 4 für Kopf (Tirolerhut, Pudelmütze, Blumenkranz, Krone), Augen (Sonnenbrille, Herzbrille, Skibrille, Monokel), Hals (Schal, Fliege, Glöckchen, Goldkette), Körper (Strickpulli, Regenjacke, Trachtenweste, Heldenumhang) und Pfoten (Ringelsocken, Hüttenschuhe, Bergstiefel, Turnschuhe). Jeden Tag sind 3 davon im Shop. Jedes gibt einen kleinen Bonus (z. B. +3 % Fische). Gekaufte Cosmetics zieht man im Shop oder Inventar an und aus. Sie sitzen in jeder Pose fest an Kopf, Hals, Körper und Pfoten.
+- **Cosmetics:** 20 Stück, je 4 für Kopf (Tirolerhut, Pudelmütze, Blumenkranz, Krone), Augen (Sonnenbrille, Herzbrille, Skibrille, Monokel), Hals (Schal, Fliege, Glöckchen, Goldkette), Körper (Strickpulli, Regenjacke, Trachtenweste, Heldenumhang) und Pfoten (Ringelsocken, Hüttenschuhe, Bergstiefel, Turnschuhe). Jeden Tag sind 4 davon im Shop. Jedes gibt einen kleinen Bonus (z. B. +3 % Fische). Gekaufte Cosmetics zieht man im Shop oder Inventar an und aus. Sie sitzen in jeder Pose fest an Kopf, Hals, Körper und Pfoten.
 
 Die Goldkatze und die Begleiter gibt es nicht mehr. Wer sie gekauft hatte, bekommt die Fische dafür einmal zurück.
 

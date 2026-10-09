@@ -220,6 +220,10 @@ body:not(.at-home) .home-only { display: none; }
 /* schmale Karten (Handy): Knopfschrift wie die Karte, damit "Ausgewählt" in die Schleife passt */
 @container (max-width: 151px) { .card .btn { font-size: var(--fs-card, 20px); } }
 .tag { align-self: flex-start; max-width: 100%; padding: 3px 8px 4px; font-size: var(--fs0); background: var(--green-lo); border: 2px solid var(--wood-deep); border-radius: 4px; white-space: nowrap; }
+/* lange Bonus-Texte dürfen umbrechen statt über den Kartenrand zu laufen (Zahl und Einheit bleiben zusammen) */
+.card .tag { white-space: normal; line-height: 1.2; }
+/* Shop und Inventar breiter, damit 4 Karten bequem in eine Reihe passen */
+#shop .panel, #inv .panel { width: min(1080px, 100%); }
 /* nur wenn ein Tag gar nicht in die Karte passt, bricht er um, statt Text zu verlieren */
 @container (max-width: 139px) { .tag { white-space: normal; } }
 #shopNote, #missionNote { margin: 0 0 10px; }
@@ -2464,7 +2468,7 @@ function dailyCosmetics() {
   const r = seeded(dayNumber() * 7919);
   const pool = COSMETICS.slice();
   const out = [];
-  while (out.length < 3 && pool.length) out.push(pool.splice(Math.floor(r() * pool.length), 1)[0]);
+  while (out.length < 4 && pool.length) out.push(pool.splice(Math.floor(r() * pool.length), 1)[0]);
   return out;
 }
 function untilMidnight() {
@@ -2599,7 +2603,7 @@ function renderInv() {
     const on = save.wear[c.slot] === c.id;
     return shopCard({ name: t(c.name), tag: bonusText(c), prev: () => catPreview([c.id], 'weiss'), desc: on ? t('Angezogen') : t(c.desc), label: on ? t('Ausziehen') : t('Anziehen'), alt: !on,
       onClick: () => { wear(c, !on); sfx.meow(); renderInv(); } });
-  }), t('Noch keine Cosmetics. Jeden Tag gibt es drei neue im Shop.'));
+  }), t('Noch keine Cosmetics. Jeden Tag gibt es vier neue im Shop.'));
 }
 let invTimer = 0;
 function invMsg(text) { const m = $('invMsg'); m.textContent = text; m.hidden = false; clearTimeout(invTimer); invTimer = setTimeout(() => { m.hidden = true; }, 2800); }
@@ -3065,7 +3069,7 @@ Object.assign(EN, {
   'Maximal': 'Maxed out', 'Menschenturm': 'Human tower', 'Menü': 'Menu', 'Meter': 'Meters', 'Mission geschafft!': 'Mission complete!', 'Missionen': 'Missions',
   'Mit feiner Kette. Sehr vornehm.': 'With a fine chain. Very posh.', 'Mit kleinem roten Anhänger.': 'With a little red pendant.', 'Mitternacht': 'Midnight', 'Monokel': 'Monocle',
   'Morgen wieder': 'Again tomorrow', 'Namen ändern': 'Change name', 'Namen ändern kostet': 'Changing the name costs', 'Neue Missionen in': 'New missions in',
-  'Noch keine Cosmetics. Jeden Tag gibt es drei neue im Shop.': 'No cosmetics yet. Every day there are three new ones in the shop.',
+  'Noch keine Cosmetics. Jeden Tag gibt es vier neue im Shop.': 'No cosmetics yet. Every day there are four new ones in the shop.',
   'Noch keine Upgrades. Im Shop gibt es welche für Fische.': 'No upgrades yet. The shop sells them for fish.', 'Nochmal': 'Again', 'Nächste Stufe:': 'Next level:', 'Orange': 'Orange', 'Passwort': 'Password',
   'Pause': 'Pause', 'Regenbogen-Stern': 'Rainbow star', 'Regenjacke': 'Raincoat',
   'Rettet dich einmal pro Runde: 3 s unverwundbar.': 'Saves you once per run: 3 s invincible.', 'Rettet dich einmal pro Runde: 5 s unverwundbar.': 'Saves you once per run: 5 s invincible.', 'Rettet dich zweimal pro Runde: je 5 s unverwundbar.': 'Saves you twice per run: 5 s invincible each.',
