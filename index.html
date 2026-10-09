@@ -1222,7 +1222,8 @@ const FISH_ROWS = [
   '..oolloo..t',
 ];
 const FISH_PAL = { o: '#d9661c', b: '#ff9f43', h: '#ffc27a', l: '#ffe2b8', k: '#3a2213', d: '#f07f2a', t: '#f07f2a' };
-const fishSpr = sprite(FISH_ROWS, FISH_PAL);
+// durchgehend dunkelorangener Umriss, sonst ergibt der helle Bauch einen grauen Rand
+const fishSpr = sprite(FISH_ROWS, FISH_PAL, '#8a3f12');
 // Goldfisch: selten, 10 Fische wert. Durchgehend dunkelgoldener Umriss (der helle Bauch ergäbe sonst einen grauen Rand).
 const GOLD_PAL = { o: '#c98a0a', b: '#ffd43b', h: '#fff1a0', l: '#fff1b8', k: '#5a3a08', d: '#f2b81e', t: '#f2b81e' };
 const goldFishSpr = sprite(FISH_ROWS, GOLD_PAL, '#7a4f0a');
