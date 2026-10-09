@@ -908,31 +908,32 @@ const BREEDS = [
   { id: 'orange', name: 'Orange', hair: 'Halblanghaar', fur: 1, price: 900, desc: 'Rot getigert.', pal: { b: '#f2a14a', s: '#d27a2a', d: '#b8661f', u: '#c8641c', p: '#ffc1a8', e: '#2f5d34', c: '#ffb08a' }, stripes: '#e48c35' },
   { id: 'siam', name: 'Siam', hair: 'Kurzhaar', fur: 0, price: 1400, desc: 'Hell, mit dunklen Ohren, Pfoten und Schwanz.', pal: { b: '#f1e6d2', s: '#d9c6a6', d: '#4a3128', g: '#5b3d30', q: '#5b3d30', u: '#3f2a22', a: '#5b3d30', e: '#1f4f8f' } },
 ];
-// Cosmetics: pro Körperstelle ist eines gleichzeitig angezogen
 // Cosmetics: pro Körperstelle ist eines angezogen. Jedes gibt einen kleinen Bonus.
 const COSMETICS = [
   { id: 'tirol', slot: 'head', name: 'Tirolerhut', price: 600, desc: 'Grüner Filzhut mit roter Kordel und Feder.', bonus: ['fish', 3] },
   { id: 'santa', slot: 'head', name: 'Pudelmütze', price: 700, desc: 'Rot gestrickt, mit weißem Bommel.', bonus: ['star', .3] },
-  { id: 'blumen', slot: 'head', name: 'Blumenkranz', price: 900, desc: 'Almrausch, Edelweiß und Enzian.', bonus: ['jump', 2] },
+  { id: 'blumen', slot: 'head', name: 'Blumenkranz', price: 900, desc: 'Almrausch, Edelweiß und Enzian.', bonus: ['jump', 1] },
   { id: 'krone', slot: 'head', name: 'Krone', price: 2000, desc: 'Für echte Almköniginnen. Glitzert beim Laufen.', bonus: ['gold', 2] },
   { id: 'brille', slot: 'eyes', name: 'Sonnenbrille', price: 650, desc: 'Cool bleiben auf der Alm.', bonus: ['magnet', 6] },
   { id: 'herz', slot: 'eyes', name: 'Herzbrille', price: 800, desc: 'Rosa und verliebt.', bonus: ['fish', 3] },
   { id: 'ski', slot: 'eyes', name: 'Skibrille', price: 1000, desc: 'Gelbe Gläser gegen den Schnee.', bonus: ['star', .3] },
   { id: 'monokel', slot: 'eyes', name: 'Monokel', price: 1500, desc: 'Mit goldener Kette. Sehr vornehm.', bonus: ['gold', 2] },
-  { id: 'schal', slot: 'neck', name: 'Schal', price: 500, desc: 'Roter Strickschal, weht im Wind.', bonus: ['jump', 2] },
+  { id: 'schal', slot: 'neck', name: 'Schal', price: 500, desc: 'Roter Strickschal, weht im Wind.', bonus: ['jump', 1] },
   { id: 'fliege', slot: 'neck', name: 'Fliege', price: 700, desc: 'Rote Fliege für feine Anlässe.', bonus: ['fish', 3] },
   { id: 'glocke', slot: 'neck', name: 'Glöckchen', price: 900, desc: 'Rotes Halsband mit goldener Glocke.', bonus: ['magnet', 6] },
   { id: 'kette', slot: 'neck', name: 'Goldkette', price: 1100, desc: 'Mit kleinem roten Anhänger.', bonus: ['gold', 2] },
   { id: 'pulli', slot: 'body', name: 'Strickpulli', price: 1000, desc: 'Blau mit weißem Zickzack.', bonus: ['star', .3] },
   { id: 'jacke', slot: 'body', name: 'Regenjacke', price: 1200, desc: 'Knallgelb für jedes Wetter.', bonus: ['fish', 4] },
   { id: 'weste', slot: 'body', name: 'Trachtenweste', price: 1400, desc: 'Grün mit goldenen Knöpfen.', bonus: ['gold', 2] },
-  { id: 'umhang', slot: 'body', name: 'Heldenumhang', price: 1800, desc: 'Roter Umhang, flattert beim Rennen.', bonus: ['jump', 3] },
-  { id: 'socken', slot: 'feet', name: 'Ringelsocken', price: 450, desc: 'Rot-weiß geringelt, an allen vier Pfoten.', bonus: ['jump', 2] },
+  { id: 'umhang', slot: 'body', name: 'Heldenumhang', price: 1800, desc: 'Roter Umhang, flattert beim Rennen.', bonus: ['jump', 2] },
+  { id: 'socken', slot: 'feet', name: 'Ringelsocken', price: 450, desc: 'Rot-weiß geringelt, an allen vier Pfoten.', bonus: ['jump', 1] },
   { id: 'pantoffel', slot: 'feet', name: 'Hüttenschuhe', price: 750, desc: 'Graue Filzpatschen mit rotem Rand.', bonus: ['fish', 3] },
   { id: 'stiefel', slot: 'feet', name: 'Bergstiefel', price: 900, desc: 'Fest geschnürt für die Alm.', bonus: ['star', .3] },
-  { id: 'sneaker', slot: 'feet', name: 'Turnschuhe', price: 1300, desc: 'Rot mit weißer Sohle. Sehr schnell.', bonus: ['jump', 3] },
+  { id: 'sneaker', slot: 'feet', name: 'Turnschuhe', price: 1300, desc: 'Rot mit weißer Sohle. Federn beim Springen.', bonus: ['jump', 2] },
 ];
-const BONUS_TEXT = { fish: (v) => '+' + v + ' % ' + t('Fische'), star: (v) => '+' + (settings.lang === 'en' ? v : String(v).replace('.', ',')) + ' s ' + t('Stern'), jump: (v) => '+' + v + ' % ' + t('Sprung'), gold: (v) => '+' + v + ' % ' + t('Goldfische'), magnet: (v) => '+' + v + ' ' + t('Magnet') };
+// Sprung: höchstens +6 % zusammen (ein Teil pro Körperstelle), damit der Menschenturm weiter einen Doppelsprung braucht
+// Zahl und Einheit bleiben in schmalen Karten zusammen
+const BONUS_TEXT = { fish: (v) => '+' + v + '\u00a0% ' + t('Fische'), star: (v) => '+' + (settings.lang === 'en' ? v : String(v).replace('.', ',')) + '\u00a0s ' + t('Stern-Zeit'), jump: (v) => '+' + v + '\u00a0% ' + t('Sprungkraft'), gold: (v) => '+' + v + '\u00a0% ' + t('Goldfisch-Chance'), magnet: (v) => '+' + v + ' ' + t('Magnet-Reichweite') };
 const catCache = {};
 function catLook(breedId, cosIds) {
     const breed = BREEDS.find((b) => b.id === breedId) || BREEDS[0];
@@ -1311,17 +1312,23 @@ const STARS = Array.from({ length: 70 }, () => ({ x: Math.random(), y: Math.rand
 /* ---------- Level ---------- */
 const LEVELS = [
   { name: 'Almwiese', tip: '', at: 0, speed: 140, gap: [.95, 1.7], pats: { stand: 6, cheer: 2 } },
-  { name: 'Menschenturm', tip: 'Jetzt stehen sie übereinander', at: 250, speed: 158, gap: [.9, 1.6], pats: { stand: 3, cheer: 2, duo: 3, tower: 3 } },
+  // ab hier stehen zwei übereinander: ohne Doppelsprung kommt man nicht drüber, darum erklärt es das Banner
+  { name: 'Menschenturm', tip: COARSE ? 'Tipp zweimal: Doppelsprung!' : 'Drück zweimal: Doppelsprung!', at: 250, speed: 158, gap: [.9, 1.6], pats: { stand: 3, cheer: 2, duo: 3, tower: 3 } },
   { name: 'Gleitschirm', tip: 'Fliegt jemand hoch, lauf unten durch', at: 550, speed: 176, gap: [.85, 1.55], pats: { stand: 2, duo: 2, tower: 2, glideLow: 3, glideHigh: 3 } },
   { name: 'Skipiste', tip: 'Skifahrer sind schneller, als du denkst', at: 900, speed: 194, gap: [.8, 1.45], pats: { stand: 2, cheer: 1, duo: 2, tower: 2, glideLow: 2, glideHigh: 2, ski: 4 } },
   { name: 'Alpenglühen', tip: 'Jetzt kommen sie zu dritt', at: 1300, speed: 212, gap: [.75, 1.4], pats: { stand: 1, duo: 2, trio: 3, tower: 3, glideLow: 2, glideHigh: 2, ski: 3, combo: 2 } },
   { name: 'Sternennacht', tip: 'Kirby schaut zu', at: 1750, speed: 230, gap: [.7, 1.3], pats: { stand: 1, cheer: 1, duo: 2, trio: 3, tower: 3, glideLow: 2, glideHigh: 2, ski: 3, combo: 3 } },
 ];
+// Endlos: der Tipp passt zur Tageszeit, nach Mitternacht wird es irgendwann wieder Morgen
+function endlessTip(n) {
+  const h = startHour(n) % 24;
+  return h >= 18 || h < 5 ? 'Es wird immer später' : h < 11 ? 'Ein neuer Tag beginnt' : 'Die Alm hört nie auf';
+}
 function levelInfo(n) {
   if (n <= LEVELS.length) return LEVELS[n - 1];
   const extra = n - LEVELS.length;
   return {
-    name: 'Endlos-Alm', tip: 'Es wird immer später', at: 1750 + extra * 500,
+    name: 'Endlos-Alm', tip: endlessTip(n), at: 1750 + extra * 500,
     speed: Math.min(330, 230 + extra * 12), gap: [.66, 1.25], pats: LEVELS[LEVELS.length - 1].pats,
   };
 }
@@ -1710,6 +1717,7 @@ function spawn() {
   let r = Math.random() * total;
   let kind = entries[0][0];
   for (const [k, w] of entries) { if ((r -= w) < 0) { kind = k; break; } }
+  if (G.nextKind) { kind = G.nextKind; G.nextKind = null; } // nach dem Doppelsprung-Tipp zuerst etwas Leichtes zum Üben
   const { list, w, extraGap } = pattern(kind, viewW + 14);
   G.objects.push(...list);
   G.untilSpawn = w + G.speed * rand(L.gap[0], L.gap[1]) + 50 + extraGap;
@@ -1731,6 +1739,8 @@ function startEvent() {
   const type = pick(pool);
   G.event = { type, t: 0, dur: EVENTS[type].dur, acc: 0 };
   G.lastEvent = type;
+  // "Keine Hindernisse" gilt sofort: wer schon vorne auf der Strecke steht, fliegt weg
+  if (noObstacles()) G.objects.forEach((o) => { if (o.type === 'person' && !o.passed && !o.knocked && o.x > P.x + 30) knock(o); });
   showBanner(t(EVENTS[type].name), t(EVENTS[type].sub), '', 2400);
   sfx.event();
 }
@@ -1823,28 +1833,41 @@ document.addEventListener('gesturestart', (e) => e.preventDefault());
 document.addEventListener('contextmenu', (e) => e.preventDefault());
 document.addEventListener('dblclick', (e) => e.preventDefault());
 
-/* ---------- PC: Leertaste springt, Enter startet, Escape pausiert, 0 öffnet das Admin-Panel ---------- */
+/* ---------- PC: Leertaste springt, Enter startet, Escape geht zurück, 0 öffnet das Admin-Panel ---------- */
+let keyNav = false, keyFocused = null; // zuletzt mit der Tastatur bedient: dann bekommt ein neues Fenster gleich den Fokus
+window.addEventListener('pointerdown', () => { keyNav = false; }, true);
+// nur ein mit der Tastatur angesteuerter Knopf reagiert selbst auf Enter und Leertaste, ein angeklickter nicht
+document.addEventListener('focusin', (e) => { keyFocused = keyNav ? e.target : null; });
+const firstRun = () => document.body.classList.contains('first-run'); // erst Name und Passwort, vorher gibt es kein Spiel
 window.addEventListener('keydown', (e) => {
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  keyNav = true;
   const typing = e.target.closest && e.target.closest('input, textarea');
-  if (typing || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (typing && e.key !== 'Escape') return;
   const anyModal = Object.keys(screens).some((k) => k !== 'home' && !screens[k].hidden);
   if (e.key === '0') { e.preventDefault(); openAdmin(); return; }
   if (!screens.admin.hidden) { if (e.key === 'Escape') closeAdmin(); return; }
-  if (e.code === 'Space' || e.key === ' ' || e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
+  const space = e.code === 'Space' || e.key === ' ';
+  const onBtn = e.target.closest && e.target.closest('button, [role=tab]');
+  if (onBtn && (space || e.key === 'Enter') && mode !== 'play' && onBtn === keyFocused) return;
+  if (space || e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
     e.preventDefault();
     if (e.repeat) return;
     audioOn();
-    if (mode === 'play' || mode === 'paused') press();
-    else if (mode === 'home' && !anyModal) $('startBtn').click();
+    if (mode === 'play') press();
+    else if (mode === 'paused') { if (screens.settings.hidden) resume(); }
+    else if (mode === 'home' && !anyModal && !firstRun()) $('startBtn').click();
     else if (mode === 'over' && !screens.over.hidden) $('againBtn').click();
   } else if (e.key === 'Enter') {
-    if (mode === 'home' && !anyModal) { e.preventDefault(); $('startBtn').click(); }
+    if (mode === 'home' && !anyModal && !firstRun()) { e.preventDefault(); $('startBtn').click(); }
     else if (mode === 'over' && !screens.over.hidden) { e.preventDefault(); $('againBtn').click(); }
   } else if (e.key === 'Escape') {
     // Escape geht immer einen Schritt zurück: Einstellungen -> Menü -> Spiel
     if (!screens.settings.hidden) closeSettings();
     else if (mode === 'play') pause();
     else if (mode === 'paused') resume();
+    else if (mode === 'over') { if (!screens.over.hidden) $('lobbyBtn').click(); }
+    else if (mode === 'home' && !screens.setup.hidden) { if (setupFromInv) { renderInv(); show('inv'); } } // die erste Einrichtung lässt sich nicht überspringen
     else if (mode === 'home' && anyModal) show('home');
   }
 });
@@ -1853,24 +1876,28 @@ window.addEventListener('keydown', (e) => {
    Ohne Server gibt es nur die Spielstände auf diesem Gerät: "Alle User löschen" leert sie alle. */
 const ADMIN = { user: 'Adrian', pass: '1234' };
 let adminBack = null, adminWipeArmed = false;
-function adminMsg(text) { $('adminMsg').textContent = text; $('adminMsg').hidden = !text; }
+function adminMsg(text) {
+  $('adminMsg').textContent = text;
+  $('adminMsg').hidden = !text;
+  if (text) $('adminMsg').scrollIntoView({ block: 'nearest' }); // am Handy steht die Meldung sonst oft außerhalb
+}
 function openAdmin() {
   if (!screens.admin.hidden) return;
   if (mode === 'play') pause();
   adminBack = Object.keys(screens).find((k) => !screens[k].hidden) || null;
   adminWipeArmed = false;
-  $('adminWipe').textContent = 'Alle User löschen';
+  $('adminWipe').textContent = t('Alle User löschen');
   adminMsg('');
   $('adminLogin').hidden = false;
   $('adminTools').hidden = true;
   $('adminUser').value = '';
   $('adminPass').value = '';
   show('admin');
-  setTimeout(() => $('adminUser').focus(), 50);
+  if (!COARSE) setTimeout(() => $('adminUser').focus(), 50);
 }
 function closeAdmin() {
-  show(adminBack && adminBack !== 'admin' ? adminBack : (mode === 'home' ? 'home' : null));
-  if (mode === 'paused' && adminBack !== 'pause') show('pause');
+  show(adminBack && adminBack !== 'admin' ? adminBack : (mode === 'home' ? 'home' : mode === 'over' ? 'over' : null));
+  if (mode === 'paused' && !adminBack) show('pause');
 }
 function renderAdmin() {
   $('adminWho').textContent = t('Dein Account:') + ' ' + (save.name || t('ohne Namen')) + ' · ' + save.fish + ' ' + t('Fische');
@@ -1880,18 +1907,18 @@ $('adminLogin').addEventListener('submit', (e) => {
   if ($('adminUser').value.trim() === ADMIN.user && $('adminPass').value === ADMIN.pass) {
     $('adminLogin').hidden = true;
     $('adminTools').hidden = false;
-    adminMsg('Angemeldet.');
+    adminMsg(t('Angemeldet.'));
     renderAdmin();
     sfx.buy();
   } else {
-    adminMsg('Benutzer oder Passwort falsch.');
+    adminMsg(t('Benutzer oder Passwort falsch.'));
     $('adminPass').value = '';
     sfx.no();
   }
 });
 $('adminGive').addEventListener('click', () => {
   const n = Math.floor(Number($('adminFish').value));
-  if (!Number.isFinite(n) || n < 1 || n > 99999) { adminMsg('Bitte eine Zahl von 1 bis 99999 eingeben.'); sfx.no(); return; }
+  if (!Number.isFinite(n) || n < 1 || n > 99999) { adminMsg(t('Bitte eine Zahl von 1 bis 99999 eingeben.')); sfx.no(); return; }
   save.fish += n;
   persist();
   updateHud(true);
@@ -1902,8 +1929,8 @@ $('adminGive').addEventListener('click', () => {
 $('adminWipe').addEventListener('click', () => {
   if (!adminWipeArmed) { // Sicherheitsabfrage im Spiel: zweimal drücken
     adminWipeArmed = true;
-    $('adminWipe').textContent = 'Wirklich alles löschen?';
-    adminMsg('Nochmal drücken, um alle User zu löschen.');
+    $('adminWipe').textContent = t('Wirklich alles löschen?');
+    adminMsg(t('Nochmal drücken, um alle User zu löschen.'));
     return;
   }
   try { Object.keys(localStorage).filter((k) => k.startsWith('cj-')).forEach((k) => localStorage.removeItem(k)); } catch (e) { /* egal */ }
@@ -1913,7 +1940,13 @@ $('adminWipe').addEventListener('click', () => {
 $('adminClose').addEventListener('click', closeAdmin);
 
 /* ---------- Einstellungen: Musik, Sounds, Vibration, Sprache ---------- */
-let settingsBack = null;
+let settingsBack = null, logoutTimer = 0;
+// Abmelden mitten in einer Runde braucht einen zweiten Tipp, sonst ist die Runde mit einem Fehltipp weg
+function logoutArm(on) {
+  clearTimeout(logoutTimer);
+  logoutTimer = on ? setTimeout(() => logoutArm(false), 3000) : 0;
+  $('setLogout').textContent = t(on ? 'Wirklich abmelden?' : 'Abmelden');
+}
 function renderSettings() {
   for (const [id, k] of [['setMusic', 'music'], ['setSound', 'sound']]) {
     $(id).value = settings[k];
@@ -1923,6 +1956,9 @@ function renderSettings() {
   $('setVibOff').classList.toggle('btn2', settings.vib);
   $('setLangDe').classList.toggle('btn2', settings.lang !== 'de');
   $('setLangEn').classList.toggle('btn2', settings.lang !== 'en');
+  // Vibration gibt es nur am Handy (und nicht in jedem Browser, z. B. nicht am iPhone)
+  $('setVibOn').closest('.set-row').hidden = !COARSE || !('vibrate' in navigator);
+  logoutArm(false);
   $('setWho').textContent = t('Angemeldet als') + ' ' + (save.name || '-');
 }
 function openSettings() {
@@ -1945,9 +1981,14 @@ $('setVibOff').addEventListener('click', () => { settings.vib = false; saveSetti
 $('setLangDe').addEventListener('click', () => { setLang('de'); renderSettings(); });
 $('setLangEn').addEventListener('click', () => { setLang('en'); renderSettings(); });
 $('settingsBtn').addEventListener('click', openSettings);
-$('setLogout').addEventListener('click', () => { if (mode === 'home') logout(); else { show(null); goHome(); logout(); } });
+$('setLogout').addEventListener('click', () => {
+  if (mode === 'home') { logout(); return; }
+  if (!logoutTimer) { logoutArm(true); return; }
+  if (G.score > 0) missionRunEnd(); // die angefangene Runde zählt für die Missionen
+  show(null); goHome(); logout();
+});
 $('settings').querySelector('[data-close]').addEventListener('click', closeSettings);
-$('menuBtn').addEventListener('click', () => { if (mode === 'play') pause(); });
+$('menuBtn').addEventListener('click', () => { if (mode === 'play') pause(); else if (mode === 'paused' && screens.settings.hidden) resume(); });
 // Jeder Knopf macht ein leises Klick-Geräusch
 document.addEventListener('click', (e) => {
   const b = e.target.closest && e.target.closest('button');
@@ -2033,6 +2074,14 @@ function show(name) {
   else if (!modal && shown && shown !== 'home' && actx && mode === 'home') sfx.close();
   shown = name;
   for (const k in screens) screens[k].hidden = k !== name;
+  // solange ein Fenster offen ist, erreicht man die Knöpfe dahinter nicht (auch nicht mit Tab)
+  document.querySelector('.hud').inert = !!modal;
+  screens.home.inert = !!modal;
+  if (!modal) return;
+  const a = document.activeElement;
+  if (a && a !== document.body && !screens[name].contains(a)) a.blur(); // kein Fokus auf Knöpfen hinter dem Fenster
+  if (name === 'setup' && !COARSE) { $('catName').focus(); return; } // am Handy würde sonst sofort die Tastatur aufgehen
+  if (keyNav) { const b = [...screens[name].querySelectorAll('button')].find((x) => !x.disabled && x.getClientRects().length); if (b) b.focus(); }
 }
 let bannerTimer = 0;
 
@@ -2052,7 +2101,7 @@ const SHOW_CLOCK = false;
 function showLevelBanner(n) {
   const L = levelInfo(n);
   const where = t(L.name) + (SHOW_CLOCK ? ' · ' + fmtClock(startHour(n)) + (settings.lang === 'en' ? '' : ' Uhr') : '');
-  showBanner(n === 1 ? t("Los geht's!") : L.at + ' m', where, L.tip ? t(L.tip) : '');
+  showBanner(n === 1 ? t("Los geht's!") : L.at + ' m', where, L.tip ? t(L.tip) : '', n === 2 ? 3600 : 2600); // den Doppelsprung-Tipp etwas länger zeigen
 }
 
 function goHome(smooth = false) {
@@ -2075,6 +2124,8 @@ function goHome(smooth = false) {
   G.objects.push(T);
   particles.length = 0;
   floaters.length = 0;
+  $('menuBtn').style.visibility = '';
+  missionFlush();
   document.body.classList.add('at-home');
   $('banner').classList.remove('show');
   show('home');
@@ -2082,6 +2133,7 @@ function goHome(smooth = false) {
   updateHud(true);
 }
 function startGame() {
+  if (firstRun()) return;
   // ohne schwarzen oder braunen Übergang: die Katze läuft los und die Landschaft zieht nach links weg
   const fromX = P.x;
   const toy = G.objects.find((o) => o.type === 'toy');
@@ -2092,6 +2144,7 @@ function startGame() {
   Object.assign(P, { death: null, x: fromX, y: 0, vy: 0, grounded: true, jumps: 0, buffer: 0, airT: 0, land: 0, flip: 0, inv: 0 });
   particles.length = 0;
   floaters.length = 0;
+  $('menuBtn').style.visibility = '';
   mode = 'play';
   document.body.classList.remove('at-home');
   if (!screens.home.hidden) {
@@ -2105,23 +2158,32 @@ function startGame() {
   keepAwake();
   updateHud(true);
 }
-function pause() { mode = 'paused'; show('pause'); }
+function pause() { mode = 'paused'; show('pause'); missionFlush(); }
 function resume() { mode = 'play'; show(null); last = performance.now(); }
 
-$('startBtn').addEventListener('click', () => { audioOn(); if (mode === 'home') { sfx.start(); startGame(); } });
+$('startBtn').addEventListener('click', () => { audioOn(); if (mode === 'home' && !firstRun()) { sfx.start(); startGame(); } });
 $('againBtn').addEventListener('click', () => { audioOn(); if (mode === 'over') { sfx.start(); startGame(); } });
 $('lobbyBtn').addEventListener('click', () => { if (mode === 'over') { sfx.home(); goHome(true); } });
-$('pauseLobbyBtn').addEventListener('click', () => { if (mode === 'paused') { sfx.home(); goHome(true); } });
+$('pauseLobbyBtn').addEventListener('click', () => { if (mode === 'paused') { if (G.score > 0) missionRunEnd(); sfx.home(); goHome(true); } });
 $('resumeBtn').addEventListener('click', () => { if (mode === 'paused') resume(); });
 $('pauseSettingsBtn').addEventListener('click', () => openSettings());
-$('shopBtn').addEventListener('click', () => { audioOn(); renderShop(); show('shop'); });
-$('invBtn').addEventListener('click', () => { audioOn(); renderInv(); show('inv'); });
+// Fenster und Reiter beginnen immer oben
+const toTop = (id) => { $(id).querySelector('.scroll').scrollTop = 0; };
+$('shopBtn').addEventListener('click', () => { audioOn(); renderShop(); show('shop'); toTop('shop'); });
+$('invBtn').addEventListener('click', () => { audioOn(); renderInv(); show('inv'); toTop('inv'); });
 $('missionsBtn').addEventListener('click', () => { audioOn(); renderMissions(); show('missions'); });
 document.querySelectorAll('[data-close]').forEach((b) => { if (!b.closest('#settings')) b.addEventListener('click', () => { if (mode === 'home') show('home'); }); });
+// ≡ schließt das Menü wieder: das Fenster liegt über dem Knopf, darum zählt ein Tipp auf seine Stelle
+screens.pause.addEventListener('click', (e) => {
+  if (e.target !== screens.pause || mode !== 'paused') return;
+  const r = $('menuBtn').getBoundingClientRect();
+  if (e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom) { audioOn(); sfx.click(); resume(); }
+});
 
 function levelUp() {
   G.level++;
   G.untilSpawn = Math.max(G.untilSpawn, G.speed * 1.1); // kurze Verschnaufpause
+  if (G.level === 2) G.nextKind = 'stand';
   sfx.level();
   showLevelBanner(G.level);
 }
@@ -2144,6 +2206,15 @@ function knock(o) {
 }
 
 const meters = () => G.score; // 1 Meter = 8 Pixel Strecke
+// sicherer Rand links (Kamera-Aussparung im Querformat), in CSS-Pixeln
+let safeLeft = 0;
+const safeProbe = document.createElement('div');
+safeProbe.style.cssText = 'position:fixed;left:0;top:0;width:0;height:0;visibility:hidden;pointer-events:none;padding-left:env(safe-area-inset-left, 0px)';
+document.body.appendChild(safeProbe);
+const readSafe = () => { safeLeft = parseFloat(getComputedStyle(safeProbe).paddingLeft) || 0; };
+readSafe();
+window.addEventListener('resize', readSafe);
+window.addEventListener('orientationchange', () => setTimeout(readSafe, 150));
 // Sturz: Zeitlupe, Blitz, die Katze wird hochgeschleudert, dreht sich, landet mit Staubwolke und sieht Sterne
 function gameOver(o) {
   mode = 'over';
@@ -2163,18 +2234,21 @@ function gameOver(o) {
   $('rFish').textContent = G.fish;
   $('rJumped').textContent = G.jumped;
   $('banner').classList.remove('show');
-  if (typeof missionRunEnd === 'function') missionRunEnd();
+  $('menuBtn').style.visibility = 'hidden'; // im Sturz gibt es nichts zu pausieren
+  missionRunEnd();
+  missionFlush();
   updateHud(true);
-  setTimeout(() => { if (mode === 'over') show('over'); }, 1600);
+  setTimeout(() => { if (mode !== 'over') return; if (screens.admin.hidden) show('over'); else adminBack = 'over'; }, 1600);
 }
 function tickDeath(dt) {
   const D = P.death;
   if (!D) return;
   D.t += dt;
   if (G.flash > 0) G.flash = Math.max(0, G.flash - dt * 2.5);
+  const minX = safeLeft / px + 4; // nicht unter die Kamera-Aussparung am Handy rutschen
   if (D.landed) { // rutscht auf dem Bauch aus, Kopf richtet sich wieder gerade
     D.vx *= Math.pow(.02, dt);
-    P.x = Math.max(4, P.x + D.vx * dt);
+    P.x = Math.max(minX, P.x + D.vx * dt);
     D.tilt *= Math.pow(.002, dt);
     if (Math.abs(D.vx) > 8 && Math.random() < dt * 40) particles.push({ x: P.x + rand(14, 24), y: 0, vx: rand(-10, 25), vy: rand(10, 30), life: rand(.2, .4), c: 'rgba(240,235,225,.85)' });
     return;
@@ -2182,7 +2256,7 @@ function tickDeath(dt) {
   // nach hinten geschleudert: Körper kippt leicht nach hinten, keine Drehung
   D.vy -= GRAV * dt;
   P.y += D.vy * dt;
-  P.x = Math.max(4, P.x + D.vx * dt);
+  P.x = Math.max(minX, P.x + D.vx * dt);
   D.tilt = Math.max(-.45, D.tilt - dt * 2.2);
   if (P.y <= 0 && D.t > .08) {
     P.y = 0; D.landed = true; D.vx = -70; D.landT = D.t;
@@ -2217,7 +2291,6 @@ const FISH_HTML = (() => {
   return '<svg class="fish-ico" viewBox="0 0 11 6" shape-rendering="crispEdges" aria-hidden="true">' + rects + '</svg>';
 })();
 document.querySelectorAll('svg.fish-ico').forEach((el) => { el.outerHTML = FISH_HTML; });
-const ICONS = ICON_SPR;
 // Vorschaubilder in voller Bildschirmauflösung zeichnen, damit nichts verschwimmt
 function iconCanvas(spr, scale = 4) {
   const r = Math.max(1, Math.round(window.devicePixelRatio || 1));
@@ -2232,7 +2305,9 @@ function iconCanvas(spr, scale = 4) {
   c.style.height = spr.c.height * scale + 'px';
   return c;
 }
-const catPreview = (cosIds, breed = save.breed, scale = 3) => iconCanvas(catPreviewSprite(breed, cosIds), scale);
+// Karten im flachen Querformat (Handy) sind niedriger: dort die Katze nur doppelt so groß
+const SHORT_LAND = window.matchMedia ? matchMedia('(orientation: landscape) and (max-height: 560px)') : { matches: false };
+const catPreview = (cosIds, breed = save.breed, scale = SHORT_LAND.matches ? 2 : 3) => iconCanvas(catPreviewSprite(breed, cosIds), scale);
 function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
 let shopTab = 'up', msgTimer = 0;
 function shopMsg(text) {
@@ -2305,7 +2380,7 @@ function renderShop() {
       const L = lvl(u.id);
       const max = L >= u.prices.length;
       cards.push(shopCard({
-        name: t(u.name), tag: t('Stufe') + ' ' + L + ' / 3', prev: () => iconCanvas(ICONS[u.id]),
+        name: t(u.name), tag: t('Stufe') + ' ' + L + ' / 3', prev: () => iconCanvas(ICON_SPR[u.id]),
         desc: max ? t(u.levels[2]) : (L ? t('Nächste Stufe:') + ' ' : '') + t(u.levels[L]),
         price: max ? undefined : u.prices[L], label: t('Maximal'), disabled: max,
         onClick: () => { if (max || !pay(u.prices[L])) return; save.levels[u.id] = L + 1; persist(); shopMsg(t(u.name) + ': ' + t('Stufe') + ' ' + (L + 1) + '!'); renderShop(); },
@@ -2345,9 +2420,9 @@ function wear(c, on) {
   cat = myCat();
   persist();
 }
-$('tabUp').addEventListener('click', () => { shopTab = 'up'; renderShop(); });
-$('tabCats').addEventListener('click', () => { shopTab = 'cats'; renderShop(); });
-$('tabCos').addEventListener('click', () => { shopTab = 'cos'; renderShop(); });
+$('tabUp').addEventListener('click', () => { shopTab = 'up'; renderShop(); toTop('shop'); });
+$('tabCats').addEventListener('click', () => { shopTab = 'cats'; renderShop(); toTop('shop'); });
+$('tabCos').addEventListener('click', () => { shopTab = 'cos'; renderShop(); toTop('shop'); });
 const RENAME_PRICE = 1000;
 function renderInv() {
   $('invWallet').textContent = save.fish;
@@ -2378,7 +2453,7 @@ function renderInv() {
       onClick: () => { save.breed = b.id; cat = myCat(); persist(); sfx.meow(); renderInv(); } });
   }), '');
   grid('invUpgrades', UPGRADES.filter((u) => lvl(u.id)).map((u) => shopCard({
-    name: t(u.name), tag: t('Stufe') + ' ' + lvl(u.id) + ' / 3', prev: () => iconCanvas(ICONS[u.id]), desc: t(u.levels[lvl(u.id) - 1]), label: t('Aktiv'), disabled: true, onClick: () => {},
+    name: t(u.name), tag: t('Stufe') + ' ' + lvl(u.id) + ' / 3', prev: () => iconCanvas(ICON_SPR[u.id]), desc: t(u.levels[lvl(u.id) - 1]), label: t('Aktiv'), disabled: true, onClick: () => {},
   })), t('Noch keine Upgrades. Im Shop gibt es welche für Fische.'));
   grid('invCos', COSMETICS.filter((c) => has('cos:' + c.id)).map((c) => {
     const on = save.wear[c.slot] === c.id;
@@ -2399,8 +2474,25 @@ const MISSION_TYPES = {
 };
 const MISSION_REWARD = [150, 260, 420];
 const LOGIN_REWARD = [50, 80, 120, 160, 220, 300, 400];
+// Fortschritt liegt im Speicher und wird höchstens einmal pro Sekunde geschrieben (nicht bei jedem Fisch)
+let missionMem = null, missionTimer = 0;
+function missionFlush() {
+  if (!missionTimer) return;
+  clearTimeout(missionTimer);
+  missionTimer = 0;
+  if (missionMem) store.set('cj-missions', missionMem);
+}
+function missionSave(now) {
+  if (now) { clearTimeout(missionTimer); missionTimer = 0; store.set('cj-missions', missionMem); return; } // geschafft oder abgeholt: sofort
+  if (!missionTimer) missionTimer = setTimeout(missionFlush, 1000);
+}
+const missionForget = () => { clearTimeout(missionTimer); missionTimer = 0; missionMem = null; }; // ein anderer Stand wurde geladen
+window.addEventListener('pagehide', missionFlush);
+document.addEventListener('visibilitychange', () => { if (document.hidden) missionFlush(); });
 function todayMissions() {
   const day = dayNumber();
+  if (missionMem && missionMem.day === day) return missionMem;
+  missionFlush();
   let m = store.get('cj-missions', null);
   if (!m || m.day !== day) {
     const r = seeded(day * 104729 + 17);
@@ -2414,7 +2506,7 @@ function todayMissions() {
     m = { day, list };
     store.set('cj-missions', m);
   }
-  return m;
+  return (missionMem = m);
 }
 function loginState() {
   const day = dayNumber();
@@ -2424,15 +2516,16 @@ function loginState() {
 }
 function missionProgress(kind, v) {
   const m = todayMissions();
-  let changed = false;
+  let changed = false, done = false;
   for (const x of m.list) {
     if (x.type !== kind || x.claimed) continue;
     const before = x.prog;
     x.prog = MISSION_TYPES[kind].best ? Math.max(x.prog, v) : x.prog + v;
-    if (before < x.n && x.prog >= x.n) { changed = true; if (mode === 'play') showBanner(t('Mission geschafft!'), fillMission(x), '', 1800); }
+    if (before < x.n && x.prog >= x.n) { done = true; if (mode === 'play') showBanner(t('Mission geschafft!'), fillMission(x), '', 1800); }
     if (x.prog !== before) changed = true;
   }
-  if (changed) { store.set('cj-missions', m); updateMissionDot(); }
+  if (changed) missionSave(done);
+  if (done) updateMissionDot();
 }
 function missionRunEnd() { missionProgress('runs', 1); missionProgress('meters', meters()); }
 const fillMission = (x) => t(MISSION_TYPES[x.type].text).replace('{n}', x.n);
@@ -2462,7 +2555,7 @@ function renderMissions() {
       name: fillMission(x), tag: Math.min(x.prog, x.n) + ' / ' + x.n, prev: () => iconCanvas(ok ? goldFishSpr : fishSpr, 4),
       desc: t('Belohnung:') + ' +' + x.reward + ' ' + t('Fische'),
       label: x.claimed ? t('Erledigt') : ok ? t('Abholen') : t('Läuft noch'), alt: !ok || x.claimed, disabled: x.claimed || !ok,
-      onClick: () => { const mm = todayMissions(), y = mm.list[i]; if (y.claimed || y.prog < y.n) return; y.claimed = true; store.set('cj-missions', mm); save.fish += y.reward; persist(); updateHud(true); sfx.claim(); renderMissions(); updateMissionDot(); },
+      onClick: () => { const mm = todayMissions(), y = mm.list[i]; if (y.claimed || y.prog < y.n) return; y.claimed = true; missionSave(true); save.fish += y.reward; persist(); updateHud(true); sfx.claim(); renderMissions(); updateMissionDot(); },
     }));
   });
   $('missionNote').textContent = t('Neue Missionen in') + ' ' + untilMidnight() + '.';
@@ -2487,8 +2580,8 @@ async function hashPassword(pw, saltHex) {
   for (let r = 0; r < 20000; r++) for (let i = 0; i < str.length; i++) h = Math.imul(h ^ str.charCodeAt(i) ^ r, 16777619) >>> 0;
   return 'x' + h.toString(16);
 }
-function snapshot() { const d = {}; for (const k of ACC_KEYS) { const v = store.get(k, undefined); if (v !== undefined) d[k] = v; } return d; }
-function loadSnapshot(d) { for (const k of ACC_KEYS) { try { localStorage.removeItem(k); } catch (e) { /* egal */ } } for (const k in d) store.set(k, d[k]); }
+function snapshot() { missionFlush(); const d = {}; for (const k of ACC_KEYS) { const v = store.get(k, undefined); if (v !== undefined) d[k] = v; } return d; }
+function loadSnapshot(d) { missionForget(); for (const k of ACC_KEYS) { try { localStorage.removeItem(k); } catch (e) { /* egal */ } } for (const k in d) store.set(k, d[k]); }
 // aktuellen Spielstand ins eigene Konto zurückschreiben (bei jedem Speichern)
 function syncAccount() {
   const key = store.get('cj-active', null);
@@ -2674,6 +2767,7 @@ if (CLOUD.url) {
 let storageTimer = 0;
 window.addEventListener('storage', (e) => {
   if (e.key === 'cj-active') { location.reload(); return; }
+  if (e.key === null || e.key === 'cj-missions') missionForget();
   if (e.key === null || ACC_KEYS.includes(e.key)) { clearTimeout(storageTimer); storageTimer = setTimeout(refreshSave, 30); }
 });
 
@@ -2791,27 +2885,31 @@ $('catPass').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('setu
 Object.assign(EN, {
   'Keine Verbindung. Zum ersten Anmelden braucht es kurz Internet.': 'No connection. Logging in for the first time needs the internet once.',
   'Keine Verbindung. Bitte nochmal versuchen.': 'No connection. Please try again.', 'Diesen Namen gibt es schon.': 'This name is already taken.',
+  'Tipp zweimal: Doppelsprung!': 'Tap twice: double jump!', 'Drück zweimal: Doppelsprung!': 'Press twice: double jump!',
+  'Ein neuer Tag beginnt': 'A new day begins', 'Die Alm hört nie auf': 'The alp never ends', 'Wirklich abmelden?': 'Really log out?', 'Regenbogen-Stern!': 'Rainbow star!',
+  'Stern-Zeit': 'star time', 'Sprungkraft': 'jump power', 'Goldfisch-Chance': 'goldfish chance', 'Magnet-Reichweite': 'magnet range',
+  'Rot mit weißer Sohle. Federn beim Springen.': 'Red with white soles. Springy when jumping.',
 });
 Object.assign(EN, {
   '+20 % Fische auf der Strecke und bei Events.': '+20 % fish on the track and in events.', '+40 % Fische.': '+40 % fish.', '+60 % Fische.': '+60 % fish.',
-  '6 Sekunden doppelte Fische': '6 seconds of double fish', 'Abholen': 'Claim', 'Aktiv': 'Active', 'Alle User löschen': 'Delete all users',
+  'Abholen': 'Claim', 'Aktiv': 'Active', 'Alle User löschen': 'Delete all users',
   'Alle User löschen entfernt jeden Spielstand auf diesem Gerät, auch deinen eigenen. Danach startet das Spiel neu mit der Namensfrage.': 'Delete all users removes every save on this device, including your own. The game then restarts with the name screen.',
-  'Alle warten auf dich.': 'Everyone is waiting for you.', 'Almwiese': 'Alpine Meadow', 'Alpenglühen': 'Alpenglow', 'An': 'On', 'Angezogen': 'Wearing',
+  'Alle warten auf dich.': 'Everyone is waiting.', 'Almwiese': 'Alpine Meadow', 'Alpenglühen': 'Alpenglow', 'An': 'On', 'Angezogen': 'Wearing',
   'Anmelden': 'Log in', 'Anziehen': 'Wear', 'App installieren': 'Install app', 'Aus': 'Off', 'Ausgewählt': 'Selected', 'Auswählen': 'Select', 'Ausziehen': 'Take off',
   'Autsch!': 'Ouch!', 'Pudelmütze': 'Bobble hat', 'Rot gestrickt, mit weißem Bommel.': 'Knitted in red, with a white pompom.', 'Grüner Filzhut mit roter Kordel und Feder.': 'Green felt hat with a red cord and a feather.',
-  'Almrausch, Edelweiß und Enzian.': 'Alpine rose, edelweiss and gentian.', 'Roter Strickschal, weht im Wind.': 'Red knitted scarf, flutters in the wind.', 'Graue Filzpatschen mit rotem Rand.': 'Grey felt slippers with a red trim.', 'Rot mit weißer Sohle. Sehr schnell.': 'Red with white soles. Very fast.', 'Belohnung:': 'Reward:', 'Benutzer': 'User', 'Bergstiefel': 'Hiking boots', 'Blau mit weißem Zickzack.': 'Blue with a white zigzag.',
+  'Almrausch, Edelweiß und Enzian.': 'Alpine rose, edelweiss and gentian.', 'Roter Strickschal, weht im Wind.': 'Red knitted scarf, flutters in the wind.', 'Graue Filzpatschen mit rotem Rand.': 'Grey felt slippers with a red trim.', 'Belohnung:': 'Reward:', 'Benutzer': 'User', 'Bergstiefel': 'Hiking boots', 'Blau mit weißem Zickzack.': 'Blue with a white zigzag.',
   'Blumenkranz': 'Flower crown',
   'Cool bleiben auf der Alm.': 'Staying cool on the alp.', 'Da stand jemand im Weg.': 'Someone was in the way.',
   'Das nächste Mal klappt es.': 'Next time you will make it.', 'Dein Account:': 'Your account:', 'Deine Fische': 'Your fish', 'Deine Katze': 'Your cat', 'Deine erste Katze.': 'Your first cat.',
   'Dir fehlen noch': 'You still need', 'Ein Schmetterling! Hinterher!': 'A butterfly! After it!',
   'Einstellungen': 'Settings', 'Endlos-Alm': 'Endless Alp',
   'Entdecke heute {n} Easter Eggs im Hintergrund': 'Spot {n} easter eggs in the background today', 'Erledigt': 'Done', 'Erwischt!': 'Caught!', 'Es wird immer später': 'It keeps getting later',
-  'Fang die Sterne, jeder bringt einen Fisch': 'Catch the stars, each one gives a fish', 'Fertig': 'Done', 'Fest geschnürt für die Alm.': 'Laced up tight for the alp.', 'Fisch-Fieber!': 'Fish fever!',
+  'Fang die Sterne, jeder bringt einen Fisch': 'Catch the stars, each one gives a fish', 'Fertig': 'Done', 'Fest geschnürt für die Alm.': 'Laced up tight for the alp.',
   'Fisch-Magnet': 'Fish magnet', 'Fische': 'fish', 'Fische in der Nähe fliegen zu dir.': 'Nearby fish fly to you.', 'Fische vergeben': 'Give fish', 'Fische vergeben.': 'fish given.', 'Fische.': 'fish.',
   'Fische. Dir fehlen noch': 'fish. You still need', 'Fische. Sammle welche im Spiel!': 'fish. Collect some in the game!', 'Fischregen!': 'Fish rain!', 'Fliege': 'Bow tie',
   'Fliegt jemand hoch, lauf unten durch': 'If someone flies high, run underneath', 'Fortsetzen': 'Continue', 'Für echte Almköniginnen. Glitzert beim Laufen.': 'For true alpine royalty. Sparkles while running.',
   'Geben': 'Give', 'Gelbe Gläser gegen den Schnee.': 'Yellow lenses against the snow.', 'Gib deiner Katze bitte einen Namen.': 'Please give your cat a name.', 'Gleitschirm': 'Paragliders',
-  'Glöckchen': 'Little bell', 'Glückspfote': 'Lucky paw', 'Goldfisch-Schwarm!': 'Goldfish swarm!', 'Goldfische': 'goldfish',
+  'Glöckchen': 'Little bell', 'Glückspfote': 'Lucky paw', 'Goldfisch-Schwarm!': 'Goldfish swarm!',
   'Goldfische (10 Fische wert) kommen öfter: 6 %.': 'Goldfish (worth 10 fish) appear more often: 6 %.', 'Goldfische: 13 %.': 'Goldfish: 13 %.', 'Goldfische: 9 %.': 'Goldfish: 9 %.',
   'Goldkette': 'Gold chain', 'Goldnase': 'Gold nose', 'Grau getigert': 'Grey tabby', 'Grau mit dunklen Streifen.': 'Grey with dark stripes.',
   'Größere Reichweite.': 'Bigger range.', 'Grün mit goldenen Knöpfen.': 'Green with golden buttons.',
@@ -2820,35 +2918,35 @@ Object.assign(EN, {
   'Im Browser-Menü (die drei Punkte) auf "App installieren" oder "Zum Startbildschirm hinzufügen" tippen.': 'In the browser menu (the three dots) tap "Install app" or "Add to Home screen".',
   'In Safari unten auf den Teilen-Knopf tippen, dann "Zum Home-Bildschirm".': 'In Safari tap the Share button, then "Add to Home Screen".',
   'In der Adressleiste auf das Installieren-Symbol klicken oder im Browser-Menü "Kirbys Alm installieren" wählen.': 'Click the install icon in the address bar or choose "Install Kirbys Alm" in the browser menu.',
-  'Inventar': 'Inventory', 'Jeder Goldfisch ist 10 Fische wert': 'Every goldfish is worth 10 fish', 'Jetzt kommen sie zu dritt': 'Now they come in threes', 'Jetzt stehen sie übereinander': 'Now they stand on each other',
+  'Inventar': 'Inventory', 'Jeder Goldfisch ist 10 Fische wert': 'Every goldfish is worth 10 fish', 'Jetzt kommen sie zu dritt': 'Now they come in threes',
   'Katzen': 'Cats', 'Keine Hindernisse, doppelte Fische': 'No obstacles, double fish', 'Kirby hat nichts gesehen.': 'Kirby saw nothing.', 'Kirby schaut zu': 'Kirby is watching',
-  'Knallgelb für jedes Wetter.': 'Bright yellow for any weather.', 'Knopf-Sounds': 'Button sounds', 'Komm jeden Tag wieder, die Belohnung wird größer.': 'Come back every day, the reward grows.', 'Krone': 'Crown',
-  'Kurzhaar': 'Short hair', 'Langhaar': 'Long hair', 'Lauf {n} m in einer Runde': 'Run {n} m in one run', 'Lautstärke': 'Volume', 'Musik': 'Music', 'Läuft noch': 'In progress', 'Magnet': 'magnet',
+  'Knallgelb für jedes Wetter.': 'Bright yellow for any weather.', 'Krone': 'Crown',
+  'Kurzhaar': 'Short hair', 'Lauf {n} m in einer Runde': 'Run {n} m in one run', 'Musik': 'Music', 'Läuft noch': 'In progress',
   'Maximal': 'Maxed out', 'Menschenturm': 'Human tower', 'Menü': 'Menu', 'Meter': 'Meters', 'Mission geschafft!': 'Mission complete!', 'Missionen': 'Missions',
   'Mit goldener Kette. Sehr vornehm.': 'With a golden chain. Very posh.', 'Mit kleinem roten Anhänger.': 'With a little red pendant.', 'Mitternacht': 'Midnight', 'Monokel': 'Monocle',
   'Morgen wieder': 'Again tomorrow', 'Namen ändern': 'Change name', 'Namen ändern kostet': 'Changing the name costs', 'Neue Missionen in': 'New missions in',
   'Noch keine Cosmetics. Jeden Tag gibt es drei neue im Shop.': 'No cosmetics yet. Every day there are three new ones in the shop.',
   'Noch keine Upgrades. Im Shop gibt es welche für Fische.': 'No upgrades yet. The shop sells them for fish.', 'Nochmal': 'Again', 'Nächste Stufe:': 'Next level:', 'Orange': 'Orange', 'Passwort': 'Password',
-  'Pause': 'Pause', 'Perfekt!': 'Perfect!', 'Regenbogen-Stern': 'Rainbow star', 'Regenjacke': 'Raincoat',
+  'Pause': 'Pause', 'Regenbogen-Stern': 'Rainbow star', 'Regenjacke': 'Raincoat',
   'Rettet dich einmal pro Runde: 3 s unverwundbar.': 'Saves you once per run: 3 s invincible.', 'Rettet dich einmal pro Runde: 5 s unverwundbar.': 'Saves you once per run: 5 s invincible.', 'Rettet dich zweimal pro Runde: je 5 s unverwundbar.': 'Saves you twice per run: 5 s invincible each.',
-  'Riesig, super flauschig, mit Pinselohren.': 'Huge, super fluffy, with tufted ears.', 'Ringelsocken': 'Striped socks', 'Rosa und verliebt.': 'Pink and in love.', 'Rot getigert.': 'Ginger tabby.',
+  'Ringelsocken': 'Striped socks', 'Rosa und verliebt.': 'Pink and in love.', 'Rot getigert.': 'Ginger tabby.',
   'Rot-weiß geringelt, an allen vier Pfoten.': 'Red and white stripes on all four paws.', 'Rote Fliege für feine Anlässe.': 'Red bow tie for fancy occasions.',
   'Rote Wollknäuel rollen heran. Spring drüber!': 'Red balls of yarn roll in. Jump over them!', 'Roter Umhang, flattert beim Rennen.': 'Red cape, flutters as you run.', 'Rotes Halsband mit goldener Glocke.': 'Red collar with a golden bell.',
-  'Sammle heute {n} Fische': 'Collect {n} fish today', 'Schaffe eine {n}er-Serie': 'Get a streak of {n}', 'Schal': 'Scarf', 'Schließen': 'Close', 'Schneeweiß': 'Snow white',
+  'Sammle heute {n} Fische': 'Collect {n} fish today', 'Schal': 'Scarf', 'Schließen': 'Close', 'Schneeweiß': 'Snow white',
   'Schnell einsammeln': 'Grab them quickly', 'Schwarz mit gelben Augen, wie Kirby.': 'Black with yellow eyes, like Kirby.', 'Sehr große Reichweite.': 'Very big range.', 'Shop': 'Shop', 'Siam': 'Siamese',
   'Skibrille': 'Ski goggles', 'Skifahrer sind schneller, als du denkst': 'Skiers are faster than you think', 'Skipiste': 'Ski slope', 'Sonnenbrille': 'Sunglasses',
-  'Spiel heute {n} Runden': 'Play {n} runs today', 'Sounds': 'Sounds', 'Sprache': 'Language', 'Sprung': 'jump', 'Start': 'Start', 'Stern': 'star', 'Sternennacht': 'Starry night',
-  'Sternschauer!': 'Star shower!', 'Strickpulli': 'Knitted jumper', 'Stufe': 'Level', 'Super!': 'Great!', 'Tag': 'Day', 'Tirolerhut': 'Tyrolean hat', 'Trachtenweste': 'Traditional waistcoat',
-  'Turbo-Rausch!': 'Turbo rush!', 'Turnschuhe': 'Sneakers', 'Tägliche Belohnung': 'Daily reward', 'Unglaublich!': 'Incredible!', 'Unverwundbar! Renn einfach durch': 'Invincible! Just run through',
-  'Upgrades': 'Upgrades', 'Ups, Zusammenstoß!': 'Oops, crash!', 'Vibration': 'Vibration', 'Weitere Katzen gibt es im Shop.': 'More cats are in the shop.',
+  'Spiel heute {n} Runden': 'Play {n} runs today', 'Sounds': 'Sounds', 'Sprache': 'Language', 'Start': 'Start', 'Sternennacht': 'Starry night',
+  'Sternschauer!': 'Star shower!', 'Strickpulli': 'Knitted jumper', 'Stufe': 'Level', 'Tag': 'Day', 'Tirolerhut': 'Tyrolean hat', 'Trachtenweste': 'Traditional waistcoat',
+  'Turbo-Rausch!': 'Turbo rush!', 'Turnschuhe': 'Sneakers', 'Tägliche Belohnung': 'Daily reward', 'Unverwundbar! Renn einfach durch': 'Invincible! Just run through',
+  'Upgrades': 'Upgrades', 'Ups, Zusammenstoß!': 'Oops, crash!', 'Vibration': 'Vibration',
   'Wie heißt deine Katze?': 'What is your cat called?', 'Willkommen!': 'Welcome!', 'Wollknäuel!': 'Balls of yarn!',
-  'Zurück': 'Back', 'gekauft und angezogen!': 'bought and put on!', 'gekauft! Du spielst jetzt mit dieser Katze.': 'bought! You now play with this cat.', 'kaufen für': 'buy for', 'knapp!': 'close!',
+  'Zurück': 'Back', 'gekauft und angezogen!': 'bought and put on!', 'gekauft! Du spielst jetzt mit dieser Katze.': 'bought! You now play with this cat.', 'kaufen für': 'buy for',
   'ohne Namen': 'no name', 'z. B. Mimi': 'e.g. Mimi', '{k} war knapp zu langsam.': '{k} was just a bit too slow.', 'Überspring heute {n} Hindernisse': 'Jump over {n} obstacles today',
   "Los geht's!": "Let's go!", 'Falsches Passwort für': 'Wrong password for', 'Das Passwort braucht mindestens 4 Zeichen.': 'The password needs at least 4 characters.',
   'Diesen Namen gibt es auf diesem Gerät schon.': 'This name already exists on this device.', 'Neuer Name: es wird ein Konto erstellt. Bekannter Name: du wirst angemeldet.': 'New name: an account is created. Known name: you are logged in.',
   'Abmelden': 'Log out', 'Angemeldet als': 'Logged in as', 'mindestens 4 Zeichen': 'at least 4 characters', 'Deutsch': 'Deutsch', 'English': 'English', 'Kirbys Alm': 'Kirbys Alm',
   'Wirklich alles löschen?': 'Really delete everything?', 'Nochmal drücken, um alle User zu löschen.': 'Press again to delete all users.', 'Angemeldet.': 'Logged in.', 'Benutzer oder Passwort falsch.': 'Wrong user or password.',
-  'Bitte eine Zahl von 1 bis 99999 eingeben.': 'Please enter a number from 1 to 99999.', 'Admin': 'Admin', 'Lobby': 'Lobby', 'Maine Coon': 'Maine Coon', 'Level': 'Level',
+  'Bitte eine Zahl von 1 bis 99999 eingeben.': 'Please enter a number from 1 to 99999.', 'Admin': 'Admin', 'Lobby': 'Lobby',
   'Spielfeld: eine Katze springt auf der Alm über Hindernisse, im Hintergrund schleckt Kirby Schnee': 'Game: a cat jumps over obstacles on the alp while Kirby licks snow in the background',
 });
 // Feste Texte im HTML einmal markieren, damit applyLang sie umschalten kann
@@ -3102,10 +3200,18 @@ function update(dt) {
 
   G.time += dt;
   G.drift += 4 * dt; // Wolken ziehen immer ein bisschen
+  if (V.purr > 0) V.purr -= dt; // läuft auch weiter, wenn gleich nach dem Antippen eine Runde beginnt
   if (mode !== 'play') {
-    if (mode === 'over') tickDeath(dt);
+    if (mode === 'over') {
+      tickDeath(dt);
+      // Weggeschleuderte fliegen auch nach dem Sturz zu Ende aus dem Bild
+      for (const o of G.objects) if (o.knocked) { o.x += o.kvx * dt; o.y += o.kvy * dt; o.kvy -= 520 * dt; o.krot += dt * 12; }
+      let n = 0;
+      for (const o of G.objects) if (!(o.knocked && (o.y < -60 || o.x > viewW + 40))) G.objects[n++] = o;
+      G.objects.length = n;
+    }
     if (mode === 'home') { if (G.outro) tickOutro(dt); else playWithYarn(dt); tickEggs(dt, 0); } // in der Lobby steht der Boden still
-    if (V.purr > 0) { V.purr -= dt; if (Math.random() < dt * 3) particles.push({ x: kirbyBox().cx + rand(-10, 10), y: kirbyBox().top - 4, vx: rand(-6, 6), vy: rand(14, 24), life: rand(.9, 1.3), c: '#ff9fd0', heart: true, bg: true }); }
+    if (V.purr > 0 && mode === 'home' && Math.random() < dt * 3) particles.push({ x: kirbyBox().cx + rand(-10, 10), y: kirbyBox().top - 4, vx: rand(-6, 6), vy: rand(14, 24), life: rand(.9, 1.3), c: '#ff9fd0', heart: true, bg: true });
     return;
   }
 
@@ -3183,7 +3289,8 @@ function update(dt) {
 
   const cs = catSprite();
   const cx = Math.round(P.x), cy = Math.round(-(P.y + cs.h));
-  const magnetR = lvl('magnet') ? MAGNET_R[lvl('magnet')] + bonus('magnet') : bonus('magnet');
+  // ohne Magnet-Upgrade wirkt das Cosmetic als kleiner Magnet (nur die Reichweite allein läge noch in der Fangzone)
+  const magnetR = lvl('magnet') ? MAGNET_R[lvl('magnet')] + bonus('magnet') : (bonus('magnet') ? 20 + bonus('magnet') : 0);
   for (const o of G.objects) {
     if (o.knocked) {
       o.x += o.kvx * dt - step;
@@ -3219,7 +3326,7 @@ function update(dt) {
       const oy = objY(o);
       if (!o.got && o.x < P.x + 24 && o.x + o.w > P.x + 3 && oy < P.y + 17 && oy + o.h > P.y + 1) {
         o.got = true;
-        if (o.type === 'star') startInvincible(5, 'Regenbogen-Stern!');
+        if (o.type === 'star') startInvincible(5 + bonus('star'), 'Regenbogen-Stern!');
         else addFish((o.gold ? 10 : 1) * (o.type === 'fish' && G.turbo > 1 ? 2 : 1), o.x + 4, oy + 6, o.gold);
         for (let i = 0; i < 6; i++) particles.push({ x: o.x + 4, y: oy + 2, vx: rand(-50, 50), vy: rand(10, 60), life: rand(.2, .45), c: o.type === 'fish' ? FISH_PAL.b : pick(RAINBOW) });
       }
