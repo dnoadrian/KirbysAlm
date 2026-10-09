@@ -304,33 +304,6 @@ body:not(.at-home) .home-only { display: none; }
 [data-ui="b"] .btn { font-family: var(--font); } [data-ui="b"] .btn:active:not([disabled]) { transform: translateY(2px); }
 [data-ui="b"] .has-dot::after { border-radius: 0; border: 0; box-shadow: 0 0 0 2px var(--outline); } [data-ui="b"] .btn.has-dot::after { top: calc(var(--rs, 3px) * 2); right: -4px; }
 [data-ui="b"] .home-menu .btn:not(.btn-start) { justify-content: center; }
-/* kleiner Installieren-Knopf oben in der Leiste */
-.install-btn svg { width: 20px; height: 20px; }
-#installHelp {
-  position: fixed;
-  top: calc(env(safe-area-inset-top, 0px) + 64px);
-  right: var(--edge-r);
-  max-width: min(320px, calc(100% - 24px));
-  padding: 10px 12px;
-  border: 2px solid #c9b48a;
-  background: rgba(251, 243, 226, .996);
-  box-shadow: inset 0 2px 0 #fffaf0, inset 0 -2px 0 #efe3c8;
-  color: #3a2516;
-  text-shadow: none;
-  font-size: var(--fs0);
-  line-height: 1.4;
-  text-align: left;
-  z-index: 11;
-}
-/* quer steht Kirby rechts: die Anleitung zwischen Menü und Kirby in den Himmel */
-@media (orientation: landscape) {
-  #installHelp { left: calc(var(--edge-l) + var(--menu-w) + 12px); right: calc(28% + 12px); width: fit-content; max-width: 420px; margin: 0 auto; }
-}
-/* hochkant unter dem Menü, über die ganze Breite */
-@media (orientation: portrait) {
-  #installHelp { top: calc(env(safe-area-inset-top, 0px) + 244px); left: var(--edge-l); max-width: none; }
-}
-[data-size~="pc"] #installHelp { top: calc(env(safe-area-inset-top, 0px) + 84px); }
 /* Lautstärkeregler im Pixel-Stil: dunkle Schiene, eckiger grüner Schieber */
 .set-row input[type=range] { -webkit-appearance: none; appearance: none; height: 28px; margin: 0; background: transparent; cursor: pointer; }
 .set-row input[type=range]::-webkit-slider-runnable-track { height: 8px; background: #3a2516; border: 0; border-radius: 0; }
@@ -347,7 +320,7 @@ body:has(.modal:not([hidden])) .hud-dist { visibility: hidden; }
 
 /* Oberfläche in ganzen Bildschirmpixeln vergrößern: --ui-zoom setzt uiZoom() so, dass ein CSS-Pixel genau
    ganze Bildschirmpixel ergibt. So bleiben Schrift und Stoffrahmen auf jedem Bildschirm scharf. */
-.hud, #home, .modal, #banner, #installHelp { zoom: var(--ui-zoom, 1); }
+.hud, #home, .modal, #banner { zoom: var(--ui-zoom, 1); }
 /* quer: Banner nur im Himmel links von Kirby */
 @media (orientation: landscape) {
   #banner { right: calc(28% + 16px); }
@@ -495,9 +468,6 @@ body:has(> #splash) .home-title { opacity: 0; }
   <div class="box fishbox" id="fishBox" aria-label="Fische">
     <svg class="fish-ico" viewBox="0 0 9 5" shape-rendering="crispEdges" aria-hidden="true"><path fill="#ff9f43" d="M2 0h4v1h1v1h1V1h1v3H8V3H7v1H6v1H2V4H1V3H0V2h1V1h1z"/><path fill="#1e1c26" d="M2 1h1v1H2z"/></svg><span id="fish">0</span>
   </div>
-  <button class="btn icon-btn install-btn home-only" id="installBtn" type="button" aria-label="App installieren" title="App installieren" hidden>
-    <svg viewBox="0 0 10 10" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M4 0h2v5h2v1H7v1H6v1H4V7H3V6H2V5h2zM0 7h1v2h8V7h1v3H0z"/></svg>
-  </button>
   <button class="btn icon-btn home-only" id="settingsBtn" type="button" aria-label="Einstellungen" title="Einstellungen">
     <svg viewBox="0 0 13 13" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M5 0h3v1H5zM1 1h2v1H1zM5 1h3v1H5zM10 1h2v1H10zM1 2h11v1H1zM2 3h9v1H2zM2 4h3v1H2zM8 4h3v1H8zM0 5h4v1H0zM9 5h4v1H9zM0 6h4v1H0zM9 6h4v1H9zM0 7h4v1H0zM9 7h4v1H9zM2 8h3v1H2zM8 8h3v1H8zM2 9h9v1H2zM1 10h11v1H1zM1 11h2v1H1zM5 11h3v1H5zM10 11h2v1H10zM5 12h3v1H5z"/></svg>
   </button>
@@ -672,7 +642,6 @@ body:has(> #splash) .home-title { opacity: 0; }
   <span class="tip" id="bTip" hidden></span>
 </div>
 
-<p class="tipline home-only" id="installHelp" hidden></p>
 
 
 
@@ -2143,40 +2112,11 @@ document.addEventListener('visibilitychange', () => {
   if (document.hidden && mode === 'play') pause();
 });
 
-/* ---------- Als App installieren ---------- */
-let installEvent = null;
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  installEvent = e;
-  $('installBtn').hidden = false;
-});
-const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-const isAndroid = /Android/i.test(navigator.userAgent);
-$('installBtn').addEventListener('click', async () => {
-  if (!installEvent) {
-    // Browser bietet keinen Installations-Dialog an: Anleitung zeigen
-    $('installHelp').textContent = isIOS
-      ? t('In Safari unten auf den Teilen-Knopf tippen, dann "Zum Home-Bildschirm".')
-      : isAndroid
-        ? t('Im Browser-Menü (die drei Punkte) auf "App installieren" oder "Zum Startbildschirm hinzufügen" tippen.')
-        : t('In der Adressleiste auf das Installieren-Symbol klicken oder im Browser-Menü "Kirbys Alm installieren" wählen.');
-    $('installHelp').hidden = !$('installHelp').hidden;
-    return;
-  }
-  installEvent.prompt();
-  try { await installEvent.userChoice; } catch (e) { /* abgebrochen */ }
-  installEvent = null;
-  $('installBtn').hidden = true;
-});
-// Anleitung schließt bei einem Tipp daneben oder mit Escape
-document.addEventListener('pointerdown', (e) => { if (!$('installHelp').hidden && !e.target.closest('#installHelp, #installBtn')) $('installHelp').hidden = true; }, true);
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') $('installHelp').hidden = true; }, true);
-window.addEventListener('appinstalled', () => { $('installBtn').hidden = true; $('installHelp').hidden = true; });
-const standalone = (window.matchMedia && matchMedia('(display-mode: standalone), (display-mode: fullscreen)').matches) || navigator.standalone === true;
+/* ---------- Offline-Modus ---------- */
+// Die Webseite bietet keine Installation an: auch die eigene Installations-Leiste des Browsers bleibt aus
+window.addEventListener('beforeinstallprompt', (e) => e.preventDefault());
 if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
-  navigator.serviceWorker.register('sw.js').then(() => {
-    if (!standalone) $('installBtn').hidden = false;
-  }).catch(() => { /* ohne Offline-Modus */ });
+  navigator.serviceWorker.register('sw.js').catch(() => { /* ohne Offline-Modus */ });
 }
 
 /* ---------- Bildschirm-Sperre verhindern (optional) ---------- */
@@ -3045,7 +2985,7 @@ Object.assign(EN, {
   'Abholen': 'Claim', 'Aktiv': 'Active', 'Alle User löschen': 'Delete all users',
   'Alle User löschen entfernt jeden Spielstand auf diesem Gerät, auch deinen eigenen. Danach startet das Spiel neu mit der Namensfrage.': 'Delete all users removes every save on this device, including your own. The game then restarts with the name screen.',
   'Alle warten auf dich.': 'Everyone is waiting.', 'Almwiese': 'Alpine Meadow', 'Alpenglühen': 'Alpenglow', 'An': 'On', 'Angezogen': 'Wearing',
-  'Anmelden': 'Log in', 'Anziehen': 'Wear', 'App installieren': 'Install app', 'Aus': 'Off', 'Ausgewählt': 'Selected', 'Auswählen': 'Select', 'Ausziehen': 'Take off',
+  'Anmelden': 'Log in', 'Anziehen': 'Wear', 'Aus': 'Off', 'Ausgewählt': 'Selected', 'Auswählen': 'Select', 'Ausziehen': 'Take off',
   'Autsch!': 'Ouch!', 'Pudelmütze': 'Bobble hat', 'Rot gestrickt, mit weißem Bommel.': 'Knitted in red, with a white pompom.', 'Grüner Filzhut mit roter Kordel und Feder.': 'Green felt hat with a red cord and a feather.',
   'Almrausch, Edelweiß und Enzian.': 'Alpine rose, edelweiss and gentian.', 'Roter Strickschal, weht im Wind.': 'Red knitted scarf, flutters in the wind.', 'Graue Filzpatschen mit rotem Rand.': 'Grey felt slippers with a red trim.', 'Belohnung:': 'Reward:', 'Benutzer': 'User', 'Bergstiefel': 'Hiking boots', 'Blau mit weißem Zickzack.': 'Blue with a white zigzag.',
   'Blumenkranz': 'Flower crown',
@@ -3065,9 +3005,6 @@ Object.assign(EN, {
   'Größere Reichweite.': 'Bigger range.', 'Grün mit goldenen Knöpfen.': 'Green with golden buttons.',
   'Halblanghaar': 'Medium hair', 'Hauptmenü': 'Main menu', 'Heldenumhang': 'Hero cape', 'Hell, mit dunklen Ohren, Pfoten und Schwanz.': 'Light, with dark ears, paws and tail.', 'Herzbrille': 'Heart glasses',
   'Heute im Angebot. Neue Auswahl in': 'On offer today. New selection in', 'Hürden': 'Hurdles', 'Hüttenschuhe': 'Hut slippers',
-  'Im Browser-Menü (die drei Punkte) auf "App installieren" oder "Zum Startbildschirm hinzufügen" tippen.': 'In the browser menu (the three dots) tap "Install app" or "Add to Home screen".',
-  'In Safari unten auf den Teilen-Knopf tippen, dann "Zum Home-Bildschirm".': 'In Safari tap the Share button, then "Add to Home Screen".',
-  'In der Adressleiste auf das Installieren-Symbol klicken oder im Browser-Menü "Kirbys Alm installieren" wählen.': 'Click the install icon in the address bar or choose "Install Kirbys Alm" in the browser menu.',
   'Inventar': 'Inventory', 'Jeder Goldfisch ist 10 Fische wert': 'Every goldfish is worth 10 fish', 'Jetzt kommen sie zu dritt': 'Now they come in threes',
   'Katzen': 'Cats', 'Keine Hindernisse, doppelte Fische': 'No obstacles, double fish', 'Kirby hat nichts gesehen.': 'Kirby saw nothing.', 'Kirby schaut zu': 'Kirby is watching',
   'Knallgelb für jedes Wetter.': 'Bright yellow for any weather.', 'Krone': 'Crown',

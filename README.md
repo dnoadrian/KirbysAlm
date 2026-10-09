@@ -26,7 +26,7 @@ Bleibt `url` leer, gibt es keinen Abgleich: Jedes Gerät hat seine eigenen Konte
 
 ## Lobby
 
-Links oben stehen **Shop**, **Inventar** und **Missionen**, rechts unten der große **Start**-Knopf, oben rechts Fische und Einstellungen (dazu, wo der Browser es anbietet, ein Knopf zum Installieren). Deine Katze spielt mit einem Wollknäuel. Tippst du Kirby an, schnurrt er einmal kurz mit geschlossenen Augen (danach braucht er ein paar Sekunden Pause). Der Boden steht in der Lobby still, nur die Wolken ziehen.
+Links oben stehen **Shop**, **Inventar** und **Missionen**, rechts unten der große **Start**-Knopf, oben rechts Fische und Einstellungen. Deine Katze spielt mit einem Wollknäuel. Tippst du Kirby an, schnurrt er einmal kurz mit geschlossenen Augen (danach braucht er ein paar Sekunden Pause). Der Boden steht in der Lobby still, nur die Wolken ziehen.
 
 Bei Start stupst ein Schmetterling die Katze an die Nase, sie rennt ihm hinterher, die Menüs gleiten weg. Nach dem Verlieren geht es mit **Nochmal** sofort weiter oder mit **Lobby** zurück.
 
@@ -72,14 +72,11 @@ Zwei Regler: **Musik** (Standard 40 %) und **Sounds** (Spiel und Knöpfe zusamme
 
 Taste **0** öffnet das Admin-Panel (Benutzer `Adrian`, Passwort `1234`): Fische vergeben und alle Konten auf diesem Gerät löschen. Benutzer und Passwort stehen im Quelltext, das ist also kein echter Schutz.
 
-## Als App installieren
+## Offline
 
-Die Seite ist eine Progressive Web App (`manifest.webmanifest`, `sw.js`, `icons/`) und läuft danach im Vollbild im Querformat, auch offline.
+Der Service Worker (`sw.js`) speichert das Spiel, danach läuft es auch ohne Internet. Die Webseite bietet keine Installation als App an.
 
-- **Android (Chrome):** Download-Knopf oben rechts oder im Browser-Menü „App installieren“.
-- **iPhone (Safari):** Teilen-Knopf, dann „Zum Home-Bildschirm“.
-
-Wenn du das Spiel änderst, erhöhe die Versionsnummer `CACHE` in `sw.js`, damit installierte Apps die neue Version laden.
+Wenn du das Spiel änderst, erhöhe die Versionsnummer `CACHE` in `sw.js`, damit Browser die neue Version laden.
 
 ## Oberfläche
 
